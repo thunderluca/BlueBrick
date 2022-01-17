@@ -52,9 +52,9 @@ namespace BlueBrick.MapData
 			// variable for drawing the mesurement value
 			private Font mMeasureFont = Properties.Settings.Default.RulerDefaultFont;
 			[NonSerialized]
-			private SolidBrush mMeasureBrush = new SolidBrush(Properties.Settings.Default.RulerDefaultFontColor);
+			private readonly SolidBrush mMeasureBrush = new SolidBrush(Properties.Settings.Default.RulerDefaultFontColor);
 			[NonSerialized]
-			private StringFormat mMeasureStringFormat = new StringFormat();
+			private readonly StringFormat mMeasureStringFormat = new StringFormat();
 			[NonSerialized]
 			private Bitmap mMeasureImage = new Bitmap(1, 1);	// image representing the text to draw in the correct orientation
 			[NonSerialized]
@@ -99,12 +99,12 @@ namespace BlueBrick.MapData
 
 			protected float MesurementTextWidthInPixel
 			{
-				get { return (mMeasureTextSizeInPixel.X * mMeasureImageScale); }
+				get { return mMeasureTextSizeInPixel.X * mMeasureImageScale; }
 			}
 
 			protected float MesurementTextHeightInPixel
 			{
-				get { return (mMeasureTextSizeInPixel.Y * mMeasureImageScale); }
+				get { return mMeasureTextSizeInPixel.Y * mMeasureImageScale; }
 			}
 
 			public Color Color
@@ -248,7 +248,7 @@ namespace BlueBrick.MapData
 				int fullAvailableWidth = (int)(Math.Max(mMeasuredDistance.DistanceInStud, GUARANTIED_SPACE_FOR_DISTANCE_DRAWING_IN_STUD) * scalePixelPerStud);
 				int availableWidthForTextInPixel = fullAvailableWidth - Math.Min(20, Math.Max(fullAvailableWidth / 20, 4));
 				if (textLengthInPixel > availableWidthForTextInPixel)
-					mMeasureImageScale = (float)availableWidthForTextInPixel / (float)textLengthInPixel;
+					mMeasureImageScale = availableWidthForTextInPixel / (float)textLengthInPixel;
 				else
 					mMeasureImageScale = 1.0f;
 			}
@@ -327,9 +327,9 @@ namespace BlueBrick.MapData
 				mGuidelineColor = XmlReadWrite.readColor(reader);
 				mGuidelineThickness = XmlReadWrite.readFloat(reader);
 				mGuidelineDashPattern = XmlReadWrite.readFloatArray(reader);
-				this.CurrentUnit = (Tools.Distance.Unit)(XmlReadWrite.readInteger(reader));
+				CurrentUnit = (Tools.Distance.Unit)XmlReadWrite.readInteger(reader);
 				mMeasureFont = XmlReadWrite.readFont(reader);
-				this.MeasureColor = XmlReadWrite.readColor(reader);
+				MeasureColor = XmlReadWrite.readColor(reader);
 				// the update method will be called by the non abstract derivated class
 			}
 
@@ -345,9 +345,9 @@ namespace BlueBrick.MapData
 				XmlReadWrite.writeColor(writer, "GuidelineColor", mGuidelineColor);
 				XmlReadWrite.writeFloat(writer, "GuidelineThickness", mGuidelineThickness);
 				XmlReadWrite.writeFloatArray(writer, "GuidelineDashPattern", mGuidelineDashPattern);
-				XmlReadWrite.writeInteger(writer, "Unit", (int)(this.CurrentUnit));				
+				XmlReadWrite.writeInteger(writer, "Unit", (int)CurrentUnit);				
 				XmlReadWrite.writeFont(writer, "MeasureFont", mMeasureFont);
-				XmlReadWrite.writeColor(writer, "MeasureFontColor", this.MeasureColor);
+				XmlReadWrite.writeColor(writer, "MeasureFontColor", MeasureColor);
 			}
 
             public override void ReadLDraw(string[] line, ref int index, int version)
@@ -359,11 +359,11 @@ namespace BlueBrick.MapData
                 mDisplayUnit = LDrawReadWrite.readBoolean(line[index++]);
                 mColor = LDrawReadWrite.readColor(line[index++]);
                 mGuidelineColor = LDrawReadWrite.readColor(line[index++]);
-                this.MeasureColor = LDrawReadWrite.readColor(line[index++]);
+                MeasureColor = LDrawReadWrite.readColor(line[index++]);
                 mLineThickness = LDrawReadWrite.readFloat(line[index++]);
                 mGuidelineThickness = LDrawReadWrite.readFloat(line[index++]);
                 mGuidelineDashPattern = LDrawReadWrite.readFloatArray(line[index++]);
-                this.CurrentUnit = (Tools.Distance.Unit)(LDrawReadWrite.readInteger(line[index++]));
+                CurrentUnit = (Tools.Distance.Unit)LDrawReadWrite.readInteger(line[index++]);
                 mMeasureFont = LDrawReadWrite.readFont(line[index++]);
                 // the update method will be called by the non abstract derivated class
             }
@@ -377,11 +377,11 @@ namespace BlueBrick.MapData
                 LDrawReadWrite.writeBoolean(ref line, mDisplayUnit);
                 LDrawReadWrite.writeColor(ref line, mColor);
                 LDrawReadWrite.writeColor(ref line, mGuidelineColor);
-                LDrawReadWrite.writeColor(ref line, this.MeasureColor);
+                LDrawReadWrite.writeColor(ref line, MeasureColor);
                 LDrawReadWrite.writeFloat(ref line, mLineThickness);
                 LDrawReadWrite.writeFloat(ref line, mGuidelineThickness);
                 LDrawReadWrite.writeFloatArray(ref line, mGuidelineDashPattern);
-                LDrawReadWrite.writeInteger(ref line, (int)(this.CurrentUnit));
+                LDrawReadWrite.writeInteger(ref line, (int)CurrentUnit);
                 LDrawReadWrite.writeFont(ref line, mMeasureFont);
             }
 			#endregion
@@ -490,11 +490,11 @@ namespace BlueBrick.MapData
 			{
 				// create the brush for drawing the dot in red
 				SolidBrush brush = new SolidBrush(color);
-				float radius = BlueBrick.Properties.Settings.Default.RulerControlPointRadiusInPixel;
+				float radius = Properties.Settings.Default.RulerControlPointRadiusInPixel;
 				float diameter = radius * 2.0f;
 
 				// convert the control points
-				PointF pointInPixel = Layer.sConvertPointInStudToPixel(point, areaInStud, scalePixelPerStud);
+				PointF pointInPixel = SConvertPointInStudToPixel(point, areaInStud, scalePixelPerStud);
 				pointInPixel.X -= radius;
 				pointInPixel.Y -= radius;
 
@@ -527,13 +527,15 @@ namespace BlueBrick.MapData
 				if (scalePixelPerStud != mScaleAtWichMeasurementImageWasDrawn)
 					updateMesurementImage(scalePixelPerStud);
 
-				// draw the mesurement text
-				Rectangle destinationRectangle = new Rectangle();
+                // draw the mesurement text
+                Rectangle destinationRectangle = new Rectangle
+                {
 
-				// compute the position of the text in pixel coord and it size according to the rescaling factor
-				destinationRectangle.Width = (int)((float)mMeasureImage.Width * mMeasureImageScale);
-				destinationRectangle.Height = (int)((float)mMeasureImage.Height * mMeasureImageScale);
-				destinationRectangle.X = (int)centerInPixel.X - (destinationRectangle.Width / 2);
+                    // compute the position of the text in pixel coord and it size according to the rescaling factor
+                    Width = (int)(mMeasureImage.Width * mMeasureImageScale),
+                    Height = (int)(mMeasureImage.Height * mMeasureImageScale)
+                };
+                destinationRectangle.X = (int)centerInPixel.X - (destinationRectangle.Width / 2);
 				destinationRectangle.Y = (int)centerInPixel.Y - (destinationRectangle.Height / 2);
 
 				// draw the image containing the text
@@ -573,7 +575,7 @@ namespace BlueBrick.MapData
 			//             mSelectionArea[0] |        | mSelectionArea[3]
 			//                               |        |
 			//       mControlPoint[0].mPoint |        | mControlPoint[1].mPoint 
-			private ControlPoint[] mControlPoint = { new ControlPoint(), new ControlPoint() };
+			private readonly ControlPoint[] mControlPoint = { new ControlPoint(), new ControlPoint() };
 			private float mOffsetDistance = 0.0f; // the offset distance in stud coord
 			private bool mAllowOffset = Properties.Settings.Default.RulerDefaultAllowOffset; // if true the line can be offseted
 
@@ -623,7 +625,7 @@ namespace BlueBrick.MapData
 						{
 							// both point are free, move them from their centers
 							float halfDistance = distance * 0.5f;
-							PointF pivot = this.Pivot;
+							PointF pivot = Pivot;
 							mControlPoint[1].mPoint.X = pivot.X + (vector[0].X * halfDistance);
 							mControlPoint[1].mPoint.Y = pivot.Y + (vector[0].Y * halfDistance);
 							halfDistance = -halfDistance;
@@ -646,7 +648,7 @@ namespace BlueBrick.MapData
 				set
 				{
 					// compute the shifting offset
-					PointF shiftOffset = this.Center;
+					PointF shiftOffset = Center;
 					shiftOffset.X = value.X - shiftOffset.X;
 					shiftOffset.Y = value.Y - shiftOffset.Y;
 					// and translate accordingly
@@ -662,7 +664,7 @@ namespace BlueBrick.MapData
 				set
 				{
 					// compute the shifting offset
-					PointF shiftOffset = this.Position;
+					PointF shiftOffset = Position;
 					shiftOffset.X = value.X - shiftOffset.X;
 					shiftOffset.Y = value.Y - shiftOffset.Y;
 					// and translate accordingly
@@ -683,7 +685,7 @@ namespace BlueBrick.MapData
 				set
 				{
 					// compute the shifting offset
-					PointF shiftOffset = this.Pivot;
+					PointF shiftOffset = Pivot;
 					shiftOffset.X = value.X - shiftOffset.X;
 					shiftOffset.Y = value.Y - shiftOffset.Y;
 					// and translate accordingly
@@ -692,17 +694,17 @@ namespace BlueBrick.MapData
 			}
 			public override bool IsNotAttached
 			{
-				get { return ((mControlPoint[0].mAttachedBrick == null) && (mControlPoint[1].mAttachedBrick == null)); }
+				get { return (mControlPoint[0].mAttachedBrick == null) && (mControlPoint[1].mAttachedBrick == null); }
 			}
 
 			public override bool IsFullyAttached
 			{
-				get { return ((mControlPoint[0].mAttachedBrick != null) && (mControlPoint[1].mAttachedBrick != null)); }
+				get { return (mControlPoint[0].mAttachedBrick != null) && (mControlPoint[1].mAttachedBrick != null); }
 			}
 
 			public override bool IsCurrentControlPointAttached
 			{
-				get { return (mControlPoint[mCurrentControlPointIndex].mAttachedBrick != null); }
+				get { return mControlPoint[mCurrentControlPointIndex].mAttachedBrick != null; }
 			}
 
 			public override LayerBrick.Brick BrickAttachedToCurrentControlPoint
@@ -842,7 +844,7 @@ namespace BlueBrick.MapData
 				float directorVectorY = (point2.X > point1.X) ? (point2.Y - point1.Y) : (point1.Y - point2.Y);
 
 				// compute the orientation angle
-				mOrientation = (float)((Math.Atan2(directorVectorY, directorVectorX) * 180.0) / Math.PI);
+				mOrientation = (float)(Math.Atan2(directorVectorY, directorVectorX) * 180.0 / Math.PI);
 
 				// also compute the distance between the two points
 				float distance = (float)Math.Sqrt((directorVectorX * directorVectorX) + (directorVectorY * directorVectorY));
@@ -917,7 +919,7 @@ namespace BlueBrick.MapData
 				// extend a little more the offset point to draw a margin
 				float extendInStud = MINIMUM_SIZE_FOR_DRAWING_HELPER_IN_STUD;
 				if (mDisplayDistance)
-					extendInStud = (float)(((double)MesurementTextHeightInPixel * 0.5) / MainForm.Instance.MapViewScale);
+					extendInStud = (float)(MesurementTextHeightInPixel * 0.5 / MainForm.Instance.MapViewScale);
 				float extendX = offsetNormalizedVector.X * ((mOffsetDistance > 0.0f) ? extendInStud : -extendInStud);
 				float extendY = offsetNormalizedVector.Y * ((mOffsetDistance > 0.0f) ? extendInStud : -extendInStud);
 				PointF[] selectionArea = new PointF[4];
@@ -1023,7 +1025,7 @@ namespace BlueBrick.MapData
 				updateDisplayDataAndMesurementImage();
 			}
 
-			public override void recreateLinksAfterLoading()
+			public override void RecreateLinksAfterLoading()
 			{
 				for (int i = 0; i < 2; ++i)
 				{
@@ -1045,11 +1047,11 @@ namespace BlueBrick.MapData
 				writer.WriteStartElement("LinearRuler");
 				base.WriteXml(writer);
 				// write the data of the linear ruler
-				XmlReadWrite.writePointF(writer, "Point1", this.Point1);
-				XmlReadWrite.writePointF(writer, "Point2", this.Point2);
+				XmlReadWrite.writePointF(writer, "Point1", Point1);
+				XmlReadWrite.writePointF(writer, "Point2", Point2);
 				XmlReadWrite.writeItemId(writer, "AttachedBrick1", (mControlPoint[0].mAttachedBrick != null) ? mControlPoint[0].mAttachedBrick.GUID : SaveLoadManager.UniqueId.Empty);
 				XmlReadWrite.writeItemId(writer, "AttachedBrick2", (mControlPoint[1].mAttachedBrick != null) ? mControlPoint[1].mAttachedBrick.GUID : SaveLoadManager.UniqueId.Empty);
-				XmlReadWrite.writeFloat(writer, "OffsetDistance", this.OffsetDistance);
+				XmlReadWrite.writeFloat(writer, "OffsetDistance", OffsetDistance);
 				XmlReadWrite.writeBoolean(writer, "AllowOffset", mAllowOffset);
 				writer.WriteEndElement(); // end of LinearRuler
 			}
@@ -1076,12 +1078,12 @@ namespace BlueBrick.MapData
                 // call the base class
                 base.WriteLDraw(ref line);
                 // write the data of the linear ruler
-                LDrawReadWrite.writePointF(ref line, this.Point1);
-                LDrawReadWrite.writePointF(ref line, this.Point2);
+                LDrawReadWrite.writePointF(ref line, Point1);
+                LDrawReadWrite.writePointF(ref line, Point2);
 				LDrawReadWrite.writeItemId(ref line, (mControlPoint[0].mAttachedBrick != null) ? mControlPoint[0].mAttachedBrick.GUID : SaveLoadManager.UniqueId.Empty);
                 LDrawReadWrite.writeItemId(ref line, (mControlPoint[1].mAttachedBrick != null) ? mControlPoint[1].mAttachedBrick.GUID : SaveLoadManager.UniqueId.Empty);
                 LDrawReadWrite.writeBoolean(ref line, mAllowOffset);
-                LDrawReadWrite.writeFloat(ref line, this.OffsetDistance);
+                LDrawReadWrite.writeFloat(ref line, OffsetDistance);
             }            
             #endregion
 
@@ -1094,7 +1096,7 @@ namespace BlueBrick.MapData
 			private void translate(PointF translation)
 			{
 				// to change the center at least one control point must be free
-				if (!this.IsFullyAttached)
+				if (!IsFullyAttached)
 				{
 					// add the offset to the 2 points if there are not attached
 					if (mControlPoint[0].mAttachedBrick == null)
@@ -1108,7 +1110,7 @@ namespace BlueBrick.MapData
 						mControlPoint[1].mPoint.Y += translation.Y;
 					}
 					// if both point are free, shift the two offset point
-					if (this.IsNotAttached)
+					if (IsNotAttached)
 					{
 						mControlPoint[0].mOffsetPoint.X += translation.X;
 						mControlPoint[0].mOffsetPoint.Y += translation.Y;
@@ -1116,7 +1118,7 @@ namespace BlueBrick.MapData
 						mControlPoint[1].mOffsetPoint.Y += translation.Y;
 						// unit vector and offset distance don't changes
 						// but we need to translate the selection area and the display area
-						translateSelectionArea(translation);
+						TranslateSelectionArea(translation);
 						// then set the new coordinate of the display area
 						mDisplayArea.Offset(translation);
 					}
@@ -1146,7 +1148,7 @@ namespace BlueBrick.MapData
 					if (squaredDist < bestSquareDist)
 					{
 						bestSquareDist = squaredDist;
-						this.mCurrentControlPointIndex = i;
+						mCurrentControlPointIndex = i;
 					}
 				}
 				return bestSquareDist;
@@ -1162,7 +1164,7 @@ namespace BlueBrick.MapData
 			public override bool isInsideAScalingHandle(PointF pointInStud, float thicknessInStud)
 			{
 				if (mAllowOffset)
-					return (this.SelectionArea.isPointInside(pointInStud));
+					return SelectionArea.isPointInside(pointInStud);
 				return false;
 			}
 
@@ -1175,10 +1177,10 @@ namespace BlueBrick.MapData
 			public override void scaleToPoint(PointF pointInStud)
 			{
 				// get the vector to make a vectorial product with the unit vector
-				PointF point1 = this.Point1;
+				PointF point1 = Point1;
 				PointF point1ToSpecifiedPoint = new PointF(pointInStud.X - point1.X, pointInStud.Y - point1.Y);
 				// compute the vectorial product (x and y are null cause z is null):
-				this.OffsetDistance = (point1ToSpecifiedPoint.X * mUnitVector.Y) - (point1ToSpecifiedPoint.Y * mUnitVector.X);
+				OffsetDistance = (point1ToSpecifiedPoint.X * mUnitVector.Y) - (point1ToSpecifiedPoint.Y * mUnitVector.X);
 			}
 
 			/// <summary>
@@ -1199,11 +1201,11 @@ namespace BlueBrick.MapData
 			/// <returns>return the angle direction of the scale in degrees</returns>
 			public override float getScalingOrientation(PointF mouseCoordInStud)
 			{
-				float orientation = this.Orientation;
+				float orientation = Orientation;
 				if (orientation < 90.0f)
-					return (this.Orientation + 90.0f);
+					return Orientation + 90.0f;
 				else
-					return (this.Orientation - 90.0f);
+					return Orientation - 90.0f;
 			}
 
 			/// <summary>
@@ -1272,20 +1274,20 @@ namespace BlueBrick.MapData
 				{
 					// check if we will need to draw the dashed offset lines
 					bool needToDrawOffset = mAllowOffset && (mOffsetDistance != 0.0f);
-					bool shouldDrawHull = (penToDrawHull != null);
+					bool shouldDrawHull = penToDrawHull != null;
 					bool needToDrawArrowForSmallDistance = !mDisplayDistance && (mMeasuredDistance.DistanceInStud < MINIMUM_SIZE_FOR_DRAWING_HELPER_IN_STUD);
 
 					// transform the coordinates into pixel coordinates
-					PointF offset1InPixel = Layer.sConvertPointInStudToPixel(mControlPoint[0].mOffsetPoint, areaInStud, scalePixelPerStud);
-					PointF offset2InPixel = Layer.sConvertPointInStudToPixel(mControlPoint[1].mOffsetPoint, areaInStud, scalePixelPerStud);
+					PointF offset1InPixel = SConvertPointInStudToPixel(mControlPoint[0].mOffsetPoint, areaInStud, scalePixelPerStud);
+					PointF offset2InPixel = SConvertPointInStudToPixel(mControlPoint[1].mOffsetPoint, areaInStud, scalePixelPerStud);
 
 					// point1 and 2 only need to be computed if we draw the offset
 					PointF point1InPixel = new PointF();
 					PointF point2InPixel = new PointF();
 					if (needToDrawOffset)
 					{
-						point1InPixel = Layer.sConvertPointInStudToPixel(this.Point1, areaInStud, scalePixelPerStud);
-						point2InPixel = Layer.sConvertPointInStudToPixel(this.Point2, areaInStud, scalePixelPerStud);
+						point1InPixel = SConvertPointInStudToPixel(Point1, areaInStud, scalePixelPerStud);
+						point2InPixel = SConvertPointInStudToPixel(Point2, areaInStud, scalePixelPerStud);
 					}
 
 					// internal and external point may be computed only for certain conditions
@@ -1295,10 +1297,10 @@ namespace BlueBrick.MapData
 					PointF offsetExternal2InPixel = new PointF();
 					if (isSelected || shouldDrawHull || needToDrawOffset || needToDrawArrowForSmallDistance)
 					{
-						offsetInternal1InPixel = Layer.sConvertPointInStudToPixel(mSelectionArea[(int)SelectionAreaIndex.INTERNAL_1], areaInStud, scalePixelPerStud);
-						offsetInternal2InPixel = Layer.sConvertPointInStudToPixel(mSelectionArea[(int)SelectionAreaIndex.INTERNAL_2], areaInStud, scalePixelPerStud);
-						offsetExternal1InPixel = Layer.sConvertPointInStudToPixel(mSelectionArea[(int)SelectionAreaIndex.EXTERNAL_1], areaInStud, scalePixelPerStud);
-						offsetExternal2InPixel = Layer.sConvertPointInStudToPixel(mSelectionArea[(int)SelectionAreaIndex.EXTERNAL_2], areaInStud, scalePixelPerStud);
+						offsetInternal1InPixel = SConvertPointInStudToPixel(mSelectionArea[(int)SelectionAreaIndex.INTERNAL_1], areaInStud, scalePixelPerStud);
+						offsetInternal2InPixel = SConvertPointInStudToPixel(mSelectionArea[(int)SelectionAreaIndex.INTERNAL_2], areaInStud, scalePixelPerStud);
+						offsetExternal1InPixel = SConvertPointInStudToPixel(mSelectionArea[(int)SelectionAreaIndex.EXTERNAL_1], areaInStud, scalePixelPerStud);
+						offsetExternal2InPixel = SConvertPointInStudToPixel(mSelectionArea[(int)SelectionAreaIndex.EXTERNAL_2], areaInStud, scalePixelPerStud);
 					}
 
 					// create the pen for the lines
@@ -1347,7 +1349,7 @@ namespace BlueBrick.MapData
 						drawMesurementImage(g, new PointF(middleX, middleY), shouldScaleMeasurementText ? scalePixelPerStud : 1.0, layerImageAttributeWithTransparency);
 
 						// compute the middle extremity of the two lines
-						float halfTextLength = (this.MesurementTextWidthInPixel * 0.5f);
+						float halfTextLength = MesurementTextWidthInPixel * 0.5f;
 						float halfTextLengthX = mUnitVector.X * halfTextLength;
 						float halfTextLengthY = mUnitVector.Y * halfTextLength;
 						PointF middle1 = new PointF(middleX - halfTextLengthX, middleY - halfTextLengthY);
@@ -1414,8 +1416,8 @@ namespace BlueBrick.MapData
 					(mDisplayArea.Bottom >= areaInStud.Top) && (mDisplayArea.Top <= areaInStud.Bottom))
 				{
 					// draw the two points
-					drawOneControlPoint(g, areaInStud, scalePixelPerStud, color, this.Point1, mControlPoint[0].mAttachedBrick != null);
-					drawOneControlPoint(g, areaInStud, scalePixelPerStud, color, this.Point2, mControlPoint[1].mAttachedBrick != null);
+					drawOneControlPoint(g, areaInStud, scalePixelPerStud, color, Point1, mControlPoint[0].mAttachedBrick != null);
+					drawOneControlPoint(g, areaInStud, scalePixelPerStud, color, Point2, mControlPoint[1].mAttachedBrick != null);
 				}
 			}
 			#endregion
@@ -1440,7 +1442,7 @@ namespace BlueBrick.MapData
 						mOrientation += 180.0f;
 					if (mOrientation > 90.0f)
 						mOrientation -= 180.0f;
-					this.updateMesurementImage();
+					updateMesurementImage();
 				}
 			}
 
@@ -1453,24 +1455,24 @@ namespace BlueBrick.MapData
 				set
 				{
 					// only move if it is not attached
-					if (!this.IsFullyAttached)
+					if (!IsFullyAttached)
 						base.Center = value;
 				}
 			}
 
 			public override bool IsNotAttached
 			{
-				get { return (mAttachedBrick == null); }
+				get { return mAttachedBrick == null; }
 			}
 
 			public override bool IsFullyAttached
 			{
-				get { return (mAttachedBrick != null); }
+				get { return mAttachedBrick != null; }
 			}
 
 			public override bool IsCurrentControlPointAttached
 			{
-				get { return (mAttachedBrick != null); }
+				get { return mAttachedBrick != null; }
 			}
 
 			public override LayerBrick.Brick BrickAttachedToCurrentControlPoint
@@ -1483,7 +1485,7 @@ namespace BlueBrick.MapData
 			/// </summary>
 			public override PointF CurrentControlPoint
 			{
-				get { return this.Center; }
+				get { return Center; }
 				set
 				{
 					// call the base class cause this check if the center is not attached
@@ -1552,7 +1554,7 @@ namespace BlueBrick.MapData
 			protected override void updateGeometryData()
 			{
 				// set the distance in the data member
-				mMeasuredDistance.DistanceInStud = (this.Radius * 2.0f);
+				mMeasuredDistance.DistanceInStud = Radius * 2.0f;
 			}
 
 			/// <summary>
@@ -1561,8 +1563,8 @@ namespace BlueBrick.MapData
 			protected override void updateDisplayData()
 			{
 				// get the center and radius
-				PointF center = this.Center;
-				float radius = Math.Max(this.Radius, HALF_MINIMUM_SIZE_FOR_DRAWING_HELPER_IN_STUD);
+				PointF center = Center;
+				float radius = Math.Max(Radius, HALF_MINIMUM_SIZE_FOR_DRAWING_HELPER_IN_STUD);
 				// compute the display area
 				mDisplayArea.X = center.X - radius;
 				mDisplayArea.Y = center.Y - radius;
@@ -1579,7 +1581,7 @@ namespace BlueBrick.MapData
 				// read data of the ruler (don't use this.Center because at that time the object is out of synch
 				// the display area may have been read but not center yet
 				mSelectionArea[0] = XmlReadWrite.readPointF(reader);
-				this.Radius = reader.ReadElementContentAsFloat();
+				Radius = reader.ReadElementContentAsFloat();
 				// read the id of the attached brick (if any)
 				mAttachedBrickGUIDUsedDuringLoading = XmlReadWrite.readItemId(reader);
 				// read the end element of the ruler
@@ -1587,14 +1589,14 @@ namespace BlueBrick.MapData
 				// don't need to update the display area after reading the data values, because the accessor of Radius did it
 			}
 
-			public override void recreateLinksAfterLoading()
+			public override void RecreateLinksAfterLoading()
 			{
 				// try to find the brick with the id we read
                 LayerBrick.Brick brick = mAttachedBrickGUIDUsedDuringLoading.getObjectOfThatId<LayerBrick.Brick>();
 				if (brick != null)
 				{
 					// compute the attach offset in local coordinate
-					PointF attachOffset = RulerAttachementSet.Anchor.sComputeLocalOffsetFromLayerItem(brick, this.Center);
+					PointF attachOffset = RulerAttachementSet.Anchor.sComputeLocalOffsetFromLayerItem(brick, Center);
 					// create a new Anchor
 					RulerAttachementSet.Anchor anchor = new RulerAttachementSet.Anchor(this, 0, attachOffset);
 					brick.attachRuler(anchor);
@@ -1606,8 +1608,8 @@ namespace BlueBrick.MapData
 				writer.WriteStartElement("CircularRuler");
 				base.WriteXml(writer);
 				// write ruler data
-				XmlReadWrite.writePointF(writer, "Center", this.Center);
-				XmlReadWrite.writeFloat(writer, "Radius", this.Radius);
+				XmlReadWrite.writePointF(writer, "Center", Center);
+				XmlReadWrite.writeFloat(writer, "Radius", Radius);
 				XmlReadWrite.writeItemId(writer, "AttachedBrick", (mAttachedBrick != null) ? mAttachedBrick.GUID : SaveLoadManager.UniqueId.Empty);
 				writer.WriteEndElement(); // end of CircularRuler
 			}
@@ -1618,7 +1620,7 @@ namespace BlueBrick.MapData
                 // read data of the ruler (don't use this.Center because at that time the object is out of synch
                 // the display area may have been read but not center yet
                 mSelectionArea[0] = LDrawReadWrite.readPointF(line[index++]);
-                this.Radius = LDrawReadWrite.readFloat(line[index++]);
+                Radius = LDrawReadWrite.readFloat(line[index++]);
                 // read the id of the attached brick (if any)
                 mAttachedBrickGUIDUsedDuringLoading = LDrawReadWrite.readItemId(line[index++]);
                 // don't need to update the display area after reading the data values, because the accessor of Radius did it
@@ -1631,8 +1633,8 @@ namespace BlueBrick.MapData
                 // call the base class
                 base.WriteLDraw(ref line);
                 // write the data of the linear ruler
-                LDrawReadWrite.writePointF(ref line, this.Center);
-                LDrawReadWrite.writeFloat(ref line, this.Radius);
+                LDrawReadWrite.writePointF(ref line, Center);
+                LDrawReadWrite.writeFloat(ref line, Radius);
 				LDrawReadWrite.writeItemId(ref line, (mAttachedBrick != null) ? mAttachedBrick.GUID : SaveLoadManager.UniqueId.Empty);
             }            
             #endregion
@@ -1648,7 +1650,7 @@ namespace BlueBrick.MapData
 			{
 				float dx = pointInStud.X - Center.X;
 				float dy = pointInStud.Y - Center.Y;
-				return ((dx * dx) + (dy * dy));
+				return (dx * dx) + (dy * dy);
 			}
 
 			/// <summary>
@@ -1667,8 +1669,8 @@ namespace BlueBrick.MapData
 				float distance = (float)Math.Sqrt((dx * dx) + (dy * dy));
 				// true if the difference between the radius and the distance is less than the thikness
 				// but use the minimum radius, in case the radius is too small
-				float radius = Math.Max(this.Radius, HALF_MINIMUM_SIZE_FOR_DRAWING_HELPER_IN_STUD);
-				return ((float)Math.Abs(radius - distance) <= thicknessInStud);
+				float radius = Math.Max(Radius, HALF_MINIMUM_SIZE_FOR_DRAWING_HELPER_IN_STUD);
+				return (float)Math.Abs(radius - distance) <= thicknessInStud;
 			}
 
 			/// <summary>
@@ -1716,7 +1718,7 @@ namespace BlueBrick.MapData
 			/// <returns>the center of the circular ruler</returns>
 			public override PointF getControlPointPosition(int index)
 			{
-				return this.CurrentControlPoint;
+				return CurrentControlPoint;
 			}
 
 			/// <summary>
@@ -1726,7 +1728,7 @@ namespace BlueBrick.MapData
 			/// <param name="positionInStud">the new value for the center of the circular ruler</param>
 			public override void setControlPointPosition(int index, PointF positionInStud)
 			{
-				this.CurrentControlPoint = positionInStud;
+				CurrentControlPoint = positionInStud;
 			}
 
 			/// <summary>
@@ -1776,9 +1778,9 @@ namespace BlueBrick.MapData
 					Pen penForCircle = new Pen(colorWithTransparency, mLineThickness);
 
 					// convert the center and radius in pixel
-					float radiusInPixel = Math.Max((float)(this.Radius * scalePixelPerStud), 0.5f);
+					float radiusInPixel = Math.Max((float)(Radius * scalePixelPerStud), 0.5f);
 					float diameterInPixel = radiusInPixel * 2.0f;
-					PointF centerInPixel = Layer.sConvertPointInStudToPixel(this.Center, areaInStud, scalePixelPerStud);
+					PointF centerInPixel = SConvertPointInStudToPixel(Center, areaInStud, scalePixelPerStud);
 					PointF upperLeftInPixel = new PointF(centerInPixel.X - radiusInPixel, centerInPixel.Y - radiusInPixel);
 
 					// draw the circle
@@ -1823,7 +1825,7 @@ namespace BlueBrick.MapData
 				if ((mDisplayArea.Right >= areaInStud.Left) && (mDisplayArea.Left <= areaInStud.Right) &&
 					(mDisplayArea.Bottom >= areaInStud.Top) && (mDisplayArea.Top <= areaInStud.Bottom))
 				{
-					drawOneControlPoint(g, areaInStud, scalePixelPerStud, color, this.Center, this.IsFullyAttached);
+					drawOneControlPoint(g, areaInStud, scalePixelPerStud, color, Center, IsFullyAttached);
 				}
 			}
 			#endregion

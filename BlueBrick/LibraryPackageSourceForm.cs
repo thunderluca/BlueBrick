@@ -29,7 +29,7 @@ namespace BlueBrick
 		private const string mOfficialNonLegoPartLibraryURL = "https://bluebrick.lswproject.com/download/packageOther/";
 
 		// a variable to memorize the button text because we will change it
-		private string mOriginalSearchButtonLabel = string.Empty;
+		private readonly string mOriginalSearchButtonLabel = string.Empty;
 
 		// a flag set in case the search was successful, and the form auto close
 		private bool mIsFormClosingSuccessfully = false;
@@ -78,8 +78,8 @@ namespace BlueBrick
 			changeSearchButton(false);
 
 			// set the hourglass except for the cancel button
-			this.Cursor = Cursors.WaitCursor;
-			this.buttonCancel.Cursor = Cursors.Default;
+			Cursor = Cursors.WaitCursor;
+			buttonCancel.Cursor = Cursors.Default;
 
 			// get the URLs depending on what is checked and create a parameter for async work
 			SearchParameter parameters = new SearchParameter();
@@ -138,7 +138,7 @@ namespace BlueBrick
 		private string getPackageVersionInAboutFile(string aboutFileName)
 		{
 			const string version = "version=";
-			string[] lines = System.IO.File.ReadAllLines(aboutFileName);
+			string[] lines = File.ReadAllLines(aboutFileName);
 			// search the version line
 			foreach (string line in lines)
 				if (line.StartsWith(version, StringComparison.OrdinalIgnoreCase))
@@ -150,30 +150,33 @@ namespace BlueBrick
 		{
 			// get all the folders in the parts folder to know what is already installed
 			DirectoryInfo partsFolder = new DirectoryInfo(PartLibraryPanel.sFullPathForLibrary);
-			DirectoryInfo[] directoriesInPartsFolder = new DirectoryInfo[] { };
-			if (partsFolder.Exists)
-			{
-				directoriesInPartsFolder = partsFolder.GetDirectories();
-			}
-			else
-			{
-				// if the part folder doesn't exist, try to create it
-				partsFolder.Create();
-				// if the part folder doesn't exist we need to get all the package found
-				return packageListToFilter;
-			}
+            _ = new DirectoryInfo[] { };
+            DirectoryInfo[] directoriesInPartsFolder;
+            if (partsFolder.Exists)
+            {
+                directoriesInPartsFolder = partsFolder.GetDirectories();
+            }
+            else
+            {
+                // if the part folder doesn't exist, try to create it
+                partsFolder.Create();
+                // if the part folder doesn't exist we need to get all the package found
+                return packageListToFilter;
+            }
 
 
-			// create a list with only the name of the directory
-			List<DownloadCenterForm.DownloadableFileInfo> installedPackages = new List<DownloadCenterForm.DownloadableFileInfo>();
+            // create a list with only the name of the directory
+            List<DownloadCenterForm.DownloadableFileInfo> installedPackages = new List<DownloadCenterForm.DownloadableFileInfo>();
 			foreach (DirectoryInfo directory in directoriesInPartsFolder)
 			{
-				// save the package name in the package info
-				DownloadCenterForm.DownloadableFileInfo package = new DownloadCenterForm.DownloadableFileInfo();
-				package.FileName = directory.Name + ".zip"; // add the zip extension to facilitate the string comparison
+                // save the package name in the package info
+                DownloadCenterForm.DownloadableFileInfo package = new DownloadCenterForm.DownloadableFileInfo
+                {
+                    FileName = directory.Name + ".zip" // add the zip extension to facilitate the string comparison
+                };
 
-				// check the about file on the local drive to get the version number
-				string aboutFileName = Application.StartupPath + @"/parts/" + directory.Name + @"/config/About.txt";
+                // check the about file on the local drive to get the version number
+                string aboutFileName = Application.StartupPath + @"/parts/" + directory.Name + @"/config/About.txt";
 				if (File.Exists(aboutFileName))
 					package.Version = getPackageVersionInAboutFile(aboutFileName);
 
@@ -322,7 +325,7 @@ namespace BlueBrick
 				return;
 
 			// get the result object
-			ResultParameter result = (e.Result) as ResultParameter;
+			ResultParameter result = e.Result as ResultParameter;
 
 			// filter all the package we have found, from the one already installed locally, and save it in the result list of the form
 			mFilesToDownload = removeAlreadyInstalledPackagesFromList(result.allPackageListFound);
@@ -331,21 +334,21 @@ namespace BlueBrick
 			if (mFilesToDownload.Count == 0)
 			{
 				// display a warning message and reload the library
-				MessageBox.Show(this, BlueBrick.Properties.Resources.ErrorMsgNoAvailablePartsPackageToDownload,
-								BlueBrick.Properties.Resources.ErrorMsgTitleWarning, MessageBoxButtons.OK,
+				MessageBox.Show(this, Properties.Resources.ErrorMsgNoAvailablePartsPackageToDownload,
+                                Properties.Resources.ErrorMsgTitleWarning, MessageBoxButtons.OK,
 								MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
 
 				// reenable the search button for a second chance
 				changeSearchButton(true);
 
 				// and reset the default cursor for the form
-				this.Cursor = Cursors.Default;
+				Cursor = Cursors.Default;
 			}
 			else
 			{
 				// if we have something to download, close the form, to let the main form open the next form to download the packages
 				mIsFormClosingSuccessfully = true;
-				this.Close();
+				Close();
 			}
 		}
 		#endregion

@@ -46,13 +46,13 @@ namespace BlueBrick.Budget
 		private bool mWasModified = false;
 
 		// the budget if the limit set by the user for each brick
-		private Dictionary<string, int> mBudget = new Dictionary<string,int>();
+		private readonly Dictionary<string, int> mBudget = new Dictionary<string,int>();
 
 		// the count is the actual brick total number in the map
-		private Dictionary<string, int> mCount = new Dictionary<string, int>();
+		private readonly Dictionary<string, int> mCount = new Dictionary<string, int>();
 
 		// We also store the count of brick on the map but per layer, in order to facilitate the statistics with the part usage view
-		private Dictionary<LayerBrick, Dictionary<string, int>> mCountPerLayer = new Dictionary<LayerBrick, Dictionary<string, int>>();
+		private readonly Dictionary<LayerBrick, Dictionary<string, int>> mCountPerLayer = new Dictionary<LayerBrick, Dictionary<string, int>>();
 
 		#region get/set
 		/// <summary>
@@ -83,17 +83,17 @@ namespace BlueBrick.Budget
 
 		public bool ShouldShowOnlyBudgetedParts
 		{
-			get { return (mIsExisting && Properties.Settings.Default.ShowOnlyBudgetedParts); }
+			get { return mIsExisting && Properties.Settings.Default.ShowOnlyBudgetedParts; }
 		}
 
 		public bool ShouldShowBudgetNumbers
 		{
-			get { return (mIsExisting && Properties.Settings.Default.ShowBudgetNumbers); }
+			get { return mIsExisting && Properties.Settings.Default.ShowBudgetNumbers; }
 		}
 
 		public bool ShouldUseBudgetLimitation
 		{
-			get { return (mIsExisting && Properties.Settings.Default.UseBudgetLimitation); }
+			get { return mIsExisting && Properties.Settings.Default.UseBudgetLimitation; }
 		}
 
 		public bool WasModified
@@ -102,7 +102,7 @@ namespace BlueBrick.Budget
 			set
 			{
  				// check if the state will change
-				bool stateChanged = (mWasModified != value);
+				bool stateChanged = mWasModified != value;
 				// change the flag
 				mWasModified = value;
 				//if the state changed, call the update of the title bar
@@ -148,13 +148,13 @@ namespace BlueBrick.Budget
 			// set the flag to tell that the budget now exists
 			mIsExisting = true;
 			// reset the was modified flag cause we just load a new budget
-			this.WasModified = false;
+			WasModified = false;
 		}
 
 		public virtual void WriteXml(System.Xml.XmlWriter writer)
 		{
 			// reset the was modified flag each time we save
-			this.WasModified = false;
+			WasModified = false;
 
 			// first of all the version, we don't use the vesion read from the file,
 			// for saving we always save with the last version of data
@@ -183,7 +183,7 @@ namespace BlueBrick.Budget
 			mBudgetFileName = Properties.Resources.DefaultSaveFileNameForBudget;
 			mIsFileNameValid = false;
 			// reset the was modified flag
-			this.WasModified = false;
+			WasModified = false;
 		}
 
 		/// <summary>
@@ -211,20 +211,19 @@ namespace BlueBrick.Budget
 
 		public void mergeWith(Budget budgetToMerge)
 		{
-			int budgetValue = 0;
-			foreach (KeyValuePair<string, int> budget in budgetToMerge.mBudget)
-				if (mBudget.TryGetValue(budget.Key, out budgetValue))
-				{
-					mBudget.Remove(budget.Key);
-					mBudget.Add(budget.Key, budget.Value + budgetValue);
-				}
-				else
-				{
-					mBudget.Add(budget.Key, budget.Value);
-				}
-			// set the was modified flag, if we actually merge something (otherwise don't touch the flag)
-			if (budgetToMerge.mBudget.Count > 0)
-				this.WasModified = true;
+            foreach (KeyValuePair<string, int> budget in budgetToMerge.mBudget)
+                if (mBudget.TryGetValue(budget.Key, out int budgetValue))
+                {
+                    mBudget.Remove(budget.Key);
+                    mBudget.Add(budget.Key, budget.Value + budgetValue);
+                }
+                else
+                {
+                    mBudget.Add(budget.Key, budget.Value);
+                }
+            // set the was modified flag, if we actually merge something (otherwise don't touch the flag)
+            if (budgetToMerge.mBudget.Count > 0)
+				WasModified = true;
 		}
 		#endregion
 
@@ -259,7 +258,7 @@ namespace BlueBrick.Budget
 			// change the flag if we modified the budget (but don't change it, if we didn't modified it)
 			if (budgetsToRename.Count > 0)
 			{
-				this.WasModified = true;
+				WasModified = true;
 				return true;
 			}
 			// by default return false
@@ -275,7 +274,7 @@ namespace BlueBrick.Budget
 		/// <returns>true if the budget is defined (not infinite and not null)</returns>
 		public bool IsBudgeted(string partID)
 		{
-			return (getBudget(partID) > 0);
+			return getBudget(partID) > 0;
 		}
 
 		/// <summary>
@@ -285,20 +284,19 @@ namespace BlueBrick.Budget
 		/// <param name="budget">the budget number (can be negative or null)</param>
 		public void setBudget(string partID, int budget)
 		{
-			// get the current value if any, and remove the it before seting the new one
-			int currentBudget = 0;
-			if (mBudget.TryGetValue(partID, out currentBudget))
-				mBudget.Remove(partID); // if we found the value, remove it to avoid exception when adding it, or maybe we won't add it anymore if it's infinite budget
-			else
-				currentBudget = -1; // this is necessary, cause the TryGetValue set the value to zero if not found
-			// set the new budget but only if it is defined (otherwise a -1 budget, means, it should not be included in the list)
-			if (budget >= 0)
+            // get the current value if any, and remove the it before seting the new one
+            if (mBudget.TryGetValue(partID, out int currentBudget))
+                mBudget.Remove(partID); // if we found the value, remove it to avoid exception when adding it, or maybe we won't add it anymore if it's infinite budget
+            else
+                currentBudget = -1; // this is necessary, cause the TryGetValue set the value to zero if not found
+                                    // set the new budget but only if it is defined (otherwise a -1 budget, means, it should not be included in the list)
+            if (budget >= 0)
 				mBudget.Add(partID, budget);
 			else
 				budget = -1; // for any negative value, transform it into -1 (for the comparison below)
 			// every time we set a new budget (with a different value), change the modified flag. But do not change the flag if it is already true.
 			if (budget != currentBudget)
-				this.WasModified = true;
+				WasModified = true;
 			// notify the MainForm for budget change
 			MainForm.Instance.NotifyForBudgetChanged(partID);
 		}
@@ -311,11 +309,10 @@ namespace BlueBrick.Budget
 		/// <returns>the budget for that part or 0 or -1 if there's no budget</returns>
 		public int getBudget(string partID)
 		{
-			// try to get the value or return 0 by default
-			int result = 0; //-1 means the budget is not set, i.e. you have an infinite budgets
-			if (!mBudget.TryGetValue(partID, out result))
-				result = Properties.Settings.Default.IsDefaultBudgetInfinite ? -1 : 0; 
-			return result;
+            // try to get the value or return 0 by default
+            if (!mBudget.TryGetValue(partID, out int result))
+                result = Properties.Settings.Default.IsDefaultBudgetInfinite ? -1 : 0;
+            return result;
 		}
 
 		/// <summary>
@@ -374,27 +371,27 @@ namespace BlueBrick.Budget
 		/// <returns>the usage percentage for that part or -1 if there's no budget (illimited budget)</returns>
 		public float getUsagePercentage(string partID, bool shouldIncludeHiddenParts, out int count, out int budget)
 		{
-			// try to get the value or return 0 by default
-			float result = -1f; //-1 means the budget is not set, i.e. you have an infinite budgets
-			budget = getBudget(partID);
-			count = getCount(partID, shouldIncludeHiddenParts);
-			if (budget < 0)
-			{
-				// if budget is negative, that means infinite budget, so the percentage will also be negative
-				result = -1f;
-			}
-			else if (budget == 0)
-			{
-				// if the budget is null, you use all of it if you have no part,
-				// otherwise you exceed the budget, and each part count as a 100% exceed
-				result = (count + 1) * 100f;
-			}
-			else
-			{
-				result = (float)(count * 100) / (float)budget;
-			}
-			// return the result
-			return result;
+            budget = getBudget(partID);
+            count = getCount(partID, shouldIncludeHiddenParts);
+            // try to get the value or return 0 by default
+            float result;
+            if (budget < 0)
+            {
+                // if budget is negative, that means infinite budget, so the percentage will also be negative
+                result = -1f;
+            }
+            else if (budget == 0)
+            {
+                // if the budget is null, you use all of it if you have no part,
+                // otherwise you exceed the budget, and each part count as a 100% exceed
+                result = (count + 1) * 100f;
+            }
+            else
+            {
+                result = count * 100 / (float)budget;
+            }
+            // return the result
+            return result;
 		}
 
 		/// <summary>
@@ -409,7 +406,7 @@ namespace BlueBrick.Budget
 			// compute the total budget if not valid
 			totalBudgetOfUsedParts = getTotalBudget(true, shouldIncludeHiddenParts);
 			// for the total count, of course we should only count the budgeted parts for having a correct usage
-			return (totalBudgetOfUsedParts == 0) ? 0 : (float)(getTotalCount(true, shouldIncludeHiddenParts) * 100) / (float)totalBudgetOfUsedParts;
+			return (totalBudgetOfUsedParts == 0) ? 0 : getTotalCount(true, shouldIncludeHiddenParts) * 100 / (float)totalBudgetOfUsedParts;
 		}
 
 		/// <summary>
@@ -425,28 +422,26 @@ namespace BlueBrick.Budget
 		{
 			float result = 0;
 			totalBudgetForTheLayer = 0;
-			// try to get the specified layer and iterate on all its values
-			Dictionary<string, int> layeredCount = null;
-			if (mCountPerLayer.TryGetValue(layer, out layeredCount))
-			{
-				int totalCount = 0;
-				// itearate on all the pair on the specified layer
-				foreach (KeyValuePair<string, int> brickCount in layeredCount)
-				{
-					// check if the current brick has a budget, otherwise ignore it
-					int budget = 0;
-					if (mBudget.TryGetValue(brickCount.Key, out budget))
-					{
-						// increase the count and budget
-						totalCount += brickCount.Value;
-						totalBudgetForTheLayer += budget;
-					}
-				}
-				// compute the result (if budget is not null to avoid division by zero)
-				if (totalBudgetForTheLayer > 0)
-					result = (float)(totalCount * 100) / (float)totalBudgetForTheLayer;
-			}
-			return result;
+            // try to get the specified layer and iterate on all its values
+            if (mCountPerLayer.TryGetValue(layer, out Dictionary<string, int> layeredCount))
+            {
+                int totalCount = 0;
+                // itearate on all the pair on the specified layer
+                foreach (KeyValuePair<string, int> brickCount in layeredCount)
+                {
+                    // check if the current brick has a budget, otherwise ignore it
+                    if (mBudget.TryGetValue(brickCount.Key, out int budget))
+                    {
+                        // increase the count and budget
+                        totalCount += brickCount.Value;
+                        totalBudgetForTheLayer += budget;
+                    }
+                }
+                // compute the result (if budget is not null to avoid division by zero)
+                if (totalBudgetForTheLayer > 0)
+                    result = totalCount * 100 / (float)totalBudgetForTheLayer;
+            }
+            return result;
 		}
 
 		/// <summary>
@@ -480,7 +475,7 @@ namespace BlueBrick.Budget
 			// get the count or remaining count depending on the settings
 			int count = Properties.Settings.Default.DisplayRemainingPartCountInBudgetInsteadOfUsedCount ? getRemainingCount(partID, shouldIncludeHiddenParts) : getCount(partID, shouldIncludeHiddenParts);
 			// retur the formated string
-			return (count.ToString() + "/" + getBudgetAsString(partID, false));
+			return count.ToString() + "/" + getBudgetAsString(partID, false);
 		}
 
 		/// <summary>
@@ -525,10 +520,9 @@ namespace BlueBrick.Budget
 				foreach (KeyValuePair<LayerBrick, Dictionary<string, int>> layerPair in mCountPerLayer)
 					if (layerPair.Key.Visible)
 					{
-						int count = 0;
-						if (layerPair.Value.TryGetValue(partID, out count))
-							result += count;
-					}
+                        if (layerPair.Value.TryGetValue(partID, out int count))
+                            result += count;
+                    }
 			}
 			return result;
 		}
@@ -546,7 +540,7 @@ namespace BlueBrick.Budget
 			int count = getCount(partID, shouldIncludeHiddenParts);
 			int budget = getBudget(partID);
 			if (budget >= 0)
-				return (budget - count);
+				return budget - count;
 			return -count;
 		}
 
@@ -555,12 +549,11 @@ namespace BlueBrick.Budget
 			int total = 0;
 			if (onlyBudgetedParts)
 			{
-				// for optim reason iterate on the budget keys
-				int count = 0;
-				foreach (string partId in mBudget.Keys)
-					if (countDictionary.TryGetValue(partId, out count))
-						total += count;
-			}
+                // for optim reason iterate on the budget keys
+                foreach (string partId in mBudget.Keys)
+                    if (countDictionary.TryGetValue(partId, out int count))
+                        total += count;
+            }
 			else
 			{
 				// otherwise count all the parts even those not budgeted
@@ -603,11 +596,10 @@ namespace BlueBrick.Budget
 		public int getTotalCountForLayer(LayerBrick layer, bool onlyBudgetedParts)
 		{
 			int result = 0;
-			// try to get the specified layer and iterate on all its values
-			Dictionary<string, int> layeredCount = null;
-			if (mCountPerLayer.TryGetValue(layer, out layeredCount))
-				result = getCountInDictionary(layeredCount, onlyBudgetedParts);
-			return result;
+            // try to get the specified layer and iterate on all its values
+            if (mCountPerLayer.TryGetValue(layer, out Dictionary<string, int> layeredCount))
+                result = getCountInDictionary(layeredCount, onlyBudgetedParts);
+            return result;
 		}
 
 		/// <summary>
@@ -624,7 +616,7 @@ namespace BlueBrick.Budget
 			// by default we can
 			bool canAdd = true;
 			// check if we need to check the budget limitation
-			if (this.ShouldUseBudgetLimitation)
+			if (ShouldUseBudgetLimitation)
 			{
 				// first check with the main brick
 				canAdd = canAddBrick(partID, 1, shouldIncludeHiddenParts);
@@ -653,10 +645,10 @@ namespace BlueBrick.Budget
 		/// <returns>true if you can add this part</returns>
 		public bool canAddBrick(string partID, int quantity, bool shouldIncludeHiddenParts)
 		{
-			if (this.ShouldUseBudgetLimitation)
+			if (ShouldUseBudgetLimitation)
 			{
 				int budget = getBudget(partID);
-				return ((budget < 0) || (getCount(partID, shouldIncludeHiddenParts) + quantity <= budget));
+				return (budget < 0) || (getCount(partID, shouldIncludeHiddenParts) + quantity <= budget);
 			}
 			return true;
 		}
@@ -672,39 +664,35 @@ namespace BlueBrick.Budget
 			string partID = brickOrGroup.PartNumber;
 			if (partID != string.Empty)
 			{
-				// get the current count in the count dictionary
-				int currentCount = 0;
-				mCount.TryGetValue(partID, out currentCount);
-				// and update the value in the global dictionnary
-				mCount.Remove(partID);
+                // get the current count in the count dictionary
+                mCount.TryGetValue(partID, out int currentCount);
+                // and update the value in the global dictionnary
+                mCount.Remove(partID);
 				mCount.Add(partID, currentCount + 1);
 
-				// also update in the layered dictionary
-				Dictionary<string, int> layeredCount = null;
-				if (mCountPerLayer.TryGetValue(layer, out layeredCount))
-				{
-					int currentCountInLayer = 0;
-					layeredCount.TryGetValue(partID, out currentCountInLayer);
-					layeredCount.Remove(partID);
-					layeredCount.Add(partID, currentCountInLayer + 1);
-				}
-				else
-				{
-					// this is a new layer (this layer didn't exist before), so add the layer and also the count
-					layeredCount = new Dictionary<string, int>();
-					layeredCount.Add(partID, 1);
-					mCountPerLayer.Add(layer, layeredCount);
-				}
-			}
+                // also update in the layered dictionary
+                if (mCountPerLayer.TryGetValue(layer, out Dictionary<string, int> layeredCount))
+                {
+                    layeredCount.TryGetValue(partID, out int currentCountInLayer);
+                    layeredCount.Remove(partID);
+                    layeredCount.Add(partID, currentCountInLayer + 1);
+                }
+                else
+                {
+                    // this is a new layer (this layer didn't exist before), so add the layer and also the count
+                    layeredCount = new Dictionary<string, int>();
+                    layeredCount.Add(partID, 1);
+                    mCountPerLayer.Add(layer, layeredCount);
+                }
+            }
 			// add also all the named children if the brick is a group
 			// (unless it is a regroup in that case the children are already counted)
 			if (!isDueToRegroup)
 			{
-				Layer.Group group = brickOrGroup as Layer.Group;
-				if (group != null)
-					foreach (Layer.LayerItem item in group.Items)
-						addBrickNotification(layer, item, isDueToRegroup);
-			}
+                if (brickOrGroup is Layer.Group group)
+                    foreach (Layer.LayerItem item in group.Items)
+                        addBrickNotification(layer, item, isDueToRegroup);
+            }
 		}
 
 		/// <summary>
@@ -718,39 +706,35 @@ namespace BlueBrick.Budget
 			string partID = brickOrGroup.PartNumber;
 			if (partID != string.Empty)
 			{
-				// get the current count
-				int currentCount = 0;
-				mCount.TryGetValue(partID, out currentCount);
-				if (currentCount > 0)
+                // get the current count
+                mCount.TryGetValue(partID, out int currentCount);
+                if (currentCount > 0)
 				{
 					// update the value
 					mCount.Remove(partID);
 					mCount.Add(partID, currentCount - 1);
 				}
 
-				// also update in the layered dictionary
-				Dictionary<string, int> layeredCount = null;
-				if (mCountPerLayer.TryGetValue(layer, out layeredCount))
-				{
-					int currentCountInLayer = 0;
-					layeredCount.TryGetValue(partID, out currentCountInLayer);
-					if (currentCountInLayer > 0)
-					{
-						layeredCount.Remove(partID);
-						layeredCount.Add(partID, currentCountInLayer - 1);
-					}
-				}
-				// if the layer doesn't exist, we have nothing to remove
-			}
+                // also update in the layered dictionary
+                if (mCountPerLayer.TryGetValue(layer, out Dictionary<string, int> layeredCount))
+                {
+                    layeredCount.TryGetValue(partID, out int currentCountInLayer);
+                    if (currentCountInLayer > 0)
+                    {
+                        layeredCount.Remove(partID);
+                        layeredCount.Add(partID, currentCountInLayer - 1);
+                    }
+                }
+                // if the layer doesn't exist, we have nothing to remove
+            }
 			// remove also all the named children if the brick is a group
 			// (unless it is a ungroup in that case we leave the children and just remove the one we ungrouped)
 			if (!isDueToUngroup)
 			{
-				Layer.Group group = brickOrGroup as Layer.Group;
-				if (group != null)
-					foreach (Layer.LayerItem item in group.Items)
-						removeBrickNotification(layer, item, isDueToUngroup);
-			}
+                if (brickOrGroup is Layer.Group group)
+                    foreach (Layer.LayerItem item in group.Items)
+                        removeBrickNotification(layer, item, isDueToUngroup);
+            }
 		}
 
 		/// <summary>
@@ -765,35 +749,32 @@ namespace BlueBrick.Budget
 			// iterate on all the brick of all the brick layers,
 			foreach (Layer layer in Map.Instance.LayerList)
 			{
-				LayerBrick brickLayer = layer as LayerBrick;
-				if (brickLayer != null)
-				{
-					// add a layered count for this current layer
-					Dictionary<string, int> layeredCount = new Dictionary<string, int>();
-					mCountPerLayer.Add(brickLayer, layeredCount);
+                if (layer is LayerBrick brickLayer)
+                {
+                    // add a layered count for this current layer
+                    Dictionary<string, int> layeredCount = new Dictionary<string, int>();
+                    mCountPerLayer.Add(brickLayer, layeredCount);
 
-					// now iterate on all the brick of the current layer
-					foreach (Layer.LayerItem item in brickLayer.LibraryBrickList)
-					{
-						// get the part id
-						string partID = item.PartNumber;
+                    // now iterate on all the brick of the current layer
+                    foreach (Layer.LayerItem item in brickLayer.LibraryBrickList)
+                    {
+                        // get the part id
+                        string partID = item.PartNumber;
 
-						// get the current global count
-						int currentCount = 0;
-						mCount.TryGetValue(partID, out currentCount);
-						// update the value
-						mCount.Remove(partID);
-						mCount.Add(partID, currentCount + 1);
+                        // get the current global count
+                        mCount.TryGetValue(partID, out int currentCount);
+                        // update the value
+                        mCount.Remove(partID);
+                        mCount.Add(partID, currentCount + 1);
 
-						// also count the brick on the layered count
-						int currentCountInLayer = 0;
-						layeredCount.TryGetValue(partID, out currentCountInLayer);
-						// update the value
-						layeredCount.Remove(partID);
-						layeredCount.Add(partID, currentCountInLayer + 1);
-					}
-				}
-			}
+                        // also count the brick on the layered count
+                        layeredCount.TryGetValue(partID, out int currentCountInLayer);
+                        // update the value
+                        layeredCount.Remove(partID);
+                        layeredCount.Add(partID, currentCountInLayer + 1);
+                    }
+                }
+            }
 		}
 		#endregion
 	}

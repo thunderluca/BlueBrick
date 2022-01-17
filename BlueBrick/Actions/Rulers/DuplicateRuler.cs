@@ -21,7 +21,7 @@ namespace BlueBrick.Actions.Rulers
 {
 	class DuplicateRuler : Items.DuplicateItems
 	{
-		private LayerRuler mRulerLayer = null;
+		private readonly LayerRuler mRulerLayer = null;
 
 		public DuplicateRuler(LayerRuler layer, List<Layer.LayerItem> itemsToDuplicate, bool needToAddOffset)
 			: base(itemsToDuplicate, needToAddOffset, false)
@@ -33,23 +33,23 @@ namespace BlueBrick.Actions.Rulers
 		public override string GetName()
 		{
 			if (mItems.Count == 1)
-				return BlueBrick.Properties.Resources.ActionDuplicateRuler;
+				return Properties.Resources.ActionDuplicateRuler;
 			else
-				return BlueBrick.Properties.Resources.ActionDuplicateSeveralRulers;
+				return Properties.Resources.ActionDuplicateSeveralRulers;
 		}
 
 		public override void Redo()
 		{
 			// clear the selection first, because we want to select only all the added rulers
-			mRulerLayer.clearSelection();
+			mRulerLayer.ClearSelection();
 			// add all the rulers (by default all the rulers index are initialized with -1
 			// so the first time they are added, we just add them at the end,
 			// after the index is record in the array during the undo)
 			// We must add all the rulers in the reverse order to avoid crash (insert with an index greater than the size of the list)
 			for (int i = mItems.Count - 1; i >= 0; --i)
 			{
-				mRulerLayer.addRulerItem(mItems[i] as LayerRuler.RulerItem, mItemIndex[i]);
-				mRulerLayer.addObjectInSelection(mItems[i]);
+				mRulerLayer.AddRulerItem(mItems[i] as LayerRuler.RulerItem, mItemIndex[i]);
+				mRulerLayer.AddObjectInSelection(mItems[i]);
 			}
 		}
 
@@ -59,7 +59,7 @@ namespace BlueBrick.Actions.Rulers
 			// but do not delete it, also memorise its last position
 			mItemIndex.Clear();
 			foreach (Layer.LayerItem obj in mItems)
-				mItemIndex.Add(mRulerLayer.removeRulerItem(obj as LayerRuler.RulerItem));
+				mItemIndex.Add(mRulerLayer.RemoveRulerItem(obj as LayerRuler.RulerItem));
 		}
 	}
 }

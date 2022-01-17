@@ -45,7 +45,7 @@ namespace BlueBrick.Actions.Items
 		protected virtual void commonConstructor(Layer layer, List<Layer.LayerItem> originalItems, float angle, bool forceKeepLastCenter)
 		{
 			mLayer = layer;
-			mRotateCW = (angle < 0.0f);
+			mRotateCW = angle < 0.0f;
 			mRotationStep = Math.Abs(angle);
 
 			// we must invalidate the last center if the last action in the undo stack is not a rotation
@@ -114,7 +114,7 @@ namespace BlueBrick.Actions.Items
 			PointF pivot = item.Pivot;
 
 			// change the orientation of the picture
-			item.Orientation = (item.Orientation + rotationAngle);
+			item.Orientation = item.Orientation + rotationAngle;
 
 			// for some items partially attached, we may don't want to adjust the pivot
 			if (adjustPivot)
@@ -142,7 +142,7 @@ namespace BlueBrick.Actions.Items
 
 			// then recompute recursively their display area
 			foreach (Layer.Group group in mTopGroupsOfTheItems)
-				group.computeDisplayArea(true);
+				group.ComputeDisplayArea(true);
 		}
 	}
 }

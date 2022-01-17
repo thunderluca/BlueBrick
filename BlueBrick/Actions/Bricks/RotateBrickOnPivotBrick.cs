@@ -8,7 +8,7 @@ namespace BlueBrick.Actions.Bricks
 {
 	class RotateBrickOnPivotBrick : RotateBrick
 	{
-		private LayerBrick.Brick mPivotBrick = null;
+		private readonly LayerBrick.Brick mPivotBrick = null;
 
 		public RotateBrickOnPivotBrick(LayerBrick layer, List<Layer.LayerItem> bricks, float angle, LayerBrick.Brick pivotBrick)
 			: base(layer, bricks, angle)
@@ -29,7 +29,7 @@ namespace BlueBrick.Actions.Bricks
 			foreach (LayerBrick.Brick brick in mItems)
 				brick.Center = new PointF(brick.Center.X + pivotShift.X, brick.Center.Y + pivotShift.Y);
 			// update the selection rectangle after moving all the parts
-			mLayer.updateBoundingSelectionRectangle();
+			mLayer.UpdateBoundingSelectionRectangle();
 			// notify the main form for the brick move
 			MainForm.Instance.NotifyForPartMoved();
 		}
@@ -47,7 +47,7 @@ namespace BlueBrick.Actions.Bricks
 			foreach (LayerBrick.Brick brick in mItems)
 				brick.Center = new PointF(brick.Center.X + pivotShift.X, brick.Center.Y + pivotShift.Y);
 			// update the selection rectangle after moving all the parts
-			mLayer.updateBoundingSelectionRectangle();
+			mLayer.UpdateBoundingSelectionRectangle();
 			// notify the main form for the brick move
 			MainForm.Instance.NotifyForPartMoved();
 		}

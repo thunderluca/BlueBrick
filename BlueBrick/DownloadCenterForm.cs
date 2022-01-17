@@ -59,10 +59,10 @@ namespace BlueBrick
 		private bool mHasDownloadBeenCancelled = false;
 
 		// a list to store the file that need to be downloaded
-		private List<DownloadableFileInfo> mFilesToDownload = null;
+		private readonly List<DownloadableFileInfo> mFilesToDownload = null;
 
 		// a list to store the successful download
-		private List<DownloadableFileInfo> mSuccessfullyDownloadedFiles = new List<DownloadableFileInfo>();
+		private readonly List<DownloadableFileInfo> mSuccessfullyDownloadedFiles = new List<DownloadableFileInfo>();
 		public List<DownloadableFileInfo> SuccessfullyDownloadedFiles
 		{
 			get { return mSuccessfullyDownloadedFiles; }
@@ -82,7 +82,7 @@ namespace BlueBrick
 
 			// change the explanation text, if we want to download brick package
 			if (isUsedToDownloadLibraryPackage)
-				this.ExplanationLabel.Text = Properties.Resources.DownloadLibraryPackageExplanation;
+				ExplanationLabel.Text = Properties.Resources.DownloadLibraryPackageExplanation;
 
 			// reset the counter of downloaded files
 			mSuccessfullyDownloadedFiles.Clear();
@@ -98,10 +98,10 @@ namespace BlueBrick
 		private void StartStopButton_Click(object sender, EventArgs e)
 		{
 			// disable this button
-			this.StartButton.Enabled = false;
+			StartButton.Enabled = false;
 			// set the hourglass except for the cancel button
-			this.Cursor = Cursors.WaitCursor;
-			this.cancelButton.Cursor = Cursors.Default;
+			Cursor = Cursors.WaitCursor;
+			cancelButton.Cursor = Cursors.Default;
 			// reset the cancel flag
 			mHasDownloadBeenCancelled = false;
 			// launch the download
@@ -112,11 +112,11 @@ namespace BlueBrick
 		{
 			// cancel the background download thread if the cancel button is pressed.
 			mHasDownloadBeenCancelled = true;
-			this.downloadBackgroundWorker.CancelAsync();
+			downloadBackgroundWorker.CancelAsync();
 			// re-enable the start button
-			this.StartButton.Enabled = true;
+			StartButton.Enabled = true;
 			// reset the default cursor
-			this.Cursor = Cursors.Default;
+			Cursor = Cursors.Default;
 		}
 
 		private void DownloadListView_AfterLabelEdit(object sender, LabelEditEventArgs e)
@@ -128,7 +128,7 @@ namespace BlueBrick
 				if (!e.Label.StartsWith(@"\") && !e.Label.StartsWith(@"/"))
 				{
 					e.CancelEdit = true;
-					this.DownloadListView.Items[e.Item].Text = @"/" + e.Label;
+					DownloadListView.Items[e.Item].Text = @"/" + e.Label;
 				}
 			}
 		}
@@ -143,19 +143,21 @@ namespace BlueBrick
 		private void fillListView(List<DownloadableFileInfo> fileList)
 		{
 			// start of the update of the control
-			this.DownloadListView.BeginUpdate();
+			DownloadListView.BeginUpdate();
 
 			// item count to take the item one by one in order
 			int itemIndex = 0;
-			this.DownloadListView.Items.Clear();
+			DownloadListView.Items.Clear();
 
 			foreach (DownloadableFileInfo downloadInfo in fileList)
 			{
-				// create an item
-				ListViewItem item = new ListViewItem(new string[] { string.Empty, downloadInfo.FileName, downloadInfo.Version, downloadInfo.DestinationFolder, downloadInfo.SourceURL });
-				item.Checked = true; // by default we download all the files
-				// add it to the list
-				this.DownloadListView.Items.Add(item);
+                // create an item
+                ListViewItem item = new ListViewItem(new string[] { string.Empty, downloadInfo.FileName, downloadInfo.Version, downloadInfo.DestinationFolder, downloadInfo.SourceURL })
+                {
+                    Checked = true // by default we download all the files
+                };
+                // add it to the list
+                DownloadListView.Items.Add(item);
 				// call the update of the percentage for updating the color
 				updatePercentageOfOneFile(itemIndex, 0);
 				// inc the index
@@ -163,28 +165,28 @@ namespace BlueBrick
 			}
 
 			// end of the update of the control
-			this.DownloadListView.EndUpdate();
+			DownloadListView.EndUpdate();
 
 			// set the parameter of the progress bar depending on the total number of files to download
 			if (fileList.Count > 0)
-				this.TotalProgressBar.Maximum = (fileList.Count * NUMBER_OF_STEP_PER_FILE_FOR_TOTAL_PROGRESS_BAR);
+				TotalProgressBar.Maximum = fileList.Count * NUMBER_OF_STEP_PER_FILE_FOR_TOTAL_PROGRESS_BAR;
 		}
 
 		private void updatePercentageOfOneFile(int fileIndex, int percentage)
 		{
 			// get the corresponding download bar subitem
-			ListViewItem.ListViewSubItemCollection subitems = this.DownloadListView.Items[fileIndex].SubItems;
+			ListViewItem.ListViewSubItemCollection subitems = DownloadListView.Items[fileIndex].SubItems;
 
 			// add the percentage bar
 			subitems[SUBITEM_PERCENTAGE_INDEX].Text = ComputePercentageBarAsString(percentage);
 
 			// change the color according to the percentage value
-			this.DownloadListView.Items[fileIndex].ForeColor = ComputeColorFromPercentage(100 - percentage, 0);
+			DownloadListView.Items[fileIndex].ForeColor = ComputeColorFromPercentage(100 - percentage, 0);
 		}
 
 		private void updatePercentageOfTotalBar(int fileIndex, int percentage)
 		{
-			this.TotalProgressBar.Value = (fileIndex * NUMBER_OF_STEP_PER_FILE_FOR_TOTAL_PROGRESS_BAR) +
+			TotalProgressBar.Value = (fileIndex * NUMBER_OF_STEP_PER_FILE_FOR_TOTAL_PROGRESS_BAR) +
 											(percentage / NUMBER_OF_STEP_PER_FILE_FOR_TOTAL_PROGRESS_BAR);
 		}
 		#endregion
@@ -218,7 +220,7 @@ namespace BlueBrick
 		private void downloadAllTheFile()
 		{
 			// reset the total progress bar
-			this.TotalProgressBar.Value = 0;
+			TotalProgressBar.Value = 0;
 			// just call the download on the first file, and then in the event of the background worker complete
 			// it will be called again on the next files.
 			downloadOneFile(0);
@@ -231,7 +233,7 @@ namespace BlueBrick
 				return;
 
 			// get the result object
-			ResultParameter result = (e.Result) as ResultParameter;
+			ResultParameter result = e.Result as ResultParameter;
 
 			// update the overall percentage for this file
 			updatePercentageOfTotalBar(result.fileIndex, 100);
@@ -240,7 +242,7 @@ namespace BlueBrick
 			if (result.hasErrorOccurs)
 			{
 				// get the item
-				ListViewItem item = this.DownloadListView.Items[result.fileIndex];
+				ListViewItem item = DownloadListView.Items[result.fileIndex];
 				// change the color for this item to red
 				item.ForeColor = Color.Red;
 				// change the text
@@ -262,30 +264,32 @@ namespace BlueBrick
 		private void downloadComplete()
 		{
 			// reset the default cursor
-			this.Cursor = Cursors.Default;
+			Cursor = Cursors.Default;
 			// Hide the Cancel Button and show the close button
-			this.cancelButton.Hide();
-			this.closeButton.Show();
+			cancelButton.Hide();
+			closeButton.Show();
 		}
 
 		private void downloadOneFile(int fileIndex)
 		{
 			// check if we reach the end of the list
-			if (fileIndex < this.DownloadListView.Items.Count)
+			if (fileIndex < DownloadListView.Items.Count)
 			{
 				// check if we need to download the file or if we need to skip it
-				ListViewItem item = this.DownloadListView.Items[fileIndex];
+				ListViewItem item = DownloadListView.Items[fileIndex];
 				if (item.Checked)
 				{
 					// get the URL and destination and create a parameter for async work
 					ListViewItem.ListViewSubItemCollection subitems = item.SubItems;
-					DownloadParameter parameters = new DownloadParameter();
-					parameters.url = subitems[SUBITEM_URL_INDEX].Text;
-					parameters.destination = Application.StartupPath + subitems[SUBITEM_DEST_INDEX].Text;
-					parameters.fileIndex = fileIndex;
+                    DownloadParameter parameters = new DownloadParameter
+                    {
+                        url = subitems[SUBITEM_URL_INDEX].Text,
+                        destination = Application.StartupPath + subitems[SUBITEM_DEST_INDEX].Text,
+                        fileIndex = fileIndex
+                    };
 
-					// start the download asynchronously by giving the parameters
-					downloadBackgroundWorker.RunWorkerAsync(parameters);
+                    // start the download asynchronously by giving the parameters
+                    downloadBackgroundWorker.RunWorkerAsync(parameters);
 					// this method will be called again when the background worker will send it complete event
 				}
 				else
@@ -318,7 +322,7 @@ namespace BlueBrick
 			DownloadParameter parameters = eventArgs.Argument as DownloadParameter;
 
 			// create a http request
-			HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(parameters.url);
+			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(parameters.url);
 			// Set some reasonable limits on resources used by this request
 			request.MaximumAutomaticRedirections = 4;
 			request.MaximumResponseHeadersLength = 4;
@@ -347,7 +351,7 @@ namespace BlueBrick
 				{
 					binaryWriter.Write(readStream.ReadBytes(BUFFER_SIZE));
 					// compute the download percentage
-					int downloadPercentage = (int)(((BUFFER_SIZE * 100) * i) / response.ContentLength);
+					int downloadPercentage = (int)(BUFFER_SIZE * 100 * i / response.ContentLength);
 					// call the report progress method that will send an event on the thread of the form to update the progress bar
 					worker.ReportProgress(downloadPercentage, parameters.fileIndex);
 				}
@@ -414,7 +418,7 @@ namespace BlueBrick
 		private void downloadBackgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
 		{
 			// get the parameters
-			int fileIndex = (int)(e.UserState);
+			int fileIndex = (int)e.UserState;
 			int percentage = Math.Min(e.ProgressPercentage, 100); // clamp the value to 100
 																  // update the progress bar of one file and global progress bar
 			updatePercentageOfOneFile(fileIndex, percentage);
@@ -442,7 +446,7 @@ namespace BlueBrick
 			// write the middle character in between the filled part of the bar and the empty part
 			if (nbTenth < 10)
 			{
-				float remain = (percentage - (nbTenth * 10));
+				float remain = percentage - (nbTenth * 10);
 				if (remain >= 8.75) // 7/8
 					percentageString += char.ConvertFromUtf32(0x2588);
 				else if (remain >= 7.5) // 6/8 i.e. 3/4
@@ -493,13 +497,12 @@ namespace BlueBrick
 
 			// the value of green and red
 			int redColor = 0;
-			int greenColor = 0;
-
-			if (maxRedValue > 0)
+            int greenColor;
+            if (maxRedValue > 0)
 			{
 				const double PERCENTAGE_GAP = 7.5;
-				const double GREEN_SLOPE = (50 / (50.0 + PERCENTAGE_GAP));
-				double redSlope = (maxRedValue / (75.0 + PERCENTAGE_GAP));
+				const double GREEN_SLOPE = 50 / (50.0 + PERCENTAGE_GAP);
+				double redSlope = maxRedValue / (75.0 + PERCENTAGE_GAP);
 
 				// compute the red color
 				if (percentage <= (75.0 + PERCENTAGE_GAP))
@@ -517,7 +520,7 @@ namespace BlueBrick
 			{
 				// the red component stay null
 				// linear inc for the green
-				greenColor = 200 - (int)(2 * percentage);
+				greenColor = 200 - 2 * percentage;
 			}
 
 			return Color.FromArgb(0xFF, redColor, greenColor, 0x00);

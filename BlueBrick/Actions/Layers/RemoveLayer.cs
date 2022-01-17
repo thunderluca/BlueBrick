@@ -21,8 +21,8 @@ namespace BlueBrick.Actions
 {
 	class RemoveLayer : Action
 	{
-		private Layer mLayerDeleted = null;
-		private int mIndex = 0;
+		private readonly Layer mLayerDeleted = null;
+		private readonly int mIndex = 0;
 
 		public RemoveLayer(Layer layer)
 		{
@@ -33,7 +33,7 @@ namespace BlueBrick.Actions
 
 		public override string GetName()
 		{
-			string actionName = BlueBrick.Properties.Resources.ActionRemoveLayer;
+			string actionName = Properties.Resources.ActionRemoveLayer;
 			actionName = actionName.Replace("&", mLayerDeleted.Name);
 			return actionName;
 		}

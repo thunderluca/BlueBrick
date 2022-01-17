@@ -109,7 +109,7 @@ namespace BlueBrick
 
 		// for some strange reason, under Mono, the export form crash in the ctor when instanciated a second time.
 		// so instanciate only one time and keep the instance
-		private ExportImageForm mExportImageForm = new ExportImageForm();
+		private readonly ExportImageForm mExportImageForm = new ExportImageForm();
 
 		// a mapping key table to store the shortcut for each action
 		enum shortcutableAction
@@ -156,7 +156,7 @@ namespace BlueBrick
 		/// </summary>
 		public double MapViewScale
 		{
-			get { return this.mapPanel.ViewScale; }
+			get { return mapPanel.ViewScale; }
 		}
 
 		#region cursors
@@ -505,7 +505,7 @@ namespace BlueBrick
 			else
 			{
 				updateEnableStatusForBudgetMenuItem();
-				this.PartUsageListView.updateBudgetNotification();
+				PartUsageListView.updateBudgetNotification();
 			}
 			// check if we need to open a file or create a new map
 			if ((fileToOpen != null) && canOpenThisFile(fileToOpen))
@@ -524,8 +524,8 @@ namespace BlueBrick
 		{
 			// set the split container distance in the shown event because else the distance is not
 			// correct if the window was maximise
-			this.mainSplitContainer.SplitterDistance = Properties.Settings.Default.UIMainSplitContainerDistance;
-			this.toolSplitContainer.SplitterDistance = Properties.Settings.Default.UIToolSplitContainerDistance;
+			mainSplitContainer.SplitterDistance = Properties.Settings.Default.UIMainSplitContainerDistance;
+			toolSplitContainer.SplitterDistance = Properties.Settings.Default.UIToolSplitContainerDistance;
 		}
 
 		/// <summary>
@@ -540,7 +540,7 @@ namespace BlueBrick
 			try
 			{
 				string sourceDataFullFileName = Application.StartupPath + sourceDataFileName;
-				System.IO.StreamReader textReader = new System.IO.StreamReader(sourceDataFullFileName);
+                StreamReader textReader = new StreamReader(sourceDataFullFileName);
 				comboBoxToFill.Items.Clear();
 				comboBoxToFill.Sorted = true;
 				while (!textReader.EndOfStream)
@@ -556,33 +556,33 @@ namespace BlueBrick
 		{
 			// DOT NET BUG: the data binding of the Form size and window state interfere with the
 			// the normal behavior of saving, so we remove the data binding and do it manually
-			this.Location = Properties.Settings.Default.UIMainFormLocation;
-			this.Size = Properties.Settings.Default.UIMainFormSize;
-			this.WindowState = Properties.Settings.Default.UIMainFormWindowState;
+			Location = Properties.Settings.Default.UIMainFormLocation;
+			Size = Properties.Settings.Default.UIMainFormSize;
+			WindowState = Properties.Settings.Default.UIMainFormWindowState;
 			// part lib
 			if (Properties.Settings.Default.UIFilterAllSentence != string.Empty)
 			{
-				this.removeInputFilterIndication();
-				this.textBoxPartFilter.Text = Properties.Settings.Default.UIFilterAllSentence;
+				removeInputFilterIndication();
+				textBoxPartFilter.Text = Properties.Settings.Default.UIFilterAllSentence;
 			}
-			else if (this.textBoxPartFilter.Text == string.Empty)
+			else if (textBoxPartFilter.Text == string.Empty)
 			{
 				// add the filter incitation message (which is saved in the ressource)
 				// only if not another filter sentence was set during the loading
 				addInputFilterIndication();
 			}
 			// set the flag after the sentence, cause the checked event handler will check the text
-			this.filterAllTabCheckBox.Checked = Properties.Settings.Default.UIFilterAllLibraryTab;
+			filterAllTabCheckBox.Checked = Properties.Settings.Default.UIFilterAllLibraryTab;
 			// budget menu
-			this.showOnlyBudgetedPartsToolStripMenuItem.Checked = Properties.Settings.Default.ShowOnlyBudgetedParts;
-			this.showBudgetNumbersToolStripMenuItem.Checked = Properties.Settings.Default.ShowBudgetNumbers;
-			this.useBudgetLimitationToolStripMenuItem.Checked = Properties.Settings.Default.UseBudgetLimitation;
+			showOnlyBudgetedPartsToolStripMenuItem.Checked = Properties.Settings.Default.ShowOnlyBudgetedParts;
+			showBudgetNumbersToolStripMenuItem.Checked = Properties.Settings.Default.ShowBudgetNumbers;
+			useBudgetLimitationToolStripMenuItem.Checked = Properties.Settings.Default.UseBudgetLimitation;
 			// snap grid button enable and size
 			enableSnapGridButton(Properties.Settings.Default.UISnapGridEnabled, Properties.Settings.Default.UISnapGridSize);
 			// rotation step
 			updateRotationStepButton(Properties.Settings.Default.UIRotationStep);
 			// the zooming value
-			this.mapPanel.ViewScale = Properties.Settings.Default.UIViewScale;
+			mapPanel.ViewScale = Properties.Settings.Default.UIViewScale;
 			// setting the correct Ruler tool
 			switch (Properties.Settings.Default.UIRulerToolSelected)
 			{
@@ -597,25 +597,25 @@ namespace BlueBrick
 			else
 				paintToolPaintToolStripMenuItem_Click(this, null);
 			// flag to split the part usage list (and force the check change in case it was not changed)
-			this.SplitPartUsagePerLayerCheckBox.Checked = Properties.Settings.Default.UISplitPartUsagePerLayer;
+			SplitPartUsagePerLayerCheckBox.Checked = Properties.Settings.Default.UISplitPartUsagePerLayer;
 			SplitPartUsagePerLayerCheckBox_CheckedChanged(this, null);
-			this.IncludeHiddenLayerInPartListCheckBox.Checked = Properties.Settings.Default.UIIncludeHiddenPartsInPartUsage;
+			IncludeHiddenLayerInPartListCheckBox.Checked = Properties.Settings.Default.UIIncludeHiddenPartsInPartUsage;
 			IncludeHiddenLayerInPartListCheckBox_CheckedChanged(this, null);
 			// toolbar and status bar visibility
-			this.toolBar.Visible = this.toolbarMenuItem.Checked = Properties.Settings.Default.UIToolbarIsVisible;
-			this.statusBar.Visible = this.statusBarMenuItem.Checked = Properties.Settings.Default.UIStatusbarIsVisible;
-			this.mapPanel.CurrentStatusBarHeight = Properties.Settings.Default.UIStatusbarIsVisible ? this.statusBar.Height : 0;
-			this.mapScrollBarsToolStripMenuItem.Checked = Properties.Settings.Default.UIMapScrollBarsAreVisible;
-			this.mapPanel.ShowHideScrollBars(Properties.Settings.Default.UIMapScrollBarsAreVisible);
-			this.watermarkToolStripMenuItem.Checked = Properties.Settings.Default.DisplayGeneralInfoWatermark;
-			this.electricCircuitsMenuItem.Checked = Properties.Settings.Default.DisplayElectricCircuit;
-			this.connectionPointsToolStripMenuItem.Checked = Properties.Settings.Default.DisplayFreeConnexionPoints;
-            this.rulerAttachPointsToolStripMenuItem.Checked = Properties.Settings.Default.DisplayRulerAttachPoints;
+			toolBar.Visible = toolbarMenuItem.Checked = Properties.Settings.Default.UIToolbarIsVisible;
+			statusBar.Visible = statusBarMenuItem.Checked = Properties.Settings.Default.UIStatusbarIsVisible;
+			mapPanel.CurrentStatusBarHeight = Properties.Settings.Default.UIStatusbarIsVisible ? statusBar.Height : 0;
+			mapScrollBarsToolStripMenuItem.Checked = Properties.Settings.Default.UIMapScrollBarsAreVisible;
+			mapPanel.ShowHideScrollBars(Properties.Settings.Default.UIMapScrollBarsAreVisible);
+			watermarkToolStripMenuItem.Checked = Properties.Settings.Default.DisplayGeneralInfoWatermark;
+			electricCircuitsMenuItem.Checked = Properties.Settings.Default.DisplayElectricCircuit;
+			connectionPointsToolStripMenuItem.Checked = Properties.Settings.Default.DisplayFreeConnexionPoints;
+            rulerAttachPointsToolStripMenuItem.Checked = Properties.Settings.Default.DisplayRulerAttachPoints;
             // the export window
-            this.mExportImageForm.loadUISettingFromDefaultSettings();
+            mExportImageForm.loadUISettingFromDefaultSettings();
 			// fill the combo box in the Properties panel
-			fillComboBoxFromTextFile(this.lugComboBox, @"/config/LugList.txt");
-			fillComboBoxFromTextFile(this.eventComboBox, @"/config/EventList.txt");
+			fillComboBoxFromTextFile(lugComboBox, @"/config/LugList.txt");
+			fillComboBoxFromTextFile(eventComboBox, @"/config/EventList.txt");
 		}
 
 		private void saveUISettingInDefaultSettings()
@@ -625,61 +625,61 @@ namespace BlueBrick
 
 			// don't save the window state in minimized, else when you reopen the application
 			// it only appears in the task bar
-			if (this.WindowState == FormWindowState.Minimized)
+			if (WindowState == FormWindowState.Minimized)
 				Properties.Settings.Default.UIMainFormWindowState = FormWindowState.Normal;
 			else
-				Properties.Settings.Default.UIMainFormWindowState = this.WindowState;
+				Properties.Settings.Default.UIMainFormWindowState = WindowState;
 			// save the normal size or the restore one
-			if (this.WindowState == FormWindowState.Normal)
+			if (WindowState == FormWindowState.Normal)
 			{
 				// normal window size
-				Properties.Settings.Default.UIMainFormLocation = this.Location;
-				Properties.Settings.Default.UIMainFormSize = this.Size;
+				Properties.Settings.Default.UIMainFormLocation = Location;
+				Properties.Settings.Default.UIMainFormSize = Size;
 			}
 			else
 			{
 				// save the restore window size
-				Properties.Settings.Default.UIMainFormLocation = this.RestoreBounds.Location;
-				Properties.Settings.Default.UIMainFormSize = this.RestoreBounds.Size;
+				Properties.Settings.Default.UIMainFormLocation = RestoreBounds.Location;
+				Properties.Settings.Default.UIMainFormSize = RestoreBounds.Size;
 			}
 
 			// split container
-			Properties.Settings.Default.UIMainSplitContainerDistance = this.mainSplitContainer.SplitterDistance;
-			Properties.Settings.Default.UIToolSplitContainerDistance = this.toolSplitContainer.SplitterDistance;
+			Properties.Settings.Default.UIMainSplitContainerDistance = mainSplitContainer.SplitterDistance;
+			Properties.Settings.Default.UIToolSplitContainerDistance = toolSplitContainer.SplitterDistance;
 
 			// snap grid size and rotation and the current zooming value (view scale)
 			Properties.Settings.Default.UISnapGridEnabled = Layer.SnapGridEnabled;
 			Properties.Settings.Default.UISnapGridSize = Layer.CurrentSnapGridSize;
 			Properties.Settings.Default.UIRotationStep = Layer.CurrentRotationStep;
-			Properties.Settings.Default.UIViewScale = this.mapPanel.ViewScale;
+			Properties.Settings.Default.UIViewScale = mapPanel.ViewScale;
 
 			// paint color
 			Properties.Settings.Default.UIPaintColor = mCurrentPaintIconColor;
 			Properties.Settings.Default.UIIsEraserToolSelected = LayerArea.IsCurrentToolTheEraser;
 
 			// ruler tool selected
-			Properties.Settings.Default.UIRulerToolSelected = (int)(LayerRuler.CurrentEditTool);
+			Properties.Settings.Default.UIRulerToolSelected = (int)LayerRuler.CurrentEditTool;
 
 			// flags for the part usage list
-			Properties.Settings.Default.UISplitPartUsagePerLayer = this.SplitPartUsagePerLayerCheckBox.Checked;
-			Properties.Settings.Default.UIIncludeHiddenPartsInPartUsage = this.IncludeHiddenLayerInPartListCheckBox.Checked;
+			Properties.Settings.Default.UISplitPartUsagePerLayer = SplitPartUsagePerLayerCheckBox.Checked;
+			Properties.Settings.Default.UIIncludeHiddenPartsInPartUsage = IncludeHiddenLayerInPartListCheckBox.Checked;
 
 			// toolbar and status bar visibility
-			Properties.Settings.Default.UIToolbarIsVisible = this.toolBar.Visible;
-			Properties.Settings.Default.UIStatusbarIsVisible = this.statusBar.Visible;
-			Properties.Settings.Default.UIMapScrollBarsAreVisible = this.mapScrollBarsToolStripMenuItem.Checked;
+			Properties.Settings.Default.UIToolbarIsVisible = toolBar.Visible;
+			Properties.Settings.Default.UIStatusbarIsVisible = statusBar.Visible;
+			Properties.Settings.Default.UIMapScrollBarsAreVisible = mapScrollBarsToolStripMenuItem.Checked;
 
 			// the part lib display config
 			savePartLibUISettingInDefaultSettings();
 
             // the export window
-            this.mExportImageForm.saveUISettingInDefaultSettings();
+            mExportImageForm.saveUISettingInDefaultSettings();
 
 			// try to save (never mind if we can not (for example BlueBrick is launched
 			// from a write protected drive)
 			try
 			{
-				BlueBrick.Properties.Settings.Default.Save();
+                Properties.Settings.Default.Save();
 			}
 			catch
 			{
@@ -693,8 +693,8 @@ namespace BlueBrick
 		/// </summary>
 		private void savePartLibUISettingInDefaultSettings()
 		{
-			this.PartsTabControl.savePartListDisplayStatusInSettings();
-			Properties.Settings.Default.UIFilterAllLibraryTab = this.filterAllTabCheckBox.Checked;
+			PartsTabControl.savePartListDisplayStatusInSettings();
+			Properties.Settings.Default.UIFilterAllLibraryTab = filterAllTabCheckBox.Checked;
 		}
 
 		/// <summary>
@@ -705,8 +705,8 @@ namespace BlueBrick
 		/// <returns>a new created cursor</returns>
 		private Cursor LoadEmbededCustomCursors(System.Reflection.Assembly assembly, string cursorResourceName)
 		{
-			// get the stream from the assembly and create the cursor giving the stream
-			System.IO.Stream stream = assembly.GetManifestResourceStream(cursorResourceName);
+            // get the stream from the assembly and create the cursor giving the stream
+            Stream stream = assembly.GetManifestResourceStream(cursorResourceName);
 			Cursor cursor = new Cursor(stream);
 			stream.Close();
 			// return the created cursor
@@ -719,7 +719,7 @@ namespace BlueBrick
 		private void LoadEmbededCustomCursors()
 		{
 			// get the assembly
-			System.Reflection.Assembly assembly = this.GetType().Assembly;
+			System.Reflection.Assembly assembly = GetType().Assembly;
 			// the load all the cursors
 			mHiddenLayerCursor = LoadEmbededCustomCursors(assembly, "BlueBrick.Cursor.HiddenLayerCursor.cur");
 			mPanViewCursor = LoadEmbededCustomCursors(assembly, "BlueBrick.Cursor.PanViewCursor.cur");
@@ -765,7 +765,7 @@ namespace BlueBrick
 			// reload the color info, because the bricks also need the color name (for correctly setting up the color name in the bubble info)
 			BrickLibrary.Instance.LoadColorInfo();
 			// reinit the parts tab control (that will fill the brick library again)
-			this.PartsTabControl.initPartsTabControl();
+			PartsTabControl.initPartsTabControl();
 			// and relod the other data for the brick library (after the brick library is loaded)
 			BrickLibrary.Instance.CreateEntriesForRenamedParts();
 			BrickLibrary.Instance.LoadTrackDesignerRegistryFileList();
@@ -784,8 +784,8 @@ namespace BlueBrick
 			fileExtension = fileExtension.ToLower();
 
 			// authorize the drop if it's a file with the good extension
-			return (fileExtension.Equals("bbm") || fileExtension.Equals("ldr") || fileExtension.Equals("ncp") ||
-					fileExtension.Equals("mpd") || fileExtension.Equals("tdl") || fileExtension.Equals("dat"));
+			return fileExtension.Equals("bbm") || fileExtension.Equals("ldr") || fileExtension.Equals("ncp") ||
+					fileExtension.Equals("mpd") || fileExtension.Equals("tdl") || fileExtension.Equals("dat");
 		}
 
 		#endregion
@@ -799,11 +799,11 @@ namespace BlueBrick
 		{
 			// update the map
             if (mapUpdateType > Actions.Action.UpdateViewType.NONE)
-				this.mapPanel.UpdateView();
+				mapPanel.UpdateView();
 
 			// update the layer
             if (layerUpdateType > Actions.Action.UpdateViewType.NONE)
-				this.layerStackPanel.updateView(layerUpdateType);
+				layerStackPanel.updateView(layerUpdateType);
 
 			// check if we need to change the "*" on the title bar
 			updateTitleBar();
@@ -833,7 +833,7 @@ namespace BlueBrick
 					title += " *";
 			}
 			// set the title bar text
-			this.Text = title;
+			Text = title;
 		}
 
 		/// <summary>
@@ -850,7 +850,7 @@ namespace BlueBrick
 			else
 			{
 				removeInputFilterIndication();
-				this.textBoxPartFilter.Text = filterSentence;
+				textBoxPartFilter.Text = filterSentence;
 			}
 		}
 
@@ -861,9 +861,9 @@ namespace BlueBrick
         /// <param name="canUngroup">if true the ungrouping buttons are enabled</param>
         public void enableGroupingButton(bool canGroup, bool canUngroup)
         {
-            this.groupToolStripMenuItem.Enabled = canGroup;
-            this.ungroupToolStripMenuItem.Enabled = canUngroup;
-            this.groupMenuToolStripMenuItem.Enabled = canGroup || canUngroup;
+            groupToolStripMenuItem.Enabled = canGroup;
+            ungroupToolStripMenuItem.Enabled = canUngroup;
+            groupMenuToolStripMenuItem.Enabled = canGroup || canUngroup;
         }
 
 		/// <summary>
@@ -886,13 +886,13 @@ namespace BlueBrick
 				{
 					// do nothing, we probably cannot copy that shit
 				}
-				this.pasteToolStripMenuItem.Enabled = isThereAnyItemCopied;
-				this.toolBarPasteButton.Enabled = isThereAnyItemCopied;
+				pasteToolStripMenuItem.Enabled = isThereAnyItemCopied;
+				toolBarPasteButton.Enabled = isThereAnyItemCopied;
 			}
 			else
 			{
-				this.pasteToolStripMenuItem.Enabled = false;
-				this.toolBarPasteButton.Enabled = false;
+				pasteToolStripMenuItem.Enabled = false;
+				toolBarPasteButton.Enabled = false;
 			}
 		}
 
@@ -905,38 +905,38 @@ namespace BlueBrick
 		public void enableToolbarButtonOnItemSelection(bool isThereAnyItemSelected)
 		{
 			// enable/disable the copy button (toolbar and menu)
-			this.toolBarCopyButton.Enabled = isThereAnyItemSelected;
-			this.copyToolStripMenuItem.Enabled = isThereAnyItemSelected;
+			toolBarCopyButton.Enabled = isThereAnyItemSelected;
+			copyToolStripMenuItem.Enabled = isThereAnyItemSelected;
 
 			// enable/disable the cut button (toolbar and menu)
-			this.toolBarCutButton.Enabled = isThereAnyItemSelected;
-			this.cutToolStripMenuItem.Enabled = isThereAnyItemSelected;
+			toolBarCutButton.Enabled = isThereAnyItemSelected;
+			cutToolStripMenuItem.Enabled = isThereAnyItemSelected;
 
 			// enable/disable the delete button (toolbar and menu)
-			this.toolBarDeleteButton.Enabled = isThereAnyItemSelected;
-			this.deleteToolStripMenuItem.Enabled = isThereAnyItemSelected;
+			toolBarDeleteButton.Enabled = isThereAnyItemSelected;
+			deleteToolStripMenuItem.Enabled = isThereAnyItemSelected;
 
 			// enable/disable the rotate buttons (toolbar and menu)
-			this.toolBarRotateCCWButton.Enabled = isThereAnyItemSelected;
-			this.toolBarRotateCWButton.Enabled = isThereAnyItemSelected;
-			this.rotateCCWToolStripMenuItem.Enabled = isThereAnyItemSelected;
-			this.rotateCWToolStripMenuItem.Enabled = isThereAnyItemSelected;
+			toolBarRotateCCWButton.Enabled = isThereAnyItemSelected;
+			toolBarRotateCWButton.Enabled = isThereAnyItemSelected;
+			rotateCCWToolStripMenuItem.Enabled = isThereAnyItemSelected;
+			rotateCWToolStripMenuItem.Enabled = isThereAnyItemSelected;
 
 			// enable/disable the send to back/bring to front buttons (toolbar and menu)
-			this.toolBarBringToFrontButton.Enabled = isThereAnyItemSelected;
-			this.toolBarSendToBackButton.Enabled = isThereAnyItemSelected;
-			this.bringToFrontToolStripMenuItem.Enabled = isThereAnyItemSelected;
-			this.sendToBackToolStripMenuItem.Enabled = isThereAnyItemSelected;
+			toolBarBringToFrontButton.Enabled = isThereAnyItemSelected;
+			toolBarSendToBackButton.Enabled = isThereAnyItemSelected;
+			bringToFrontToolStripMenuItem.Enabled = isThereAnyItemSelected;
+			sendToBackToolStripMenuItem.Enabled = isThereAnyItemSelected;
 
 			// enable/disable the deselect all button (menu only)
-			this.deselectAllToolStripMenuItem.Enabled = isThereAnyItemSelected;
+			deselectAllToolStripMenuItem.Enabled = isThereAnyItemSelected;
 
 			// enable/disable the select path button (menu only)
             bool selectedLayerIsBrick = (Map.Instance.SelectedLayer != null) && (Map.Instance.SelectedLayer is LayerBrick);
-			this.selectPathToolStripMenuItem.Enabled = selectedLayerIsBrick && (Map.Instance.SelectedLayer.SelectedObjects.Count >= 2);
+			selectPathToolStripMenuItem.Enabled = selectedLayerIsBrick && (Map.Instance.SelectedLayer.SelectedObjects.Count >= 2);
 
             // enable/disable the save of the selection to the library
-            this.saveSelectionInLibraryToolStripMenuItem.Enabled = selectedLayerIsBrick && (Map.Instance.SelectedLayer.SelectedObjects.Count > 1);
+            saveSelectionInLibraryToolStripMenuItem.Enabled = selectedLayerIsBrick && (Map.Instance.SelectedLayer.SelectedObjects.Count > 1);
 		}
 
 		/// <summary>
@@ -954,70 +954,70 @@ namespace BlueBrick
 			enablePasteButton(enableMoveRotateButton);
 
 			// enable/disable the sub menu item Transform (only menu)
-			this.transformToolStripMenuItem.Enabled = enableMoveRotateButton;
+			transformToolStripMenuItem.Enabled = enableMoveRotateButton;
 
 			// enable/disable the snapping grid (toolbar and menu)
-			this.toolBarSnapGridButton.Enabled = enableMoveRotateButton;
-			this.moveStepToolStripMenuItem.Enabled = enableMoveRotateButton;
-			this.moveStepDisabledToolStripMenuItem.Enabled = enableMoveRotateButton;
-			this.moveStep32ToolStripMenuItem.Enabled = enableMoveRotateButton;
-			this.moveStep16ToolStripMenuItem.Enabled = enableMoveRotateButton;
-			this.moveStep8ToolStripMenuItem.Enabled = enableMoveRotateButton;
-			this.moveStep4ToolStripMenuItem.Enabled = enableMoveRotateButton;
-			this.moveStep2ToolStripMenuItem.Enabled = enableMoveRotateButton;
-			this.moveStep1ToolStripMenuItem.Enabled = enableMoveRotateButton;
-			this.moveStep05ToolStripMenuItem.Enabled = enableMoveRotateButton;
+			toolBarSnapGridButton.Enabled = enableMoveRotateButton;
+			moveStepToolStripMenuItem.Enabled = enableMoveRotateButton;
+			moveStepDisabledToolStripMenuItem.Enabled = enableMoveRotateButton;
+			moveStep32ToolStripMenuItem.Enabled = enableMoveRotateButton;
+			moveStep16ToolStripMenuItem.Enabled = enableMoveRotateButton;
+			moveStep8ToolStripMenuItem.Enabled = enableMoveRotateButton;
+			moveStep4ToolStripMenuItem.Enabled = enableMoveRotateButton;
+			moveStep2ToolStripMenuItem.Enabled = enableMoveRotateButton;
+			moveStep1ToolStripMenuItem.Enabled = enableMoveRotateButton;
+			moveStep05ToolStripMenuItem.Enabled = enableMoveRotateButton;
 
 			// enable/disable the rotation step (toolbar and menu)
-			this.toolBarRotationAngleButton.Enabled = enableMoveRotateButton;
-			this.rotationStepToolStripMenuItem.Enabled = enableMoveRotateButton;
-			this.rotationStep1ToolStripMenuItem.Enabled = enableMoveRotateButton;
-			this.rotationStep22ToolStripMenuItem.Enabled = enableMoveRotateButton;
-			this.rotationStep45ToolStripMenuItem.Enabled = enableMoveRotateButton;
-			this.rotationStep90ToolStripMenuItem.Enabled = enableMoveRotateButton;
+			toolBarRotationAngleButton.Enabled = enableMoveRotateButton;
+			rotationStepToolStripMenuItem.Enabled = enableMoveRotateButton;
+			rotationStep1ToolStripMenuItem.Enabled = enableMoveRotateButton;
+			rotationStep22ToolStripMenuItem.Enabled = enableMoveRotateButton;
+			rotationStep45ToolStripMenuItem.Enabled = enableMoveRotateButton;
+			rotationStep90ToolStripMenuItem.Enabled = enableMoveRotateButton;
 
 			// the toolbar is enabled either if there's a paint or ruler to enable
-			this.toolBarToolButton.Enabled = enablePaintButton || enableRulerButton;
+			toolBarToolButton.Enabled = enablePaintButton || enableRulerButton;
 
 			// enable/disable the paint button in the menu
-			this.paintToolToolStripMenuItem.Enabled = enablePaintButton;
-			this.paintToolEraseToolStripMenuItem.Enabled = enablePaintButton;
-			this.paintToolPaintToolStripMenuItem.Enabled = enablePaintButton;
-			this.paintToolChooseColorToolStripMenuItem.Enabled = enablePaintButton;			
+			paintToolToolStripMenuItem.Enabled = enablePaintButton;
+			paintToolEraseToolStripMenuItem.Enabled = enablePaintButton;
+			paintToolPaintToolStripMenuItem.Enabled = enablePaintButton;
+			paintToolChooseColorToolStripMenuItem.Enabled = enablePaintButton;			
 			// show/hide the paint button in the toolbar
-			this.paintToolStripMenuItem.Visible = enablePaintButton;
-			this.eraseToolStripMenuItem.Visible = enablePaintButton;
+			paintToolStripMenuItem.Visible = enablePaintButton;
+			eraseToolStripMenuItem.Visible = enablePaintButton;
 			// adjust the image of the main button
 			if (enablePaintButton)
 			{
 				if (LayerArea.IsCurrentToolTheEraser)
-					this.toolBarToolButton.Image = this.eraseToolStripMenuItem.Image;
+					toolBarToolButton.Image = eraseToolStripMenuItem.Image;
 				else
-					this.toolBarToolButton.Image = mPaintIcon;
+					toolBarToolButton.Image = mPaintIcon;
 			}
 
 			// enable/disable the ruler buttons in the menu
-			this.rulerToolToolStripMenuItem.Enabled = enableRulerButton;
-			this.selectAndEditToolStripMenuItem.Enabled = enableRulerButton;
-			this.addRulerToolStripMenuItem.Enabled = enableRulerButton;
-			this.addCircleToolStripMenuItem.Enabled = enableRulerButton;
+			rulerToolToolStripMenuItem.Enabled = enableRulerButton;
+			selectAndEditToolStripMenuItem.Enabled = enableRulerButton;
+			addRulerToolStripMenuItem.Enabled = enableRulerButton;
+			addCircleToolStripMenuItem.Enabled = enableRulerButton;
 			// show/hide the ruler button in the toolbar
-			this.rulerSelectAndEditToolStripMenuItem.Visible = enableRulerButton;
-			this.rulerAddRulerToolStripMenuItem.Visible = enableRulerButton;
-			this.rulerAddCircleToolStripMenuItem.Visible = enableRulerButton;
+			rulerSelectAndEditToolStripMenuItem.Visible = enableRulerButton;
+			rulerAddRulerToolStripMenuItem.Visible = enableRulerButton;
+			rulerAddCircleToolStripMenuItem.Visible = enableRulerButton;
 			// adjust the image of the main tool button
 			if (enableRulerButton)
 			{
 				switch (LayerRuler.CurrentEditTool)
 				{
 					case LayerRuler.EditTool.SELECT:
-						this.toolBarToolButton.Image = this.rulerSelectAndEditToolStripMenuItem.Image;
+						toolBarToolButton.Image = rulerSelectAndEditToolStripMenuItem.Image;
 						break;
 					case LayerRuler.EditTool.LINE:
-						this.toolBarToolButton.Image = this.rulerAddRulerToolStripMenuItem.Image;
+						toolBarToolButton.Image = rulerAddRulerToolStripMenuItem.Image;
 						break;
 					case LayerRuler.EditTool.CIRCLE:
-						this.toolBarToolButton.Image = this.rulerAddCircleToolStripMenuItem.Image;
+						toolBarToolButton.Image = rulerAddCircleToolStripMenuItem.Image;
 						break;
 				}
 			}
@@ -1032,73 +1032,73 @@ namespace BlueBrick
 		private void enableSnapGridButton(bool enable, float size)
 		{
 			// uncheck all the menu item
-			this.moveStep32ToolStripMenuItem.Checked = false;
-			this.moveStep16ToolStripMenuItem.Checked = false;
-			this.moveStep8ToolStripMenuItem.Checked = false;
-			this.moveStep4ToolStripMenuItem.Checked = false;
-			this.moveStep2ToolStripMenuItem.Checked = false;
-			this.moveStep1ToolStripMenuItem.Checked = false;
-			this.moveStep05ToolStripMenuItem.Checked = false;
+			moveStep32ToolStripMenuItem.Checked = false;
+			moveStep16ToolStripMenuItem.Checked = false;
+			moveStep8ToolStripMenuItem.Checked = false;
+			moveStep4ToolStripMenuItem.Checked = false;
+			moveStep2ToolStripMenuItem.Checked = false;
+			moveStep1ToolStripMenuItem.Checked = false;
+			moveStep05ToolStripMenuItem.Checked = false;
 			// uncheck all the toolbar item
-			this.toolBarGrid32Button.Checked = false;
-			this.toolBarGrid16Button.Checked = false;
-			this.toolBarGrid8Button.Checked = false;
-			this.toolBarGrid4Button.Checked = false;
-			this.toolBarGrid2Button.Checked = false;
-			this.toolBarGrid1Button.Checked = false;
-			this.toolBarGrid05Button.Checked = false;
+			toolBarGrid32Button.Checked = false;
+			toolBarGrid16Button.Checked = false;
+			toolBarGrid8Button.Checked = false;
+			toolBarGrid4Button.Checked = false;
+			toolBarGrid2Button.Checked = false;
+			toolBarGrid1Button.Checked = false;
+			toolBarGrid05Button.Checked = false;
 			// enable or disable the correct items
 			if (enable)
 			{
 				// menu
-				this.moveStepDisabledToolStripMenuItem.Checked = false;
+				moveStepDisabledToolStripMenuItem.Checked = false;
 				if (size == 32.0f)
 				{
-					this.moveStep32ToolStripMenuItem.Checked = true;
-					this.toolBarGrid32Button.Checked = true;
+					moveStep32ToolStripMenuItem.Checked = true;
+					toolBarGrid32Button.Checked = true;
 				}
 				else if (size == 16.0f)
 				{
-					this.moveStep16ToolStripMenuItem.Checked = true;
-					this.toolBarGrid16Button.Checked = true;
+					moveStep16ToolStripMenuItem.Checked = true;
+					toolBarGrid16Button.Checked = true;
 				}
 				else if (size == 8.0f)
 				{
-					this.moveStep8ToolStripMenuItem.Checked = true;
-					this.toolBarGrid8Button.Checked = true;
+					moveStep8ToolStripMenuItem.Checked = true;
+					toolBarGrid8Button.Checked = true;
 				}
 				else if (size == 4.0f)
 				{
-					this.moveStep4ToolStripMenuItem.Checked = true;
-					this.toolBarGrid4Button.Checked = true;
+					moveStep4ToolStripMenuItem.Checked = true;
+					toolBarGrid4Button.Checked = true;
 				}
 				else if (size == 2.0f)
 				{
-					this.moveStep2ToolStripMenuItem.Checked = true;
-					this.toolBarGrid2Button.Checked = true;
+					moveStep2ToolStripMenuItem.Checked = true;
+					toolBarGrid2Button.Checked = true;
 				}
 				else if (size == 1.0f)
 				{
-					this.moveStep1ToolStripMenuItem.Checked = true;
-					this.toolBarGrid1Button.Checked = true;
+					moveStep1ToolStripMenuItem.Checked = true;
+					toolBarGrid1Button.Checked = true;
 				}
 				else
 				{
-					this.moveStep05ToolStripMenuItem.Checked = true;
-					this.toolBarGrid05Button.Checked = true;
+					moveStep05ToolStripMenuItem.Checked = true;
+					toolBarGrid05Button.Checked = true;
 				}
 				// toolbar
-				this.toolBarSnapGridButton.DropDown.Enabled = true;
-				this.toolBarSnapGridButton.Image = BlueBrick.Properties.Resources.SnapGridOn;
+				toolBarSnapGridButton.DropDown.Enabled = true;
+				toolBarSnapGridButton.Image = Properties.Resources.SnapGridOn;
 				Layer.SnapGridEnabled = true;
 			}
 			else
 			{
 				// menu
-				this.moveStepDisabledToolStripMenuItem.Checked = true;
+				moveStepDisabledToolStripMenuItem.Checked = true;
 				// toolbar
-				this.toolBarSnapGridButton.DropDown.Enabled = false;
-				this.toolBarSnapGridButton.Image = BlueBrick.Properties.Resources.SnapGridOff;
+				toolBarSnapGridButton.DropDown.Enabled = false;
+				toolBarSnapGridButton.Image = Properties.Resources.SnapGridOff;
 				Layer.SnapGridEnabled = false;
 			}
 			// set the size
@@ -1114,31 +1114,31 @@ namespace BlueBrick
 		public void updateMapGeneralInfo(bool doesNeedToUpdateDimension)
 		{
 			// disable the UI event handlers
-			this.AuthorTextBox.Leave -= AuthorTextBox_Leave;
-			this.lugComboBox.Leave -= lugComboBox_Leave;
-			this.eventComboBox.Leave -= eventComboBox_Leave;
-			this.dateTimePicker.ValueChanged -= dateTimePicker_ValueChanged;
-			this.commentTextBox.Leave -= commentTextBox_Leave;
+			AuthorTextBox.Leave -= AuthorTextBox_Leave;
+			lugComboBox.Leave -= lugComboBox_Leave;
+			eventComboBox.Leave -= eventComboBox_Leave;
+			dateTimePicker.ValueChanged -= dateTimePicker_ValueChanged;
+			commentTextBox.Leave -= commentTextBox_Leave;
 
 			// update the back color of the background color button
-			this.DocumentDataPropertiesMapBackgroundColorButton.BackColor = Map.Instance.BackgroundColor;
+			DocumentDataPropertiesMapBackgroundColorButton.BackColor = Map.Instance.BackgroundColor;
 			// fill the text controls
-			this.AuthorTextBox.Text = Map.Instance.Author;
-			this.lugComboBox.Text = Map.Instance.LUG;
-			this.eventComboBox.Text = Map.Instance.Event;
-			this.dateTimePicker.Value = Map.Instance.Date;
+			AuthorTextBox.Text = Map.Instance.Author;
+			lugComboBox.Text = Map.Instance.LUG;
+			eventComboBox.Text = Map.Instance.Event;
+			dateTimePicker.Value = Map.Instance.Date;
 			char[] splitter = { '\n' };
-			this.commentTextBox.Lines = Map.Instance.Comment.Split(splitter);
+			commentTextBox.Lines = Map.Instance.Comment.Split(splitter);
 			// update also the map dimensions if needed
 			if (doesNeedToUpdateDimension)
 				updateMapDimensionInfo();
 
 			// re-enable the UI event handlers
-			this.AuthorTextBox.Leave += AuthorTextBox_Leave;
-			this.lugComboBox.Leave += lugComboBox_Leave;
-			this.eventComboBox.Leave += eventComboBox_Leave;
-			this.dateTimePicker.ValueChanged += dateTimePicker_ValueChanged;
-			this.commentTextBox.Leave += commentTextBox_Leave;
+			AuthorTextBox.Leave += AuthorTextBox_Leave;
+			lugComboBox.Leave += lugComboBox_Leave;
+			eventComboBox.Leave += eventComboBox_Leave;
+			dateTimePicker.ValueChanged += dateTimePicker_ValueChanged;
+			commentTextBox.Leave += commentTextBox_Leave;
 		}
 
 		/// <summary>
@@ -1147,10 +1147,10 @@ namespace BlueBrick
 		private void updateMapDimensionInfo()
 		{
 			// warn the map Panel that the map dimension may have changed
-			this.mapPanel.MapAreaChangedNotification();
+			mapPanel.MapAreaChangedNotification();
 
 			// ignore if the properties tab is not visible
-			if (this.DocumentDataTabControl.SelectedTab != this.DocumentDataPropertiesTabPage)
+			if (DocumentDataTabControl.SelectedTab != DocumentDataPropertiesTabPage)
 				return;
 
 			// compute the size
@@ -1158,40 +1158,40 @@ namespace BlueBrick
 			MapData.Tools.Distance width = new MapData.Tools.Distance(totalArea.Width, MapData.Tools.Distance.Unit.STUD);
 			MapData.Tools.Distance height = new MapData.Tools.Distance(totalArea.Height, MapData.Tools.Distance.Unit.STUD);
 
-			this.labelWidthModule.Text = Math.Ceiling(width.DistanceInModule).ToString();
-			this.labelHeightModule.Text = Math.Ceiling(height.DistanceInModule).ToString();
+			labelWidthModule.Text = Math.Ceiling(width.DistanceInModule).ToString();
+			labelHeightModule.Text = Math.Ceiling(height.DistanceInModule).ToString();
 
-			this.labelWidthStud.Text = Math.Round(width.DistanceInStud).ToString();
-			this.labelHeightStud.Text = Math.Round(height.DistanceInStud).ToString();
+			labelWidthStud.Text = Math.Round(width.DistanceInStud).ToString();
+			labelHeightStud.Text = Math.Round(height.DistanceInStud).ToString();
 
-			this.labelWidthMeter.Text = width.DistanceInMeter.ToString("N2");
-			this.labelHeightMeter.Text = height.DistanceInMeter.ToString("N2");
+			labelWidthMeter.Text = width.DistanceInMeter.ToString("N2");
+			labelHeightMeter.Text = height.DistanceInMeter.ToString("N2");
 
-			this.labelWidthFeet.Text = width.DistanceInFeet.ToString("N2");
-			this.labelHeightFeet.Text = height.DistanceInFeet.ToString("N2");
+			labelWidthFeet.Text = width.DistanceInFeet.ToString("N2");
+			labelHeightFeet.Text = height.DistanceInFeet.ToString("N2");
 		}
 
 		public void NotifyPartListForLayerAdded(Layer layer)
 		{
-			this.PartUsageListView.addLayerNotification(layer as LayerBrick);
+			PartUsageListView.addLayerNotification(layer as LayerBrick);
 		}
 
 		public void NotifyPartListForLayerRemoved(Layer layer)
 		{
-			this.PartUsageListView.removeLayerNotification(layer as LayerBrick);
+			PartUsageListView.removeLayerNotification(layer as LayerBrick);
 		}
 
 		public void NotifyPartListForLayerRenamed(Layer layer)
 		{
-			this.PartUsageListView.renameLayerNotification(layer as LayerBrick);
+			PartUsageListView.renameLayerNotification(layer as LayerBrick);
 		}
 
 		public void NotifyPartListForBrickAdded(LayerBrick layer, Layer.LayerItem brickOrGroup, bool isCausedByRegroup)
 		{
 			// inform the budget first, because the part usage also display the budget
 			Budget.Budget.Instance.addBrickNotification(layer, brickOrGroup, isCausedByRegroup);
-			this.PartUsageListView.addBrickNotification(layer, brickOrGroup, isCausedByRegroup);
-			this.PartsTabControl.updatePartCountAndBudget(brickOrGroup);
+			PartUsageListView.addBrickNotification(layer, brickOrGroup, isCausedByRegroup);
+			PartsTabControl.updatePartCountAndBudget(brickOrGroup);
 			// update the map dimensions
 			updateMapDimensionInfo();
 		}
@@ -1200,8 +1200,8 @@ namespace BlueBrick
 		{
 			// inform the budget first, because the part usage also display the budget
 			Budget.Budget.Instance.removeBrickNotification(layer, brickOrGroup, isCausedByUngroup);
-			this.PartUsageListView.removeBrickNotification(layer, brickOrGroup, isCausedByUngroup);
-			this.PartsTabControl.updatePartCountAndBudget(brickOrGroup);
+			PartUsageListView.removeBrickNotification(layer, brickOrGroup, isCausedByUngroup);
+			PartsTabControl.updatePartCountAndBudget(brickOrGroup);
 			// update the map dimensions
 			updateMapDimensionInfo();
 		}
@@ -1221,11 +1221,11 @@ namespace BlueBrick
 		public void NotifyForMapBackgroundColorChanged()
 		{
 			// update the back color of the background color button
-			this.DocumentDataPropertiesMapBackgroundColorButton.BackColor = Map.Instance.BackgroundColor;
+			DocumentDataPropertiesMapBackgroundColorButton.BackColor = Map.Instance.BackgroundColor;
 		}
 		public void NotifyForBudgetChanged(string partId)
 		{
-			this.PartUsageListView.updateBudgetNotification(partId);
+			PartUsageListView.updateBudgetNotification(partId);
 		}
 		#endregion
 
@@ -1234,7 +1234,7 @@ namespace BlueBrick
 		public void setStatusBarMessage(string message)
 		{
 			// escape the ampersome character
-			this.statusBarLabel.Text = message.Replace("&", "&&");
+			statusBarLabel.Text = message.Replace("&", "&&");
 		}
 
 		public void resetProgressBar(int maxValue)
@@ -1243,11 +1243,11 @@ namespace BlueBrick
 			{
 				if (maxValue > 0)
 				{
-					this.statusBarProgressBar.Step = 1;
-					this.statusBarProgressBar.Minimum = 0;
-					this.statusBarProgressBar.Maximum = maxValue;
-					this.statusBarProgressBar.Value = 0;
-					this.statusBarProgressBar.Visible = true;
+					statusBarProgressBar.Step = 1;
+					statusBarProgressBar.Minimum = 0;
+					statusBarProgressBar.Maximum = maxValue;
+					statusBarProgressBar.Value = 0;
+					statusBarProgressBar.Visible = true;
 				}
 			}
 			catch
@@ -1261,10 +1261,10 @@ namespace BlueBrick
 			try
 			{
 				// perform the step
-				this.statusBarProgressBar.PerformStep();
+				statusBarProgressBar.PerformStep();
 				// hide automatically the progress bar when the end is reached
-				if (this.statusBarProgressBar.Value >= this.statusBarProgressBar.Maximum)
-					this.statusBarProgressBar.Visible = false;
+				if (statusBarProgressBar.Value >= statusBarProgressBar.Maximum)
+					statusBarProgressBar.Visible = false;
 			}
 			catch
 			{
@@ -1278,7 +1278,7 @@ namespace BlueBrick
 			{
 				if (stepValue > 0)
 				{
-					this.statusBarProgressBar.Step = stepValue;
+					statusBarProgressBar.Step = stepValue;
 					stepProgressBar();
 				}
 			}
@@ -1292,9 +1292,9 @@ namespace BlueBrick
 		{
 			try
 			{
-				if (this.statusBarProgressBar.Value < this.statusBarProgressBar.Maximum)
+				if (statusBarProgressBar.Value < statusBarProgressBar.Maximum)
 				{
-					this.statusBarProgressBar.Step = this.statusBarProgressBar.Maximum - this.statusBarProgressBar.Value;
+					statusBarProgressBar.Step = statusBarProgressBar.Maximum - statusBarProgressBar.Value;
 					stepProgressBar();
 				}
 			}
@@ -1321,8 +1321,8 @@ namespace BlueBrick
 				// if the user can cancel the application close, give him 3 buttons yes/no/cancel,
 				// else give him only 2 buttons yes/no:
 				DialogResult result = MessageBox.Show(this,
-					BlueBrick.Properties.Resources.ErrorMsgMapWasModified,
-					BlueBrick.Properties.Resources.ErrorMsgTitleWarning,
+                    Properties.Resources.ErrorMsgMapWasModified,
+                    Properties.Resources.ErrorMsgTitleWarning,
 					mCanUserCancelTheApplicationClose ? MessageBoxButtons.YesNoCancel : MessageBoxButtons.YesNo,
 					MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
 
@@ -1348,17 +1348,17 @@ namespace BlueBrick
 		{
 			// create a new map to trash the previous one
 			Map.Instance = new Map();
-			Layer.resetNameInstanceCounter();
+			Layer.ResetNameInstanceCounter();
 			ActionManager.Instance.clearStacks();
 			// reset the modified flag
 			Map.Instance.WasModified = false;
 			// reset the current file name
 			changeCurrentMapFileName(Properties.Resources.DefaultSaveFileName, false);
 			// update the view any way
-            this.updateView(Actions.Action.UpdateViewType.FULL, Actions.Action.UpdateViewType.FULL);
+            updateView(Actions.Action.UpdateViewType.FULL, Actions.Action.UpdateViewType.FULL);
 			Budget.Budget.Instance.recountAllBricks();
-			this.PartUsageListView.rebuildList();
-			this.PartsTabControl.updateAllPartCountAndBudget();
+			PartUsageListView.rebuildList();
+			PartsTabControl.updateAllPartCountAndBudget();
 			// update the properties
 			updateMapGeneralInfo(true);
 			// force a garbage collect because we just trashed the previous map
@@ -1388,7 +1388,7 @@ namespace BlueBrick
 			// (and before the update of the title bar)
 			Map.Instance.WasModified = false;
 			// update the view any way
-            this.updateView(Actions.Action.UpdateViewType.FULL, Actions.Action.UpdateViewType.FULL);
+            updateView(Actions.Action.UpdateViewType.FULL, Actions.Action.UpdateViewType.FULL);
 		}
 
 		private void newToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1410,9 +1410,9 @@ namespace BlueBrick
 		private void openMap(string filename, bool isTemplateFile = false)
 		{
 			// set the wait cursor
-			this.Cursor = Cursors.WaitCursor;
+			Cursor = Cursors.WaitCursor;
 			// reset the action stacks and layer counter
-			Layer.resetNameInstanceCounter();
+			Layer.ResetNameInstanceCounter();
 			ActionManager.Instance.clearStacks();
 			BrickLibrary.Instance.WereUnknownBricksAdded = false;
 			// load the file
@@ -1420,22 +1420,22 @@ namespace BlueBrick
 			if (isFileValid)
 			{
 				// move the view to center of the map
-				this.mapPanel.MoveViewToMapCenter();
+				mapPanel.MoveViewToMapCenter();
 				// update the view
-				this.updateView(Actions.Action.UpdateViewType.FULL, Actions.Action.UpdateViewType.FULL);
+				updateView(Actions.Action.UpdateViewType.FULL, Actions.Action.UpdateViewType.FULL);
 				Budget.Budget.Instance.recountAllBricks();
-				this.PartUsageListView.rebuildList();
-				this.PartsTabControl.updateAllPartCountAndBudget();
+				PartUsageListView.rebuildList();
+				PartsTabControl.updateAllPartCountAndBudget();
 				// update the properties
 				updateMapGeneralInfo(true);
 				//check if some parts were missing in the library for displaying a warning message
 				if (BrickLibrary.Instance.WereUnknownBricksAdded)
 				{
 					// restore the cursor before displaying the error message box
-					this.Cursor = Cursors.Default;
-					string message = BlueBrick.Properties.Resources.ErrorMsgMissingParts.Replace("&", Map.Instance.Author);
+					Cursor = Cursors.Default;
+					string message = Properties.Resources.ErrorMsgMissingParts.Replace("&", Map.Instance.Author);
 					MessageBox.Show(this, message,
-						BlueBrick.Properties.Resources.ErrorMsgTitleWarning, MessageBoxButtons.OK,
+                        Properties.Resources.ErrorMsgTitleWarning, MessageBoxButtons.OK,
 						MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
 				}
 			}
@@ -1445,7 +1445,7 @@ namespace BlueBrick
 				finishProgressBar();
 			}
 			// restore the cursor after loading
-			this.Cursor = Cursors.Default;
+			Cursor = Cursors.Default;
 			// save the current file name of the loaded map
 			if (isFileValid && !isTemplateFile)
 				changeCurrentMapFileName(filename, true);
@@ -1463,9 +1463,9 @@ namespace BlueBrick
 			// check if the current map is not save and display a warning message
 			if (checkForUnsavedMap())
 			{
-				DialogResult result = this.openFileDialog.ShowDialog();
+				DialogResult result = openFileDialog.ShowDialog();
 				if (result == DialogResult.OK)
-					openMap(this.openFileDialog.FileName);
+					openMap(openFileDialog.FileName);
 			}
 		}
 
@@ -1483,7 +1483,7 @@ namespace BlueBrick
 		private void UpdateRecentFileMenuFromConfigFile(string fileName, bool isAdded)
 		{
 			// get a reference on the list
-			System.Collections.Specialized.StringCollection recentFiles = BlueBrick.Properties.Settings.Default.RecentFiles;
+			System.Collections.Specialized.StringCollection recentFiles = Properties.Settings.Default.RecentFiles;
 			// first update the settings
 			// remove the file from this list since it will be re-added (or not) on top of the list
 			recentFiles.Remove(fileName);
@@ -1493,20 +1493,20 @@ namespace BlueBrick
 			// if the maximum files is reached, we delete the last one (the old one)
 			if (recentFiles.Count > 20)
 				recentFiles.RemoveAt(20);
-			// In order to save the change we need to recreate the list due to a Mono BUG:
-			// if you just modify the list in the default settings, Mono didn't detect it and think no modification
-			// was made, therefore the Save() method does nothing (don't save the modified list)
-			// Moreover, if you just try to assign the recentFile list to Default.RecentFiles an exception is raised
-			// because I guess it references the same list.
-			// Moreover the Specialized.StringCollection class do not have a constructor to clone the list.
-			// Therefore the only way is to recreate an empty list and fill it again. While doing it I clean it
-			// a bit by removing the empty string (because the list is initiallized with empty string)
-			BlueBrick.Properties.Settings.Default.RecentFiles = new System.Collections.Specialized.StringCollection();
+            // In order to save the change we need to recreate the list due to a Mono BUG:
+            // if you just modify the list in the default settings, Mono didn't detect it and think no modification
+            // was made, therefore the Save() method does nothing (don't save the modified list)
+            // Moreover, if you just try to assign the recentFile list to Default.RecentFiles an exception is raised
+            // because I guess it references the same list.
+            // Moreover the Specialized.StringCollection class do not have a constructor to clone the list.
+            // Therefore the only way is to recreate an empty list and fill it again. While doing it I clean it
+            // a bit by removing the empty string (because the list is initiallized with empty string)
+            Properties.Settings.Default.RecentFiles = new System.Collections.Specialized.StringCollection();
 			foreach (string name in recentFiles)
 				if (name.Length > 0)
-					BlueBrick.Properties.Settings.Default.RecentFiles.Add(name);
-			// save the change
-			BlueBrick.Properties.Settings.Default.Save();
+                    Properties.Settings.Default.RecentFiles.Add(name);
+            // save the change
+            Properties.Settings.Default.Save();
 			// then update the menu item list
 			UpdateRecentFileMenuFromConfigFile();
 		}
@@ -1516,24 +1516,26 @@ namespace BlueBrick
 			// clear the list of recent files
 			openRecentToolStripMenuItem.DropDownItems.Clear();
 			// if the list is not empty, populate the menu
-			foreach (string fileName in BlueBrick.Properties.Settings.Default.RecentFiles)
+			foreach (string fileName in Properties.Settings.Default.RecentFiles)
 			{
 				// check if the filename is valid
 				if (fileName.Length > 0)
 				{
-					ToolStripMenuItem item = new ToolStripMenuItem();
-					item.Tag = fileName;
-					item.Text = System.IO.Path.GetFileName(fileName);
-					item.ToolTipText = fileName; // to display the full path as tooltip
-					item.Click += new EventHandler(OpenRecentFileMenuItem_Click);
+                    ToolStripMenuItem item = new ToolStripMenuItem
+                    {
+                        Tag = fileName,
+                        Text = Path.GetFileName(fileName),
+                        ToolTipText = fileName // to display the full path as tooltip
+                    };
+                    item.Click += new EventHandler(OpenRecentFileMenuItem_Click);
 					openRecentToolStripMenuItem.DropDownItems.Add(item);
 				}
 				// stop adding files if we reach the maximum number to display
-				if (openRecentToolStripMenuItem.DropDownItems.Count >= BlueBrick.Properties.Settings.Default.MaxRecentFilesNum)
+				if (openRecentToolStripMenuItem.DropDownItems.Count >= Properties.Settings.Default.MaxRecentFilesNum)
 					break;
 			}
 			// enable the Open Recent menu item if we have some recent files
-			openRecentToolStripMenuItem.Enabled = (openRecentToolStripMenuItem.DropDownItems.Count > 0);
+			openRecentToolStripMenuItem.Enabled = openRecentToolStripMenuItem.DropDownItems.Count > 0;
 		}
 
 		/// <summary>
@@ -1543,7 +1545,7 @@ namespace BlueBrick
 		private bool saveNamedMap()
 		{
 			// set the wait cursor
-			this.Cursor = Cursors.WaitCursor;
+			Cursor = Cursors.WaitCursor;
 			// save the file
             bool saveDone = SaveLoadManager.save(Map.Instance.MapFileName);
 			if (saveDone)
@@ -1552,10 +1554,10 @@ namespace BlueBrick
 				// (and before the update of the title bar)
 				Map.Instance.WasModified = false;
 				// update the title bar to remove the asterix
-				this.updateTitleBar();
+				updateTitleBar();
 			}
 			// restore the cursor
-			this.Cursor = Cursors.Default;
+			Cursor = Cursors.Default;
 			// return the save status
 			return saveDone;
 		}
@@ -1566,11 +1568,11 @@ namespace BlueBrick
 		/// <returns>true if the map was correctly saved</returns>
 		private bool saveMap()
 		{
-			// a flag to know if the save was correctly done or not
-			bool saveDone = false;
+            // a flag to know if the save was correctly done or not
+            bool saveDone;
 
-			// if the current file name is not defined we do a "save as..."
-			if (Map.Instance.IsMapNameValid)
+            // if the current file name is not defined we do a "save as..."
+            if (Map.Instance.IsMapNameValid)
 				saveDone = saveNamedMap();
 			else
 				saveDone = saveMapAs();
@@ -1590,20 +1592,20 @@ namespace BlueBrick
 			// put the current file name in the dialog (which can be the default one)
 			// but remove the extension, such as the user can easily change the extension in
 			// the save dialog drop list, and the save dialog will add it automatically
-            this.saveFileDialog.FileName = Path.GetFileNameWithoutExtension(Map.Instance.MapFileName);
+            saveFileDialog.FileName = Path.GetFileNameWithoutExtension(Map.Instance.MapFileName);
             // if there's no initial directory, choose the My Documents directory
-            this.saveFileDialog.InitialDirectory = Path.GetDirectoryName(Map.Instance.MapFileName);
-            if (this.saveFileDialog.InitialDirectory.Length == 0)
-                this.saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            saveFileDialog.InitialDirectory = Path.GetDirectoryName(Map.Instance.MapFileName);
+            if (saveFileDialog.InitialDirectory.Length == 0)
+                saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 			// instantiate a flag to know if the save was actually done
 			bool saveDone = false;
 			// open the save as dialog
-			DialogResult result = this.saveFileDialog.ShowDialog();
+			DialogResult result = saveFileDialog.ShowDialog();
 			if (result == DialogResult.OK)
 			{
 				// for a "Save As..." only (not for a save), we check if the user choose a LDRAW or TDL format
 				// to display a warning message, that he will lost data
-				string filenameLower = this.saveFileDialog.FileName.ToLower();
+				string filenameLower = saveFileDialog.FileName.ToLower();
 				if (Properties.Settings.Default.DisplayWarningMessageForNotSavingInBBM && !filenameLower.EndsWith("bbm"))
 				{
 					// use a local variable to get the value of the checkbox, by default we don't suggest the user to hide it
@@ -1624,12 +1626,12 @@ namespace BlueBrick
 				}
 
 				// change the current file name before calling the save
-				changeCurrentMapFileName(this.saveFileDialog.FileName, true);
+				changeCurrentMapFileName(saveFileDialog.FileName, true);
 				// save the map
 				saveDone = saveNamedMap();
 				// update the recent file list with the new file saved (if correctly saved)
 				if (saveDone)
-					UpdateRecentFileMenuFromConfigFile(this.saveFileDialog.FileName, true);
+					UpdateRecentFileMenuFromConfigFile(saveFileDialog.FileName, true);
 			}
 			// return the flag to know if the save was done
 			return saveDone;
@@ -1655,33 +1657,32 @@ namespace BlueBrick
 				// if some export options (at least the first one) were validated, we need to update the view
 				// to set the little "*" after the name of the file in the title bar, because the export options
 				// have been saved in the map, therefore the map was modified.
-				this.updateTitleBar();
+				updateTitleBar();
 			}
 		}
 
 		private void exportPartListToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			// open the save file dialog
-			DialogResult result = this.exportPartListFileDialog.ShowDialog();
+			DialogResult result = exportPartListFileDialog.ShowDialog();
 			if (result == DialogResult.OK)
-				this.PartUsageListView.export(this.exportPartListFileDialog.FileName);
+				PartUsageListView.export(exportPartListFileDialog.FileName);
 		}
 
 		private void reloadPartLibraryToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			// try to unload the part library, if sucessful continue
-			string mapFileNameToReload = null;
-			if (unloadPartLibrary(out mapFileNameToReload))
-			{
-				// then display a waiting message box, giving the user the oppotunity to change the data before reloading
-				MessageBox.Show(this, BlueBrick.Properties.Resources.ErrorMsgReadyToReloadPartLib,
-					BlueBrick.Properties.Resources.ErrorMsgTitleWarning, MessageBoxButtons.OK,
-					MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+            // try to unload the part library, if sucessful continue
+            if (unloadPartLibrary(out string mapFileNameToReload))
+            {
+                // then display a waiting message box, giving the user the oppotunity to change the data before reloading
+                MessageBox.Show(this, Properties.Resources.ErrorMsgReadyToReloadPartLib,
+                    Properties.Resources.ErrorMsgTitleWarning, MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
 
-				// reload the part library when the user close the message box
-				reloadPartLibrary(mapFileNameToReload);
-			}
-		}
+                // reload the part library when the user close the message box
+                reloadPartLibrary(mapFileNameToReload);
+            }
+        }
 
 		private bool unloadPartLibrary(out string mapFileNameToReload)
 		{
@@ -1703,7 +1704,7 @@ namespace BlueBrick
 				savePartLibUISettingInDefaultSettings();
 
 				// then clear the part lib panel and the brick library (before creating the new map)
-				this.PartsTabControl.clearAllData();
+				PartsTabControl.clearAllData();
 				BrickLibrary.Instance.ClearAllData();
 
 				// destroy the current map
@@ -1723,9 +1724,9 @@ namespace BlueBrick
 		private void reloadPartLibrary(string mapFileNameToReload)
 		{
 			// then reload the library
-			this.Cursor = Cursors.WaitCursor;
+			Cursor = Cursors.WaitCursor;
 			loadPartLibraryFromDisk();
-			this.Cursor = Cursors.Default;
+			Cursor = Cursors.Default;
 
 			// Update the budget: most of the time the budget text for the item are correct (cause correctly set during creation)
 			// however, the user may have rename a part just before reloading the part lib, 
@@ -1733,9 +1734,9 @@ namespace BlueBrick
 			if (Budget.Budget.Instance.updatePartId())
 			{
 				// update the count and budget
-				this.PartsTabControl.updateAllPartCountAndBudget();
+				PartsTabControl.updateAllPartCountAndBudget();
 				// update the part lib view filtering on budget (because the renamed items may appear/disappear)
-				this.PartsTabControl.updateFilterOnBudgetedParts();
+				PartsTabControl.updateFilterOnBudgetedParts();
 			}
 
 			// finally reload the previous map or create a new one
@@ -1777,61 +1778,60 @@ namespace BlueBrick
 				if (successfullyDownloadedFiles.Count > 0)
 				{
 					// display a warning message and reload the library
-					MessageBox.Show(this, BlueBrick.Properties.Resources.ErrorMsgNeedToReloadPartLib,
-									BlueBrick.Properties.Resources.ErrorMsgTitleWarning, MessageBoxButtons.OK,
+					MessageBox.Show(this, Properties.Resources.ErrorMsgNeedToReloadPartLib,
+                                    Properties.Resources.ErrorMsgTitleWarning, MessageBoxButtons.OK,
 									MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
 
-					// after the user close the message box, unload, install and reload the library
-					string mapFileNameToReload = null;
-					if (unloadPartLibrary(out mapFileNameToReload))
-					{
-						// a string to get the part folder
-						string partsFolder = Application.StartupPath + @"/parts";
-						foreach (DownloadCenterForm.DownloadableFileInfo filePackageToInstall in successfullyDownloadedFiles)
-						{
-							try
-							{
-								// get the current folder of the library
-								string currentPackageFolderName = partsFolder + @"/" + filePackageToInstall.FileName;
-								currentPackageFolderName = currentPackageFolderName.Remove(currentPackageFolderName.Length - 4);
-								// check if the package already exists, and delete it in that case.
-								// give several chance to user in case this directory is locked
-								DialogResult result = DialogResult.Retry;
-								while ((result == DialogResult.Retry) && Directory.Exists(currentPackageFolderName))
-								{
-									try
-									{
-										Directory.Delete(currentPackageFolderName, true);
-									}
-									catch (IOException ioe)
-									{
-										// display a warning message and reload the library
-										result = MessageBox.Show(this, BlueBrick.Properties.Resources.ErrorMsgExceptionWhenDeletingPartLib.Replace("&&", ioe.Message).Replace("&", filePackageToInstall.FileName),
-														BlueBrick.Properties.Resources.ErrorMsgTitleError, MessageBoxButtons.AbortRetryIgnore,
-														MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
-									}
-								}
-								// check if user aborted the library installation, in that case break the loop to stop the install
-								// else if he ignore, then skip that package and continue with the other packages
-								if (result == DialogResult.Abort)
-									break;
-								else if (result == DialogResult.Ignore)
-									continue;
-								// unzip the new archive
-								string zipFileName = Application.StartupPath + filePackageToInstall.DestinationFolder;
-								ZipFile.ExtractToDirectory(zipFileName, partsFolder);
-								// then delete the archive
-								File.Delete(zipFileName);
-							}
-							catch
-							{
-							}
-						}
+                    // after the user close the message box, unload, install and reload the library
+                    if (unloadPartLibrary(out string mapFileNameToReload))
+                    {
+                        // a string to get the part folder
+                        string partsFolder = Application.StartupPath + @"/parts";
+                        foreach (DownloadCenterForm.DownloadableFileInfo filePackageToInstall in successfullyDownloadedFiles)
+                        {
+                            try
+                            {
+                                // get the current folder of the library
+                                string currentPackageFolderName = partsFolder + @"/" + filePackageToInstall.FileName;
+                                currentPackageFolderName = currentPackageFolderName.Remove(currentPackageFolderName.Length - 4);
+                                // check if the package already exists, and delete it in that case.
+                                // give several chance to user in case this directory is locked
+                                DialogResult result = DialogResult.Retry;
+                                while ((result == DialogResult.Retry) && Directory.Exists(currentPackageFolderName))
+                                {
+                                    try
+                                    {
+                                        Directory.Delete(currentPackageFolderName, true);
+                                    }
+                                    catch (IOException ioe)
+                                    {
+                                        // display a warning message and reload the library
+                                        result = MessageBox.Show(this, Properties.Resources.ErrorMsgExceptionWhenDeletingPartLib.Replace("&&", ioe.Message).Replace("&", filePackageToInstall.FileName),
+                                                        Properties.Resources.ErrorMsgTitleError, MessageBoxButtons.AbortRetryIgnore,
+                                                        MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                                    }
+                                }
+                                // check if user aborted the library installation, in that case break the loop to stop the install
+                                // else if he ignore, then skip that package and continue with the other packages
+                                if (result == DialogResult.Abort)
+                                    break;
+                                else if (result == DialogResult.Ignore)
+                                    continue;
+                                // unzip the new archive
+                                string zipFileName = Application.StartupPath + filePackageToInstall.DestinationFolder;
+                                ZipFile.ExtractToDirectory(zipFileName, partsFolder);
+                                // then delete the archive
+                                File.Delete(zipFileName);
+                            }
+                            catch
+                            {
+                            }
+                        }
 
-						// reload the part library when the user close the message box
-						reloadPartLibrary(mapFileNameToReload);
-					}
-				}
+                        // reload the part library when the user close the message box
+                        reloadPartLibrary(mapFileNameToReload);
+                    }
+                }
 			}
 		}
 
@@ -1842,7 +1842,7 @@ namespace BlueBrick
 			DialogResult result = form.ShowDialog();
 			// check if we need to update the part lib
 			if ((result == DialogResult.OK) && (form.NewXmlFilesToLoad.Count > 0))
-				this.PartsTabControl.loadAdditionnalGroups(form.NewXmlFilesToLoad, form.NewGroupName);
+				PartsTabControl.loadAdditionnalGroups(form.NewXmlFilesToLoad, form.NewGroupName);
         }
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1851,7 +1851,7 @@ namespace BlueBrick
 			// in order to catch all the path to close the application
 			// (such as Alt+F4, the cross button in the title bar, the Close item
 			// in the menu of the title bar, etc...)
-			this.Close();
+			Close();
 		}
 
 		private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -1877,34 +1877,34 @@ namespace BlueBrick
 		{
 			// reinit undo/redo menu with the correct language
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-			resources.ApplyResources(this.undoToolStripMenuItem, "undoToolStripMenuItem");
-			resources.ApplyResources(this.redoToolStripMenuItem, "redoToolStripMenuItem");
+			resources.ApplyResources(undoToolStripMenuItem, "undoToolStripMenuItem");
+			resources.ApplyResources(redoToolStripMenuItem, "redoToolStripMenuItem");
 
 			// check if the undo stack is empty or not
 			string actionName = ActionManager.Instance.getUndoableActionName();
-			this.undoToolStripMenuItem.Enabled = (actionName != null);
+			undoToolStripMenuItem.Enabled = actionName != null;
 			if (actionName != null)
-				this.undoToolStripMenuItem.Text += " \"" + actionName + "\"";
+				undoToolStripMenuItem.Text += " \"" + actionName + "\"";
 			
 			// check if the redo stack is empty or not
 			actionName = ActionManager.Instance.getRedoableActionName();
-			this.redoToolStripMenuItem.Enabled = (actionName != null);
+			redoToolStripMenuItem.Enabled = actionName != null;
 			if (actionName != null)
-				this.redoToolStripMenuItem.Text += " \"" + actionName + "\"";
+				redoToolStripMenuItem.Text += " \"" + actionName + "\"";
 
 			// the undo toolbar button
-			this.toolBarUndoButton.Enabled = this.undoToolStripMenuItem.Enabled;
-			this.toolBarUndoButton.DropDownItems.Clear();
-			string[] actionNameList = ActionManager.Instance.getUndoActionNameList(BlueBrick.Properties.Settings.Default.UndoStackDisplayedDepth);
+			toolBarUndoButton.Enabled = undoToolStripMenuItem.Enabled;
+			toolBarUndoButton.DropDownItems.Clear();
+			string[] actionNameList = ActionManager.Instance.getUndoActionNameList(Properties.Settings.Default.UndoStackDisplayedDepth);
 			foreach (string action in actionNameList)
-				this.toolBarUndoButton.DropDownItems.Add(action);
+				toolBarUndoButton.DropDownItems.Add(action);
 
 			// the redo toolbar button
-			this.toolBarRedoButton.Enabled = this.redoToolStripMenuItem.Enabled;
-			this.toolBarRedoButton.DropDownItems.Clear();
-			actionNameList = ActionManager.Instance.getRedoActionNameList(BlueBrick.Properties.Settings.Default.UndoStackDisplayedDepth);
+			toolBarRedoButton.Enabled = redoToolStripMenuItem.Enabled;
+			toolBarRedoButton.DropDownItems.Clear();
+			actionNameList = ActionManager.Instance.getRedoActionNameList(Properties.Settings.Default.UndoStackDisplayedDepth);
 			foreach (string action in actionNameList)
-				this.toolBarRedoButton.DropDownItems.Add(action);
+				toolBarRedoButton.DropDownItems.Add(action);
 		}
 
 		private void undoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1924,7 +1924,7 @@ namespace BlueBrick
 			if ((selectedLayer != null) && (selectedLayer.SelectedObjects.Count > 0))
 			{
 				// a cut is a copy followed by a delete
-				selectedLayer.copyCurrentSelectionToClipboard();
+				selectedLayer.CopyCurrentSelectionToClipboard();
 				deleteToolStripMenuItem_Click(sender, e);
 			}
 		}
@@ -1935,37 +1935,36 @@ namespace BlueBrick
 			Layer selectedLayer = Map.Instance.SelectedLayer;
 			// then call the funcion to copy the selection on the selected layer
 			if (selectedLayer != null)
-				selectedLayer.copyCurrentSelectionToClipboard();
+				selectedLayer.CopyCurrentSelectionToClipboard();
 		}
 
 		private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			// first get the current selected layer
 			Layer selectedLayer = Map.Instance.SelectedLayer;
-			// call the paste method on the selected layer, and display an error if the paste was not possible
-			string itemTypeName = "";
-			Layer.AddActionInHistory addInHistory = Layer.AddActionInHistory.ADD_TO_HISTORY;
-			if (!selectedLayer.pasteClipboardInLayer(Layer.AddOffsetAfterPaste.USE_SETTINGS_RULE, out itemTypeName, ref addInHistory))
-			{
-				// we have a type mismatch
-				if (Properties.Settings.Default.DisplayWarningMessageForPastingOnWrongLayer)
-				{
-					// first replace the layer type name
-					string message = Properties.Resources.ErrorMsgCanNotPaste.Replace("&&", selectedLayer.LocalizedTypeName);
-					// then replace the item type name
-					message = message.Replace("&", itemTypeName);
-					// and display the message box
-					bool dontDisplayMessageAgain = false;
-					ForgetableMessageBox.Show(this, message, Properties.Resources.ErrorMsgTitleError, MessageBoxButtons.OK,
-									MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, ref dontDisplayMessageAgain);
-					Properties.Settings.Default.DisplayWarningMessageForPastingOnWrongLayer = !dontDisplayMessageAgain;
-				}
-				else
-				{
-					System.Media.SystemSounds.Beep.Play();
-				}
-			}
-		}
+            Layer.AddActionInHistory addInHistory = Layer.AddActionInHistory.ADD_TO_HISTORY;
+            // call the paste method on the selected layer, and display an error if the paste was not possible
+            if (!selectedLayer.PasteClipboardInLayer(Layer.AddOffsetAfterPaste.USE_SETTINGS_RULE, out string itemTypeName, ref addInHistory))
+            {
+                // we have a type mismatch
+                if (Properties.Settings.Default.DisplayWarningMessageForPastingOnWrongLayer)
+                {
+                    // first replace the layer type name
+                    string message = Properties.Resources.ErrorMsgCanNotPaste.Replace("&&", selectedLayer.LocalizedTypeName);
+                    // then replace the item type name
+                    message = message.Replace("&", itemTypeName);
+                    // and display the message box
+                    bool dontDisplayMessageAgain = false;
+                    ForgetableMessageBox.Show(this, message, Properties.Resources.ErrorMsgTitleError, MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, ref dontDisplayMessageAgain);
+                    Properties.Settings.Default.DisplayWarningMessageForPastingOnWrongLayer = !dontDisplayMessageAgain;
+                }
+                else
+                {
+                    System.Media.SystemSounds.Beep.Play();
+                }
+            }
+        }
 
 		private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
 		{
@@ -1986,7 +1985,7 @@ namespace BlueBrick
 		{
 			FindForm findForm = new FindForm();
 			findForm.ShowDialog(this);
-			this.mapPanel.Invalidate();
+			mapPanel.Invalidate();
 		}
 
 		public void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1995,8 +1994,8 @@ namespace BlueBrick
 			Layer selectedLayer = Map.Instance.SelectedLayer;
 			if (selectedLayer != null)
 			{
-				selectedLayer.selectAll();
-				this.mapPanel.Invalidate();
+				selectedLayer.SelectAll();
+				mapPanel.Invalidate();
 			}
 		}
 
@@ -2005,8 +2004,8 @@ namespace BlueBrick
 			Layer selectedLayer = Map.Instance.SelectedLayer;
 			if ((selectedLayer != null) && (selectedLayer.SelectedObjects.Count > 0))
 			{
-				selectedLayer.clearSelection();
-				this.mapPanel.Invalidate();
+				selectedLayer.ClearSelection();
+				mapPanel.Invalidate();
 			}
 		}
 
@@ -2022,8 +2021,8 @@ namespace BlueBrick
 					// if AStar found a path, select the path
 					if (brickToSelect.Count > 0)
 					{
-						selectedLayer.addObjectInSelection(brickToSelect);
-						this.mapPanel.Invalidate();
+						selectedLayer.AddObjectInSelection(brickToSelect);
+						mapPanel.Invalidate();
 					}
 				}
 			}
@@ -2035,8 +2034,8 @@ namespace BlueBrick
 			if ((selectedLayer != null) && (selectedLayer.SelectedObjects.Count > 0)
 				&& ((selectedLayer is LayerBrick) || (selectedLayer is LayerText) || (selectedLayer is LayerRuler)))
             {
-				Actions.Items.GroupItems groupAction = new BlueBrick.Actions.Items.GroupItems(selectedLayer.SelectedObjects, selectedLayer);
-                Actions.ActionManager.Instance.doAction(groupAction);
+				Actions.Items.GroupItems groupAction = new Actions.Items.GroupItems(selectedLayer.SelectedObjects, selectedLayer);
+                ActionManager.Instance.doAction(groupAction);
             }
 		}
 
@@ -2046,8 +2045,8 @@ namespace BlueBrick
 			if ((selectedLayer != null) && (selectedLayer.SelectedObjects.Count > 0)
 				&& ((selectedLayer is LayerBrick) || (selectedLayer is LayerText) || (selectedLayer is LayerRuler)))
 			{
-				Actions.Items.UngroupItems ungroupAction = new BlueBrick.Actions.Items.UngroupItems(selectedLayer.SelectedObjects, selectedLayer);
-                Actions.ActionManager.Instance.doAction(ungroupAction);
+				Actions.Items.UngroupItems ungroupAction = new Actions.Items.UngroupItems(selectedLayer.SelectedObjects, selectedLayer);
+                ActionManager.Instance.doAction(ungroupAction);
             }
         }
 
@@ -2162,10 +2161,10 @@ namespace BlueBrick
 		private void updateRotationStepButton(float angle)
 		{
 			// toolbar and menu
-			this.toolBarAngle90Button.Checked = this.rotationStep90ToolStripMenuItem.Checked = (angle == 90.0f);
-			this.toolBarAngle45Button.Checked = this.rotationStep45ToolStripMenuItem.Checked = (angle == 45.0f);
-			this.toolBarAngle22Button.Checked = this.rotationStep22ToolStripMenuItem.Checked = (angle == 22.5f);
-			this.toolBarAngle1Button.Checked = this.rotationStep1ToolStripMenuItem.Checked = (angle == 1.0f);
+			toolBarAngle90Button.Checked = rotationStep90ToolStripMenuItem.Checked = angle == 90.0f;
+			toolBarAngle45Button.Checked = rotationStep45ToolStripMenuItem.Checked = angle == 45.0f;
+			toolBarAngle22Button.Checked = rotationStep22ToolStripMenuItem.Checked = angle == 22.5f;
+			toolBarAngle1Button.Checked = rotationStep1ToolStripMenuItem.Checked = angle == 1.0f;
 			//layer
 			Layer.CurrentRotationStep = angle;
 		}
@@ -2193,10 +2192,10 @@ namespace BlueBrick
 		private void paintToolPaintToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			// toolbar
-			this.toolBarToolButton.Image = mPaintIcon;
+			toolBarToolButton.Image = mPaintIcon;
 			// menu
-			this.paintToolPaintToolStripMenuItem.Checked = true;
-			this.paintToolEraseToolStripMenuItem.Checked = false;
+			paintToolPaintToolStripMenuItem.Checked = true;
+			paintToolEraseToolStripMenuItem.Checked = false;
 			// set the current static paint color in the area layer
 			LayerArea.CurrentDrawColor = mCurrentPaintIconColor;
 		}
@@ -2204,10 +2203,10 @@ namespace BlueBrick
 		private void paintToolEraseToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			// toolbar
-			this.toolBarToolButton.Image = this.eraseToolStripMenuItem.Image;
+			toolBarToolButton.Image = eraseToolStripMenuItem.Image;
 			// menu
-			this.paintToolPaintToolStripMenuItem.Checked = false;
-			this.paintToolEraseToolStripMenuItem.Checked = true;
+			paintToolPaintToolStripMenuItem.Checked = false;
+			paintToolEraseToolStripMenuItem.Checked = true;
 			// set the current static paint color in the area layer
 			LayerArea.CurrentDrawColor = Color.Empty;
 		}
@@ -2215,11 +2214,11 @@ namespace BlueBrick
 		public void rulerSelectAndEditToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			// toolbar
-			this.toolBarToolButton.Image = this.rulerSelectAndEditToolStripMenuItem.Image;
+			toolBarToolButton.Image = rulerSelectAndEditToolStripMenuItem.Image;
 			// menu
-			this.selectAndEditToolStripMenuItem.Checked = true;
-			this.addRulerToolStripMenuItem.Checked = false;
-			this.addCircleToolStripMenuItem.Checked = false;
+			selectAndEditToolStripMenuItem.Checked = true;
+			addRulerToolStripMenuItem.Checked = false;
+			addCircleToolStripMenuItem.Checked = false;
 			// set the selected tool in the static vaqr of the ruler layer
 			LayerRuler.CurrentEditTool = LayerRuler.EditTool.SELECT;
 		}
@@ -2227,11 +2226,11 @@ namespace BlueBrick
 		private void rulerAddRulerToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			// toolbar
-			this.toolBarToolButton.Image = this.rulerAddRulerToolStripMenuItem.Image;
+			toolBarToolButton.Image = rulerAddRulerToolStripMenuItem.Image;
 			// menu
-			this.selectAndEditToolStripMenuItem.Checked = false;
-			this.addRulerToolStripMenuItem.Checked = true;
-			this.addCircleToolStripMenuItem.Checked = false;
+			selectAndEditToolStripMenuItem.Checked = false;
+			addRulerToolStripMenuItem.Checked = true;
+			addCircleToolStripMenuItem.Checked = false;
 			// set the selected tool in the static vaqr of the ruler layer
 			LayerRuler.CurrentEditTool = LayerRuler.EditTool.LINE;
 		}
@@ -2239,11 +2238,11 @@ namespace BlueBrick
 		private void rulerAddCircleToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			// toolbar
-			this.toolBarToolButton.Image = this.rulerAddCircleToolStripMenuItem.Image;
+			toolBarToolButton.Image = rulerAddCircleToolStripMenuItem.Image;
 			// menu
-			this.selectAndEditToolStripMenuItem.Checked = false;
-			this.addRulerToolStripMenuItem.Checked = false;
-			this.addCircleToolStripMenuItem.Checked = true;
+			selectAndEditToolStripMenuItem.Checked = false;
+			addRulerToolStripMenuItem.Checked = false;
+			addCircleToolStripMenuItem.Checked = true;
 			// set the selected tool in the static vaqr of the ruler layer
 			LayerRuler.CurrentEditTool = LayerRuler.EditTool.CIRCLE;
 		}
@@ -2262,22 +2261,22 @@ namespace BlueBrick
 			mPaintIcon = new Bitmap(16, 16);
 			Graphics g = Graphics.FromImage(mPaintIcon);
 			g.Clear(backColor);
-			g.DrawImage(this.paintToolStripMenuItem.Image, 0, 0);
+			g.DrawImage(paintToolStripMenuItem.Image, 0, 0);
 			g.Flush();
 			// refresh the icon
-			this.toolBarToolButton.Image = mPaintIcon;
+			toolBarToolButton.Image = mPaintIcon;
 			// set the current static paint color in the area layer
 			LayerArea.CurrentDrawColor = color;
 		}
 
 		private void paintToolChooseColorToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			this.colorDialog.Color = mCurrentPaintIconColor;
-			DialogResult result = this.colorDialog.ShowDialog();
+			colorDialog.Color = mCurrentPaintIconColor;
+			DialogResult result = colorDialog.ShowDialog();
 			if (result == DialogResult.OK)
 			{
 				// regenerate the icon
-				generatePaintIcon(this.colorDialog.Color);
+				generatePaintIcon(colorDialog.Color);
 				// and reselect the paint tool
 				paintToolPaintToolStripMenuItem_Click(sender, e);
 			}
@@ -2289,9 +2288,9 @@ namespace BlueBrick
 		/// </summary>
 		private void openColorPickerToChangeMapBackgroundColor()
 		{
-			DialogResult result = this.colorDialog.ShowDialog();
+			DialogResult result = colorDialog.ShowDialog();
 			if (result == DialogResult.OK)
-				ActionManager.Instance.doAction(new ChangeBackgroundColor(this.colorDialog.Color));
+				ActionManager.Instance.doAction(new ChangeBackgroundColor(colorDialog.Color));
 		}
 
 		private void mapBackgroundColorToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2344,7 +2343,7 @@ namespace BlueBrick
 				// update the gamma for the layer bricks because they may have changed (before redrawing the map)
 				Map.Instance.UpdateGammaFromSettings();
 				// redraw the map because the color scheme may have changed
-				this.mapPanel.Invalidate();
+				mapPanel.Invalidate();
 				// also redraw the undo stack
 				updateUndoRedoMenuItems();
 			}
@@ -2353,7 +2352,7 @@ namespace BlueBrick
 			UpdateRecentFileMenuFromConfigFile();
 
 			// before checking if we need to restart, check if the language package is correctly installed
-			LanguageManager.checkLanguage(BlueBrick.Properties.Settings.Default.Language);
+			LanguageManager.checkLanguage(Properties.Settings.Default.Language);
 
 			// check if we need to restart, if yes, ask the user what he wants to do
 			if (preferenceForm.DoesNeedToRestart)
@@ -2379,49 +2378,49 @@ namespace BlueBrick
 		#region View Menu
 		private void toolbarToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			this.toolBar.Visible = this.toolbarMenuItem.Checked;
+			toolBar.Visible = toolbarMenuItem.Checked;
 		}
 
 		private void statusBarToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			this.statusBar.Visible = this.statusBarMenuItem.Checked;
-			this.mapPanel.CurrentStatusBarHeight = this.statusBar.Visible ? this.statusBar.Height : 0;
-			this.mapPanel.Invalidate();
+			statusBar.Visible = statusBarMenuItem.Checked;
+			mapPanel.CurrentStatusBarHeight = statusBar.Visible ? statusBar.Height : 0;
+			mapPanel.Invalidate();
 		}
 
 		public void mapScrollBarsVisibilityChangeNotification(bool newVisibility)
 		{
-			this.mapScrollBarsToolStripMenuItem.Checked = newVisibility;
+			mapScrollBarsToolStripMenuItem.Checked = newVisibility;
 		}
 
 		private void mapScrollBarsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			this.mapPanel.ShowHideScrollBars(mapScrollBarsToolStripMenuItem.Checked);
-			this.mapPanel.Invalidate();
+			mapPanel.ShowHideScrollBars(mapScrollBarsToolStripMenuItem.Checked);
+			mapPanel.Invalidate();
 		}
 
 		private void watermarkToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Properties.Settings.Default.DisplayGeneralInfoWatermark = this.watermarkToolStripMenuItem.Checked;
-			this.mapPanel.Invalidate();
+			Properties.Settings.Default.DisplayGeneralInfoWatermark = watermarkToolStripMenuItem.Checked;
+			mapPanel.Invalidate();
 		}
 
 		private void electricCircuitsMenuItem_Click(object sender, EventArgs e)
 		{
-			Properties.Settings.Default.DisplayElectricCircuit = this.electricCircuitsMenuItem.Checked;
-			this.mapPanel.Invalidate();
+			Properties.Settings.Default.DisplayElectricCircuit = electricCircuitsMenuItem.Checked;
+			mapPanel.Invalidate();
 		}
 
 		private void connectionPointsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Properties.Settings.Default.DisplayFreeConnexionPoints = this.connectionPointsToolStripMenuItem.Checked;
-			this.mapPanel.Invalidate();
+			Properties.Settings.Default.DisplayFreeConnexionPoints = connectionPointsToolStripMenuItem.Checked;
+			mapPanel.Invalidate();
 		}
 
 		private void rulerAttachPointsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Properties.Settings.Default.DisplayRulerAttachPoints = this.rulerAttachPointsToolStripMenuItem.Checked;
-			this.mapPanel.Invalidate();
+			Properties.Settings.Default.DisplayRulerAttachPoints = rulerAttachPointsToolStripMenuItem.Checked;
+			mapPanel.Invalidate();
 		}
 		#endregion
 
@@ -2433,13 +2432,13 @@ namespace BlueBrick
 		private void updateEnableStatusForBudgetMenuItem()
 		{
 			bool isEnabled = Budget.Budget.Instance.IsExisting;
-			this.budgetImportAndMergeToolStripMenuItem.Enabled = isEnabled;
-			this.budgetCloseToolStripMenuItem.Enabled = isEnabled;
-			this.budgetSaveToolStripMenuItem.Enabled = isEnabled;
-			this.budgetSaveAsToolStripMenuItem.Enabled = isEnabled;
-			this.showOnlyBudgetedPartsToolStripMenuItem.Enabled = isEnabled;
-			this.showBudgetNumbersToolStripMenuItem.Enabled = isEnabled;
-			this.useBudgetLimitationToolStripMenuItem.Enabled = isEnabled;
+			budgetImportAndMergeToolStripMenuItem.Enabled = isEnabled;
+			budgetCloseToolStripMenuItem.Enabled = isEnabled;
+			budgetSaveToolStripMenuItem.Enabled = isEnabled;
+			budgetSaveAsToolStripMenuItem.Enabled = isEnabled;
+			showOnlyBudgetedPartsToolStripMenuItem.Enabled = isEnabled;
+			showBudgetNumbersToolStripMenuItem.Enabled = isEnabled;
+			useBudgetLimitationToolStripMenuItem.Enabled = isEnabled;
 		}
 
 		/// <summary>
@@ -2455,8 +2454,8 @@ namespace BlueBrick
 				// if the user can cancel the application close, give him 3 buttons yes/no/cancel,
 				// else give him only 2 buttons yes/no:
 				DialogResult result = MessageBox.Show(this,
-					BlueBrick.Properties.Resources.ErrorMsgBudgetWasModified,
-					BlueBrick.Properties.Resources.ErrorMsgTitleWarning,
+                    Properties.Resources.ErrorMsgBudgetWasModified,
+                    Properties.Resources.ErrorMsgTitleWarning,
 					mCanUserCancelTheApplicationClose ? MessageBoxButtons.YesNoCancel : MessageBoxButtons.YesNo,
 					MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
 
@@ -2484,7 +2483,7 @@ namespace BlueBrick
 		private bool openBudget(string filename, Budget.Budget budgetToMerge)
 		{
 			// set the wait cursor
-			this.Cursor = Cursors.WaitCursor;
+			Cursor = Cursors.WaitCursor;
 			// load the file
 			bool isFileValid = SaveLoadManager.load(filename);
 			if (isFileValid)
@@ -2503,18 +2502,18 @@ namespace BlueBrick
 				}
 				// recount the parts because, opening a new budget actually create a new instance of Budget, so the count is destroyed
 				Budget.Budget.Instance.recountAllBricks();
-				this.PartUsageListView.rebuildList();
+				PartUsageListView.rebuildList();
 				// update the filtering on of the part lib after recounting all the bricks
-				this.PartsTabControl.updateFilterOnBudgetedParts();
+				PartsTabControl.updateFilterOnBudgetedParts();
 			}
 			// update the menu items
 			updateEnableStatusForBudgetMenuItem();
 			// then update the view of the part lib
-			this.PartsTabControl.updateViewStyle();
+			PartsTabControl.updateViewStyle();
 			// update the budgets in the part usage view
-			this.PartUsageListView.updateBudgetNotification();
+			PartUsageListView.updateBudgetNotification();
 			// restore the cursor after loading
-			this.Cursor = Cursors.Default;
+			Cursor = Cursors.Default;
 			// return if the file was correctly loaded
 			return isFileValid;
 		}
@@ -2535,15 +2534,15 @@ namespace BlueBrick
 				// create a new budget
 				Budget.Budget.Instance.create();
 				// update the part lib view
-				this.PartsTabControl.updateFilterOnBudgetedParts();
+				PartsTabControl.updateFilterOnBudgetedParts();
 				// update the title bar
-				this.updateTitleBar();
+				updateTitleBar();
 				// update the menu items
 				updateEnableStatusForBudgetMenuItem();
 				// then update the view of the part lib
-				this.PartsTabControl.updateViewStyle();
+				PartsTabControl.updateViewStyle();
 				// update the budgets in the part usage view
-				this.PartUsageListView.updateBudgetNotification();
+				PartUsageListView.updateBudgetNotification();
 			}
 		}
 
@@ -2552,9 +2551,9 @@ namespace BlueBrick
 			// check if the current budget is not save and display a warning message
 			if (checkForUnsavedBudget())
 			{
-				DialogResult result = this.openBudgetFileDialog.ShowDialog();
+				DialogResult result = openBudgetFileDialog.ShowDialog();
 				if (result == DialogResult.OK)
-					openBudget(this.openBudgetFileDialog.FileName, null);
+					openBudget(openBudgetFileDialog.FileName, null);
 			}
 		}
 
@@ -2564,9 +2563,9 @@ namespace BlueBrick
 			// save the current budget instance, cause the loading of new budget will erase it
 			Budget.Budget currentBudget = Budget.Budget.Instance;
 			// open the new one
-			DialogResult result = this.openBudgetFileDialog.ShowDialog();
+			DialogResult result = openBudgetFileDialog.ShowDialog();
 			if (result == DialogResult.OK)
-				openBudget(this.openBudgetFileDialog.FileName, currentBudget);
+				openBudget(openBudgetFileDialog.FileName, currentBudget);
 		}
 
 		private void budgetCloseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2576,22 +2575,22 @@ namespace BlueBrick
 				// destroy the budget
 				Budget.Budget.Instance.destroy();
 				// update the part lib view
-				this.PartsTabControl.updateFilterOnBudgetedParts();
+				PartsTabControl.updateFilterOnBudgetedParts();
 				// update the title bar (to remove the budget name from the title bar)
-				this.updateTitleBar();
+				updateTitleBar();
 				// update the menu items
 				updateEnableStatusForBudgetMenuItem();
 				// then update the view of the part lib
-				this.PartsTabControl.updateViewStyle();
+				PartsTabControl.updateViewStyle();
 				// update the budgets in the part usage view
-				this.PartUsageListView.updateBudgetNotification();
+				PartUsageListView.updateBudgetNotification();
 			}
 		}
 
 		private void saveBudget()
 		{
 			// set the wait cursor
-			this.Cursor = Cursors.WaitCursor;
+			Cursor = Cursors.WaitCursor;
 			// save the file
 			bool saveDone = SaveLoadManager.save(Budget.Budget.Instance.BudgetFileName);
 			if (saveDone)
@@ -2600,10 +2599,10 @@ namespace BlueBrick
 				// (and before the update of the title bar)
 				Budget.Budget.Instance.WasModified = false;
 				// update the title bar
-				this.updateTitleBar();
+				updateTitleBar();
 			}
 			// restore the cursor
-			this.Cursor = Cursors.Default;
+			Cursor = Cursors.Default;
 		}
 
 		private void budgetSaveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2618,17 +2617,17 @@ namespace BlueBrick
 		private void budgetSaveAsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			// put the current file name in the dialog (which can be the default one)
-			this.saveBudgetFileDialog.FileName = Budget.Budget.Instance.BudgetFileName;
+			saveBudgetFileDialog.FileName = Budget.Budget.Instance.BudgetFileName;
 			// if there's no initial directory, choose the My Documents directory
-			this.saveBudgetFileDialog.InitialDirectory = Path.GetDirectoryName(Budget.Budget.Instance.BudgetFileName);
-			if (this.saveBudgetFileDialog.InitialDirectory.Length == 0)
-				this.saveBudgetFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			saveBudgetFileDialog.InitialDirectory = Path.GetDirectoryName(Budget.Budget.Instance.BudgetFileName);
+			if (saveBudgetFileDialog.InitialDirectory.Length == 0)
+				saveBudgetFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 			// open the save as dialog
-			DialogResult result = this.saveBudgetFileDialog.ShowDialog();
+			DialogResult result = saveBudgetFileDialog.ShowDialog();
 			if (result == DialogResult.OK)
 			{
 				// change the current file name before calling the save
-				changeCurrentBudgetFileName(this.saveBudgetFileDialog.FileName, true);
+				changeCurrentBudgetFileName(saveBudgetFileDialog.FileName, true);
 				// save the map
 				saveBudget();
 			}
@@ -2639,9 +2638,9 @@ namespace BlueBrick
 			// update the setting
 			Properties.Settings.Default.ShowOnlyBudgetedParts = !Properties.Settings.Default.ShowOnlyBudgetedParts;
 			// then udpate the check state according to the new setting
-			this.showOnlyBudgetedPartsToolStripMenuItem.Checked = Properties.Settings.Default.ShowOnlyBudgetedParts;
+			showOnlyBudgetedPartsToolStripMenuItem.Checked = Properties.Settings.Default.ShowOnlyBudgetedParts;
 			// update the filtering on budget of the part lib
-			this.PartsTabControl.updateFilterOnBudgetedParts();
+			PartsTabControl.updateFilterOnBudgetedParts();
 		}
 
 		public void showBudgetNumbersToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2649,9 +2648,9 @@ namespace BlueBrick
 			// update the setting
 			Properties.Settings.Default.ShowBudgetNumbers = !Properties.Settings.Default.ShowBudgetNumbers;
 			// then udpate the check state according to the new setting
-			this.showBudgetNumbersToolStripMenuItem.Checked = Properties.Settings.Default.ShowBudgetNumbers;
+			showBudgetNumbersToolStripMenuItem.Checked = Properties.Settings.Default.ShowBudgetNumbers;
 			// then update the view of the part lib
-			this.PartsTabControl.updateViewStyle();
+			PartsTabControl.updateViewStyle();
 		}
 
 		public void useBudgetLimitationToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2659,10 +2658,10 @@ namespace BlueBrick
 			// update the setting
 			Properties.Settings.Default.UseBudgetLimitation = !Properties.Settings.Default.UseBudgetLimitation;
 			// then udpate the check state according to the new setting
-			this.useBudgetLimitationToolStripMenuItem.Checked = Properties.Settings.Default.UseBudgetLimitation;
+			useBudgetLimitationToolStripMenuItem.Checked = Properties.Settings.Default.UseBudgetLimitation;
 			// now check if we need to also show the budget numbers
 			if (Properties.Settings.Default.DisplayWarningMessageForShowingBudgetNumbers &&
-				Properties.Settings.Default.UseBudgetLimitation && !this.showBudgetNumbersToolStripMenuItem.Checked)
+				Properties.Settings.Default.UseBudgetLimitation && !showBudgetNumbersToolStripMenuItem.Checked)
 			{
 				bool dontDisplayMessageAgain = false;
 				DialogResult result = ForgetableMessageBox.Show(this, Properties.Resources.ErrorMsgDoYouWantToDisplayBudgetNumber,
@@ -2695,8 +2694,10 @@ namespace BlueBrick
                 if ((Environment.OSVersion.Platform == PlatformID.Unix) ||
                     (Environment.OSVersion.Platform == PlatformID.MacOSX))
                 {
-                    System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                    startInfo.FileName = helpFileInfo.FullName;
+                    System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = helpFileInfo.FullName
+                    };
                     System.Diagnostics.Process.Start(startInfo);
                 }
                 else
@@ -2737,16 +2738,16 @@ namespace BlueBrick
 
 		private void toolBarSnapGridButton_Click(object sender, EventArgs e)
 		{
-			if (this.toolBarSnapGridButton.ButtonPressed)
+			if (toolBarSnapGridButton.ButtonPressed)
 			{
-				enableSnapGridButton(!this.toolBarSnapGridButton.DropDown.Enabled, Layer.CurrentSnapGridSize);
+				enableSnapGridButton(!toolBarSnapGridButton.DropDown.Enabled, Layer.CurrentSnapGridSize);
 			}
 		}
 
 		private void toolBarPaintButton_ButtonClick(object sender, EventArgs e)
 		{
 			// nothing happen by default, but if the paint icon is selected this call the color picker
-			if (this.toolBarToolButton.Image == mPaintIcon)
+			if (toolBarToolButton.Image == mPaintIcon)
 				paintToolChooseColorToolStripMenuItem_Click(sender, e);
 		}
 		#endregion
@@ -2755,27 +2756,27 @@ namespace BlueBrick
 		private void addInputFilterIndication()
 		{
 			// set the color first cause we will check it in the TextChange event
-			this.textBoxPartFilter.ForeColor = Color.Gray;
-			this.textBoxPartFilter.Text = Properties.Resources.InputFilterIndication;
+			textBoxPartFilter.ForeColor = Color.Gray;
+			textBoxPartFilter.Text = Properties.Resources.InputFilterIndication;
 		}
 
 		private void removeInputFilterIndication()
 		{
 			// set the color first cause we will check it in the TextChange event
-			this.textBoxPartFilter.ForeColor = Color.Black;
-			this.textBoxPartFilter.Text = string.Empty;
+			textBoxPartFilter.ForeColor = Color.Black;
+			textBoxPartFilter.Text = string.Empty;
 		}
 
 		private bool isThereAnyUserFilterSentence()
 		{
 			// we use the color of the text box filter, because the user may type a sentence
 			// which could be exactly as the input filter indication (i.e. the hint)
-			return (this.textBoxPartFilter.ForeColor == Color.Black);
+			return textBoxPartFilter.ForeColor == Color.Black;
 		}
 
 		private string getUserFilterSentence()
 		{
-			return (isThereAnyUserFilterSentence() ? this.textBoxPartFilter.Text : string.Empty);
+			return isThereAnyUserFilterSentence() ? textBoxPartFilter.Text : string.Empty;
 		}
 
 		private void textBoxPartFilter_TextChanged(object sender, EventArgs e)
@@ -2784,10 +2785,10 @@ namespace BlueBrick
 			if (isThereAnyUserFilterSentence())
 			{
 				// checked which filter method to call
-				if (this.filterAllTabCheckBox.Checked)
-					this.PartsTabControl.filterAllTabs(this.textBoxPartFilter.Text);
+				if (filterAllTabCheckBox.Checked)
+					PartsTabControl.filterAllTabs(textBoxPartFilter.Text);
 				else
-					this.PartsTabControl.filterCurrentTab(this.textBoxPartFilter.Text);
+					PartsTabControl.filterCurrentTab(textBoxPartFilter.Text);
 			}
 		}
 
@@ -2801,7 +2802,7 @@ namespace BlueBrick
 		private void textBoxPartFilter_Leave(object sender, EventArgs e)
 		{
 			// if the user deleted the whole text when leaving the box, add the incitation text
-			if (this.textBoxPartFilter.Text == string.Empty)
+			if (textBoxPartFilter.Text == string.Empty)
 				addInputFilterIndication();
 		}
 
@@ -2816,7 +2817,7 @@ namespace BlueBrick
 		private void textBoxPartFilter_KeyDown(object sender, KeyEventArgs e)
 		{
 			// it seems the CTRL+A is not handled by default by the text box control??
-			if ((e.Control) && (e.KeyCode == Keys.A))
+			if (e.Control && (e.KeyCode == Keys.A))
 			{
 				textBoxPartFilter.SelectAll();
 				e.Handled = true;
@@ -2833,7 +2834,7 @@ namespace BlueBrick
 			if (filterAllTabCheckBox.Checked)
 			{
 				filterAllTabCheckBox.ImageIndex = 0;
-				this.PartsTabControl.filterAllTabs(filterSentence);
+				PartsTabControl.filterAllTabs(filterSentence);
 			}
 			else
 			{
@@ -2850,7 +2851,7 @@ namespace BlueBrick
 				// another possible behavior would be to update the filter text with the filter sentence of the
 				// current tab: in that case, the user would see the text change when he uncheck the filter all checkbox
 				// so actually we give in parameter the filter sentence to use for the current tab
-				this.PartsTabControl.unfilterAllTabs(filterSentence);
+				PartsTabControl.unfilterAllTabs(filterSentence);
 			}
 		}
 		#endregion
@@ -2913,13 +2914,13 @@ namespace BlueBrick
 		private void SplitPartUsagePerLayerCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
 			// change the status of the split status
-			this.PartUsageListView.SplitPartPerLayer = SplitPartUsagePerLayerCheckBox.Checked;
+			PartUsageListView.SplitPartPerLayer = SplitPartUsagePerLayerCheckBox.Checked;
 		}
 
 		private void IncludeHiddenLayerInPartListCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
 			// change the status of the hidden status
-			this.PartUsageListView.IncludeHiddenLayers = IncludeHiddenLayerInPartListCheckBox.Checked;
+			PartUsageListView.IncludeHiddenLayers = IncludeHiddenLayerInPartListCheckBox.Checked;
 		}
 		#endregion
 
@@ -2929,7 +2930,7 @@ namespace BlueBrick
 		private void DocumentDataTabControl_Selected(object sender, TabControlEventArgs e)
 		{
 			// update the map dimension if we just selected the properties tab
-			if (e.TabPage == this.DocumentDataPropertiesTabPage)
+			if (e.TabPage == DocumentDataPropertiesTabPage)
 				updateMapDimensionInfo();
 		}
 
@@ -2940,8 +2941,8 @@ namespace BlueBrick
 
 		private ChangeGeneralInfo getGeneralInfoActionFromUI()
 		{
-			return new ChangeGeneralInfo(this.AuthorTextBox.Text, this.lugComboBox.Text,
-					this.eventComboBox.Text, this.dateTimePicker.Value, this.commentTextBox.Text);
+			return new ChangeGeneralInfo(AuthorTextBox.Text, lugComboBox.Text,
+					eventComboBox.Text, dateTimePicker.Value, commentTextBox.Text);
 		}
 
 		private void memorizeGeneralInfoActionWhenEnteringFocus()
@@ -3026,11 +3027,11 @@ namespace BlueBrick
 		#region event handler for map
 		private void MainForm_MouseWheel(object sender, MouseEventArgs e)
 		{
-			if (this.mapPanel.Focused)
+			if (mapPanel.Focused)
 			{
 				// convert the coord of the mouse position into client area
-				Point clientCoord = this.TopLevelControl.PointToScreen(e.Location);
-				clientCoord = this.mapPanel.PointToClient(clientCoord);
+				Point clientCoord = TopLevelControl.PointToScreen(e.Location);
+				clientCoord = mapPanel.PointToClient(clientCoord);
 				// recreate a new event for the client and call the client
 				MouseEventArgs clientEvent = new MouseEventArgs(e.Button, e.Clicks, clientCoord.X, clientCoord.Y, e.Delta);
 				mapPanel.MapPanel_MouseWheel(sender, clientEvent);
@@ -3114,7 +3115,7 @@ namespace BlueBrick
 					else
 					{
 						// do a move action without puting it in the undo stack
-						RotateBrick rotateAction = new RotateBrick(selectedLayer as LayerBrick, itemList, angleStep, ((angleStep != -1) && (angleStep != 1)));
+						RotateBrick rotateAction = new RotateBrick(selectedLayer as LayerBrick, itemList, angleStep, (angleStep != -1) && (angleStep != 1));
 						rotateAction.Redo();
 					}
 				}
@@ -3132,7 +3133,7 @@ namespace BlueBrick
 					else
 					{
 						// do a move action without puting it in the undo stack
-						RotateText rotateAction = new RotateText(selectedLayer as LayerText, itemList, angleStep, ((angleStep != -1) && (angleStep != 1)));
+						RotateText rotateAction = new RotateText(selectedLayer as LayerText, itemList, angleStep, (angleStep != -1) && (angleStep != 1));
 						rotateAction.Redo();
 					}
 				}
@@ -3150,7 +3151,7 @@ namespace BlueBrick
 					else
 					{
 						// do a move action without puting it in the undo stack
-						RotateRulers rotateAction = new RotateRulers(selectedLayer as LayerRuler, itemList, angleStep, ((angleStep != -1) && (angleStep != 1)));
+						RotateRulers rotateAction = new RotateRulers(selectedLayer as LayerRuler, itemList, angleStep, (angleStep != -1) && (angleStep != 1));
 						rotateAction.Redo();
 					}
 				}
@@ -3168,7 +3169,7 @@ namespace BlueBrick
 			if (e.Data.GetDataPresent(DataFormats.FileDrop))
 			{
 				// check if the first file has a valid suported extension
-				string[] filenames = (string[])(e.Data.GetData(DataFormats.FileDrop));
+				string[] filenames = (string[])e.Data.GetData(DataFormats.FileDrop);
 				if (filenames.Length > 0)
 				{
 					// authorize the drop if it's a file with the good extension
@@ -3180,7 +3181,7 @@ namespace BlueBrick
 
 		public void MainForm_DragDrop(object sender, DragEventArgs e)
 		{
-			string[] filenames = (string[])(e.Data.GetData(DataFormats.FileDrop));
+			string[] filenames = (string[])e.Data.GetData(DataFormats.FileDrop);
 			if (filenames.Length > 0)
 			{
 				// check if the current map is not save and display a warning message
@@ -3206,7 +3207,7 @@ namespace BlueBrick
 
 			// iterate on the settings list
 			char[] separator = { '|' };
-			foreach (string text in BlueBrick.Properties.Settings.Default.ShortcutKey)
+			foreach (string text in Properties.Settings.Default.ShortcutKey)
 			{
 				try
 				{
@@ -3225,8 +3226,8 @@ namespace BlueBrick
 
 		private bool isUserTypingTextInATextBox()
 		{
-			return this.textBoxPartFilter.Focused || this.PartsTabControl.IsEditingBudget ||
-					this.AuthorTextBox.Focused || this.lugComboBox.Focused || this.eventComboBox.Focused || this.commentTextBox.Focused;
+			return textBoxPartFilter.Focused || PartsTabControl.IsEditingBudget ||
+					AuthorTextBox.Focused || lugComboBox.Focused || eventComboBox.Focused || commentTextBox.Focused;
 		}
 
 		private void MainForm_KeyDown(object sender, KeyEventArgs e)
@@ -3252,7 +3253,7 @@ namespace BlueBrick
 				if (mLastModifierKeyDown != e.Modifiers)
 				{
 					mLastModifierKeyDown = e.Modifiers;
-					this.mapPanel.SetDefaultCursor();
+					mapPanel.SetDefaultCursor();
 				}
 				return;
 			}
@@ -3283,16 +3284,15 @@ namespace BlueBrick
 						{
 							case shortcutableAction.ADD_PART:
 								{
-									LayerBrick brickLayer = Map.Instance.SelectedLayer as LayerBrick;
-									if (brickLayer != null)
-									{
-										// add a connected brick, or if there's no connectable brick, add a brick in the origin
-										if (brickLayer.getConnectableBrick() != null)
-											Map.Instance.AddConnectBrick(shortcut.mPartName, shortcut.mConnexion);
-										else
-											Map.Instance.AddBrick(shortcut.mPartName);
-									}
-									break;
+                                    if (Map.Instance.SelectedLayer is LayerBrick brickLayer)
+                                    {
+                                        // add a connected brick, or if there's no connectable brick, add a brick in the origin
+                                        if (brickLayer.getConnectableBrick() != null)
+                                            Map.Instance.AddConnectBrick(shortcut.mPartName, shortcut.mConnexion);
+                                        else
+                                            Map.Instance.AddBrick(shortcut.mPartName);
+                                    }
+                                    break;
 								}
 							case shortcutableAction.DELETE_PART:
 								// shortcut to the event handler of the menu
@@ -3348,17 +3348,16 @@ namespace BlueBrick
 								break;
 							case shortcutableAction.CHANGE_CURRENT_CONNEXION:
 								{
-									LayerBrick brickLayer = Map.Instance.SelectedLayer as LayerBrick;
-									if (brickLayer != null)
-									{
-										LayerBrick.Brick selectedBrick = brickLayer.getConnectableBrick();
-										if (selectedBrick != null)
-										{
-											selectedBrick.setActiveConnectionPointWithNextOne(true);
-											this.mapPanel.UpdateView();
-										}
-									}
-									break;
+                                    if (Map.Instance.SelectedLayer is LayerBrick brickLayer)
+                                    {
+                                        LayerBrick.Brick selectedBrick = brickLayer.getConnectableBrick();
+                                        if (selectedBrick != null)
+                                        {
+                                            selectedBrick.setActiveConnectionPointWithNextOne(true);
+                                            mapPanel.UpdateView();
+                                        }
+                                    }
+                                    break;
 								}
 							case shortcutableAction.SEND_TO_BACK:
 								// shortcut to the event handler of the menu
@@ -3372,7 +3371,7 @@ namespace BlueBrick
 
 						// we need to force the refresh of the map immediatly because the invalidate
 						// is not fast enough compare to the repeat key event.
-						this.mapPanel.Refresh();
+						mapPanel.Refresh();
 
 						// and just return, because don't need to search more keys
 						return;
@@ -3392,13 +3391,13 @@ namespace BlueBrick
 				return;
 
 			// We will warn the mapPanel if a modifier is released in case it wants to change the cursor
-			bool wasModifierReleased = (mLastModifierKeyDown != e.Modifiers);
+			bool wasModifierReleased = mLastModifierKeyDown != e.Modifiers;
 			if (wasModifierReleased)
 			{
 				// save the new modifier state
 				mLastModifierKeyDown = e.Modifiers;
 				// and change the cursor of the panel
-				this.mapPanel.SetDefaultCursor();
+				mapPanel.SetDefaultCursor();
 				// a modifier was released anyway, we don't handle the key
 				e.Handled = false;
 			}
@@ -3506,12 +3505,12 @@ namespace BlueBrick
 		#region function related to parts library
 		public string getDraggingPartNumberInPartLib()
 		{
-			return this.PartsTabControl.DraggingPartNumber;
+			return PartsTabControl.DraggingPartNumber;
 		}
 
 		public void resetDraggingPartNumberInPartLib()
 		{
-			this.PartsTabControl.DraggingPartNumber = null;
+			PartsTabControl.DraggingPartNumber = null;
 		}
 		#endregion
 	}

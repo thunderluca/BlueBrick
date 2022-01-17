@@ -22,7 +22,7 @@ namespace BlueBrick.Actions.Area
 {
 	class DeleteArea : Action
 	{
-		private LayerArea mAreaLayer = null;
+		private readonly LayerArea mAreaLayer = null;
 		private Rectangle mAreaInCellIndex = Rectangle.Empty;
 		private Color[,] mOldColor = null;
 
@@ -34,7 +34,7 @@ namespace BlueBrick.Actions.Area
 
 		public override string GetName()
 		{
-			return BlueBrick.Properties.Resources.ActionDeleteArea;
+			return Properties.Resources.ActionDeleteArea;
 		}
 
 		public override void Redo()

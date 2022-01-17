@@ -21,19 +21,19 @@ namespace BlueBrick
 		}
 
 		// use a dictionary to store all the descriptions in every languages
-		private Dictionary<string, string> mDescription = new Dictionary<string, string>();
+		private readonly Dictionary<string, string> mDescription = new Dictionary<string, string>();
 		// store the error message in an array of string
-		private string[] mErrorHint = null;
+		private readonly string[] mErrorHint = null;
 		// group to save
-		private Layer.Group mGroupToSave = null;
-		private bool mWasGroupToSaveCreated = false;
+		private readonly Layer.Group mGroupToSave = null;
+		private readonly bool mWasGroupToSaveCreated = false;
 		// xml setting for saving
-		private System.Xml.XmlWriterSettings mXmlSettings = new System.Xml.XmlWriterSettings();
+		private readonly XmlWriterSettings mXmlSettings = new XmlWriterSettings();
 		// An array of forbidden chars
-		private char[] mForbiddenChar = null;
+		private readonly char[] mForbiddenChar = null;
 		// the resulting files to load
-		private List<FileInfo> mNewXmlFilesToLoad = new List<FileInfo>();
-		private List<string> mNewGroupName = new List<string>();
+		private readonly List<FileInfo> mNewXmlFilesToLoad = new List<FileInfo>();
+		private readonly List<string> mNewGroupName = new List<string>();
 		// this is used to store temporarily the suffix added to the group name in order to be valid
 		private string mSuffixAddedToGroupName = string.Empty;
         // and this is used to store temporarily the previous group name to check what the user has changed
@@ -66,8 +66,8 @@ namespace BlueBrick
 			InitializeComponent();
 
 			// create an array of forbidden char for the group name (before setting the name of the group)
-			List<char> charList = new List<char>(System.IO.Path.GetInvalidFileNameChars());
-			foreach (char character in System.IO.Path.GetInvalidPathChars())
+			List<char> charList = new List<char>(Path.GetInvalidFileNameChars());
+			foreach (char character in Path.GetInvalidPathChars())
 				if (!charList.Contains(character))
 					charList.Add(character);
 			charList.Add('&'); // the ampersome is authorized in file name, but brings trouble in xml, since it is the escape char.				
@@ -75,49 +75,49 @@ namespace BlueBrick
 
 			// save the error list from the text field
 			char[] separator = { '|' };
-			mErrorHint = this.nameErrorLabel.Text.Split(separator);
+			mErrorHint = nameErrorLabel.Text.Split(separator);
 
 			// fill the language combo
-			fillAndSelectLanguageComboBox();
+			FillAndSelectLanguageComboBox();
 
 			// set the author (could be overriden later)
-			this.authorTextBox.Text = this.Author;
+			authorTextBox.Text = Author;
 			
 			// get the list of the top items
-			List<Layer.LayerItem> topItems = Layer.sGetTopItemListFromList(Map.Instance.SelectedLayer.SelectedObjects);
+			List<Layer.LayerItem> topItems = Layer.SGetTopItemListFromList(Map.Instance.SelectedLayer.SelectedObjects);
 			// fill the name if there's only one group selected
 			if (topItems.Count == 1)
 			{
 				// if this window is called with one object, it should be normally a group
 				// otherwise the save group cannot be called
-				mGroupToSave = (topItems[0]) as Layer.Group;
+				mGroupToSave = topItems[0] as Layer.Group;
 				mWasGroupToSaveCreated = false;
 				if (mGroupToSave.IsANamedGroup)
 				{
 					string partNumber = mGroupToSave.PartNumber;
 					// set the name here and init the rest in the function
 					nameTextBox.Text = partNumber;
-					initControlWithPartInfo(partNumber);
+					InitControlWithPartInfo(partNumber);
 				}
 			}
 			else
 			{
 				// sort the top items as on the layer
-				topItems.Sort(Map.Instance.SelectedLayer.compareItemOrderOnLayer);
+				topItems.Sort(Map.Instance.SelectedLayer.CompareItemOrderOnLayer);
 				// create a group temporally for the export purpose
 				mGroupToSave = new Layer.Group();
-				mGroupToSave.addItem(topItems);
+				mGroupToSave.AddItem(topItems);
 				mWasGroupToSaveCreated = true;
 			}
 
 			// call explicitly the event to set the correct color and error message
 			// after setting all the data members used to check the validity of the name
-			this.nameTextBox_TextChanged(nameTextBox, null);
+			NameTextBox_TextChanged(nameTextBox, null);
 
 			// configure the xmlSetting for writing
 			mXmlSettings.CheckCharacters = false;
 			mXmlSettings.CloseOutput = true;
-			mXmlSettings.ConformanceLevel = System.Xml.ConformanceLevel.Document;
+			mXmlSettings.ConformanceLevel = ConformanceLevel.Document;
 			mXmlSettings.Encoding = new UTF8Encoding(false);
 			mXmlSettings.Indent = true;
 			mXmlSettings.IndentChars = "\t";
@@ -126,7 +126,7 @@ namespace BlueBrick
 			mXmlSettings.OmitXmlDeclaration = false;
 		}
 
-		private void fillAndSelectLanguageComboBox()
+		private void FillAndSelectLanguageComboBox()
 		{
 			int selectedIndex = 0;
 
@@ -135,7 +135,7 @@ namespace BlueBrick
 			for (int i = 0; i < MainForm.sLanguageCodeAndName.Length; ++i)
 			{
 				languageCodeComboBox.Items.Add(MainForm.sLanguageCodeAndName[i].mCode);
-				if (MainForm.sLanguageCodeAndName[i].mCode.Equals(BlueBrick.Properties.Settings.Default.Language))
+				if (MainForm.sLanguageCodeAndName[i].mCode.Equals(Properties.Settings.Default.Language))
 					selectedIndex = i;
 			}
 
@@ -143,28 +143,28 @@ namespace BlueBrick
 			languageCodeComboBox.SelectedIndex = selectedIndex;
 		}
 
-		private void initControlWithPartInfo(string partNumber)
+		private void InitControlWithPartInfo(string partNumber)
 		{
 			// set the ungroup and sorting key
 			canUngroupCheckBox.Checked = BrickLibrary.Instance.CanUngroup(partNumber);
 			sortingKeyTextBox.Text = BrickLibrary.Instance.GetSortingKey(partNumber);
 			// for the Author, check if it is the same
-			string author = this.Author;
+			string author = Author;
 			string partAuthor = BrickLibrary.Instance.GetAuthor(partNumber);
 			if (!partAuthor.Contains(author))
 				partAuthor = author + " & " + partAuthor;
-			this.authorTextBox.Text = partAuthor;
+			authorTextBox.Text = partAuthor;
 			// get the description
 			string description = BrickLibrary.Instance.GetBrickInfo(partNumber)[3];
 			if (description != string.Empty)
 			{
 				mDescription.Clear();
-				mDescription.Add(BlueBrick.Properties.Settings.Default.Language, description);
+				mDescription.Add(Properties.Settings.Default.Language, description);
 			}
 			// the image URL
-			this.imageURLTextBox.Text = BrickLibrary.Instance.GetImageURL(partNumber);
+			imageURLTextBox.Text = BrickLibrary.Instance.GetImageURL(partNumber);
 			// force the event to set the description because we are constructing the window and the focus event is skip
-			descriptionTextBox_Enter(this, null);
+			DescriptionTextBox_Enter(this, null);
 		}
 		#endregion
 
@@ -177,7 +177,7 @@ namespace BlueBrick
 		/// </summary>
 		/// <param name="groupName">The name of the group you want to save</param>
 		/// <returns>The full path of the file that will be saved, including extension</returns>
-		private string getFullFileNameFromGroupName(string groupName)
+		private string GetFullFileNameFromGroupName(string groupName)
 		{
             // the lower case is mandatory for Linux.
 			string filename = PartLibraryPanel.sFullPathForCustomParts + groupName.Trim().ToLower();
@@ -186,7 +186,7 @@ namespace BlueBrick
 			return filename;
 		}
 
-		private string getGroupName(string userInput)
+		private string GetGroupName(string userInput)
 		{
 			string groupName = userInput.Trim().ToUpper();
 			if (groupName.LastIndexOf('.') < 0)
@@ -194,12 +194,12 @@ namespace BlueBrick
 			return groupName;
 		}
 
-		private string getSubGroupName(string groupName, int id)
+		private string GetSubGroupName(string groupName, int id)
 		{
 			int index = groupName.LastIndexOf('.');
 			if (index >= 0)
 				groupName = groupName.Substring(0, index);
-			return (groupName + ".SUB" + id.ToString()); 
+			return groupName + ".SUB" + id.ToString(); 
 		}
 
 		/// <summary>
@@ -208,7 +208,7 @@ namespace BlueBrick
 		/// <param name="group">The group to save</param>
 		/// <param name="groupName">the name of the group that should be used to save the file</param>
 		/// <param name="groupNumber">The sequential number of the group, starting with 0 for the top group</param>
-		private void saveGroup(Layer.Group group, string groupName, int groupNumber)
+		private void SaveGroup(Layer.Group group, string groupName, int groupNumber)
 		{
 			// use a counter for the sub-groups of this group, starting from this group number + 1
 			int subGroupNumber = groupNumber + 1;
@@ -223,7 +223,7 @@ namespace BlueBrick
 			mNewGroupName.Add(groupName);
 			
 			// get the full filename and save it in the array
-			string filename = getFullFileNameFromGroupName(groupName);
+			string filename = GetFullFileNameFromGroupName(groupName);
 			mNewXmlFilesToLoad.Add(new FileInfo(filename));
 
 			// open the stream
@@ -232,22 +232,22 @@ namespace BlueBrick
 			xmlWriter.WriteStartDocument();
 			xmlWriter.WriteStartElement("group");
 			// author
-			xmlWriter.WriteElementString("Author", this.authorTextBox.Text);
+			xmlWriter.WriteElementString("Author", authorTextBox.Text);
 			// description
 			xmlWriter.WriteStartElement("Description");
 			foreach (KeyValuePair<string, string> keyValue in mDescription)
 				xmlWriter.WriteElementString(keyValue.Key, keyValue.Value);
 			xmlWriter.WriteEndElement(); // Description
 			// sorting key
-			xmlWriter.WriteElementString("SortingKey", this.sortingKeyTextBox.Text.Trim());
+			xmlWriter.WriteElementString("SortingKey", sortingKeyTextBox.Text.Trim());
 			// in library? Only the top group is in library, the other one are hidden (normal behavior)
 			if (groupNumber != 0)
 				xmlWriter.WriteElementString("NotListedInLibrary", "true");
 			// image URL if it exists
-			if (this.imageURLTextBox.Text != string.Empty)
-				xmlWriter.WriteElementString("ImageURL", this.imageURLTextBox.Text);
+			if (imageURLTextBox.Text != string.Empty)
+				xmlWriter.WriteElementString("ImageURL", imageURLTextBox.Text);
 			// can ungroup?
-			if (this.canUngroupCheckBox.Checked)
+			if (canUngroupCheckBox.Checked)
 				xmlWriter.WriteElementString("CanUngroup", "true");
 			else
 				xmlWriter.WriteElementString("CanUngroup", "false");
@@ -259,7 +259,7 @@ namespace BlueBrick
 				if (item.PartNumber != string.Empty)
 					xmlWriter.WriteAttributeString("id", item.PartNumber);
 				else
-					xmlWriter.WriteAttributeString("id", getSubGroupName(groupName, subGroupNumber++));
+					xmlWriter.WriteAttributeString("id", GetSubGroupName(groupName, subGroupNumber++));
 				// position and angle
 				PointF center = item.Center;
 				center.X -= origin.X;
@@ -273,7 +273,7 @@ namespace BlueBrick
 			
 			// for the top group we should also write cyclic prefered connection lists (one cycle per type of connection among the free connections)
 			if (groupNumber == 0)
-				writeGroupConnectionPreferenceList(xmlWriter, group);
+				WriteGroupConnectionPreferenceList(xmlWriter, group);
 
 			// write the end element and close the stream
 			xmlWriter.WriteEndElement(); // group
@@ -285,7 +285,7 @@ namespace BlueBrick
 			foreach (Layer.LayerItem item in group.Items)
 				if (item.PartNumber == string.Empty)
 				{
-					saveGroup(item as Layer.Group, getSubGroupName(groupName, subGroupNumber), subGroupNumber);
+					SaveGroup(item as Layer.Group, GetSubGroupName(groupName, subGroupNumber), subGroupNumber);
 					subGroupNumber++;
 				}
 		}
@@ -318,10 +318,10 @@ namespace BlueBrick
 		/// </summary>
 		/// <param name="xmlWriter">The xmlWritter where to write the list</param>
 		/// <param name="group">The group for which we are writting the list</param>
-		private void writeGroupConnectionPreferenceList(XmlWriter xmlWriter, Layer.Group group)
+		private void WriteGroupConnectionPreferenceList(XmlWriter xmlWriter, Layer.Group group)
 		{
 			// get all the bricks in a flat list (removing intermediate group)
-			List<Layer.LayerItem> allBricks = group.getAllLeafItems();
+			List<Layer.LayerItem> allBricks = group.GetAllLeafItems();
 			// if the group doesn't contains brick, just early exit
 			if ((allBricks.Count == 0) || !(allBricks[0] is LayerBrick.Brick))
 				return;
@@ -387,7 +387,7 @@ namespace BlueBrick
 		/// </summary>
 		/// <param name="partNumber">the name of the group the user wants to use to save his group</param>
 		/// <returns>true if some cyclic reference is detected</returns>
-		private bool isCyclicReferenceDetected(Layer.Group group, string partNumber)
+		private bool IsCyclicReferenceDetected(Layer.Group group, string partNumber)
 		{
 			foreach (Layer.LayerItem item in group.Items)
 			{
@@ -397,7 +397,7 @@ namespace BlueBrick
 				// if it's a group, call recursively
 				if (item.IsAGroup)
 				{
-					bool isCyclic = isCyclicReferenceDetected(item as Layer.Group, partNumber);
+					bool isCyclic = IsCyclicReferenceDetected(item as Layer.Group, partNumber);
 					// only return true if we found a match, if false continue to iterate on next item
 					if (isCyclic)
 						return true;
@@ -411,18 +411,18 @@ namespace BlueBrick
 		private void SaveGroupNameForm_Shown(object sender, EventArgs e)
 		{
 			// for some reason, I cannot focus the name text box in the constructor, so focus it here.
-			this.nameTextBox.Focus();
-			this.nameTextBox.Select(0, 0);
+			nameTextBox.Focus();
+			nameTextBox.Select(0, 0);
 		}
 
 		private void SaveGroupNameForm_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			// when the form is closing, destroyed the temp group created
 			if (mWasGroupToSaveCreated)
-				mGroupToSave.ungroup(null);
+				mGroupToSave.Ungroup(null);
 		}
 
-		private void okButton_Click(object sender, EventArgs e)
+		private void OkButton_Click(object sender, EventArgs e)
 		{
 			try
 			{
@@ -431,7 +431,7 @@ namespace BlueBrick
 				if (!customFolder.Exists)
 				    customFolder.Create();
 				// then call the recursive function by starting to save the top group
-				saveGroup(mGroupToSave, getGroupName(nameTextBox.Text), 0);
+				SaveGroup(mGroupToSave, GetGroupName(nameTextBox.Text), 0);
 			}
 			catch (Exception exception)
 			{
@@ -440,10 +440,10 @@ namespace BlueBrick
 			}
 		}
 
-		private void nameTextBox_TextChanged(object sender, EventArgs e)
+		private void NameTextBox_TextChanged(object sender, EventArgs e)
 		{
 			// unsubscribe the event handler to avoid being called back (make Mono crash probably on stack over flow)
-			this.nameTextBox.TextChanged -= this.nameTextBox_TextChanged;
+			nameTextBox.TextChanged -= NameTextBox_TextChanged;
 
 			// add a default extension if not added by user
 			const string DEFAULT_SUFFIX = ".SET";
@@ -500,23 +500,23 @@ namespace BlueBrick
             mPreviousGroupName = nameTextBox.Text;
 
             // construct the part number from the text in the textbox (after it has been modified)
-            string partNumber = this.getGroupName(mPreviousGroupName);
+            string partNumber = GetGroupName(mPreviousGroupName);
 
 			// check if the name is empty or contains any forbidden char for a file name
-			bool isEmptyName = (textOfTheUser.Trim().Length == 0);
-			bool hasForbiddenChar = (partNumber.IndexOfAny(mForbiddenChar) >= 0);
-			bool hasCyclicReference = isCyclicReferenceDetected(mGroupToSave, partNumber);
-			bool disableOkButton = (isEmptyName || hasForbiddenChar || hasCyclicReference);
+			bool isEmptyName = textOfTheUser.Trim().Length == 0;
+			bool hasForbiddenChar = partNumber.IndexOfAny(mForbiddenChar) >= 0;
+			bool hasCyclicReference = IsCyclicReferenceDetected(mGroupToSave, partNumber);
+			bool disableOkButton = isEmptyName || hasForbiddenChar || hasCyclicReference;
 
 			// set the corresponding error text
 			if (isEmptyName)
-				this.nameErrorLabel.Text = mErrorHint[(int)HintIndex.EMPTY_NAME] as string;
+				nameErrorLabel.Text = mErrorHint[(int)HintIndex.EMPTY_NAME];
 			else if (hasForbiddenChar)
-				this.nameErrorLabel.Text = mErrorHint[(int)HintIndex.HAS_FORBIDDEN_CHAR] as string;
+				nameErrorLabel.Text = mErrorHint[(int)HintIndex.HAS_FORBIDDEN_CHAR];
 			else if (hasCyclicReference)
-				this.nameErrorLabel.Text = mErrorHint[(int)HintIndex.CYCLIC_REFERENCE] as string;
+				nameErrorLabel.Text = mErrorHint[(int)HintIndex.CYCLIC_REFERENCE];
 			else
-				this.nameErrorLabel.Text = string.Empty;
+				nameErrorLabel.Text = string.Empty;
 
 			// If the name is ok so far, check if the part already exists in the library
 			if (!disableOkButton)
@@ -526,19 +526,19 @@ namespace BlueBrick
 				// Now check if the name already exist in the library
 				if (BrickLibrary.Instance.IsInLibrary(partNumber))
 				{
-					// if yes, check on the disk if the part is inside the custom lib for overriding purpose
-					// which is ok, otherwise if the part is in another folder, it's forbidden
-					System.IO.FileInfo fileInfo = new System.IO.FileInfo(getFullFileNameFromGroupName(partNumber));
+                    // if yes, check on the disk if the part is inside the custom lib for overriding purpose
+                    // which is ok, otherwise if the part is in another folder, it's forbidden
+                    FileInfo fileInfo = new FileInfo(GetFullFileNameFromGroupName(partNumber));
 					if (fileInfo.Exists)
 					{
 						nameTextBox.BackColor = Color.Gold;
-						this.nameErrorLabel.Text = mErrorHint[(int)HintIndex.OVERRIDE] as string;
-						initControlWithPartInfo(partNumber);
+						nameErrorLabel.Text = mErrorHint[(int)HintIndex.OVERRIDE];
+						InitControlWithPartInfo(partNumber);
 					}
 					else
 					{
 						disableOkButton = true;
-						this.nameErrorLabel.Text = mErrorHint[(int)HintIndex.EXISTING_NAME] as string;
+						nameErrorLabel.Text = mErrorHint[(int)HintIndex.EXISTING_NAME];
 					}
 				}
 			}
@@ -548,53 +548,52 @@ namespace BlueBrick
 				nameTextBox.BackColor = Color.DarkSalmon;
 
 			// enable or disable the Ok button
-			this.okButton.Enabled = !disableOkButton;
+			okButton.Enabled = !disableOkButton;
 
 			// resubscribe the event handler after changing the text
-			this.nameTextBox.TextChanged += new System.EventHandler(this.nameTextBox_TextChanged);
+			nameTextBox.TextChanged += new EventHandler(NameTextBox_TextChanged);
 		}
 
-		private void languageCodeComboBox_TextChanged(object sender, EventArgs e)
+		private void LanguageCodeComboBox_TextChanged(object sender, EventArgs e)
 		{
 			// by default set the unknow text
-			this.languageNameLabel.Text = Properties.Resources.TextUnknown;
+			languageNameLabel.Text = Properties.Resources.TextUnknown;
 			// search in the list of code if we can find a known one
 			// if yes set the text in the language name label
 			for (int i = 0; i < MainForm.sLanguageCodeAndName.Length; ++i)
-				if (MainForm.sLanguageCodeAndName[i].mCode.Equals(this.languageCodeComboBox.Text))
-					this.languageNameLabel.Text = MainForm.sLanguageCodeAndName[i].mName;
+				if (MainForm.sLanguageCodeAndName[i].mCode.Equals(languageCodeComboBox.Text))
+					languageNameLabel.Text = MainForm.sLanguageCodeAndName[i].mName;
 		}
 
-		private void languageCodeComboBox_SelectedIndexChanged(object sender, EventArgs e)
+		private void LanguageCodeComboBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			this.descriptionTextBox.Focus();
+			descriptionTextBox.Focus();
 		}
 
-		private void languageCodeComboBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+		private void LanguageCodeComboBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
 		{
 			// change the focus on an enter or tab key
 			if ((e.KeyCode == Keys.Return) || (e.KeyCode == Keys.Tab))
-				this.descriptionTextBox.Focus();
+				descriptionTextBox.Focus();
 			// capture all the keys in the text box, to avoid closing the window
 			e.IsInputKey = true;
 		}
 
-		private void descriptionTextBox_Enter(object sender, EventArgs e)
+		private void DescriptionTextBox_Enter(object sender, EventArgs e)
 		{
-			// when the description get the focus, update the contain with the the description of the current language
-			// first check in the dictionnary if we already have a text for the language code
-			string description = null;
-			if (mDescription.TryGetValue(this.languageCodeComboBox.Text, out description))
-				descriptionTextBox.Text = description;
-			else
-				descriptionTextBox.Text = string.Empty;
-			// place the cursor at the end of the text and deselct all
-			descriptionTextBox.Select(descriptionTextBox.Text.Length, 0);
+            // when the description get the focus, update the contain with the the description of the current language
+            // first check in the dictionnary if we already have a text for the language code
+            if (mDescription.TryGetValue(languageCodeComboBox.Text, out string description))
+                descriptionTextBox.Text = description;
+            else
+                descriptionTextBox.Text = string.Empty;
+            // place the cursor at the end of the text and deselct all
+            descriptionTextBox.Select(descriptionTextBox.Text.Length, 0);
 		}
 
-		private void descriptionTextBox_Leave(object sender, EventArgs e)
+		private void DescriptionTextBox_Leave(object sender, EventArgs e)
 		{
-			string key = this.languageCodeComboBox.Text;
+			string key = languageCodeComboBox.Text;
 			// chek if we need to remove the previous value
 			if (mDescription.ContainsKey(key))
 				mDescription.Remove(key);

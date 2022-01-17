@@ -54,7 +54,7 @@ namespace BlueBrick.MapData
 		private Point mMouseDownLastPosition = Point.Empty;
 
 		// global param for drawing the cell index
-		static private StringFormat sCellIndexStringFormat = new StringFormat();
+		private static readonly StringFormat sCellIndexStringFormat = new StringFormat();
 
 		#region get/set
 		public int GridSizeInStud
@@ -91,7 +91,7 @@ namespace BlueBrick.MapData
 			set
 			{
 				// compute the new alpha value
-				int alphaValue = (255 * mTransparency) / 100;
+				int alphaValue = 255 * mTransparency / 100;
 				// set the color with the transparency setting
 				mGridLinePen.Color = Color.FromArgb(alphaValue, value);
 			}
@@ -107,7 +107,7 @@ namespace BlueBrick.MapData
 			set
 			{
 				// compute the new alpha value
-				int alphaValue = (255 * mTransparency) / 100;
+				int alphaValue = 255 * mTransparency / 100;
 				// set the color with the transparency setting
 				mSubGridLinePen.Color = Color.FromArgb(alphaValue, value);
 			}
@@ -147,7 +147,7 @@ namespace BlueBrick.MapData
 			set
 			{
 				// compute the new alpha value
-				int alphaValue = (255 * mTransparency) / 100;
+				int alphaValue = 255 * mTransparency / 100;
 				// set the color with the transparency setting
 				mCellIndexBrush.Color = Color.FromArgb(alphaValue, value);
 			}
@@ -200,7 +200,7 @@ namespace BlueBrick.MapData
 				// set the value
 				mTransparency = value;
 				// compute the new alpha value
-				int alphaValue = (255 * value) / 100;
+				int alphaValue = 255 * value / 100;
 				// adjust the values of the pen and brushes used in this layer
 				mGridLinePen.Color = Color.FromArgb(alphaValue, mGridLinePen.Color);
 				mSubGridLinePen.Color = Color.FromArgb(alphaValue, mSubGridLinePen.Color);
@@ -241,25 +241,24 @@ namespace BlueBrick.MapData
 		/// <param name="layerToCopy">the model to copy from</param>
 		public override void CopyOptionsFrom(Layer layerToCopy)
 		{
-			// and try to cast in grid layer
-			LayerGrid gridLayer = layerToCopy as LayerGrid;
-			if (gridLayer != null)
-			{
-				mGridLinePen = gridLayer.mGridLinePen.Clone() as Pen;
-				mSubGridLinePen = gridLayer.mSubGridLinePen.Clone() as Pen;
-				mCellIndexFont = gridLayer.mCellIndexFont.Clone() as Font;
-				mCellIndexBrush = gridLayer.mCellIndexBrush;
-				mGridSizeInStud = gridLayer.mGridSizeInStud;
-				mSubDivisionNumber = gridLayer.mSubDivisionNumber;
-				mDisplayGrid = gridLayer.mDisplayGrid;
-				mDisplaySubGrid = gridLayer.mDisplaySubGrid;
-				mDisplayCellIndex = gridLayer.mDisplayCellIndex;
-				mCellIndexColumnType = gridLayer.mCellIndexColumnType;
-				mCellIndexRowType = gridLayer.mCellIndexRowType;
-				mCellIndexCorner = gridLayer.mCellIndexCorner;
-			}
-			// call the base method after such as the pen and brush transparency can be correctly set
-			base.CopyOptionsFrom(layerToCopy);
+            // and try to cast in grid layer
+            if (layerToCopy is LayerGrid gridLayer)
+            {
+                mGridLinePen = gridLayer.mGridLinePen.Clone() as Pen;
+                mSubGridLinePen = gridLayer.mSubGridLinePen.Clone() as Pen;
+                mCellIndexFont = gridLayer.mCellIndexFont.Clone() as Font;
+                mCellIndexBrush = gridLayer.mCellIndexBrush;
+                mGridSizeInStud = gridLayer.mGridSizeInStud;
+                mSubDivisionNumber = gridLayer.mSubDivisionNumber;
+                mDisplayGrid = gridLayer.mDisplayGrid;
+                mDisplaySubGrid = gridLayer.mDisplaySubGrid;
+                mDisplayCellIndex = gridLayer.mDisplayCellIndex;
+                mCellIndexColumnType = gridLayer.mCellIndexColumnType;
+                mCellIndexRowType = gridLayer.mCellIndexRowType;
+                mCellIndexCorner = gridLayer.mCellIndexCorner;
+            }
+            // call the base method after such as the pen and brush transparency can be correctly set
+            base.CopyOptionsFrom(layerToCopy);
 		}
 		#endregion
 
@@ -290,7 +289,7 @@ namespace BlueBrick.MapData
 		public override void WriteXml(System.Xml.XmlWriter writer)
 		{
 			// write the header
-			writeHeaderAndCommonProperties(writer);
+			WriteHeaderAndCommonProperties(writer);
 			// write the grid properties
 			XmlReadWrite.writeColor(writer, "GridColor", GridColor);
 			writer.WriteElementString("GridThickness", GridThickness.ToString(System.Globalization.CultureInfo.InvariantCulture));
@@ -307,7 +306,7 @@ namespace BlueBrick.MapData
 			writer.WriteElementString("CellIndexRowType", ((int)mCellIndexRowType).ToString());
 			XmlReadWrite.writePoint(writer, "CellIndexCorner", mCellIndexCorner);
 			// write the footer
-			writeFooter(writer); // end of layer
+			WriteFooter(writer); // end of layer
 
 			// step the progress bar for the grid
 			MainForm.Instance.stepProgressBar();
@@ -320,7 +319,7 @@ namespace BlueBrick.MapData
 		/// get the total area in stud covered by the grid in this layer
 		/// </summary>
 		/// <returns></returns>
-		public override RectangleF getTotalAreaInStud()
+		public override RectangleF GetTotalAreaInStud()
 		{
 			// if the cell indice are displayed, at least display the corner
 			if (DisplayCellIndex)
@@ -340,7 +339,7 @@ namespace BlueBrick.MapData
 		/// <param name="areaInStud">The region in which we should draw</param>
 		/// <param name="scalePixelPerStud">The scale to use to draw</param>
 		/// <param name="drawSelection">If true draw the selection rectangle and also the selection overlay (this can be set to false when exporting the map to an image)</param>
-		public override void draw(Graphics g, RectangleF areaInStud, double scalePixelPerStud, bool drawSelection)
+		public override void Draw(Graphics g, RectangleF areaInStud, double scalePixelPerStud, bool drawSelection)
 		{
 			if (!Visible)
 				return;
@@ -392,8 +391,8 @@ namespace BlueBrick.MapData
 				Point cellIndexCorner = mCellIndexCorner;
 				if (mIsMovingGridOrigin)
 				{
-					cellIndexCorner.X += (mMouseDownLastPosition.X - mMouseDownInitialPosition.X);
-					cellIndexCorner.Y += (mMouseDownLastPosition.Y - mMouseDownInitialPosition.Y);
+					cellIndexCorner.X += mMouseDownLastPosition.X - mMouseDownInitialPosition.X;
+					cellIndexCorner.Y += mMouseDownLastPosition.Y - mMouseDownInitialPosition.Y;
 				}
 
 				// ---- COLUMN
@@ -467,12 +466,12 @@ namespace BlueBrick.MapData
 		/// Return the cursor that should be display when the mouse is above the map without mouse click
 		/// </summary>
 		/// <param name="mouseCoordInStud"></param>
-		public override Cursor getDefaultCursorWithoutMouseClick(PointF mouseCoordInStud)
+		public override Cursor GetDefaultCursorWithoutMouseClick(PointF mouseCoordInStud)
 		{
 			// if the layer is not visible you can basically do nothing on it
 			if (!Visible)
 				return MainForm.Instance.HiddenLayerCursor;
-			else if (Control.ModifierKeys == BlueBrick.Properties.Settings.Default.MouseZoomPanKey)
+			else if (Control.ModifierKeys == Properties.Settings.Default.MouseZoomPanKey)
 				return MainForm.Instance.PanOrZoomViewCursor;
 			else if (mDisplayCellIndex) // check if the user try to move the origin of the grid
 				return MainForm.Instance.GridArrowCursor;
@@ -486,9 +485,9 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the mouse click</param>
 		/// <returns>true if this layer wants to handle it</returns>
-		public override bool handleMouseDown(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
+		public override bool HandleMouseDown(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
 		{
-			bool isLeftButtonDown = (e.Button == MouseButtons.Left);
+			bool isLeftButtonDown = e.Button == MouseButtons.Left;
 
 			// only give the move grid cursor for a left click and if the cells are displayed
 			if (Visible && mDisplayCellIndex && isLeftButtonDown)
@@ -500,7 +499,7 @@ namespace BlueBrick.MapData
 			// we reply that we are always interested in the left click mouse event
 			// even if we do nothing with it after
 			// or if we want to cancel a move
-			return (isLeftButtonDown || (mIsMovingGridOrigin && (e.Button == MouseButtons.Right)));
+			return isLeftButtonDown || (mIsMovingGridOrigin && (e.Button == MouseButtons.Right));
 		}
 
 		/// <summary>
@@ -509,7 +508,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the click</param>
 		/// <returns>true if the view should be refreshed</returns>
-		public override bool mouseDown(MouseEventArgs e, PointF mouseCoordInStud)
+		public override bool MouseDown(MouseEventArgs e, PointF mouseCoordInStud)
 		{
 			bool mustRefresh = false;
 
@@ -536,7 +535,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the mouse move</param>
 		/// <returns>true if the view should be refreshed</returns>
-		public override bool mouseMove(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
+		public override bool MouseMove(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
 		{
 			// compute the position snapped on the grid
 			Point newPosition = computeGridCoordFromStudCoord(mouseCoordInStud);
@@ -552,7 +551,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the click</param>
 		/// <returns>true if the view should be refreshed</returns>
-		public override bool mouseUp(MouseEventArgs e, PointF mouseCoordInStud)
+		public override bool MouseUp(MouseEventArgs e, PointF mouseCoordInStud)
 		{
 			if (mIsMovingGridOrigin)
 			{
@@ -572,7 +571,7 @@ namespace BlueBrick.MapData
 		/// Select all the item inside the rectangle in the current selected layer
 		/// </summary>
 		/// <param name="selectionRectangeInStud">the rectangle in which select the items</param>
-		public override void selectInRectangle(RectangleF selectionRectangeInStud)
+		public override void SelectInRectangle(RectangleF selectionRectangeInStud)
 		{
 			// nothing to select on a grid
 		}

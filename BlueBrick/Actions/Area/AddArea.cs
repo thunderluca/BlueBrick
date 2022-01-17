@@ -22,9 +22,9 @@ namespace BlueBrick.Actions.Area
 {
 	class AddArea : Action
 	{
-		private LayerArea mAreaLayer = null;
+		private readonly LayerArea mAreaLayer = null;
 		private Rectangle mAreaInCellIndex = Rectangle.Empty;
-		private Color mNewColor = Color.Empty;
+		private readonly Color mNewColor = Color.Empty;
 		private Color[,] mOldColor = null;
 
 		public AddArea(LayerArea layer, Color color, Rectangle area)
@@ -36,7 +36,7 @@ namespace BlueBrick.Actions.Area
 
 		public override string GetName()
 		{
-			return BlueBrick.Properties.Resources.ActionAddArea;
+			return Properties.Resources.ActionAddArea;
 		}
 
 		public override void Redo()

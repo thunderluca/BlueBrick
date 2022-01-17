@@ -30,7 +30,7 @@ namespace BlueBrick.Actions.Texts
 		{
 			if (mItems.Count == 1)
 			{
-				string actionName = BlueBrick.Properties.Resources.ActionMoveText;
+				string actionName = Properties.Resources.ActionMoveText;
 				// if the first item is a group, search recursively the first non group item
 				Layer.LayerItem firstItem = mItems[0];
 				while (firstItem.IsAGroup)
@@ -45,7 +45,7 @@ namespace BlueBrick.Actions.Texts
 			}
 			else
 			{
-				return BlueBrick.Properties.Resources.ActionMoveSeveralTexts;
+				return Properties.Resources.ActionMoveSeveralTexts;
 			}
 		}
 	}

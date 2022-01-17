@@ -22,9 +22,9 @@ namespace BlueBrick.Actions.Area
 {
 	class MoveArea : Action
 	{
-		private LayerArea mAreaLayer = null;
-		private int mMoveX = 0;
-		private int mMoveY = 0;
+		private readonly LayerArea mAreaLayer = null;
+		private readonly int mMoveX = 0;
+		private readonly int mMoveY = 0;
 
 		public MoveArea(LayerArea layer, int moveX, int moveY)
 		{
@@ -35,7 +35,7 @@ namespace BlueBrick.Actions.Area
 
 		public override string GetName()
 		{
-			return BlueBrick.Properties.Resources.ActionMoveArea;
+			return Properties.Resources.ActionMoveArea;
 		}
 
 		public override void Redo()

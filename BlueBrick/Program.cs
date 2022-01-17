@@ -42,14 +42,14 @@ namespace BlueBrick
 				// if the setting is set to default, the window culture info is used
 				// we should do that before creating the MainForm to have the menu in
 				// the right language
-				string language = BlueBrick.Properties.Settings.Default.Language;
+				string language = Properties.Settings.Default.Language;
 				if (!language.Equals("default"))
 				{
 					// create a new culture info based on the property
 					System.Globalization.CultureInfo cultureInfo = new System.Globalization.CultureInfo(language);
-					// change the culture of the resources and the UI
-					BlueBrick.Properties.Resources.Culture = cultureInfo;
-					System.Threading.Thread.CurrentThread.CurrentUICulture = cultureInfo;
+                    // change the culture of the resources and the UI
+                    Properties.Resources.Culture = cultureInfo;
+                    Thread.CurrentThread.CurrentUICulture = cultureInfo;
 				}
 
 				// the application can be launched with one argument, which should be a name of a file

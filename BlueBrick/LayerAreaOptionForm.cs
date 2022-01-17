@@ -27,7 +27,7 @@ namespace BlueBrick
 {
 	public partial class LayerAreaOptionForm : Form
 	{
-		private LayerArea mEditedLayer = null;
+		private readonly LayerArea mEditedLayer = null;
 
 		public LayerAreaOptionForm(Layer layer)
 		{
@@ -36,12 +36,12 @@ namespace BlueBrick
 			mEditedLayer = layer as LayerArea;
 			// update the controls with the data of the areaLayer
 			// name and visibility
-			this.nameTextBox.Text = layer.Name;
-			this.isVisibleCheckBox.Checked = layer.Visible;
+			nameTextBox.Text = layer.Name;
+			isVisibleCheckBox.Checked = layer.Visible;
 			// transparency and cell size
-			this.alphaNumericUpDown.Value = mEditedLayer.Transparency;
-			this.alphaTrackBar.Value = mEditedLayer.Transparency;
-			this.cellSizeNumericUpDown.Value = mEditedLayer.AreaCellSizeInStud;
+			alphaNumericUpDown.Value = mEditedLayer.Transparency;
+			alphaTrackBar.Value = mEditedLayer.Transparency;
+			cellSizeNumericUpDown.Value = mEditedLayer.AreaCellSizeInStud;
 		}
 
 		private void buttonOk_Click(object sender, EventArgs e)
@@ -50,18 +50,20 @@ namespace BlueBrick
 			LayerArea oldLayerData = new LayerArea();
 			oldLayerData.CopyOptionsFrom(mEditedLayer);
 
-			// create a new layer to store the new data
-			LayerArea newLayerData = new LayerArea();
+            // create a new layer to store the new data
+            LayerArea newLayerData = new LayerArea
+            {
 
-			// name and visibility
-			newLayerData.Name = this.nameTextBox.Text;
-			newLayerData.Visible = this.isVisibleCheckBox.Checked;
-			//transparency and cell size
-			newLayerData.Transparency = (int)(this.alphaNumericUpDown.Value);
-			newLayerData.AreaCellSizeInStud = (int)(this.cellSizeNumericUpDown.Value);
+                // name and visibility
+                Name = nameTextBox.Text,
+                Visible = isVisibleCheckBox.Checked,
+                //transparency and cell size
+                Transparency = (int)alphaNumericUpDown.Value,
+                AreaCellSizeInStud = (int)cellSizeNumericUpDown.Value
+            };
 
-			// do a change option action
-			ActionManager.Instance.doAction(new ChangeLayerOption(mEditedLayer, oldLayerData, newLayerData));
+            // do a change option action
+            ActionManager.Instance.doAction(new ChangeLayerOption(mEditedLayer, oldLayerData, newLayerData));
 		}
 
 		private void alphaTrackBar_Scroll(object sender, EventArgs e)
@@ -71,7 +73,7 @@ namespace BlueBrick
 
 		private void alphaNumericUpDown_ValueChanged(object sender, EventArgs e)
 		{
-			alphaTrackBar.Value = (int)(alphaNumericUpDown.Value);
+			alphaTrackBar.Value = (int)alphaNumericUpDown.Value;
 		}
 
 		private void alphaNumericUpDown_KeyUp(object sender, KeyEventArgs e)

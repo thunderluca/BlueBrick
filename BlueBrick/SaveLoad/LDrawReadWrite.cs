@@ -21,7 +21,7 @@ namespace BlueBrick.SaveLoad
 {
     class LDrawReadWrite
     {
-        private static char[] mSeparator = { '|' };
+        private static readonly char[] mSeparator = { '|' };
 
         #region commands
         public static readonly string COMMON_COMMAND_GROUP = "0 GROUP ";

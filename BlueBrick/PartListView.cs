@@ -28,14 +28,14 @@ namespace BlueBrick
 		}
 
 		// the comparer to sort the list view item, base on their name property
-		private static ListViewItemComparerBasedOnName sListViewItemComparer = new ListViewItemComparerBasedOnName();
+		private static readonly ListViewItemComparerBasedOnName sListViewItemComparer = new ListViewItemComparerBasedOnName();
 
 		// create a list of list view item containing all the visible not filtered and bugeted item, i.e. the currently visible item in this list view for optim reason (to use the AddRange, and not adding items one by one)
-		private List<ListViewItem> mVisibleItems = new List<ListViewItem>();
+		private readonly List<ListViewItem> mVisibleItems = new List<ListViewItem>();
 		// create a temporary list view to temporary store the items that have been filtered in this list view
-		private List<ListViewItem> mFilteredItems = new List<ListViewItem>();
+		private readonly List<ListViewItem> mFilteredItems = new List<ListViewItem>();
 		// create another temporary list view to temporary store the items that are not budgeted in this listview
-		private List<ListViewItem> mNotBudgetedItems = new List<ListViewItem>();
+		private readonly List<ListViewItem> mNotBudgetedItems = new List<ListViewItem>();
 		
 		// the filter sentence
 		private string mFilterSentence = string.Empty;
@@ -60,9 +60,9 @@ namespace BlueBrick
 				// if a filter sentence is entered by the user. But we need to check both the global and
 				// and local filter sentence to get an accurate answer.
 				if (Properties.Settings.Default.UIFilterAllLibraryTab)
-					return (Properties.Settings.Default.UIFilterAllSentence != string.Empty);
+					return Properties.Settings.Default.UIFilterAllSentence != string.Empty;
 				else
-					return (mFilterSentence != string.Empty);
+					return mFilterSentence != string.Empty;
 			}
 		}
 
@@ -79,36 +79,36 @@ namespace BlueBrick
 
 		#region constructor
 		// import this method for the optimization in the constructor
-		[System.Runtime.InteropServices.DllImport("user32")]
+		[DllImport("user32")]
 		private static extern bool SendMessage(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam);
 
 		public PartListView()
 		{
             InitializeComponent();
 			// set the property of the list view
-			this.ShowItemToolTips = Properties.Settings.Default.PartLibDisplayBubbleInfo;
-			this.ListViewItemSorter = sListViewItemComparer; // we want to sort the items based on their Name (which contains a sorting key)
+			ShowItemToolTips = Properties.Settings.Default.PartLibDisplayBubbleInfo;
+			ListViewItemSorter = sListViewItemComparer; // we want to sort the items based on their Name (which contains a sorting key)
 			updateViewStyle(false); // set the view style depending if budget need to be visible or not
 			updateBackgroundColor();
 			// remove the transparent background color for the text (which is a performance issue on dot net)
 			uint LVM_SETTEXTBKCOLOR = 0x1026;
-			SendMessage(this.Handle, LVM_SETTEXTBKCOLOR, IntPtr.Zero, unchecked((IntPtr)(int)0xFFFFFF));
+			SendMessage(Handle, LVM_SETTEXTBKCOLOR, IntPtr.Zero, unchecked((IntPtr)0xFFFFFF));
 		}
 
         private void InitializeComponent()
         {
-            this.SuspendLayout();
+            SuspendLayout();
             // 
             // PartListView
             // 
-            this.Alignment = System.Windows.Forms.ListViewAlignment.SnapToGrid;
-            this.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LabelEdit = true;
-			this.LabelWrap = false;
-            this.MultiSelect = false;
-			this.LabelWrap = true; // we need label wrap for the "\n" to work, between the part name and the budget display
-			this.DoubleBuffered = true; // the double buffered also prevent a crash bug in Mono, otherwise it tries to paint while editing the list by a filtering
-			this.ResumeLayout(false);
+            Alignment = ListViewAlignment.SnapToGrid;
+            Dock = DockStyle.Fill;
+            LabelEdit = true;
+			LabelWrap = false;
+            MultiSelect = false;
+			LabelWrap = true; // we need label wrap for the "\n" to work, between the part name and the budget display
+			DoubleBuffered = true; // the double buffered also prevent a crash bug in Mono, otherwise it tries to paint while editing the list by a filtering
+			ResumeLayout(false);
         }
 
 		/// <summary>
@@ -116,22 +116,22 @@ namespace BlueBrick
 		/// </summary>
 		public void resetThisListViewWithVisibleList()
 		{
-			this.BeginUpdate();
+			BeginUpdate();
 			// reset the list of item of this list view, with an AddRange for optim reason
-			this.Items.Clear();
+			Items.Clear();
 			try
 			{
 				// for a strange reason, on mono, this method throw an exception for all the
 				// item added after the 16th one added (but the item is still added).
 				// Probably a bug from Mono.
-				this.Items.AddRange(mVisibleItems.ToArray());
+				Items.AddRange(mVisibleItems.ToArray());
 			}
 			catch
 			{
 				// so ignore this exception for mono, otherwise it is displayed in the error message box
 			}
 			// On Mono the EndUpate is called, but on Dot Net the begin and End update are counted
-			this.EndUpdate();
+			EndUpdate();
 		}
 
 		/// <summary>
@@ -194,10 +194,10 @@ namespace BlueBrick
 		public void ensureVisibleByTag(string tagToShow)
 		{
 			// find the first item that match the tag and make it visible
-			foreach (ListViewItem item in this.Items)
+			foreach (ListViewItem item in Items)
 				if (item.Tag.Equals(tagToShow))
 				{
-					this.EnsureVisible(item.Index);
+					EnsureVisible(item.Index);
 					break;
 				}
 		}
@@ -280,7 +280,7 @@ namespace BlueBrick
 			for (int i = 0; i < subSentenceList.Length; ++i)
 			{
 				string subSentence = subSentenceList[i];
-				bool isEvenIndex = ((i % 2) == 0);
+				bool isEvenIndex = (i % 2) == 0;
 				// special case for a special character (-+#) in front of a double quoted sentence
 				// if we can find a special character at the end of the current sub sentence, we need to transfert it
 				// at the begining of the next subsentence, but only for even index
@@ -375,8 +375,8 @@ namespace BlueBrick
 		private void filterDisplayedParts(List<string> includeIdFilter, List<string> includeFilter, List<string> excludeFilter)
 		{
 			// stop the redraw
-			this.SuspendLayout();
-			this.BeginUpdate();
+			SuspendLayout();
+			BeginUpdate();
 
 			//put back all the previous filtered item in the list
 			moveItemsToVisibleList(mFilteredItems);
@@ -389,7 +389,7 @@ namespace BlueBrick
 			{
 				try
 				{
-					this.BackColor = Properties.Settings.Default.PartLibFilteredBackColor;
+					BackColor = Properties.Settings.Default.PartLibFilteredBackColor;
 					// do not use a foreach here because Mono doesn't support to remove items while iterating on the list
 					// so use an index instead and decrease the index when we remove the item
 					for (int i = 0; i < mVisibleItems.Count; ++i)
@@ -444,16 +444,16 @@ namespace BlueBrick
 
 			// On Mono, the AddRange call the EndUpdate, so we put back the begin update, because we want to continue to update
 			// On Dot Net, the BeginUpdate are counted, but not on Mono, so we will have to put another EndUpdate
-			this.BeginUpdate();
+			BeginUpdate();
 
 			// resort the list view
-			this.Sort();
+			Sort();
 
 			// resume the redraw
-			this.EndUpdate();
+			EndUpdate();
 			// call it a second time because on Dot Net, the number of BeginUpdate are counted
-			this.EndUpdate();
-			this.ResumeLayout();
+			EndUpdate();
+			ResumeLayout();
 		}
 
 		/// <summary>
@@ -476,7 +476,7 @@ namespace BlueBrick
 			foreach (ListViewItem item in mNotBudgetedItems)
 				imageArray[item.ImageIndex] = BrickLibrary.Instance.GetImage(item.Tag as string);
 			// return the result as a list of image
-			return (new List<Image>(imageArray));
+			return new List<Image>(imageArray);
 		}
 
 		/// <summary>
@@ -486,11 +486,11 @@ namespace BlueBrick
 		public void updateBackgroundColor()
 		{
 			if (IsFiltered)
-				this.BackColor = Properties.Settings.Default.PartLibFilteredBackColor;
+				BackColor = Properties.Settings.Default.PartLibFilteredBackColor;
 			else if (Budget.Budget.Instance.ShouldShowOnlyBudgetedParts)
-				this.BackColor = Properties.Settings.Default.PartLibShowOnlyBudgetedPartsColor;
+				BackColor = Properties.Settings.Default.PartLibShowOnlyBudgetedPartsColor;
 			else
-				this.BackColor = Properties.Settings.Default.PartLibBackColor;
+				BackColor = Properties.Settings.Default.PartLibBackColor;
 		}
 		#endregion
 
@@ -500,7 +500,7 @@ namespace BlueBrick
 			// give focus to me so that user can scroll with mouse, just by moving the mouse above the part list view
 			// but do not do it if we are editing a budget because that means we have the focus, and we don't want to exit the editing
 			if (!mIsEditingBudget)
-				this.Focus();
+				Focus();
 		}
 
 		protected override void OnMouseLeave(EventArgs e)
@@ -521,9 +521,9 @@ namespace BlueBrick
 		/// </summary>
 		public void editCurrentSelectedItemLabel()
 		{
-			if (this.SelectedIndices.Count > 0)
+			if (SelectedIndices.Count > 0)
 			{
-				mItemForLabelEdit = this.SelectedItems[0];
+				mItemForLabelEdit = SelectedItems[0];
 				beginEditLabel();
 			}
 		}
@@ -541,41 +541,40 @@ namespace BlueBrick
 			e.CancelEdit = true;
 
 			// get the partID
-			string partID = this.Items[e.Item].Tag as string;
+			string partID = Items[e.Item].Tag as string;
 
 			// if the user escaped the edition, its null, so do not change the label in that case, otherwise try to change it
 			if (e.Label != null)
 			{
-				// by default it's an inifinte budget. Anything not parsable will result in an infinite budget (meaning the user erase the budget)
-				int newBudget = -1;
-				// try to parse as int (positive number)
-				if (int.TryParse(e.Label, out newBudget))
-				{
-					// every negative number will result as - 1 for infinite budget
- 					if (newBudget < -1)
-						newBudget = -1;
-				}
-				else
-				{
-					newBudget = -1;
-				}
+                // by default it's an inifinte budget. Anything not parsable will result in an infinite budget (meaning the user erase the budget)
+                // try to parse as int (positive number)
+                if (int.TryParse(e.Label, out int newBudget))
+                {
+                    // every negative number will result as - 1 for infinite budget
+                    if (newBudget < -1)
+                        newBudget = -1;
+                }
+                else
+                {
+                    newBudget = -1;
+                }
 
-				// add the current count and change the text myself
-				// set the budget first
-				Budget.Budget.Instance.setBudget(partID, newBudget);
+                // add the current count and change the text myself
+                // set the budget first
+                Budget.Budget.Instance.setBudget(partID, newBudget);
 				// before asking its formating
-				updatePartTextAndBackColor(this.Items[e.Item]);
+				updatePartTextAndBackColor(Items[e.Item]);
 				// check if we have unbudgeted the part
 				if (newBudget == -1)
-					updateFilterForUnbudgetingPart(this.Items[e.Item]);
+					updateFilterForUnbudgetingPart(Items[e.Item]);
 				// Bug Mono: if you change the text for a longer text, it keeps the previous displayed size
 				// even if there's enough space to display the new long text. A resize will recompute the display length of the texts
-				this.Size += new Size(1, 1);
+				Size += new Size(1, 1);
 			}
 			else
 			{
 				// just set back the proper text after the edition
-				updatePartTextAndBackColor(this.Items[e.Item]);
+				updatePartTextAndBackColor(Items[e.Item]);
 			}
 
 			// reset the label for edition if we are really editing the budget
@@ -594,8 +593,8 @@ namespace BlueBrick
 		/// <returns>the hit test result</returns>
 		public new ListViewHitTestInfo HitTest(Point location)
 		{
-			ListViewHitTestInfo result = null;
-			try
+            ListViewHitTestInfo result;
+            try
 			{
 				result = base.HitTest(location);
 			}
@@ -615,10 +614,10 @@ namespace BlueBrick
 			mItemForLabelEdit = null;
 
 			// check if we click with the left button
-			if (e.Button == System.Windows.Forms.MouseButtons.Left)
+			if (e.Button == MouseButtons.Left)
 			{
 				// get the info to know if we click an item and where
-				ListViewHitTestInfo hitTest = this.HitTest(e.Location);
+				ListViewHitTestInfo hitTest = HitTest(e.Location);
 				if (hitTest.Item != null)
 				{
 					// check where the user clicked, if it's on the label, we have a chance that he want to edit the label
@@ -639,10 +638,10 @@ namespace BlueBrick
 		protected override void OnMouseUp(MouseEventArgs e)
 		{
 			// check if we click with the left button
-			if (e.Button == System.Windows.Forms.MouseButtons.Left)
+			if (e.Button == MouseButtons.Left)
 			{
 				// check where the user clicked, if it's on the label, we have a chance that he want to edit the label
-				ListViewHitTestInfo hitTest = this.HitTest(e.Location);
+				ListViewHitTestInfo hitTest = HitTest(e.Location);
 				if (hitTest.Item != null)
 				{
 					// check if we click on the label to edit it or on the item to add it in the map
@@ -656,11 +655,10 @@ namespace BlueBrick
 					{
 						// reset the item flag
 						mItemHitOnMouseDownForAdding = null;
-						// and add an item if the part number is valid
-						string partNumber = hitTest.Item.Tag as string;
-						if (partNumber != null)
-							Map.Instance.AddConnectBrick(partNumber);
-					}
+                        // and add an item if the part number is valid
+                        if (hitTest.Item.Tag is string partNumber)
+                            Map.Instance.AddConnectBrick(partNumber);
+                    }
 				}
 			}
 		}
@@ -690,7 +688,7 @@ namespace BlueBrick
 			}
 			else
 			{
-				item.BackColor = System.Drawing.Color.Empty;
+				item.BackColor = Color.Empty;
 			}
 
 			// set the resulting text
@@ -737,13 +735,13 @@ namespace BlueBrick
 		public void updateAllPartCountAndBudget()
 		{
 			// suspend the layout, since we will update all the items
-			this.SuspendLayout();
-			this.BeginUpdate();
+			SuspendLayout();
+			BeginUpdate();
 			// iterate on all items
 			updateAllPartTextAndBackColor();
 			// resume the layout
-			this.EndUpdate();
-			this.ResumeLayout();
+			EndUpdate();
+			ResumeLayout();
 		}
 
 		/// <summary>
@@ -759,9 +757,9 @@ namespace BlueBrick
 				updateAllPartCountAndBudget();
 			// change the view style
 			if (Budget.Budget.Instance.ShouldShowBudgetNumbers || Properties.Settings.Default.PartLibDisplayPartInfo)
-				this.View = View.LargeIcon;
+				View = View.LargeIcon;
 			else
-				this.View = View.Tile;
+				View = View.Tile;
 		}
 		
 		/// <summary>
@@ -770,8 +768,8 @@ namespace BlueBrick
 		public void updateFilterOnBudgetedParts()
 		{
 			// suspend the layout since we will remove some items from the list
-			this.SuspendLayout();
-			this.BeginUpdate();
+			SuspendLayout();
+			BeginUpdate();
 
 			// put back all the previous not budgeted item in the list, and then we will iterate on all the items in the
 			// list to remove them again. We do that, because it may happen that some items were not visible because they
@@ -809,16 +807,16 @@ namespace BlueBrick
 			resetThisListViewWithVisibleList();
 
 			// resume the layout
-			this.EndUpdate();
-			this.ResumeLayout();
+			EndUpdate();
+			ResumeLayout();
 
 			// refilter after move the (non) budgeted parts if needed
 			// if we don't filter on budget, we have already put all the budget in, so we just need to resort the list,
 			// and the refilter will also sort, so we don't need to sort if we refilter
-			if (this.IsFiltered)
-				this.refilter();
+			if (IsFiltered)
+				refilter();
 			else
-				this.Sort();
+				Sort();
 
 			// update the background color with the default one
 			updateBackgroundColor();
@@ -844,9 +842,9 @@ namespace BlueBrick
 					// then add it to the list of unbugeted items
 					mNotBudgetedItems.Add(unbudgetedItem);
 				}
-				else if (this.mFilteredItems.Contains(unbudgetedItem))
+				else if (mFilteredItems.Contains(unbudgetedItem))
 				{
-					this.mFilteredItems.Remove(unbudgetedItem);
+					mFilteredItems.Remove(unbudgetedItem);
 					// then add it to the list of unbugeted items
 					mNotBudgetedItems.Add(unbudgetedItem);
 				}

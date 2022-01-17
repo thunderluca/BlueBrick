@@ -21,10 +21,10 @@ namespace BlueBrick.Actions.Rulers
 {
 	class EditRuler : Action
 	{
-		private LayerRuler mRulerLayer = null;
-		private LayerRuler.RulerItem mRulerItem = null;
-		private LayerRuler.RulerItem mOldRulerItemTemplate = null;
-		private LayerRuler.RulerItem mNewRulerItemTemplate = null;
+		private readonly LayerRuler mRulerLayer = null;
+		private readonly LayerRuler.RulerItem mRulerItem = null;
+		private readonly LayerRuler.RulerItem mOldRulerItemTemplate = null;
+		private readonly LayerRuler.RulerItem mNewRulerItemTemplate = null;
 
 		public EditRuler(LayerRuler layer, LayerRuler.RulerItem rulerItem, LayerRuler.RulerItem rulerItemTemplateForNewProperties)
 		{
@@ -38,7 +38,7 @@ namespace BlueBrick.Actions.Rulers
 
 		public override string GetName()
 		{
-			return BlueBrick.Properties.Resources.ActionEditRuler;
+			return Properties.Resources.ActionEditRuler;
 		}
 
 		public override void Redo()
@@ -70,7 +70,7 @@ namespace BlueBrick.Actions.Rulers
 			mRulerItem.MeasureFont = rulerTemplate.MeasureFont;
 			// update the display data
 			mRulerItem.updateDisplayDataAndMesurementImage();
-			mRulerLayer.updateBoundingSelectionRectangle();
+			mRulerLayer.UpdateBoundingSelectionRectangle();
 		}
 	}
 }

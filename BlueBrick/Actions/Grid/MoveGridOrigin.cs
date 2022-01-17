@@ -22,9 +22,9 @@ namespace BlueBrick.Actions.Grid
 {
 	class MoveGridOrigin : Action
 	{
-		private LayerGrid mGridLayer = null;
-		private int mMoveX = 0;
-		private int mMoveY = 0;
+		private readonly LayerGrid mGridLayer = null;
+		private readonly int mMoveX = 0;
+		private readonly int mMoveY = 0;
 
 		public MoveGridOrigin(LayerGrid layer, int moveX, int moveY)
 		{
@@ -35,7 +35,7 @@ namespace BlueBrick.Actions.Grid
 
 		public override string GetName()
 		{
-			return BlueBrick.Properties.Resources.ActionMoveGridOrigin;
+			return Properties.Resources.ActionMoveGridOrigin;
 		}
 
 		public override void Redo()

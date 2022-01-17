@@ -19,17 +19,17 @@ namespace BlueBrick.Actions.Bricks
 {
 	class ChangeBrickElevation : Action
 	{
-		private LayerBrick mLayer = null;
-		private List<LayerBrick.Brick> mBricksToEdit = null;
-		private List<float> mOldElevationForEachBrick = null;
-		private float mNewElevation = 0;
+		private readonly LayerBrick mLayer = null;
+		private readonly List<LayerBrick.Brick> mBricksToEdit = null;
+		private readonly List<float> mOldElevationForEachBrick = null;
+		private readonly float mNewElevation = 0;
 		// for restoring the order in the list we need a list of brick and index sorted by index in increasing order
 		struct BriCkAndIndex
 		{
 			public LayerBrick.Brick mBrick;
 			public int mIndex;
 		}
-		private List<BriCkAndIndex> mBrickIndex = null; // this list of index is for the redo, to add each text at the same place
+		private readonly List<BriCkAndIndex> mBrickIndex = null; // this list of index is for the redo, to add each text at the same place
 
 		public ChangeBrickElevation(LayerBrick layer, List<LayerBrick.Brick> bricksToEdit, float newElevation)
 		{

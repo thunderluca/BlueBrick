@@ -51,10 +51,12 @@ namespace BlueBrick
 				// but to avoid a stretching effect, we redraw the picture in a square
 				// first compute the position and size of the bitmap to draw
 				int maxSize = Math.Max(originalPartImage.Width, originalPartImage.Height);
-				Rectangle drawRectangle = new Rectangle();
-				drawRectangle.Width = (16 * originalPartImage.Width) / maxSize;
-				drawRectangle.Height = (16 * originalPartImage.Height) / maxSize;
-				drawRectangle.X = (16 - drawRectangle.Width) / 2;
+                Rectangle drawRectangle = new Rectangle
+                {
+                    Width = 16 * originalPartImage.Width / maxSize,
+                    Height = 16 * originalPartImage.Height / maxSize
+                };
+                drawRectangle.X = (16 - drawRectangle.Width) / 2;
 				drawRectangle.Y = (16 - drawRectangle.Height) / 2;
 				// create a new bitmap to draw the scaled part
 				mImage = new Bitmap(16, 16);
@@ -71,14 +73,14 @@ namespace BlueBrick
 		private class BrickEntry
 		{
 			private const int MAX_RED_VALUE = 227;
-			private string mPartNumber = string.Empty;
+			private readonly string mPartNumber = string.Empty;
 			private int mQuantity = 0;
-			private int mImageIndex = 0;
-			private ListViewItem mItem = null;
+			private readonly int mImageIndex = 0;
+			private readonly ListViewItem mItem = null;
 
 			public bool IsQuantityNull
 			{
-				get { return (mQuantity == 0); }
+				get { return mQuantity == 0; }
 			}
 
 			public ListViewItem Item
@@ -124,13 +126,15 @@ namespace BlueBrick
 			{
 				// create a list view item with the total count and the total part usage
 				string[] itemTexts = { Properties.Resources.TextTotal, mQuantity.ToString(), string.Empty, string.Empty, Properties.Resources.TextNA, Properties.Resources.TextNA, Properties.Resources.TextNA };
-				mItem = new ListViewItem(itemTexts);
-				// set a color
-				mItem.UseItemStyleForSubItems = true; // use the same color for the whole line, even the budget
-				mItem.ForeColor = Color.MediumBlue;
-				mItem.BackColor = Color.MintCream;
-				// add a tag to the item, so that it can be sorted, always at the bottom
-				if (brickLayer != null)
+                mItem = new ListViewItem(itemTexts)
+                {
+                    // set a color
+                    UseItemStyleForSubItems = true, // use the same color for the whole line, even the budget
+                    ForeColor = Color.MediumBlue,
+                    BackColor = Color.MintCream
+                };
+                // add a tag to the item, so that it can be sorted, always at the bottom
+                if (brickLayer != null)
 					mItem.Tag = brickLayer;
 				else
 					mItem.Tag = mItem;
@@ -156,40 +160,38 @@ namespace BlueBrick
 
 			public void updateUsagePercentageForPart(bool shouldIncludeHiddenParts)
 			{
-				// get the total count of the part all layer included
-				int partCount = 0;
-				int partBudget = 0;
-				int missingCount = 0;
 
-				// get the current budget for this part
-				string budgetCountAsString;
-				string usageAsString;
+                // get the current budget for this part
+                string budgetCountAsString;
+                string usageAsString;
 
-				// we should not use the mQuantity to compute the budget percentage, because this quantity is only for this
-				// group, but the part can appear in multiple group (on multiple layer), and the budget is an overall budget
-				// all part included, so let the Budget class to use its own count of part
-				float usagePercentage = Budget.Budget.Instance.getUsagePercentage(mPartNumber, shouldIncludeHiddenParts, out partCount, out partBudget);
-				if (usagePercentage < 0)
-				{
-					// illimited budget
-					budgetCountAsString = Properties.Resources.TextUnbudgeted;
-					mItem.SubItems[(int)ColumnId.BUDGET_COUNT].ForeColor = Color.BlueViolet;
-					missingCount = partCount; // if not budgeted, then we need all of them
-					mItem.SubItems[(int)ColumnId.MISSING_COUNT].ForeColor = Color.BlueViolet;
-					usageAsString = Properties.Resources.TextUnbudgeted;
-					mItem.SubItems[(int)ColumnId.PART_USAGE].ForeColor = Color.BlueViolet;
-				}
-				else
-				{
-					budgetCountAsString = partBudget.ToString();
-					mItem.SubItems[(int)ColumnId.BUDGET_COUNT].ForeColor = Color.Black;
-					missingCount = (partCount <= partBudget) ? 0 : (partCount - partBudget);
-					mItem.SubItems[(int)ColumnId.MISSING_COUNT].ForeColor = (missingCount == 0) ? Color.Black : Color.Red;
-					usageAsString = DownloadCenterForm.ComputePercentageBarAsString(usagePercentage);
-					mItem.SubItems[(int)ColumnId.PART_USAGE].ForeColor = DownloadCenterForm.ComputeColorFromPercentage((int)usagePercentage, MAX_RED_VALUE, true);
-				}
+                // get the total count of the part all layer included
+                // we should not use the mQuantity to compute the budget percentage, because this quantity is only for this
+                // group, but the part can appear in multiple group (on multiple layer), and the budget is an overall budget
+                // all part included, so let the Budget class to use its own count of part
+                float usagePercentage = Budget.Budget.Instance.getUsagePercentage(mPartNumber, shouldIncludeHiddenParts, out int partCount, out int partBudget);
+                int missingCount;
+                if (usagePercentage < 0)
+                {
+                    // illimited budget
+                    budgetCountAsString = Properties.Resources.TextUnbudgeted;
+                    mItem.SubItems[(int)ColumnId.BUDGET_COUNT].ForeColor = Color.BlueViolet;
+                    missingCount = partCount; // if not budgeted, then we need all of them
+                    mItem.SubItems[(int)ColumnId.MISSING_COUNT].ForeColor = Color.BlueViolet;
+                    usageAsString = Properties.Resources.TextUnbudgeted;
+                    mItem.SubItems[(int)ColumnId.PART_USAGE].ForeColor = Color.BlueViolet;
+                }
+                else
+                {
+                    budgetCountAsString = partBudget.ToString();
+                    mItem.SubItems[(int)ColumnId.BUDGET_COUNT].ForeColor = Color.Black;
+                    missingCount = (partCount <= partBudget) ? 0 : (partCount - partBudget);
+                    mItem.SubItems[(int)ColumnId.MISSING_COUNT].ForeColor = (missingCount == 0) ? Color.Black : Color.Red;
+                    usageAsString = DownloadCenterForm.ComputePercentageBarAsString(usagePercentage);
+                    mItem.SubItems[(int)ColumnId.PART_USAGE].ForeColor = DownloadCenterForm.ComputeColorFromPercentage((int)usagePercentage, MAX_RED_VALUE, true);
+                }
 
-				mItem.SubItems[(int)ColumnId.BUDGET_COUNT].Text = budgetCountAsString;
+                mItem.SubItems[(int)ColumnId.BUDGET_COUNT].Text = budgetCountAsString;
 				mItem.SubItems[(int)ColumnId.BUDGET_COUNT].Tag = partBudget;
 				mItem.SubItems[(int)ColumnId.MISSING_COUNT].Text = missingCount.ToString();
 				mItem.SubItems[(int)ColumnId.MISSING_COUNT].Tag = missingCount;
@@ -198,25 +200,24 @@ namespace BlueBrick
 
 			public void updateUsagePercentageForLayerSum(bool shouldIncludeHiddenParts)
 			{
-				// get the total count of the part all layer included
-				int totalPartCount = 0;
-				int partBudget = 0;
-				float usagePercentage = 0f;
 
-				// check if this layer sum is a sum for a layer or for the whole map
-				if (mItem.Tag is LayerBrick)
-				{
-					LayerBrick layerBrick = this.mItem.Tag as LayerBrick;
-					totalPartCount = Budget.Budget.Instance.getTotalCountForLayer(layerBrick, false);
-					usagePercentage = Budget.Budget.Instance.getUsagePercentageForLayer(layerBrick, out partBudget);
-				}
-				else
-				{
-					totalPartCount = Budget.Budget.Instance.getTotalCount(false, shouldIncludeHiddenParts);
-					usagePercentage = Budget.Budget.Instance.getTotalUsagePercentage(shouldIncludeHiddenParts, out partBudget);
-				}
+                // get the total count of the part all layer included
+                int partBudget;
+                float usagePercentage;
+                // check if this layer sum is a sum for a layer or for the whole map
+                if (mItem.Tag is LayerBrick)
+                {
+                    LayerBrick layerBrick = mItem.Tag as LayerBrick;
+                    _ = Budget.Budget.Instance.getTotalCountForLayer(layerBrick, false);
+                    usagePercentage = Budget.Budget.Instance.getUsagePercentageForLayer(layerBrick, out partBudget);
+                }
+                else
+                {
+                    _ = Budget.Budget.Instance.getTotalCount(false, shouldIncludeHiddenParts);
+                    usagePercentage = Budget.Budget.Instance.getTotalUsagePercentage(shouldIncludeHiddenParts, out partBudget);
+                }
 
-				mItem.SubItems[(int)ColumnId.BUDGET_COUNT].Text = partBudget.ToString();
+                mItem.SubItems[(int)ColumnId.BUDGET_COUNT].Text = partBudget.ToString();
 				mItem.SubItems[(int)ColumnId.MISSING_COUNT].Text = sumUpTagOfMyGroup((int)ColumnId.MISSING_COUNT).ToString();
 				mItem.SubItems[(int)ColumnId.PART_USAGE].Text = DownloadCenterForm.ComputePercentageBarAsString(usagePercentage);
 				mItem.SubItems[(int)ColumnId.PART_USAGE].ForeColor = DownloadCenterForm.ComputeColorFromPercentage((int)usagePercentage, MAX_RED_VALUE, true);
@@ -225,11 +226,11 @@ namespace BlueBrick
 			private int sumUpTagOfMyGroup(int columnId)
 			{
 				int total = 0;
-				if (this.mItem.Group != null)
-					foreach (ListViewItem item in this.mItem.Group.Items)
+				if (mItem.Group != null)
+					foreach (ListViewItem item in mItem.Group.Items)
 						total += (int)item.SubItems[columnId].Tag;
-				else if (this.mItem.ListView != null)
-					foreach (ListViewItem item in this.mItem.ListView.Items)
+				else if (mItem.ListView != null)
+					foreach (ListViewItem item in mItem.ListView.Items)
 						total += (int)item.SubItems[columnId].Tag;
 				return total;
 			}
@@ -240,7 +241,7 @@ namespace BlueBrick
 			public Dictionary<string, BrickEntry> mBrickEntryList = new Dictionary<string, BrickEntry>();
 			public LayerBrick mLayer = null;
 			public BrickEntry mBrickEntrySumLine = null;
-			private ListViewGroup mGroup = null;
+			private readonly ListViewGroup mGroup = null;
 
 			public ListViewGroup Group
 			{
@@ -274,8 +275,8 @@ namespace BlueBrick
 		/// </summary>
 		private class MyListViewItemComparer : System.Collections.IComparer
 		{
-			private int mColumn;
-			private SortOrder mOrder;
+			private readonly int mColumn;
+			private readonly SortOrder mOrder;
 
 			public MyListViewItemComparer(int column, SortOrder order)
 			{
@@ -332,8 +333,8 @@ namespace BlueBrick
 			}
 		}
 
-		private List<GroupEntry> mGroupEntryList = new List<GroupEntry>();
-		private Dictionary<string, IconEntry> mThumbnailImage = new Dictionary<string, IconEntry>();
+		private readonly List<GroupEntry> mGroupEntryList = new List<GroupEntry>();
+		private readonly Dictionary<string, IconEntry> mThumbnailImage = new Dictionary<string, IconEntry>();
 
 		//save the last sorted column
 		private int mLastColumnSortedIndex = -1;
@@ -343,12 +344,14 @@ namespace BlueBrick
 		{
 			InitializeComponent();
 
-			// set the size of the image (do not change)
-			this.SmallImageList = new ImageList();
-			this.SmallImageList.ImageSize = new Size(16, 16);
+            // set the size of the image (do not change)
+            SmallImageList = new ImageList
+            {
+                ImageSize = new Size(16, 16)
+            };
 
-			// sort the first column
-			OnColumnClick(new ColumnClickEventArgs(0));
+            // sort the first column
+            OnColumnClick(new ColumnClickEventArgs(0));
 		}
 		#endregion
 		#region update
@@ -360,7 +363,7 @@ namespace BlueBrick
 		{
 			// do nothing if the window is not visible
 			// because we rebuild everything when it becomes visible
-			if (newLayer == null || !this.Visible)
+			if (newLayer == null || !Visible)
 				return;
 
 			addLayer(newLayer);
@@ -373,7 +376,7 @@ namespace BlueBrick
 		{
 			// do nothing if the window is not visible
 			// because we rebuild everything when it becomes visible
-			if (deletedLayer == null || !this.Visible)
+			if (deletedLayer == null || !Visible)
 				return;
 
 			removeLayer(deletedLayer);
@@ -386,7 +389,7 @@ namespace BlueBrick
 		{
 			// do nothing if the window is not visible
 			// because we rebuild everything when it becomes visible
-			if (layer == null || !this.Visible || !this.SplitPartPerLayer)
+			if (layer == null || !Visible || !SplitPartPerLayer)
 				return;
 
 			// search the layer
@@ -408,7 +411,7 @@ namespace BlueBrick
 		{
 			// search the group entry associated with this layer
 			GroupEntry currentGroupEntry = null;
-			if (this.SplitPartPerLayer)
+			if (SplitPartPerLayer)
 			{
 				foreach (GroupEntry groupEntry in mGroupEntryList)
 					if (groupEntry.mLayer == layer)
@@ -421,7 +424,7 @@ namespace BlueBrick
 				{
 					currentGroupEntry = new GroupEntry(layer, this);
 					mGroupEntryList.Add(currentGroupEntry);
-					this.Groups.Add(currentGroupEntry.Group);
+					Groups.Add(currentGroupEntry.Group);
 				}
 			}
 			else
@@ -443,27 +446,26 @@ namespace BlueBrick
 			// do nothing if the window is not visible
 			// because we rebuild everything when it becomes visible
 			// or if there's no budget open
-			if (!this.Visible || !Budget.Budget.Instance.IsExisting)
+			if (!Visible || !Budget.Budget.Instance.IsExisting)
 				return;
 
 			// iterate on all the group entry, because the specified part can be in multiple group (if the part list is split by layers)
 			foreach (GroupEntry groupEntry in mGroupEntryList)
 			{
-				// try to get an entry in the dictionnary for the specified brick
-				// if we find it, update its usage percentage, otherwise just ignore it
-				BrickEntry brickEntry = null;
-				if (groupEntry.mBrickEntryList.TryGetValue(partNumber, out brickEntry))
-				{
-					// update the percentage of the found brick
-					brickEntry.updateUsagePercentageForPart(this.IncludeHiddenLayers);
-					// since we found the brick in this group entry, update also the percentage of the sum line
-					groupEntry.mBrickEntrySumLine.updateUsagePercentageForLayerSum(this.IncludeHiddenLayers);
-				}
-			}
+                // try to get an entry in the dictionnary for the specified brick
+                // if we find it, update its usage percentage, otherwise just ignore it
+                if (groupEntry.mBrickEntryList.TryGetValue(partNumber, out BrickEntry brickEntry))
+                {
+                    // update the percentage of the found brick
+                    brickEntry.updateUsagePercentageForPart(IncludeHiddenLayers);
+                    // since we found the brick in this group entry, update also the percentage of the sum line
+                    groupEntry.mBrickEntrySumLine.updateUsagePercentageForLayerSum(IncludeHiddenLayers);
+                }
+            }
 
 			// if it is currently sorted by budget, we need to resort
 			if (mLastColumnSortedIndex == 2)
-				this.Sort();
+				Sort();
 		}
 
 		/// <summary>
@@ -477,7 +479,7 @@ namespace BlueBrick
 			// do nothing if the window is not visible
 			// because we rebuild everything when it becomes visible
 			// or if there's no budget open
-			if (!this.Visible || !Budget.Budget.Instance.IsExisting)
+			if (!Visible || !Budget.Budget.Instance.IsExisting)
 				return;
 
 			// iterate on all brick entrey on all the group entry to update the usage percentage
@@ -485,14 +487,14 @@ namespace BlueBrick
 			{
 				// update all the other brick entries
 				foreach (BrickEntry brickEntry in groupEntry.mBrickEntryList.Values)
-					brickEntry.updateUsagePercentageForPart(this.IncludeHiddenLayers);
+					brickEntry.updateUsagePercentageForPart(IncludeHiddenLayers);
 				// and also update the percentage of the sum brick entry after, so that the missing count is correctly computed
-				groupEntry.mBrickEntrySumLine.updateUsagePercentageForLayerSum(this.IncludeHiddenLayers);
+				groupEntry.mBrickEntrySumLine.updateUsagePercentageForLayerSum(IncludeHiddenLayers);
 			}
 
 			// if it is currently sorted by budget, we need to resort
 			if (mLastColumnSortedIndex == 2)
-				this.Sort();
+				Sort();
 		}
 
 		/// <summary>
@@ -503,24 +505,24 @@ namespace BlueBrick
 			if (shouldShow)
 			{
 				// add the budget column if they are not already there and set there correct dispay index
-				if (!this.Columns.Contains(budgetCountColumnHeader))
-					this.Columns.Insert((int)ColumnId.BUDGET_COUNT, budgetCountColumnHeader);
+				if (!Columns.Contains(budgetCountColumnHeader))
+					Columns.Insert((int)ColumnId.BUDGET_COUNT, budgetCountColumnHeader);
 				budgetCountColumnHeader.DisplayIndex = 2;
 
-				if (!this.Columns.Contains(missingCountColumnHeader))
-					this.Columns.Insert((int)ColumnId.MISSING_COUNT, missingCountColumnHeader);
+				if (!Columns.Contains(missingCountColumnHeader))
+					Columns.Insert((int)ColumnId.MISSING_COUNT, missingCountColumnHeader);
 				missingCountColumnHeader.DisplayIndex = 3;
 
-				if (!this.Columns.Contains(usagePercentageColumnHeader))
-					this.Columns.Insert((int)ColumnId.PART_USAGE, usagePercentageColumnHeader);
+				if (!Columns.Contains(usagePercentageColumnHeader))
+					Columns.Insert((int)ColumnId.PART_USAGE, usagePercentageColumnHeader);
 				usagePercentageColumnHeader.DisplayIndex = 4;
 			}
 			else
 			{
 				// remove the budget columns
-				this.Columns.Remove(budgetCountColumnHeader);
-				this.Columns.Remove(missingCountColumnHeader);
-				this.Columns.Remove(usagePercentageColumnHeader);
+				Columns.Remove(budgetCountColumnHeader);
+				Columns.Remove(missingCountColumnHeader);
+				Columns.Remove(usagePercentageColumnHeader);
 			}
 		}
 
@@ -538,7 +540,7 @@ namespace BlueBrick
 		{
 			// do nothing if the window is not visible
 			// because we rebuild everything when it becomes visible
-			if (!this.Visible)
+			if (!Visible)
 				return;
 
 			// do nothing if the layer is hidden, unless we should also count hidden bricks
@@ -559,7 +561,7 @@ namespace BlueBrick
 					// We need to do a recursive call on all the brick, even the unnamed group, because those unnamed group may contains named brick inside
 					// but no worries, the addBrick() function will check and avoid adding unnamed group
 					foreach (Layer.LayerItem item in (brickOrGroup as Layer.Group).Items)
-						this.addBrickNotification(layer, item, false); // allways isCausedByRegroup is false in that case, the regroup is only on the first level of the recursion
+						addBrickNotification(layer, item, false); // allways isCausedByRegroup is false in that case, the regroup is only on the first level of the recursion
 				}
 				else if (isCausedByRegroup)
 				{
@@ -567,13 +569,13 @@ namespace BlueBrick
 					// and in that case we need to remove all the sub element of that group
 					// because of the false flag, it will not readd anything
 					foreach (Layer.LayerItem item in (brickOrGroup as Layer.Group).Items)
-						this.removeBrickNotification(layer, item, false); // don't use true otherwise it's an infinite loop
+						removeBrickNotification(layer, item, false); // don't use true otherwise it's an infinite loop
 				}
 
 			// if it is currently sorted by quantity, we need to resort.
 			// if it is sorted by budget, the addBrick function will anyway call the update budget modification
 			if (mLastColumnSortedIndex == 1)
-				this.Sort();
+				Sort();
 		}
 
 		/// <summary>
@@ -591,7 +593,7 @@ namespace BlueBrick
 		{
 			// do nothing if the window is not visible
 			// because we rebuild everything when it becomes visible
-			if (!this.Visible)
+			if (!Visible)
 				return;
 
 			// do nothing if the layer is hidden, unless we should also count hidden bricks
@@ -615,7 +617,7 @@ namespace BlueBrick
 					// We need to do a recursive call on all the brick, even the unnamed group, because those unnamed group may contains named brick inside
 					// but no worries, the removeBrick() function will check and avoid removing unnamed group
 					foreach (Layer.LayerItem item in (brickOrGroup as Layer.Group).Items)
-						this.removeBrickNotification(layer, item, false); // alway isCausedByUngroup is false otherwise it's an infinite loop
+						removeBrickNotification(layer, item, false); // alway isCausedByUngroup is false otherwise it's an infinite loop
 				}
 				else if (isCausedByUngroup)
 				{
@@ -623,20 +625,20 @@ namespace BlueBrick
 					// because of the false flag set in the recursive call, we will only add the named group and not under,
 					// and will add hierrachy of unnamed group
 					foreach (Layer.LayerItem item in (brickOrGroup as Layer.Group).Items)
-						this.addBrickNotification(layer, item, false); // don't use true otherwise it's an infinite loop
+						addBrickNotification(layer, item, false); // don't use true otherwise it's an infinite loop
 				}
 
 			// remove the group from the list view and the mGroupEntryList if it is empty
-			if (this.SplitPartPerLayer && (currentGroupEntry.Group.Items.Count == 0))
+			if (SplitPartPerLayer && (currentGroupEntry.Group.Items.Count == 0))
 			{
-				this.Groups.Remove(currentGroupEntry.Group);
+				Groups.Remove(currentGroupEntry.Group);
 				mGroupEntryList.Remove(currentGroupEntry);
 			}
 
 			// if it is currently sorted by quantity, we need to resort
 			// if it is sorted by budget, the removeBrick function will anyway call the update budget modification
 			if (mLastColumnSortedIndex == 1)
-				this.Sort();
+				Sort();
 		}
 
 		private void addLayer(LayerBrick brickLayer)
@@ -672,29 +674,27 @@ namespace BlueBrick
 			// get the part number
 			string partNumber = brickOrGroup.PartNumber;
 
-			// try to get an entry in the image dictionary, else add it
-			IconEntry iconEntry = null;
-			if (!mThumbnailImage.TryGetValue(partNumber, out iconEntry))
-			{
-				iconEntry = new IconEntry(partNumber, this.SmallImageList);
-				mThumbnailImage.Add(partNumber, iconEntry);
-			}
+            // try to get an entry in the image dictionary, else add it
+            if (!mThumbnailImage.TryGetValue(partNumber, out IconEntry iconEntry))
+            {
+                iconEntry = new IconEntry(partNumber, SmallImageList);
+                mThumbnailImage.Add(partNumber, iconEntry);
+            }
 
-			// try to get an entry in the dictionnary for the current brick
-			// to get the previous count, then increase the count and store the new value
-			BrickEntry brickEntry = null;
-			if (!brickEntryList.TryGetValue(partNumber, out brickEntry))
-			{
-				// create a new entry and add it
-				brickEntry = new BrickEntry(partNumber, iconEntry.mImageIndex, this.IncludeHiddenLayers);
-				brickEntryList.Add(partNumber, brickEntry);
-			}
-			// assign the correct group to the item
-			brickEntry.Item.Group = groupEntry.Group;
+            // try to get an entry in the dictionnary for the current brick
+            // to get the previous count, then increase the count and store the new value
+            if (!brickEntryList.TryGetValue(partNumber, out BrickEntry brickEntry))
+            {
+                // create a new entry and add it
+                brickEntry = new BrickEntry(partNumber, iconEntry.mImageIndex, IncludeHiddenLayers);
+                brickEntryList.Add(partNumber, brickEntry);
+            }
+            // assign the correct group to the item
+            brickEntry.Item.Group = groupEntry.Group;
 
 			// add the item in the list view if not already in
 			if (brickEntry.IsQuantityNull)
-				this.Items.Add(brickEntry.Item);
+				Items.Add(brickEntry.Item);
 			// and increment its count
 			brickEntry.incrementQuantity();
 			// also increment the count for the whole group
@@ -719,9 +719,9 @@ namespace BlueBrick
 				removeBrick(item, currentGroupEntry);
 
 			// remove the group from the list view and the mGroupEntryList
-			if (this.SplitPartPerLayer)
+			if (SplitPartPerLayer)
 			{
-				this.Groups.Remove(currentGroupEntry.Group);
+				Groups.Remove(currentGroupEntry.Group);
 				mGroupEntryList.Remove(currentGroupEntry);
 			}
 		}
@@ -738,21 +738,20 @@ namespace BlueBrick
 			if (brickOrGroup.PartNumber == string.Empty)
 				return;
 
-			BrickEntry brickEntry = null;
-			if (groupEntry.mBrickEntryList.TryGetValue(brickOrGroup.PartNumber, out brickEntry))
-			{
-				// decrement the count for the brick and the whole group
-				brickEntry.decrementQuantity();
-				groupEntry.mBrickEntrySumLine.decrementQuantity();
-				// check if the brick becomes null
-				if (brickEntry.IsQuantityNull)
-				{
-					this.Items.Remove(brickEntry.Item);
-				}
-				// update the part usage for all the part that bear the same part number in all the groups
-				updateBudgetNotification(brickOrGroup.PartNumber);
-			}
-		}
+            if (groupEntry.mBrickEntryList.TryGetValue(brickOrGroup.PartNumber, out BrickEntry brickEntry))
+            {
+                // decrement the count for the brick and the whole group
+                brickEntry.decrementQuantity();
+                groupEntry.mBrickEntrySumLine.decrementQuantity();
+                // check if the brick becomes null
+                if (brickEntry.IsQuantityNull)
+                {
+                    Items.Remove(brickEntry.Item);
+                }
+                // update the part usage for all the part that bear the same part number in all the groups
+                updateBudgetNotification(brickOrGroup.PartNumber);
+            }
+        }
 
 		/// <summary>
 		/// rebuild the full list from scratch
@@ -761,7 +760,7 @@ namespace BlueBrick
 		{
 			// do nothing if the window is not visible
 			// because we rebuild everything when it becomes visible
-			if (!this.Visible)
+			if (!Visible)
 				return;
 
 			// and rebuild the list
@@ -776,12 +775,12 @@ namespace BlueBrick
 			// clear everyting that we will rebuild
 			mThumbnailImage.Clear();
 			mGroupEntryList.Clear();
-			this.Groups.Clear();
-			this.Items.Clear();
-			this.SmallImageList.Images.Clear();
+			Groups.Clear();
+			Items.Clear();
+			SmallImageList.Images.Clear();
 
 			// create a default group if we don't use the layers
-			if (!this.SplitPartPerLayer)
+			if (!SplitPartPerLayer)
 			{
 				GroupEntry groupEntry = new GroupEntry(null, this);
 				mGroupEntryList.Add(groupEntry);
@@ -792,10 +791,9 @@ namespace BlueBrick
 			// in the dictionnary
 			foreach (Layer layer in Map.Instance.LayerList)
 			{
-				LayerBrick brickLayer = layer as LayerBrick;
-				if (brickLayer != null)
-					addLayer(brickLayer);
-			}
+                if (layer is LayerBrick brickLayer)
+                    addLayer(brickLayer);
+            }
 		}
 
 		#endregion
@@ -805,13 +803,13 @@ namespace BlueBrick
 		{
 			// if the part list is not visible, we need to rebuild it before exporting
 			// (otherwise, if it is visible, the list is already up to date)
-			if (!this.Visible)
+			if (!Visible)
 				rebuildListInternal();
 
 			// compute an array to store the order of the columns
-			int[] columnOrder = new int[this.Columns.Count];
+			int[] columnOrder = new int[Columns.Count];
 			int columnIndex = 0;
-			foreach (ColumnHeader columnHeader in this.Columns)
+			foreach (ColumnHeader columnHeader in Columns)
 			{
 				columnOrder[columnHeader.DisplayIndex] = columnIndex;
 				columnIndex++;
@@ -832,12 +830,12 @@ namespace BlueBrick
 			for (int i = 0; i < maxLength.Length; ++i)
 			{
 				// prepare the text to write with padding
-				string text = this.Columns[columnOrder[i]].Text;
+				string text = Columns[columnOrder[i]].Text;
 				// remove the column sorter char
-				if (columnOrder[i] == this.mLastColumnSortedIndex)
+				if (columnOrder[i] == mLastColumnSortedIndex)
 					text = text.Substring(2);
 				// compute the padding
-				int padding = (maxLength[i] - text.Length) + 1;
+				int padding = maxLength[i] - text.Length + 1;
 				for (int j = 0; j < padding; ++j)
 					text += " ";
 				// write the text and a pipe
@@ -854,7 +852,7 @@ namespace BlueBrick
 			{
 				// prepare the text to write with padding
 				string text = item.SubItems[columnOrder[i]].Text;
-				int padding = (maxLength[i] - text.Length) + 1;
+				int padding = maxLength[i] - text.Length + 1;
 				for (int j = 0; j < padding; ++j)
 					text += " ";
 				// write the text and a pipe
@@ -865,7 +863,7 @@ namespace BlueBrick
 			}
 		}
 
-		private void exportItemsInTxt(StreamWriter writer, int[] columnOrder, int[] maxLength, ListView.ListViewItemCollection itemList, string headerLine)
+		private void exportItemsInTxt(StreamWriter writer, int[] columnOrder, int[] maxLength, ListViewItemCollection itemList, string headerLine)
 		{
 			ListViewItem sumLineItem = null;
 
@@ -892,10 +890,10 @@ namespace BlueBrick
 		private void exportListInTxt(string fileName, int[] columnOrder)
 		{
 			//compute the max lenght of texts of each column and the column header
-			int[] maxLength = new int[this.Columns.Count];
+			int[] maxLength = new int[Columns.Count];
 			for (int i = 0; i < maxLength.Length; ++i)
-				maxLength[i] = this.Columns[i].Text.Length;
-			foreach (ListViewItem item in this.Items)
+				maxLength[i] = Columns[i].Text.Length;
+			foreach (ListViewItem item in Items)
 			{
 				for (int i = 0; i < maxLength.Length; ++i)
 				{
@@ -939,9 +937,9 @@ namespace BlueBrick
 				writer.WriteLine();
 				writer.WriteLine();
 				// the parts
-				if (this.SplitPartPerLayer)
+				if (SplitPartPerLayer)
 				{
-					foreach (ListViewGroup group in this.Groups)
+					foreach (ListViewGroup group in Groups)
 					{
 						writer.WriteLine("| " + group.Header);
 						writer.WriteLine(headerLine);
@@ -957,7 +955,7 @@ namespace BlueBrick
 					writer.WriteLine(headerLine);
 					exportColumnHeaderInTxt(writer, columnOrder, maxLength);
 					writer.WriteLine(headerLine);
-					exportItemsInTxt(writer, columnOrder, maxLength, this.Items, headerLine);
+					exportItemsInTxt(writer, columnOrder, maxLength, Items, headerLine);
 					writer.WriteLine(headerLine);
 				}
 
@@ -977,9 +975,9 @@ namespace BlueBrick
 			string line = string.Empty;
 			for (int i = 0; i < columnOrder.Length; ++i)
 			{
-				string text = this.Columns[columnOrder[i]].Text;
+				string text = Columns[columnOrder[i]].Text;
 				// remove the column sorter char
-				if (columnOrder[i] == this.mLastColumnSortedIndex)
+				if (columnOrder[i] == mLastColumnSortedIndex)
 					text = text.Substring(2);
 				// add the text
 				line += text;
@@ -1016,7 +1014,7 @@ namespace BlueBrick
 			writer.WriteLine(line);
 		}
 
-		private void exportItemsInCSV(StreamWriter writer, int[] columnOrder, ListView.ListViewItemCollection itemList)
+		private void exportItemsInCSV(StreamWriter writer, int[] columnOrder, ListViewItemCollection itemList)
 		{
 			ListViewItem sumLineItem = null;
 
@@ -1045,9 +1043,9 @@ namespace BlueBrick
 				StreamWriter writer = new StreamWriter(fileName, false, Encoding.UTF8);
 
 				// the parts
-				if (this.SplitPartPerLayer)
+				if (SplitPartPerLayer)
 				{
-					foreach (ListViewGroup group in this.Groups)
+					foreach (ListViewGroup group in Groups)
 					{
 						// write the name of the layer
 						writer.WriteLine(group.Header);
@@ -1063,7 +1061,7 @@ namespace BlueBrick
 					// write the column header
 					exportColumnHeaderInCSV(writer, columnOrder);
 					// and the item list
-					exportItemsInCSV(writer, columnOrder, this.Items);
+					exportItemsInCSV(writer, columnOrder, Items);
 				}
 
 				// close the stream
@@ -1083,9 +1081,9 @@ namespace BlueBrick
 			{
 				string styleClass = string.Empty;
 				// get the column header text
-				string text = this.Columns[columnOrder[i]].Text;
+				string text = Columns[columnOrder[i]].Text;
 				// remove the column sorter char
-				if (columnOrder[i] == this.mLastColumnSortedIndex)
+				if (columnOrder[i] == mLastColumnSortedIndex)
 					text = text.Substring(2);
 				// write the header
 				switch (columnOrder[i])
@@ -1174,7 +1172,7 @@ namespace BlueBrick
 			writer.WriteLine("</tr>");
 		}
 
-		private void exportItemsInHtml(StreamWriter writer, int[] columnOrder, ListView.ListViewItemCollection itemList)
+		private void exportItemsInHtml(StreamWriter writer, int[] columnOrder, ListViewItemCollection itemList)
 		{
 			ListViewItem sumLineItem = null;
 
@@ -1242,9 +1240,9 @@ namespace BlueBrick
 				writer.WriteLine("\t<tr><td class=\"info\">{0}</td><td>{1}</td></tr>", MainForm.Instance.LabelCommentLocalized, Map.Instance.Comment.Replace(Environment.NewLine, "<br/>"));
 				writer.WriteLine("</table>\n<br/>\n<br/>\n");
 				// the parts
-				if (this.SplitPartPerLayer)
+				if (SplitPartPerLayer)
 				{
-					foreach (ListViewGroup group in this.Groups)
+					foreach (ListViewGroup group in Groups)
 					{
 						writer.WriteLine("<table border=\"1px\" width=\"95%\" cellpadding=\"10\" style=\"margin: auto\">");
 						writer.WriteLine("<tr class=\"groupName\"><td colspan=\"{0}\"><b>{1}</b></td></tr>", columnOrder.Length, group.Header);
@@ -1258,7 +1256,7 @@ namespace BlueBrick
 				{
 					writer.WriteLine("<table border=\"1\" width=\"95%\" cellpadding=\"10\" style=\"margin: auto\">");
 					exportColumnHeaderInHtml(writer, columnOrder);
-					exportItemsInHtml(writer, columnOrder, this.Items);
+					exportItemsInHtml(writer, columnOrder, Items);
 					writer.WriteLine("</table>");
 				}
 				writer.WriteLine("</body>\n</html>");
@@ -1277,23 +1275,23 @@ namespace BlueBrick
 		protected override void OnVisibleChanged(EventArgs e)
 		{
 			// rebuild the list if the form becomes visible
-			if (this.Visible)
+			if (Visible)
 				rebuildList();
 		}
 
 		protected override void OnColumnClick(ColumnClickEventArgs e)
 		{
 			// start of the update of the control
-			this.BeginUpdate();
+			BeginUpdate();
 
 			// change the sort order if we click again on the same column
 			// but if we change the column, don't change the sort order
 			if (mLastColumnSortedIndex == e.Column)
 			{
-				if (this.Sorting == SortOrder.Ascending)
-					this.Sorting = SortOrder.Descending;
+				if (Sorting == SortOrder.Ascending)
+					Sorting = SortOrder.Descending;
 				else
-					this.Sorting = SortOrder.Ascending;
+					Sorting = SortOrder.Ascending;
 			}
 			else
 			{
@@ -1301,20 +1299,20 @@ namespace BlueBrick
 				// and reset it with the same value to FORCE the Sort to be done,
 				// once if the listViewShortcutKeys.Sorting didn't changed the Sort
 				// method does nothing.
-				SortOrder oldOrder = this.Sorting;
-				this.Sorting = SortOrder.None;
-				this.Sorting = oldOrder;
+				SortOrder oldOrder = Sorting;
+				Sorting = SortOrder.None;
+				Sorting = oldOrder;
 			}
 
 			// remove the previous sorting icon, and add the icon to the new column
 			setSortIcon(e.Column);
 
 			// create a new comparer with the right column then call the sort method
-			this.ListViewItemSorter = new MyListViewItemComparer(e.Column, this.Sorting);
-			this.Sort();
+			ListViewItemSorter = new MyListViewItemComparer(e.Column, Sorting);
+			Sort();
 
 			// end of the update of the control
-			this.EndUpdate();
+			EndUpdate();
 		}
 
 		private void setSortIcon(int columnIndex)
@@ -1322,18 +1320,18 @@ namespace BlueBrick
 			// remove the order sign on the previous sorted column
 			if (mLastColumnSortedIndex != -1)
 			{
-				string header = this.Columns[mLastColumnSortedIndex].Text;
-				this.Columns[mLastColumnSortedIndex].Text = header.Substring(2);
+				string header = Columns[mLastColumnSortedIndex].Text;
+				Columns[mLastColumnSortedIndex].Text = header.Substring(2);
 			}
 
 			// save the new current column index
 			mLastColumnSortedIndex = columnIndex;
 
 			// add a descending or ascending sign to the header of the column
-			if (this.Sorting == SortOrder.Ascending)
-				this.Columns[columnIndex].Text = char.ConvertFromUtf32(0x25B2) + " " + this.Columns[columnIndex].Text;
+			if (Sorting == SortOrder.Ascending)
+				Columns[columnIndex].Text = char.ConvertFromUtf32(0x25B2) + " " + Columns[columnIndex].Text;
 			else
-				this.Columns[columnIndex].Text = char.ConvertFromUtf32(0x25BC) + " " + this.Columns[columnIndex].Text;
+				Columns[columnIndex].Text = char.ConvertFromUtf32(0x25BC) + " " + Columns[columnIndex].Text;
 		}
 		#endregion
 	}

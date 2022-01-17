@@ -34,7 +34,7 @@ namespace BlueBrick
 			//  - AssemblyInfo.cs
 //			this.Text = String.Format("About {0}", AssemblyTitle);
 //			this.labelProductName.Text = AssemblyProduct;
-			this.labelVersion.Text = this.labelVersion.Text + AssemblyVersion;
+			labelVersion.Text = labelVersion.Text + AssemblyVersion;
 //			this.labelCopyright.Text = AssemblyCopyright;
 //			this.labelWebSiteName.Text = AssemblyCompany;
 

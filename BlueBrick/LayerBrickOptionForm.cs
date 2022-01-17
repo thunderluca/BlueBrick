@@ -23,7 +23,7 @@ namespace BlueBrick
 {
 	public partial class LayerBrickOptionForm : Form
 	{
-		private LayerBrick mEditedLayer = null;
+		private readonly LayerBrick mEditedLayer = null;
 		private Color mHullColor;
 
 		public LayerBrickOptionForm(LayerBrick layer)
@@ -33,19 +33,19 @@ namespace BlueBrick
 			mEditedLayer = layer;
 			// update the controls with the data of the gridLayer
 			// name and visibility
-			this.nameTextBox.Text = layer.Name;
-			this.isVisibleCheckBox.Checked = layer.Visible;
+			nameTextBox.Text = layer.Name;
+			isVisibleCheckBox.Checked = layer.Visible;
 			// transparency
-			this.alphaNumericUpDown.Value = layer.Transparency;
-			this.alphaTrackBar.Value = layer.Transparency;
+			alphaNumericUpDown.Value = layer.Transparency;
+			alphaTrackBar.Value = layer.Transparency;
 			// the display hull settings
-			this.displayHullCheckBox.Checked = layer.DisplayHulls;
+			displayHullCheckBox.Checked = layer.DisplayHulls;
 			updateHullColor(layer.PenToDrawHull.Color);
 			hullThicknessNumericUpDown.Value = (int)layer.PenToDrawHull.Width;
 			// call the checkchange to force the enable of the hull color option
 			displayHullCheckBox_CheckedChanged(this, null);
 			// brick elevation
-			this.displayBrickElevationCheckBox.Checked = layer.DisplayBrickElevation;
+			displayBrickElevationCheckBox.Checked = layer.DisplayBrickElevation;
 		}
 
 		private void buttonOk_Click(object sender, EventArgs e)
@@ -54,25 +54,27 @@ namespace BlueBrick
 			LayerBrick oldLayerData = new LayerBrick();
 			oldLayerData.CopyOptionsFrom(mEditedLayer);
 
-			// create a new layer to store the new data
-			LayerBrick newLayerData = new LayerBrick();
+            // create a new layer to store the new data
+            LayerBrick newLayerData = new LayerBrick
+            {
 
-			// name and visibility
-			newLayerData.Name = this.nameTextBox.Text;
-			newLayerData.Visible = this.isVisibleCheckBox.Checked;
+                // name and visibility
+                Name = nameTextBox.Text,
+                Visible = isVisibleCheckBox.Checked,
 
-			//transparency
-			newLayerData.Transparency = (int)(this.alphaNumericUpDown.Value);
+                //transparency
+                Transparency = (int)alphaNumericUpDown.Value,
 
-			// hull
-			newLayerData.DisplayHulls = this.displayHullCheckBox.Checked;
-			newLayerData.PenToDrawHull = new Pen(mHullColor, (int)hullThicknessNumericUpDown.Value);
+                // hull
+                DisplayHulls = displayHullCheckBox.Checked,
+                PenToDrawHull = new Pen(mHullColor, (int)hullThicknessNumericUpDown.Value),
 
-			// brick elevation
-			newLayerData.DisplayBrickElevation = this.displayBrickElevationCheckBox.Checked;
+                // brick elevation
+                DisplayBrickElevation = displayBrickElevationCheckBox.Checked
+            };
 
-			// do a change option action
-			ActionManager.Instance.doAction(new ChangeLayerOption(mEditedLayer, oldLayerData, newLayerData));
+            // do a change option action
+            ActionManager.Instance.doAction(new ChangeLayerOption(mEditedLayer, oldLayerData, newLayerData));
 		}
 
 		private void updateHullColor(Color newColor)
@@ -93,7 +95,7 @@ namespace BlueBrick
 
 		private void alphaNumericUpDown_ValueChanged(object sender, EventArgs e)
 		{
-			alphaTrackBar.Value = (int)(alphaNumericUpDown.Value);
+			alphaTrackBar.Value = (int)alphaNumericUpDown.Value;
 		}
 
 		private void alphaNumericUpDown_KeyUp(object sender, KeyEventArgs e)
@@ -104,13 +106,13 @@ namespace BlueBrick
 		private void hullColorPictureBox_Click(object sender, EventArgs e)
 		{
 			// set the color with the current back color of the picture box
-			this.colorDialog.Color = mHullColor;
+			colorDialog.Color = mHullColor;
 			// open the color box in modal
-			DialogResult result = this.colorDialog.ShowDialog(this);
+			DialogResult result = colorDialog.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
 				// if the user choose a color, set it back in the back color of the picture box
-				updateHullColor(this.colorDialog.Color);
+				updateHullColor(colorDialog.Color);
 			}
 		}
 

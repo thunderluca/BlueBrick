@@ -29,7 +29,7 @@ namespace BlueBrick.Actions.Texts
 		public RotateText(LayerText layer, List<Layer.LayerItem> texts, int rotateSteps, bool forceKeepLastCenter)
 		{
 			// call the common constructor
-			float angle = MapData.Layer.CurrentRotationStep * rotateSteps;
+			float angle = Layer.CurrentRotationStep * rotateSteps;
 			base.commonConstructor(layer, texts, angle, forceKeepLastCenter);
 		}
 
@@ -37,7 +37,7 @@ namespace BlueBrick.Actions.Texts
 		{
 			if (mItems.Count == 1)
 			{
-				string actionName = BlueBrick.Properties.Resources.ActionRotateText;
+				string actionName = Properties.Resources.ActionRotateText;
 				string text = (mItems[0] as LayerText.TextCell).Text.Replace("\r\n", " ");
 				if (text.Length > 10)
 					text = text.Substring(0, 10) + "...";
@@ -46,7 +46,7 @@ namespace BlueBrick.Actions.Texts
 			}
 			else
 			{
-				return BlueBrick.Properties.Resources.ActionRotateSeveralTexts;
+				return Properties.Resources.ActionRotateSeveralTexts;
 			}
 		}
 
@@ -65,7 +65,7 @@ namespace BlueBrick.Actions.Texts
 			rotateGroups(rotationAngle);
 
 			// update the bounding rectangle (because the text is not square)
-			mLayer.updateBoundingSelectionRectangle();
+			mLayer.UpdateBoundingSelectionRectangle();
 		}
 
 		public override void Undo()
@@ -83,7 +83,7 @@ namespace BlueBrick.Actions.Texts
 			rotateGroups(rotationAngle);
 
 			// update the bounding rectangle (because the text is not square)
-			mLayer.updateBoundingSelectionRectangle();
+			mLayer.UpdateBoundingSelectionRectangle();
 		}
 	}
 }

@@ -32,7 +32,7 @@ namespace BlueBrick.Actions.Items
 			// To do that call the function that gives all the top items of the list (brick or group),
 			// this function will return a newly created list.
 			// Also moving the top group, will also move all the children items
-			mItems = Layer.sGetTopItemListFromList(items);
+			mItems = Layer.SGetTopItemListFromList(items);
 			// however this function can return null, if the list of item is empty, so create an empty list instead
 			if (mItems == null)
 				mItems = new List<Layer.LayerItem>();
@@ -45,7 +45,7 @@ namespace BlueBrick.Actions.Items
 				item.Position = new PointF(item.Position.X + mMove.X, item.Position.Y + mMove.Y);
 
 			// update the bounding rectangle
-			mLayer.updateBoundingSelectionRectangle();
+			mLayer.UpdateBoundingSelectionRectangle();
 		}
 
 		public override void Undo()
@@ -55,7 +55,7 @@ namespace BlueBrick.Actions.Items
 				item.Position = new PointF(item.Position.X - mMove.X, item.Position.Y - mMove.Y);
 
 			// update the bounding rectangle
-			mLayer.updateBoundingSelectionRectangle();
+			mLayer.UpdateBoundingSelectionRectangle();
 		}
 	}
 }

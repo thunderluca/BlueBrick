@@ -30,12 +30,14 @@ namespace BlueBrick
 		public static DialogResult Show(IWin32Window owner, string text, string caption, MessageBoxButtons buttons,
 			MessageBoxIcon icon, MessageBoxDefaultButton defaultButton, ref bool checkboxValue)
 		{
-			// create a message box
-			ForgetableMessageBox messageBox = new ForgetableMessageBox();
+            // create a message box
+            ForgetableMessageBox messageBox = new ForgetableMessageBox
+            {
 
-			// set the parameters
-			messageBox.Text = caption;
-			messageBox.messageLabel.Text = text;
+                // set the parameters
+                Text = caption
+            };
+            messageBox.messageLabel.Text = text;
 			messageBox.setButtons(buttons);
 			messageBox.setDefaultButtons(defaultButton);
 			messageBox.setIcon(icon);
@@ -63,59 +65,59 @@ namespace BlueBrick
 			switch (buttons)
 			{
 				case MessageBoxButtons.AbortRetryIgnore:
-					this.button1.Text = BlueBrick.Properties.Resources.ErrorMsgAbortButton;
-					this.button1.DialogResult = DialogResult.Abort;
-					this.button2.Text = BlueBrick.Properties.Resources.ErrorMsgRetryButton;
-					this.button2.DialogResult = DialogResult.Retry;
-					this.button3.Text = BlueBrick.Properties.Resources.ErrorMsgIgnoreButton;
-					this.button3.DialogResult = DialogResult.Ignore;
-					this.AcceptButton = button3;
-					this.CancelButton = button1;
+					button1.Text = Properties.Resources.ErrorMsgAbortButton;
+					button1.DialogResult = DialogResult.Abort;
+					button2.Text = Properties.Resources.ErrorMsgRetryButton;
+					button2.DialogResult = DialogResult.Retry;
+					button3.Text = Properties.Resources.ErrorMsgIgnoreButton;
+					button3.DialogResult = DialogResult.Ignore;
+					AcceptButton = button3;
+					CancelButton = button1;
 					break;
 				case MessageBoxButtons.OK:
-					this.button1.Text = BlueBrick.Properties.Resources.ErrorMsgOkButton;
-					this.button1.DialogResult = DialogResult.OK;
-					this.button2.Hide();
-					this.button3.Hide();
-					this.AcceptButton = button1;
-					this.CancelButton = button1;
+					button1.Text = Properties.Resources.ErrorMsgOkButton;
+					button1.DialogResult = DialogResult.OK;
+					button2.Hide();
+					button3.Hide();
+					AcceptButton = button1;
+					CancelButton = button1;
 					break;
 				case MessageBoxButtons.OKCancel:
-					this.button1.Text = BlueBrick.Properties.Resources.ErrorMsgOkButton;
-					this.button1.DialogResult = DialogResult.OK;
-					this.button2.Text = BlueBrick.Properties.Resources.ErrorMsgCancelButton;
-					this.button2.DialogResult = DialogResult.Cancel;
-					this.button3.Hide();
-					this.AcceptButton = button1;
-					this.CancelButton = button2;
+					button1.Text = Properties.Resources.ErrorMsgOkButton;
+					button1.DialogResult = DialogResult.OK;
+					button2.Text = Properties.Resources.ErrorMsgCancelButton;
+					button2.DialogResult = DialogResult.Cancel;
+					button3.Hide();
+					AcceptButton = button1;
+					CancelButton = button2;
 					break;
 				case MessageBoxButtons.RetryCancel:
-					this.button1.Text = BlueBrick.Properties.Resources.ErrorMsgRetryButton;
-					this.button1.DialogResult = DialogResult.Retry;
-					this.button2.Text = BlueBrick.Properties.Resources.ErrorMsgCancelButton;
-					this.button2.DialogResult = DialogResult.Cancel;
-					this.button3.Hide();
-					this.AcceptButton = button1;
-					this.CancelButton = button2;
+					button1.Text = Properties.Resources.ErrorMsgRetryButton;
+					button1.DialogResult = DialogResult.Retry;
+					button2.Text = Properties.Resources.ErrorMsgCancelButton;
+					button2.DialogResult = DialogResult.Cancel;
+					button3.Hide();
+					AcceptButton = button1;
+					CancelButton = button2;
 					break;
 				case MessageBoxButtons.YesNo:
-					this.button1.Text = BlueBrick.Properties.Resources.ErrorMsgYesButton;
-					this.button1.DialogResult = DialogResult.Yes;
-					this.button2.Text = BlueBrick.Properties.Resources.ErrorMsgNoButton;
-					this.button2.DialogResult = DialogResult.No;
-					this.button3.Hide();
-					this.AcceptButton = button1;
-					this.CancelButton = button2;
+					button1.Text = Properties.Resources.ErrorMsgYesButton;
+					button1.DialogResult = DialogResult.Yes;
+					button2.Text = Properties.Resources.ErrorMsgNoButton;
+					button2.DialogResult = DialogResult.No;
+					button3.Hide();
+					AcceptButton = button1;
+					CancelButton = button2;
 					break;
 				case MessageBoxButtons.YesNoCancel:
-					this.button1.Text = BlueBrick.Properties.Resources.ErrorMsgYesButton;
-					this.button1.DialogResult = DialogResult.Yes;
-					this.button2.Text = BlueBrick.Properties.Resources.ErrorMsgNoButton;
-					this.button2.DialogResult = DialogResult.No;
-					this.button3.Text = BlueBrick.Properties.Resources.ErrorMsgCancelButton;
-					this.button3.DialogResult = DialogResult.Cancel;
-					this.AcceptButton = button1;
-					this.CancelButton = button3;
+					button1.Text = Properties.Resources.ErrorMsgYesButton;
+					button1.DialogResult = DialogResult.Yes;
+					button2.Text = Properties.Resources.ErrorMsgNoButton;
+					button2.DialogResult = DialogResult.No;
+					button3.Text = Properties.Resources.ErrorMsgCancelButton;
+					button3.DialogResult = DialogResult.Cancel;
+					AcceptButton = button1;
+					CancelButton = button3;
 					break;
 			}
 		}
@@ -125,13 +127,13 @@ namespace BlueBrick
 			switch (defaultButton)
 			{
 				case MessageBoxDefaultButton.Button1:
-					this.button1.Focus();
+					button1.Focus();
 					break;
 				case MessageBoxDefaultButton.Button2:
-					this.button2.Focus();
+					button2.Focus();
 					break;
 				case MessageBoxDefaultButton.Button3:
-					this.button3.Focus();
+					button3.Focus();
 					break;
 			}
 		}
@@ -142,22 +144,22 @@ namespace BlueBrick
 			{
 				case MessageBoxIcon.Information:
 //				case MessageBoxIcon.Asterisk: // same as information
-					this.iconPictureBox.Image = SystemIcons.Information.ToBitmap();
+					iconPictureBox.Image = SystemIcons.Information.ToBitmap();
 					break;
 				case MessageBoxIcon.Error:
 //				case MessageBoxIcon.Hand: // same as error
 //				case MessageBoxIcon.Stop: // same as error
-					this.iconPictureBox.Image = SystemIcons.Error.ToBitmap();
+					iconPictureBox.Image = SystemIcons.Error.ToBitmap();
 					break;
 				case MessageBoxIcon.Exclamation:
 //				case MessageBoxIcon.Warning: //same as exclamation
-					this.iconPictureBox.Image = SystemIcons.Exclamation.ToBitmap();
+					iconPictureBox.Image = SystemIcons.Exclamation.ToBitmap();
 					break;
 				case MessageBoxIcon.Question:
-					this.iconPictureBox.Image = SystemIcons.Question.ToBitmap();
+					iconPictureBox.Image = SystemIcons.Question.ToBitmap();
 					break;
 				case MessageBoxIcon.None:
-					this.iconAndMessageTableLayoutPanel.ColumnStyles[0].Width = 0;
+					iconAndMessageTableLayoutPanel.ColumnStyles[0].Width = 0;
 					break;
 			}
 		}

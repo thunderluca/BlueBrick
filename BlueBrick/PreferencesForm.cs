@@ -48,7 +48,7 @@ namespace BlueBrick
 		};
 
 		// save the old value of the setting to restore the old value after a click on "Reset Default Settings" + "Cancel"
-		private Settings mOldSettings = new Settings();
+		private readonly Settings mOldSettings = new Settings();
 
 		// a flag to check if the user changed the part lib order
 		private bool mHasPartLibOrderChanged = false;
@@ -60,8 +60,8 @@ namespace BlueBrick
 		private bool mDoesNeedToRestart = false;
 
 		// a flag to tell if the user has set the new map template file name and the budget file name
-		private bool mIsTemplateFilenameForNewMapSet = (Settings.Default.TemplateFilenameWhenCreatingANewMap != string.Empty);
-		private bool mIsBudgetFilenameToLoadAtStartupSet = (Settings.Default.BudgetFilenameToLoadAtStartup != string.Empty);
+		private bool mIsTemplateFilenameForNewMapSet = Settings.Default.TemplateFilenameWhenCreatingANewMap != string.Empty;
+		private bool mIsBudgetFilenameToLoadAtStartupSet = Settings.Default.BudgetFilenameToLoadAtStartup != string.Empty;
 
 		#region properties
 		public bool DoesNeedToRestart
@@ -133,112 +133,112 @@ namespace BlueBrick
 				// new map template
 				setTextBoxForTemplateFilenameForNewMap(Settings.Default.TemplateFilenameWhenCreatingANewMap);
 				// recent files
-				this.RecentFilesNumericUpDown.Value = Settings.Default.MaxRecentFilesNum;
-				this.clearRecentFilesButton.Enabled = (Settings.Default.RecentFiles.Count > 0);
+				RecentFilesNumericUpDown.Value = Settings.Default.MaxRecentFilesNum;
+				clearRecentFilesButton.Enabled = Settings.Default.RecentFiles.Count > 0;
 				// undo
-				this.undoRecordedNumericUpDown.Value = Settings.Default.UndoStackDepth;
-				this.undoDisplayedNumericUpDown.Value = Settings.Default.UndoStackDisplayedDepth;
+				undoRecordedNumericUpDown.Value = Settings.Default.UndoStackDepth;
+				undoDisplayedNumericUpDown.Value = Settings.Default.UndoStackDisplayedDepth;
 				// notification
-				this.GeneralCheckedListBoxNotification.SetItemChecked(0, Settings.Default.DisplayWarningMessageForNotSavingInBBM);
-				this.GeneralCheckedListBoxNotification.SetItemChecked(1, Settings.Default.DisplayWarningMessageForOverridingExportFiles);
-				this.GeneralCheckedListBoxNotification.SetItemChecked(2, Settings.Default.DisplayWarningMessageForBrickNotAddedDueToBudgetLimitation);
-				this.GeneralCheckedListBoxNotification.SetItemChecked(3, Settings.Default.DisplayWarningMessageForBrickNotCopiedDueToBudgetLimitation);
-				this.GeneralCheckedListBoxNotification.SetItemChecked(4, Settings.Default.DisplayWarningMessageForBrickNotReplacedDueToBudgetLimitation);
-				this.GeneralCheckedListBoxNotification.SetItemChecked(5, Settings.Default.DisplayWarningMessageForShowingBudgetNumbers);
-				this.GeneralCheckedListBoxNotification.SetItemChecked(6, Settings.Default.DisplayWarningMessageForPastingOnWrongLayer);
+				GeneralCheckedListBoxNotification.SetItemChecked(0, Settings.Default.DisplayWarningMessageForNotSavingInBBM);
+				GeneralCheckedListBoxNotification.SetItemChecked(1, Settings.Default.DisplayWarningMessageForOverridingExportFiles);
+				GeneralCheckedListBoxNotification.SetItemChecked(2, Settings.Default.DisplayWarningMessageForBrickNotAddedDueToBudgetLimitation);
+				GeneralCheckedListBoxNotification.SetItemChecked(3, Settings.Default.DisplayWarningMessageForBrickNotCopiedDueToBudgetLimitation);
+				GeneralCheckedListBoxNotification.SetItemChecked(4, Settings.Default.DisplayWarningMessageForBrickNotReplacedDueToBudgetLimitation);
+				GeneralCheckedListBoxNotification.SetItemChecked(5, Settings.Default.DisplayWarningMessageForShowingBudgetNumbers);
+				GeneralCheckedListBoxNotification.SetItemChecked(6, Settings.Default.DisplayWarningMessageForPastingOnWrongLayer);
 				// performance
-				this.optimComboBox.SelectedIndex = Settings.Default.StartSavedMipmapLevel;
+				optimComboBox.SelectedIndex = Settings.Default.StartSavedMipmapLevel;
 			}
 
 			// -- tab edition
 			if ((tabPageFilter & TabPageFilter.EDITION) != 0)
 			{
 				// mouse
-				this.mouseZoomCenteredCheckBox.Checked = Settings.Default.WheelMouseIsZoomOnCursor;
-				this.mouseZoomSpeedNumericUpDown.Value = (Decimal)Settings.Default.WheelMouseZoomSpeed;
+				mouseZoomCenteredCheckBox.Checked = Settings.Default.WheelMouseIsZoomOnCursor;
+				mouseZoomSpeedNumericUpDown.Value = (Decimal)Settings.Default.WheelMouseZoomSpeed;
 				fillAndSelectModifierKeyComboBox();
 				// copy/paste
-				this.copyOffsetComboBox.SelectedIndex = Settings.Default.OffsetAfterCopyStyle;
-				this.pasteOffsetValueNumericUpDown.Value = (Decimal)Settings.Default.OffsetAfterCopyValue;
-				bool enableOffsetValue = (Settings.Default.OffsetAfterCopyStyle != 0);
-				this.pasteOffsetValueNumericUpDown.Enabled = enableOffsetValue;
-				this.OffsetValueLabel.Enabled = enableOffsetValue;
+				copyOffsetComboBox.SelectedIndex = Settings.Default.OffsetAfterCopyStyle;
+				pasteOffsetValueNumericUpDown.Value = (Decimal)Settings.Default.OffsetAfterCopyValue;
+				bool enableOffsetValue = Settings.Default.OffsetAfterCopyStyle != 0;
+				pasteOffsetValueNumericUpDown.Enabled = enableOffsetValue;
+				OffsetValueLabel.Enabled = enableOffsetValue;
 				// ruler
-				this.rulerControlPointRadiusNumericUpDown.Value = (Decimal)Settings.Default.RulerControlPointRadiusInPixel;
-				this.RulerSwitchToEditionAfterCreationCheckBox.Checked = Settings.Default.SwitchToEditionAfterRulerCreation;
+				rulerControlPointRadiusNumericUpDown.Value = Settings.Default.RulerControlPointRadiusInPixel;
+				RulerSwitchToEditionAfterCreationCheckBox.Checked = Settings.Default.SwitchToEditionAfterRulerCreation;
 				// line appearance
-				this.lineThicknessNumericUpDown.Value = (Decimal)(Settings.Default.RulerDefaultLineThickness);
-				this.lineColorPictureBox.BackColor = Settings.Default.RulerDefaultLineColor;
-				this.allowOffsetCheckBox.Checked = Settings.Default.RulerDefaultAllowOffset;
+				lineThicknessNumericUpDown.Value = (Decimal)Settings.Default.RulerDefaultLineThickness;
+				lineColorPictureBox.BackColor = Settings.Default.RulerDefaultLineColor;
+				allowOffsetCheckBox.Checked = Settings.Default.RulerDefaultAllowOffset;
 				// guideline appearance
-				this.dashPatternLineNumericUpDown.Value = (Decimal)(Settings.Default.RulerDefaultDashPatternLine);
-				this.dashPatternSpaceNumericUpDown.Value = (Decimal)(Settings.Default.RulerDefaultDashPatternSpace);
-				this.guidelineThicknessNumericUpDown.Value = (Decimal)(Settings.Default.RulerDefaultGuidelineThickness);
-				this.guidelineColorPictureBox.BackColor = Settings.Default.RulerDefaultGuidelineColor;
+				dashPatternLineNumericUpDown.Value = (Decimal)Settings.Default.RulerDefaultDashPatternLine;
+				dashPatternSpaceNumericUpDown.Value = (Decimal)Settings.Default.RulerDefaultDashPatternSpace;
+				guidelineThicknessNumericUpDown.Value = (Decimal)Settings.Default.RulerDefaultGuidelineThickness;
+				guidelineColorPictureBox.BackColor = Settings.Default.RulerDefaultGuidelineColor;
 				// measure and unit
-				this.displayUnitCheckBox.Checked = Settings.Default.RulerDefaultDisplayUnit;
-				this.displayMeasureTextCheckBox.Checked = Settings.Default.RulerDefaultDisplayMeasureText;
-				this.unitComboBox.SelectedIndex = Settings.Default.RulerDefaultUnit;
-				this.rulerFontColorPictureBox.BackColor = Settings.Default.RulerDefaultFontColor;
+				displayUnitCheckBox.Checked = Settings.Default.RulerDefaultDisplayUnit;
+				displayMeasureTextCheckBox.Checked = Settings.Default.RulerDefaultDisplayMeasureText;
+				unitComboBox.SelectedIndex = Settings.Default.RulerDefaultUnit;
+				rulerFontColorPictureBox.BackColor = Settings.Default.RulerDefaultFontColor;
 				updateChosenFont(rulerFontNameLabel, Settings.Default.RulerDefaultFontColor, Settings.Default.RulerDefaultFont);
 			}
 
 			// -- tab appearance
 			if ((tabPageFilter & TabPageFilter.APPEARANCE) != 0)
 			{
-				this.brickHullColorPictureBox.BackColor = Settings.Default.DefaultHullColor;
-				this.brickHullThicknessNumericUpDown.Value = (Decimal)Settings.Default.DefaultHullThickness;
-				this.backgroundColorPictureBox.BackColor = Settings.Default.DefaultBackgroundColor;
-				this.gridColorPictureBox.BackColor = Settings.Default.DefaultGridColor;
-				this.subGridColorPictureBox.BackColor = Settings.Default.DefaultSubGridColor;
-				setGammaToNumericUpDown(this.GammaForSelectionNumericUpDown, Settings.Default.GammaForSelection);
-				setGammaToNumericUpDown(this.GammaForSnappingNumericUpDown, Settings.Default.GammaForSnappingPart);
+				brickHullColorPictureBox.BackColor = Settings.Default.DefaultHullColor;
+				brickHullThicknessNumericUpDown.Value = (Decimal)Settings.Default.DefaultHullThickness;
+				backgroundColorPictureBox.BackColor = Settings.Default.DefaultBackgroundColor;
+				gridColorPictureBox.BackColor = Settings.Default.DefaultGridColor;
+				subGridColorPictureBox.BackColor = Settings.Default.DefaultSubGridColor;
+				setGammaToNumericUpDown(GammaForSelectionNumericUpDown, Settings.Default.GammaForSelection);
+				setGammaToNumericUpDown(GammaForSnappingNumericUpDown, Settings.Default.GammaForSnappingPart);
 				// grid size
-				this.gridSizeNumericUpDown.Value = (Decimal)Math.Min(this.gridSizeNumericUpDown.Maximum,
-															Math.Max(this.gridSizeNumericUpDown.Minimum, Settings.Default.DefaultGridSize));
-				this.gridSubdivisionNumericUpDown.Value = (Decimal)Math.Min(this.gridSubdivisionNumericUpDown.Maximum,
-															Math.Max(this.gridSubdivisionNumericUpDown.Minimum, Settings.Default.DefaultSubDivisionNumber));
-				this.gridEnabledCheckBox.Checked = Settings.Default.DefaultGridEnabled;
-				this.subGridEnabledCheckBox.Checked = Settings.Default.DefaultSubGridEnabled;
+				gridSizeNumericUpDown.Value = Math.Min(gridSizeNumericUpDown.Maximum,
+                                                            Math.Max(gridSizeNumericUpDown.Minimum, Settings.Default.DefaultGridSize));
+				gridSubdivisionNumericUpDown.Value = Math.Min(gridSubdivisionNumericUpDown.Maximum,
+                                                            Math.Max(gridSubdivisionNumericUpDown.Minimum, Settings.Default.DefaultSubDivisionNumber));
+				gridEnabledCheckBox.Checked = Settings.Default.DefaultGridEnabled;
+				subGridEnabledCheckBox.Checked = Settings.Default.DefaultSubGridEnabled;
 				// redraw the sample box only after having set the colors
 				redrawSamplePictureBox();
 				// only set the color scheme after having set the colors
 				fillColorSchemeComboBox();
 				findCorectColorSchemeAccordingToColors();
 				// font
-				this.defaultFontColorPictureBox.BackColor = Settings.Default.DefaultTextColor;
-				updateChosenFont(this.defaultTextFontNameLabel, Settings.Default.DefaultTextColor, Settings.Default.DefaultTextFont);
+				defaultFontColorPictureBox.BackColor = Settings.Default.DefaultTextColor;
+				updateChosenFont(defaultTextFontNameLabel, Settings.Default.DefaultTextColor, Settings.Default.DefaultTextFont);
 				// area
-				this.areaTransparencyNumericUpDown.Value = (Decimal)Settings.Default.DefaultAreaTransparency;
-				this.areaCellSizeNumericUpDown.Value = (Decimal)Settings.Default.DefaultAreaSize;
+				areaTransparencyNumericUpDown.Value = Settings.Default.DefaultAreaTransparency;
+				areaCellSizeNumericUpDown.Value = Settings.Default.DefaultAreaSize;
 			}
 
 			// -- tab part lib
 			if ((tabPageFilter & TabPageFilter.PART_LIBRARY) != 0)
 			{
 				fillPartLibraryListBox(isForResetingDefaultSetting);
-				this.PartLibBackColorPictureBox.BackColor = Settings.Default.PartLibBackColor;
-				this.partLibBudgetFilterBackColorPictureBox.BackColor = Settings.Default.PartLibShowOnlyBudgetedPartsColor;
-				this.PartLibFilteredBackColorPictureBox.BackColor = Settings.Default.PartLibFilteredBackColor;
+				PartLibBackColorPictureBox.BackColor = Settings.Default.PartLibBackColor;
+				partLibBudgetFilterBackColorPictureBox.BackColor = Settings.Default.PartLibShowOnlyBudgetedPartsColor;
+				PartLibFilteredBackColorPictureBox.BackColor = Settings.Default.PartLibFilteredBackColor;
 				setTextBoxForBudgetFilenameToLoadAtStartup(Settings.Default.BudgetFilenameToLoadAtStartup);
-				this.PartLibDefaultBudgetNotLimitedradioButton.Checked = Settings.Default.IsDefaultBudgetInfinite;
-				this.PartLibDefaultBudgetZeroRadioButton.Checked = !Settings.Default.IsDefaultBudgetInfinite;
-				this.PartLibDisplayRemaingPartCountCheckBox.Checked = Settings.Default.DisplayRemainingPartCountInBudgetInsteadOfUsedCount;
-				this.PartLibDisplayPartInfoCheckBox.Checked = Settings.Default.PartLibDisplayPartInfo;
-				this.PartLibDisplayPartPartIDCheckBox.Checked = Settings.Default.PartLibPartInfoPartID;
-				this.PartLibDisplayPartPartColorCheckBox.Checked = Settings.Default.PartLibPartInfoPartColor;
-				this.PartLibDisplayPartPartDescriptionCheckBox.Checked = Settings.Default.PartLibPartInfoPartDescription;
-				this.PartLibDisplayBubbleInfoCheckBox.Checked = Settings.Default.PartLibDisplayBubbleInfo;
-				this.PartLibDisplayBubblePartIDCheckBox.Checked = Settings.Default.PartLibBubbleInfoPartID;
-				this.PartLibDisplayBubblePartColorCheckBox.Checked = Settings.Default.PartLibBubbleInfoPartColor;
-				this.PartLibDisplayBubblePartDescriptionCheckBox.Checked = Settings.Default.PartLibBubbleInfoPartDescription;
+				PartLibDefaultBudgetNotLimitedradioButton.Checked = Settings.Default.IsDefaultBudgetInfinite;
+				PartLibDefaultBudgetZeroRadioButton.Checked = !Settings.Default.IsDefaultBudgetInfinite;
+				PartLibDisplayRemaingPartCountCheckBox.Checked = Settings.Default.DisplayRemainingPartCountInBudgetInsteadOfUsedCount;
+				PartLibDisplayPartInfoCheckBox.Checked = Settings.Default.PartLibDisplayPartInfo;
+				PartLibDisplayPartPartIDCheckBox.Checked = Settings.Default.PartLibPartInfoPartID;
+				PartLibDisplayPartPartColorCheckBox.Checked = Settings.Default.PartLibPartInfoPartColor;
+				PartLibDisplayPartPartDescriptionCheckBox.Checked = Settings.Default.PartLibPartInfoPartDescription;
+				PartLibDisplayBubbleInfoCheckBox.Checked = Settings.Default.PartLibDisplayBubbleInfo;
+				PartLibDisplayBubblePartIDCheckBox.Checked = Settings.Default.PartLibBubbleInfoPartID;
+				PartLibDisplayBubblePartColorCheckBox.Checked = Settings.Default.PartLibBubbleInfoPartColor;
+				PartLibDisplayBubblePartDescriptionCheckBox.Checked = Settings.Default.PartLibBubbleInfoPartDescription;
 			}
 
 			// -- tab shortcut key
 			if ((tabPageFilter & TabPageFilter.SHORTCUT_KEYS) != 0)
 			{
 				// init the list view
-				this.listViewShortcutKeys.Items.Clear();
+				listViewShortcutKeys.Items.Clear();
 				char[] separator = { '|' };
 				foreach (string text in Settings.Default.ShortcutKey)
 				{
@@ -246,13 +246,13 @@ namespace BlueBrick
 					addShortcutKey(itemNames);
 				}
 				// fill the part combobox
-				this.comboBoxPartNum.Items.AddRange(BrickLibrary.Instance.GetBrickNameList());
+				comboBoxPartNum.Items.AddRange(BrickLibrary.Instance.GetBrickNameList());
 				// init the combobox selections (the selection for connexion is set in the event handler of the selection of part num)
-				this.comboBoxKey.SelectedIndex = 0;
-				this.comboBoxAction.SelectedIndex = 0;
+				comboBoxKey.SelectedIndex = 0;
+				comboBoxAction.SelectedIndex = 0;
 				// test if there's at list one part in the library, else an exception is raised when seting the selected index
-				if (this.comboBoxPartNum.Items.Count > 0)
-					this.comboBoxPartNum.SelectedIndex = 0;
+				if (comboBoxPartNum.Items.Count > 0)
+					comboBoxPartNum.SelectedIndex = 0;
 				// add the little sign of the sort order
 				// Be careful, do not set mGlobalStatsLastColumnSorted before calling the method,
 				// it must be set inside the method
@@ -376,60 +376,60 @@ namespace BlueBrick
 			// if the language change, we need to restart the application
 			mDoesNeedToRestart = hasLanguageChanged;
 			// new map template
-			Settings.Default.TemplateFilenameWhenCreatingANewMap = mIsTemplateFilenameForNewMapSet ? this.GeneralNewMapTemplateFilenameTextBox.Text : string.Empty;
+			Settings.Default.TemplateFilenameWhenCreatingANewMap = mIsTemplateFilenameForNewMapSet ? GeneralNewMapTemplateFilenameTextBox.Text : string.Empty;
 			// recent files
-			Settings.Default.MaxRecentFilesNum = (int)this.RecentFilesNumericUpDown.Value;
+			Settings.Default.MaxRecentFilesNum = (int)RecentFilesNumericUpDown.Value;
 			// undo
-			Settings.Default.UndoStackDepth = (int)this.undoRecordedNumericUpDown.Value;
-			Settings.Default.UndoStackDisplayedDepth = (int)this.undoDisplayedNumericUpDown.Value;
+			Settings.Default.UndoStackDepth = (int)undoRecordedNumericUpDown.Value;
+			Settings.Default.UndoStackDisplayedDepth = (int)undoDisplayedNumericUpDown.Value;
 			// notification
-			Settings.Default.DisplayWarningMessageForNotSavingInBBM = this.GeneralCheckedListBoxNotification.GetItemChecked(0);
-			Settings.Default.DisplayWarningMessageForOverridingExportFiles = this.GeneralCheckedListBoxNotification.GetItemChecked(1);
-			Settings.Default.DisplayWarningMessageForBrickNotAddedDueToBudgetLimitation = this.GeneralCheckedListBoxNotification.GetItemChecked(2);
-			Settings.Default.DisplayWarningMessageForBrickNotCopiedDueToBudgetLimitation =  this.GeneralCheckedListBoxNotification.GetItemChecked(3);
-			Settings.Default.DisplayWarningMessageForBrickNotReplacedDueToBudgetLimitation = this.GeneralCheckedListBoxNotification.GetItemChecked(4);
-			Settings.Default.DisplayWarningMessageForShowingBudgetNumbers = this.GeneralCheckedListBoxNotification.GetItemChecked(5);
-			Settings.Default.DisplayWarningMessageForPastingOnWrongLayer = this.GeneralCheckedListBoxNotification.GetItemChecked(6);
+			Settings.Default.DisplayWarningMessageForNotSavingInBBM = GeneralCheckedListBoxNotification.GetItemChecked(0);
+			Settings.Default.DisplayWarningMessageForOverridingExportFiles = GeneralCheckedListBoxNotification.GetItemChecked(1);
+			Settings.Default.DisplayWarningMessageForBrickNotAddedDueToBudgetLimitation = GeneralCheckedListBoxNotification.GetItemChecked(2);
+			Settings.Default.DisplayWarningMessageForBrickNotCopiedDueToBudgetLimitation =  GeneralCheckedListBoxNotification.GetItemChecked(3);
+			Settings.Default.DisplayWarningMessageForBrickNotReplacedDueToBudgetLimitation = GeneralCheckedListBoxNotification.GetItemChecked(4);
+			Settings.Default.DisplayWarningMessageForShowingBudgetNumbers = GeneralCheckedListBoxNotification.GetItemChecked(5);
+			Settings.Default.DisplayWarningMessageForPastingOnWrongLayer = GeneralCheckedListBoxNotification.GetItemChecked(6);
 			// performances
 			if (setOptimSettingAccordingToComboBox())
 			{
 				// set the wait cursor because the recreation of image can take a long time
-				this.Cursor = Cursors.WaitCursor;
+				Cursor = Cursors.WaitCursor;
 				Map.Instance.RecomputeBrickMipmapImages();
-				this.Cursor = Cursors.Default;
+				Cursor = Cursors.Default;
 			}
 
 			// -- tab edition
 			// mouse
-			Settings.Default.WheelMouseIsZoomOnCursor = this.mouseZoomCenteredCheckBox.Checked;
-			Settings.Default.WheelMouseZoomSpeed = (double)this.mouseZoomSpeedNumericUpDown.Value;
+			Settings.Default.WheelMouseIsZoomOnCursor = mouseZoomCenteredCheckBox.Checked;
+			Settings.Default.WheelMouseZoomSpeed = (double)mouseZoomSpeedNumericUpDown.Value;
 			setModifierKeySettingAccordingToComboBox();
 			// copy/paste
-			Settings.Default.OffsetAfterCopyStyle = (int)this.copyOffsetComboBox.SelectedIndex;
-			Settings.Default.OffsetAfterCopyValue = (float)this.pasteOffsetValueNumericUpDown.Value;
+			Settings.Default.OffsetAfterCopyStyle = copyOffsetComboBox.SelectedIndex;
+			Settings.Default.OffsetAfterCopyValue = (float)pasteOffsetValueNumericUpDown.Value;
 			// ruler
-			Settings.Default.RulerControlPointRadiusInPixel = (int)this.rulerControlPointRadiusNumericUpDown.Value;
-			Settings.Default.SwitchToEditionAfterRulerCreation = this.RulerSwitchToEditionAfterCreationCheckBox.Checked;
+			Settings.Default.RulerControlPointRadiusInPixel = (int)rulerControlPointRadiusNumericUpDown.Value;
+			Settings.Default.SwitchToEditionAfterRulerCreation = RulerSwitchToEditionAfterCreationCheckBox.Checked;
 			// line appearance
-			Settings.Default.RulerDefaultLineThickness = (float)this.lineThicknessNumericUpDown.Value;
-			Settings.Default.RulerDefaultLineColor = this.lineColorPictureBox.BackColor;
-			Settings.Default.RulerDefaultAllowOffset = this.allowOffsetCheckBox.Checked;
+			Settings.Default.RulerDefaultLineThickness = (float)lineThicknessNumericUpDown.Value;
+			Settings.Default.RulerDefaultLineColor = lineColorPictureBox.BackColor;
+			Settings.Default.RulerDefaultAllowOffset = allowOffsetCheckBox.Checked;
 			// guideline appearance
-			Settings.Default.RulerDefaultDashPatternLine = (float)this.dashPatternLineNumericUpDown.Value;
-			Settings.Default.RulerDefaultDashPatternSpace = (float)this.dashPatternSpaceNumericUpDown.Value;
-			Settings.Default.RulerDefaultGuidelineThickness = (float)this.guidelineThicknessNumericUpDown.Value;
-			Settings.Default.RulerDefaultGuidelineColor = this.guidelineColorPictureBox.BackColor;
+			Settings.Default.RulerDefaultDashPatternLine = (float)dashPatternLineNumericUpDown.Value;
+			Settings.Default.RulerDefaultDashPatternSpace = (float)dashPatternSpaceNumericUpDown.Value;
+			Settings.Default.RulerDefaultGuidelineThickness = (float)guidelineThicknessNumericUpDown.Value;
+			Settings.Default.RulerDefaultGuidelineColor = guidelineColorPictureBox.BackColor;
 			// measure and unit
-			Settings.Default.RulerDefaultDisplayUnit = this.displayUnitCheckBox.Checked;
-			Settings.Default.RulerDefaultDisplayMeasureText = this.displayMeasureTextCheckBox.Checked;
-			Settings.Default.RulerDefaultUnit = this.unitComboBox.SelectedIndex;
-			Settings.Default.RulerDefaultFontColor = this.rulerFontColorPictureBox.BackColor;
-			Settings.Default.RulerDefaultFont = this.rulerFontNameLabel.Font;
+			Settings.Default.RulerDefaultDisplayUnit = displayUnitCheckBox.Checked;
+			Settings.Default.RulerDefaultDisplayMeasureText = displayMeasureTextCheckBox.Checked;
+			Settings.Default.RulerDefaultUnit = unitComboBox.SelectedIndex;
+			Settings.Default.RulerDefaultFontColor = rulerFontColorPictureBox.BackColor;
+			Settings.Default.RulerDefaultFont = rulerFontNameLabel.Font;
 
 			// -- tab appearance
 			// hull style
-			Settings.Default.DefaultHullColor = this.brickHullColorPictureBox.BackColor;
-			Settings.Default.DefaultHullThickness = (float)this.brickHullThicknessNumericUpDown.Value;
+			Settings.Default.DefaultHullColor = brickHullColorPictureBox.BackColor;
+			Settings.Default.DefaultHullThickness = (float)brickHullThicknessNumericUpDown.Value;
 			// check if the user changed the grid color
 			bool doesGridColorChanged = (mOldSettings.DefaultBackgroundColor != backgroundColorPictureBox.BackColor) ||
 										(mOldSettings.DefaultGridColor != gridColorPictureBox.BackColor) ||
@@ -437,28 +437,28 @@ namespace BlueBrick
 			Settings.Default.DefaultBackgroundColor = backgroundColorPictureBox.BackColor;
 			Settings.Default.DefaultGridColor = gridColorPictureBox.BackColor;
 			Settings.Default.DefaultSubGridColor = subGridColorPictureBox.BackColor;
-			Settings.Default.GammaForSelection = getGammaFromNumericUpDown(this.GammaForSelectionNumericUpDown);
-			Settings.Default.GammaForSnappingPart = getGammaFromNumericUpDown(this.GammaForSnappingNumericUpDown);
+			Settings.Default.GammaForSelection = getGammaFromNumericUpDown(GammaForSelectionNumericUpDown);
+			Settings.Default.GammaForSnappingPart = getGammaFromNumericUpDown(GammaForSnappingNumericUpDown);
 			// font
 			bool doesFontChanged = (!mOldSettings.DefaultTextFont.Equals(defaultTextFontNameLabel.Font)) ||
 									(mOldSettings.DefaultTextColor != defaultFontColorPictureBox.BackColor);
-			Settings.Default.DefaultTextFont = this.defaultTextFontNameLabel.Font;
-			Settings.Default.DefaultTextColor = this.defaultFontColorPictureBox.BackColor;
+			Settings.Default.DefaultTextFont = defaultTextFontNameLabel.Font;
+			Settings.Default.DefaultTextColor = defaultFontColorPictureBox.BackColor;
 			// grid size
-			bool isSizeModified = (mOldSettings.DefaultGridSize != (int)this.gridSizeNumericUpDown.Value) ||
-									(mOldSettings.DefaultSubDivisionNumber != (int)this.gridSubdivisionNumericUpDown.Value) ||
-									(mOldSettings.DefaultGridEnabled != this.gridEnabledCheckBox.Checked) ||
-									(mOldSettings.DefaultSubGridEnabled != this.subGridEnabledCheckBox.Checked);
-			Settings.Default.DefaultGridSize = (int)this.gridSizeNumericUpDown.Value;
-			Settings.Default.DefaultSubDivisionNumber = (int)this.gridSubdivisionNumericUpDown.Value;
-			Settings.Default.DefaultGridEnabled = this.gridEnabledCheckBox.Checked;
-			Settings.Default.DefaultSubGridEnabled = this.subGridEnabledCheckBox.Checked;
+			bool isSizeModified = (mOldSettings.DefaultGridSize != (int)gridSizeNumericUpDown.Value) ||
+									(mOldSettings.DefaultSubDivisionNumber != (int)gridSubdivisionNumericUpDown.Value) ||
+									(mOldSettings.DefaultGridEnabled != gridEnabledCheckBox.Checked) ||
+									(mOldSettings.DefaultSubGridEnabled != subGridEnabledCheckBox.Checked);
+			Settings.Default.DefaultGridSize = (int)gridSizeNumericUpDown.Value;
+			Settings.Default.DefaultSubDivisionNumber = (int)gridSubdivisionNumericUpDown.Value;
+			Settings.Default.DefaultGridEnabled = gridEnabledCheckBox.Checked;
+			Settings.Default.DefaultSubGridEnabled = subGridEnabledCheckBox.Checked;
 
 			//area
-			bool doesAreaChanged = (mOldSettings.DefaultAreaTransparency != (int)this.areaTransparencyNumericUpDown.Value) ||
-									(mOldSettings.DefaultAreaSize != (int)this.areaCellSizeNumericUpDown.Value);
-			Settings.Default.DefaultAreaTransparency = (int)this.areaTransparencyNumericUpDown.Value;
-			Settings.Default.DefaultAreaSize = (int)this.areaCellSizeNumericUpDown.Value;
+			bool doesAreaChanged = (mOldSettings.DefaultAreaTransparency != (int)areaTransparencyNumericUpDown.Value) ||
+									(mOldSettings.DefaultAreaSize != (int)areaCellSizeNumericUpDown.Value);
+			Settings.Default.DefaultAreaTransparency = (int)areaTransparencyNumericUpDown.Value;
+			Settings.Default.DefaultAreaSize = (int)areaCellSizeNumericUpDown.Value;
 
 			// if the grid color changed, we prompt a dialog box to ask if we need to apply the change on all the grid layer
 			if (doesGridColorChanged || doesFontChanged || isSizeModified || doesAreaChanged)
@@ -475,40 +475,40 @@ namespace BlueBrick
 
 			// -- tab PartLib
 			savePartLibraryTabOrder();
-			bool didAppearanceChanged = (mOldSettings.PartLibBackColor != this.PartLibBackColorPictureBox.BackColor) ||
-										(mOldSettings.PartLibShowOnlyBudgetedPartsColor != this.partLibBudgetFilterBackColorPictureBox.BackColor) ||
-										(mOldSettings.PartLibFilteredBackColor != this.PartLibFilteredBackColorPictureBox.BackColor) ||
-										(mOldSettings.PartLibDisplayBubbleInfo != this.PartLibDisplayBubbleInfoCheckBox.Checked);
-			bool didStyleChanged = (mOldSettings.PartLibDisplayPartInfo != this.PartLibDisplayPartInfoCheckBox.Checked);
-			bool didBudgetCountChanged = (mOldSettings.IsDefaultBudgetInfinite != this.PartLibDefaultBudgetNotLimitedradioButton.Checked) ||
-										(mOldSettings.DisplayRemainingPartCountInBudgetInsteadOfUsedCount != this.PartLibDisplayRemaingPartCountCheckBox.Checked) ||
-										(mOldSettings.PartLibPartInfoPartID != this.PartLibDisplayPartPartIDCheckBox.Checked) ||
-										(mOldSettings.PartLibPartInfoPartColor != this.PartLibDisplayPartPartColorCheckBox.Checked) ||
-										(mOldSettings.PartLibPartInfoPartDescription != this.PartLibDisplayPartPartDescriptionCheckBox.Checked);
-			bool didBubbleInfoChanged = (mOldSettings.PartLibBubbleInfoPartID != this.PartLibDisplayBubblePartIDCheckBox.Checked) ||
-										(mOldSettings.PartLibBubbleInfoPartColor != this.PartLibDisplayBubblePartColorCheckBox.Checked) ||
-										(mOldSettings.PartLibBubbleInfoPartDescription != this.PartLibDisplayBubblePartDescriptionCheckBox.Checked);
-			Settings.Default.PartLibBackColor = this.PartLibBackColorPictureBox.BackColor;
-			Settings.Default.PartLibShowOnlyBudgetedPartsColor = this.partLibBudgetFilterBackColorPictureBox.BackColor;
-			Settings.Default.PartLibFilteredBackColor = this.PartLibFilteredBackColorPictureBox.BackColor;
-			Settings.Default.BudgetFilenameToLoadAtStartup = mIsBudgetFilenameToLoadAtStartupSet ? this.PartLibBudgetFilenameTextBox.Text : string.Empty;
-			Settings.Default.IsDefaultBudgetInfinite = this.PartLibDefaultBudgetNotLimitedradioButton.Checked;
-			Settings.Default.DisplayRemainingPartCountInBudgetInsteadOfUsedCount = this.PartLibDisplayRemaingPartCountCheckBox.Checked;
-			Settings.Default.PartLibDisplayPartInfo = this.PartLibDisplayPartInfoCheckBox.Checked;
-			Settings.Default.PartLibPartInfoPartID = this.PartLibDisplayPartPartIDCheckBox.Checked;
-			Settings.Default.PartLibPartInfoPartColor = this.PartLibDisplayPartPartColorCheckBox.Checked;
-			Settings.Default.PartLibPartInfoPartDescription = this.PartLibDisplayPartPartDescriptionCheckBox.Checked;
-			Settings.Default.PartLibDisplayBubbleInfo = this.PartLibDisplayBubbleInfoCheckBox.Checked;
-			Settings.Default.PartLibBubbleInfoPartID = this.PartLibDisplayBubblePartIDCheckBox.Checked;
-			Settings.Default.PartLibBubbleInfoPartColor = this.PartLibDisplayBubblePartColorCheckBox.Checked;
-			Settings.Default.PartLibBubbleInfoPartDescription = this.PartLibDisplayBubblePartDescriptionCheckBox.Checked;
-			// call the function on the part lib to reflect the change
-			BlueBrick.MainForm.Instance.PartsTabControl.updateAppearanceAccordingToSettings(mHasPartLibOrderChanged, didAppearanceChanged, didStyleChanged, didBudgetCountChanged, didBubbleInfoChanged, false, false);
+			bool didAppearanceChanged = (mOldSettings.PartLibBackColor != PartLibBackColorPictureBox.BackColor) ||
+										(mOldSettings.PartLibShowOnlyBudgetedPartsColor != partLibBudgetFilterBackColorPictureBox.BackColor) ||
+										(mOldSettings.PartLibFilteredBackColor != PartLibFilteredBackColorPictureBox.BackColor) ||
+										(mOldSettings.PartLibDisplayBubbleInfo != PartLibDisplayBubbleInfoCheckBox.Checked);
+			bool didStyleChanged = mOldSettings.PartLibDisplayPartInfo != PartLibDisplayPartInfoCheckBox.Checked;
+			bool didBudgetCountChanged = (mOldSettings.IsDefaultBudgetInfinite != PartLibDefaultBudgetNotLimitedradioButton.Checked) ||
+										(mOldSettings.DisplayRemainingPartCountInBudgetInsteadOfUsedCount != PartLibDisplayRemaingPartCountCheckBox.Checked) ||
+										(mOldSettings.PartLibPartInfoPartID != PartLibDisplayPartPartIDCheckBox.Checked) ||
+										(mOldSettings.PartLibPartInfoPartColor != PartLibDisplayPartPartColorCheckBox.Checked) ||
+										(mOldSettings.PartLibPartInfoPartDescription != PartLibDisplayPartPartDescriptionCheckBox.Checked);
+			bool didBubbleInfoChanged = (mOldSettings.PartLibBubbleInfoPartID != PartLibDisplayBubblePartIDCheckBox.Checked) ||
+										(mOldSettings.PartLibBubbleInfoPartColor != PartLibDisplayBubblePartColorCheckBox.Checked) ||
+										(mOldSettings.PartLibBubbleInfoPartDescription != PartLibDisplayBubblePartDescriptionCheckBox.Checked);
+			Settings.Default.PartLibBackColor = PartLibBackColorPictureBox.BackColor;
+			Settings.Default.PartLibShowOnlyBudgetedPartsColor = partLibBudgetFilterBackColorPictureBox.BackColor;
+			Settings.Default.PartLibFilteredBackColor = PartLibFilteredBackColorPictureBox.BackColor;
+			Settings.Default.BudgetFilenameToLoadAtStartup = mIsBudgetFilenameToLoadAtStartupSet ? PartLibBudgetFilenameTextBox.Text : string.Empty;
+			Settings.Default.IsDefaultBudgetInfinite = PartLibDefaultBudgetNotLimitedradioButton.Checked;
+			Settings.Default.DisplayRemainingPartCountInBudgetInsteadOfUsedCount = PartLibDisplayRemaingPartCountCheckBox.Checked;
+			Settings.Default.PartLibDisplayPartInfo = PartLibDisplayPartInfoCheckBox.Checked;
+			Settings.Default.PartLibPartInfoPartID = PartLibDisplayPartPartIDCheckBox.Checked;
+			Settings.Default.PartLibPartInfoPartColor = PartLibDisplayPartPartColorCheckBox.Checked;
+			Settings.Default.PartLibPartInfoPartDescription = PartLibDisplayPartPartDescriptionCheckBox.Checked;
+			Settings.Default.PartLibDisplayBubbleInfo = PartLibDisplayBubbleInfoCheckBox.Checked;
+			Settings.Default.PartLibBubbleInfoPartID = PartLibDisplayBubblePartIDCheckBox.Checked;
+			Settings.Default.PartLibBubbleInfoPartColor = PartLibDisplayBubblePartColorCheckBox.Checked;
+			Settings.Default.PartLibBubbleInfoPartDescription = PartLibDisplayBubblePartDescriptionCheckBox.Checked;
+            // call the function on the part lib to reflect the change
+            MainForm.Instance.PartsTabControl.updateAppearanceAccordingToSettings(mHasPartLibOrderChanged, didAppearanceChanged, didStyleChanged, didBudgetCountChanged, didBubbleInfoChanged, false, false);
 
 			// -- tab shortcut key
 			// save the list view
 			Settings.Default.ShortcutKey = new System.Collections.Specialized.StringCollection();
-			foreach (ListViewItem item in this.listViewShortcutKeys.Items)
+			foreach (ListViewItem item in listViewShortcutKeys.Items)
 			{
 				string text = item.SubItems[0].Tag + "|" + item.SubItems[1].Tag + "|" + item.SubItems[2].Text + "|" + item.SubItems[3].Text;
 				Settings.Default.ShortcutKey.Add(text);
@@ -556,7 +556,7 @@ namespace BlueBrick
 				Resources.ErrorMsgTitleWarning, MessageBoxButtons.YesNo,
 				MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 			if (result == DialogResult.Yes)
-				resetSettings((TabPageFilter)(1 << this.optionsTabControl.SelectedIndex));
+				resetSettings((TabPageFilter)(1 << optionsTabControl.SelectedIndex));
 		}
 
 		private void cancelButton_Click(object sender, EventArgs e)
@@ -583,14 +583,14 @@ namespace BlueBrick
 			{
 				// reload the default sentence in the current language
 				System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PreferencesForm));
-				resources.ApplyResources(this.GeneralNewMapTemplateFilenameTextBox, "GeneralNewMapTemplateFilenameTextBox");
+				resources.ApplyResources(GeneralNewMapTemplateFilenameTextBox, "GeneralNewMapTemplateFilenameTextBox");
 				// reset the flag
 				mIsTemplateFilenameForNewMapSet = false;
 			}
 			else
 			{
 				// set the filename in the text box
-				this.GeneralNewMapTemplateFilenameTextBox.Text = filename;
+				GeneralNewMapTemplateFilenameTextBox.Text = filename;
 				// set the flag to true
 				mIsTemplateFilenameForNewMapSet = true;
 			}
@@ -607,14 +607,14 @@ namespace BlueBrick
 			{
 				// reload the default sentence in the current language
 				System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PreferencesForm));
-				resources.ApplyResources(this.PartLibBudgetFilenameTextBox, "PartLibBudgetFilenameTextBox");
+				resources.ApplyResources(PartLibBudgetFilenameTextBox, "PartLibBudgetFilenameTextBox");
 				// reset the flag
 				mIsBudgetFilenameToLoadAtStartupSet = false;
 			}
 			else
 			{
 				// set the filename in the text box
-				this.PartLibBudgetFilenameTextBox.Text = filename;
+				PartLibBudgetFilenameTextBox.Text = filename;
 				// set the flag to true
 				mIsBudgetFilenameToLoadAtStartupSet = true;
 			}
@@ -665,7 +665,7 @@ namespace BlueBrick
 			// set the new language
 			Settings.Default.Language = newLanguage;
 			// and return true if the language changed
-			return (!mOldSettings.Language.Equals(newLanguage));
+			return !mOldSettings.Language.Equals(newLanguage);
 		}
 
 		private void fillAndSelectLanguageComboBox()
@@ -693,20 +693,20 @@ namespace BlueBrick
 			// set the filename in the dialog from the setting
 			if (mIsTemplateFilenameForNewMapSet)
 			{
-				System.IO.FileInfo file = new System.IO.FileInfo(this.GeneralNewMapTemplateFilenameTextBox.Text);
-				this.openTemplateFileDialog.InitialDirectory = file.DirectoryName;
-				this.openTemplateFileDialog.FileName = file.Name;
+                FileInfo file = new FileInfo(GeneralNewMapTemplateFilenameTextBox.Text);
+				openTemplateFileDialog.InitialDirectory = file.DirectoryName;
+				openTemplateFileDialog.FileName = file.Name;
 			}
 			// then open the dialog box in modal
-			DialogResult result = this.openTemplateFileDialog.ShowDialog();
+			DialogResult result = openTemplateFileDialog.ShowDialog();
 			if (result == DialogResult.OK)
 			{
 				// Try to load the file and copy the style settings like the background colors, etc.. in the appearance settings
 				// so that it keeps a certain coherence. However the user may style override the appearance settings if he wants later
-				bool isFileValid = loadTemplateFileAndCopyStyleToSettings(this.openTemplateFileDialog.FileName);
+				bool isFileValid = loadTemplateFileAndCopyStyleToSettings(openTemplateFileDialog.FileName);
 				// set the chosen file name in the text box (if the file is valid, otherwise clear the text box)
 				if (isFileValid)
-					setTextBoxForTemplateFilenameForNewMap(this.openTemplateFileDialog.FileName);
+					setTextBoxForTemplateFilenameForNewMap(openTemplateFileDialog.FileName);
 				else
 					setTextBoxForTemplateFilenameForNewMap(string.Empty);
 			}
@@ -720,13 +720,13 @@ namespace BlueBrick
 		private void clearRecentFilesButton_Click(object sender, EventArgs e)
 		{
 			Settings.Default.RecentFiles.Clear();
-			this.clearRecentFilesButton.Enabled = false;
+			clearRecentFilesButton.Enabled = false;
 		}
 
 		private bool setOptimSettingAccordingToComboBox()
 		{
 			Settings.Default.StartSavedMipmapLevel = optimComboBox.SelectedIndex;
-			return (mOldSettings.StartSavedMipmapLevel != Settings.Default.StartSavedMipmapLevel);
+			return mOldSettings.StartSavedMipmapLevel != Settings.Default.StartSavedMipmapLevel;
 		}
 
 		private bool loadTemplateFileAndCopyStyleToSettings(string filename)
@@ -748,8 +748,8 @@ namespace BlueBrick
 			}
 			catch (Exception e)
 			{
-				string message = Properties.Resources.ErrorMsgCannotOpenMap.Replace("&", filename);
-				LoadErrorForm errorMessageDialog = new LoadErrorForm(Properties.Resources.ErrorMsgTitleError, message, e.Message);
+				string message = Resources.ErrorMsgCannotOpenMap.Replace("&", filename);
+				LoadErrorForm errorMessageDialog = new LoadErrorForm(Resources.ErrorMsgTitleError, message, e.Message);
 				errorMessageDialog.ShowDialog();
 				// there was a problem loading the file
 				return false;
@@ -759,15 +759,15 @@ namespace BlueBrick
 		private void copyMapStyleToAppearanceSettings(Map templateMap)
 		{
 			// global parameters always present in the Map (back color only so far)
-			this.backgroundColorPictureBox.BackColor = templateMap.BackgroundColor;
+			backgroundColorPictureBox.BackColor = templateMap.BackgroundColor;
 
 			// copy also the grid colors (of the lowest grid, if there's a grid in the template), do not copy other grid params
-			foreach (MapData.Layer layer in templateMap.LayerList)
-				if (layer is MapData.LayerGrid)
+			foreach (Layer layer in templateMap.LayerList)
+				if (layer is LayerGrid)
 				{
-					MapData.LayerGrid gridLayer = layer as MapData.LayerGrid;
-					this.gridColorPictureBox.BackColor = gridLayer.GridColor;
-					this.subGridColorPictureBox.BackColor = gridLayer.SubGridColor;
+                    LayerGrid gridLayer = layer as LayerGrid;
+					gridColorPictureBox.BackColor = gridLayer.GridColor;
+					subGridColorPictureBox.BackColor = gridLayer.SubGridColor;
 					break;
 				}
 
@@ -783,60 +783,60 @@ namespace BlueBrick
 		private void lineColorPictureBox_Click(object sender, EventArgs e)
 		{
 			// set the color with the current back color of the picture box
-			this.colorDialog.Color = lineColorPictureBox.BackColor;
+			colorDialog.Color = lineColorPictureBox.BackColor;
 			// open the color box in modal
-			DialogResult result = this.colorDialog.ShowDialog(this);
+			DialogResult result = colorDialog.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
 				// if the user choose a color, set it back in the back color of the picture box
-				this.lineColorPictureBox.BackColor = this.colorDialog.Color;
+				lineColorPictureBox.BackColor = colorDialog.Color;
 			}
 		}
 
 		private void guidelineColorPictureBox_Click(object sender, EventArgs e)
 		{
 			// set the color with the current back color of the picture box
-			this.colorDialog.Color = guidelineColorPictureBox.BackColor;
+			colorDialog.Color = guidelineColorPictureBox.BackColor;
 			// open the color box in modal
-			DialogResult result = this.colorDialog.ShowDialog(this);
+			DialogResult result = colorDialog.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
 				// if the user choose a color, set it back in the back color of the picture box
-				this.guidelineColorPictureBox.BackColor = this.colorDialog.Color;
+				guidelineColorPictureBox.BackColor = colorDialog.Color;
 			}
 		}
 
 		private void rulerFontColorPictureBox_Click(object sender, EventArgs e)
 		{
 			// set the color with the current back color of the picture box
-			this.colorDialog.Color = rulerFontColorPictureBox.BackColor;
+			colorDialog.Color = rulerFontColorPictureBox.BackColor;
 			// open the color box in modal
-			DialogResult result = this.colorDialog.ShowDialog(this);
+			DialogResult result = colorDialog.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
 				// if the user choose a color, set it back in the back color of the picture box
-				this.rulerFontColorPictureBox.BackColor = this.colorDialog.Color;
-				this.rulerFontNameLabel.ForeColor = this.colorDialog.Color;
+				rulerFontColorPictureBox.BackColor = colorDialog.Color;
+				rulerFontNameLabel.ForeColor = colorDialog.Color;
 			}
 		}
 
 		private void rulerFontButton_Click(object sender, EventArgs e)
 		{
 			// set the color with the current back color of the picture box
-			this.fontDialog.Font = this.rulerFontNameLabel.Font;
+			fontDialog.Font = rulerFontNameLabel.Font;
 			// open the color box in modal
-			DialogResult result = this.fontDialog.ShowDialog(this);
+			DialogResult result = fontDialog.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
 				// if the user choose a color, set it back in the back color of the picture box
-				updateChosenFont(this.rulerFontNameLabel, this.rulerFontColorPictureBox.BackColor, this.fontDialog.Font);
+				updateChosenFont(rulerFontNameLabel, rulerFontColorPictureBox.BackColor, fontDialog.Font);
 			}
 		}
 
 		private void setModifierKeySettingAccordingToComboBox()
 		{
 			// Multiple selection
-			switch (this.mouseMultipleSelKeyComboBox.SelectedIndex)
+			switch (mouseMultipleSelKeyComboBox.SelectedIndex)
 			{
 				case 0: Settings.Default.MouseMultipleSelectionKey = Keys.Control; break;
 				case 1: Settings.Default.MouseMultipleSelectionKey = Keys.Alt; break;
@@ -844,7 +844,7 @@ namespace BlueBrick
 			}
 
 			// Duplicate
-			switch (this.mouseDuplicateSelKeyComboBox.SelectedIndex)
+			switch (mouseDuplicateSelKeyComboBox.SelectedIndex)
 			{
 				case 0: Settings.Default.MouseDuplicateSelectionKey = Keys.Control; break;
 				case 1: Settings.Default.MouseDuplicateSelectionKey = Keys.Alt; break;
@@ -852,7 +852,7 @@ namespace BlueBrick
 			}
 
 			// zoompan
-			switch (this.mousePanViewKeyComboBox.SelectedIndex)
+			switch (mousePanViewKeyComboBox.SelectedIndex)
 			{
 				case 0: Settings.Default.MouseZoomPanKey = Keys.Control; break;
 				case 1: Settings.Default.MouseZoomPanKey = Keys.Alt; break;
@@ -884,10 +884,10 @@ namespace BlueBrick
 			// avoid to have the multiple selection, the duplicate and the zoompan on the same key
 			// we are in the event of the duplicate key, so don't change this one,
 			// change one of the two others.
-			if (this.mousePanViewKeyComboBox.SelectedIndex == this.mouseMultipleSelKeyComboBox.SelectedIndex)
-				this.mouseMultipleSelKeyComboBox.SelectedIndex = getTheThirdOne(this.mousePanViewKeyComboBox.SelectedIndex, this.mouseDuplicateSelKeyComboBox.SelectedIndex);
+			if (mousePanViewKeyComboBox.SelectedIndex == mouseMultipleSelKeyComboBox.SelectedIndex)
+				mouseMultipleSelKeyComboBox.SelectedIndex = getTheThirdOne(mousePanViewKeyComboBox.SelectedIndex, mouseDuplicateSelKeyComboBox.SelectedIndex);
 			else
-				this.mouseDuplicateSelKeyComboBox.SelectedIndex = getTheThirdOne(this.mousePanViewKeyComboBox.SelectedIndex, this.mouseMultipleSelKeyComboBox.SelectedIndex);
+				mouseDuplicateSelKeyComboBox.SelectedIndex = getTheThirdOne(mousePanViewKeyComboBox.SelectedIndex, mouseMultipleSelKeyComboBox.SelectedIndex);
 		}
 
 		private void mouseDuplicateSelKeyComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -895,10 +895,10 @@ namespace BlueBrick
 			// avoid to have the multiple selection, the duplicate and the zoompan on the same key
 			// we are in the event of the duplicate key, so don't change this one,
 			// change one of the two others.
-			if (this.mouseDuplicateSelKeyComboBox.SelectedIndex == this.mouseMultipleSelKeyComboBox.SelectedIndex)
-				this.mouseMultipleSelKeyComboBox.SelectedIndex = getTheThirdOne(this.mouseDuplicateSelKeyComboBox.SelectedIndex, this.mousePanViewKeyComboBox.SelectedIndex);
+			if (mouseDuplicateSelKeyComboBox.SelectedIndex == mouseMultipleSelKeyComboBox.SelectedIndex)
+				mouseMultipleSelKeyComboBox.SelectedIndex = getTheThirdOne(mouseDuplicateSelKeyComboBox.SelectedIndex, mousePanViewKeyComboBox.SelectedIndex);
 			else
-				this.mousePanViewKeyComboBox.SelectedIndex = getTheThirdOne(this.mouseDuplicateSelKeyComboBox.SelectedIndex, this.mouseMultipleSelKeyComboBox.SelectedIndex);
+				mousePanViewKeyComboBox.SelectedIndex = getTheThirdOne(mouseDuplicateSelKeyComboBox.SelectedIndex, mouseMultipleSelKeyComboBox.SelectedIndex);
 		}
 
 		private void mouseMultipleSelKeyComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -906,10 +906,10 @@ namespace BlueBrick
 			// avoid to have the multiple selection, the duplicate and the zoompan on the same key
 			// we are in the event of the multiple select key, so don't change this one,
 			// change one of the two others.
-			if (this.mouseMultipleSelKeyComboBox.SelectedIndex == this.mouseDuplicateSelKeyComboBox.SelectedIndex)
-				this.mouseDuplicateSelKeyComboBox.SelectedIndex = getTheThirdOne(this.mouseMultipleSelKeyComboBox.SelectedIndex, this.mousePanViewKeyComboBox.SelectedIndex);
+			if (mouseMultipleSelKeyComboBox.SelectedIndex == mouseDuplicateSelKeyComboBox.SelectedIndex)
+				mouseDuplicateSelKeyComboBox.SelectedIndex = getTheThirdOne(mouseMultipleSelKeyComboBox.SelectedIndex, mousePanViewKeyComboBox.SelectedIndex);
 			else
-				this.mousePanViewKeyComboBox.SelectedIndex = getTheThirdOne(this.mouseMultipleSelKeyComboBox.SelectedIndex, this.mouseDuplicateSelKeyComboBox.SelectedIndex);
+				mousePanViewKeyComboBox.SelectedIndex = getTheThirdOne(mouseMultipleSelKeyComboBox.SelectedIndex, mouseDuplicateSelKeyComboBox.SelectedIndex);
 		}
 
 		private void fillAndSelectModifierKeyComboBox()
@@ -917,40 +917,40 @@ namespace BlueBrick
 			// select the correct index for multiple selection
 			switch (Settings.Default.MouseMultipleSelectionKey)
 			{
-				case Keys.Control: this.mouseMultipleSelKeyComboBox.SelectedIndex = 0; break;
-				case Keys.Alt: this.mouseMultipleSelKeyComboBox.SelectedIndex = 1; break;
-				case Keys.Shift: this.mouseMultipleSelKeyComboBox.SelectedIndex = 2; break;
+				case Keys.Control: mouseMultipleSelKeyComboBox.SelectedIndex = 0; break;
+				case Keys.Alt: mouseMultipleSelKeyComboBox.SelectedIndex = 1; break;
+				case Keys.Shift: mouseMultipleSelKeyComboBox.SelectedIndex = 2; break;
 			}
 
 			// select the correct index for duplicate
 			switch (Settings.Default.MouseDuplicateSelectionKey)
 			{
-				case Keys.Control: this.mouseDuplicateSelKeyComboBox.SelectedIndex = 0; break;
-				case Keys.Alt: this.mouseDuplicateSelKeyComboBox.SelectedIndex = 1; break;
-				case Keys.Shift: this.mouseDuplicateSelKeyComboBox.SelectedIndex = 2; break;
+				case Keys.Control: mouseDuplicateSelKeyComboBox.SelectedIndex = 0; break;
+				case Keys.Alt: mouseDuplicateSelKeyComboBox.SelectedIndex = 1; break;
+				case Keys.Shift: mouseDuplicateSelKeyComboBox.SelectedIndex = 2; break;
 			}
 
 			// select the correct index for zoompan
 			switch (Settings.Default.MouseZoomPanKey)
 			{
-				case Keys.Control: this.mousePanViewKeyComboBox.SelectedIndex = 0; break;
-				case Keys.Alt: this.mousePanViewKeyComboBox.SelectedIndex = 1; break;
-				case Keys.Shift: this.mousePanViewKeyComboBox.SelectedIndex = 2; break;
+				case Keys.Control: mousePanViewKeyComboBox.SelectedIndex = 0; break;
+				case Keys.Alt: mousePanViewKeyComboBox.SelectedIndex = 1; break;
+				case Keys.Shift: mousePanViewKeyComboBox.SelectedIndex = 2; break;
 			}
 		}
 
 		private void copyOffsetComboBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			bool enableOffsetValue = (this.copyOffsetComboBox.SelectedIndex != 0);
-			this.pasteOffsetValueNumericUpDown.Enabled = enableOffsetValue;
-			this.OffsetValueLabel.Enabled = enableOffsetValue;
+			bool enableOffsetValue = copyOffsetComboBox.SelectedIndex != 0;
+			pasteOffsetValueNumericUpDown.Enabled = enableOffsetValue;
+			OffsetValueLabel.Enabled = enableOffsetValue;
 		}
 		#endregion
 
 		#region tab appearance
 		private float getGammaFromNumericUpDown(NumericUpDown control)
 		{
-			float gamma = (float)(100 - (int)(control.Value)) / 100.0f;
+			float gamma = (100 - (int)control.Value) / 100.0f;
 			if (gamma == 0.0f)
 				gamma = 0.01f;
 			return gamma;
@@ -967,37 +967,37 @@ namespace BlueBrick
 		private void redrawSamplePictureBox()
 		{
 			// create the image if not already existing
-			if (this.samplePictureBox.Image == null)
-				this.samplePictureBox.Image = new Bitmap(this.samplePictureBox.Width, this.samplePictureBox.Height);
+			if (samplePictureBox.Image == null)
+				samplePictureBox.Image = new Bitmap(samplePictureBox.Width, samplePictureBox.Height);
 			// get the gc of the image
-			Graphics graphics = Graphics.FromImage(this.samplePictureBox.Image);
+			Graphics graphics = Graphics.FromImage(samplePictureBox.Image);
 			// set the background color
 			graphics.Clear(backgroundColorPictureBox.BackColor);
 			// start corner for the grid
 			int startGridCoord = 10;
 			// draw some sub-grid lines
 			Pen linePen = new Pen(subGridColorPictureBox.BackColor, 1);
-			for (int i = startGridCoord - 8; i < this.samplePictureBox.Height; i += 8)
+			for (int i = startGridCoord - 8; i < samplePictureBox.Height; i += 8)
 			{
-				graphics.DrawLine(linePen, 0, i, this.samplePictureBox.Width, i);
-				graphics.DrawLine(linePen, i, 0, i, this.samplePictureBox.Height);
+				graphics.DrawLine(linePen, 0, i, samplePictureBox.Width, i);
+				graphics.DrawLine(linePen, i, 0, i, samplePictureBox.Height);
 			}
 			// draw some grid lines
 			linePen = new Pen(gridColorPictureBox.BackColor, 2);
-			for (int i = startGridCoord; i < this.samplePictureBox.Height; i += 32)
+			for (int i = startGridCoord; i < samplePictureBox.Height; i += 32)
 			{
-				graphics.DrawLine(linePen, 0, i, this.samplePictureBox.Width, i);
-				graphics.DrawLine(linePen, i, 0, i, this.samplePictureBox.Height);
+				graphics.DrawLine(linePen, 0, i, samplePictureBox.Width, i);
+				graphics.DrawLine(linePen, i, 0, i, samplePictureBox.Height);
 			}
 
 			// create the image attributes
 			ImageAttributes imageAttributeForSelection = new ImageAttributes();
-			imageAttributeForSelection.SetGamma(getGammaFromNumericUpDown(this.GammaForSelectionNumericUpDown));
+			imageAttributeForSelection.SetGamma(getGammaFromNumericUpDown(GammaForSelectionNumericUpDown));
 			ImageAttributes imageAttributeForSnapping = new ImageAttributes();
-			imageAttributeForSnapping.SetGamma(getGammaFromNumericUpDown(this.GammaForSnappingNumericUpDown));
+			imageAttributeForSnapping.SetGamma(getGammaFromNumericUpDown(GammaForSnappingNumericUpDown));
 
 			// get the part example image from the resource
-			Image image = Properties.Resources.PartForOptionPreview;
+			Image image = Resources.PartForOptionPreview;
 
 			// create the pen do draw the hull around the parts
 			Pen penToDrawHull = new Pen(brickHullColorPictureBox.BackColor, (float)brickHullThicknessNumericUpDown.Value);
@@ -1018,19 +1018,19 @@ namespace BlueBrick
 			graphics.DrawRectangle(penToDrawHull, destinationRectangle);
 
 			// invalidate the picture box
-			this.samplePictureBox.Invalidate();
+			samplePictureBox.Invalidate();
 		}
 
 		private void brickHullColorPictureBox_Click(object sender, EventArgs e)
 		{
 			// set the color with the current back color of the picture box
-			this.colorDialog.Color = brickHullColorPictureBox.BackColor;
+			colorDialog.Color = brickHullColorPictureBox.BackColor;
 			// open the color box in modal
-			DialogResult result = this.colorDialog.ShowDialog(this);
+			DialogResult result = colorDialog.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
 				// if the user choose a color, set it back in the back color of the picture box
-				brickHullColorPictureBox.BackColor = this.colorDialog.Color;
+				brickHullColorPictureBox.BackColor = colorDialog.Color;
 				redrawSamplePictureBox();
 			}
 		}
@@ -1043,13 +1043,13 @@ namespace BlueBrick
 		private void backgroundColorPictureBox_Click(object sender, EventArgs e)
 		{
 			// set the color with the current back color of the picture box
-			this.colorDialog.Color = backgroundColorPictureBox.BackColor;
+			colorDialog.Color = backgroundColorPictureBox.BackColor;
 			// open the color box in modal
-			DialogResult result = this.colorDialog.ShowDialog(this);
+			DialogResult result = colorDialog.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
 				// if the user choose a color, set it back in the back color of the picture box
-				backgroundColorPictureBox.BackColor = this.colorDialog.Color;
+				backgroundColorPictureBox.BackColor = colorDialog.Color;
 				redrawSamplePictureBox();
 				colorSchemeComboBox.SelectedIndex = (int)ColorScheme.CUSTOM;
 				findCorectColorSchemeAccordingToColors();
@@ -1059,13 +1059,13 @@ namespace BlueBrick
 		private void gridColorPictureBox_Click(object sender, EventArgs e)
 		{
 			// set the color with the current back color of the picture box
-			this.colorDialog.Color = gridColorPictureBox.BackColor;
+			colorDialog.Color = gridColorPictureBox.BackColor;
 			// open the color box in modal
-			DialogResult result = this.colorDialog.ShowDialog(this);
+			DialogResult result = colorDialog.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
 				// if the user choose a color, set it back in the back color of the picture box
-				gridColorPictureBox.BackColor = this.colorDialog.Color;
+				gridColorPictureBox.BackColor = colorDialog.Color;
 				redrawSamplePictureBox();
 				colorSchemeComboBox.SelectedIndex = (int)ColorScheme.CUSTOM;
 				findCorectColorSchemeAccordingToColors();
@@ -1075,13 +1075,13 @@ namespace BlueBrick
 		private void subGridColorPictureBox_Click(object sender, EventArgs e)
 		{
 			// set the color with the current back color of the picture box
-			this.colorDialog.Color = subGridColorPictureBox.BackColor;
+			colorDialog.Color = subGridColorPictureBox.BackColor;
 			// open the color box in modal
-			DialogResult result = this.colorDialog.ShowDialog(this);
+			DialogResult result = colorDialog.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
 				// if the user choose a color, set it back in the back color of the picture box
-				subGridColorPictureBox.BackColor = this.colorDialog.Color;
+				subGridColorPictureBox.BackColor = colorDialog.Color;
 				redrawSamplePictureBox();
 				colorSchemeComboBox.SelectedIndex = (int)ColorScheme.CUSTOM;
 				findCorectColorSchemeAccordingToColors();
@@ -1165,39 +1165,39 @@ namespace BlueBrick
 		private void defaultFontButton_Click(object sender, EventArgs e)
 		{
 			// set the color with the current back color of the picture box
-			this.fontDialog.Font = this.defaultTextFontNameLabel.Font;
+			fontDialog.Font = defaultTextFontNameLabel.Font;
 			// open the color box in modal
-			DialogResult result = this.fontDialog.ShowDialog(this);
+			DialogResult result = fontDialog.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
 				// if the user choose a color, set it back in the back color of the picture box
-				updateChosenFont(this.defaultTextFontNameLabel, this.defaultFontColorPictureBox.BackColor, this.fontDialog.Font);
+				updateChosenFont(defaultTextFontNameLabel, defaultFontColorPictureBox.BackColor, fontDialog.Font);
 			}
 		}
 
 		private void defaultFontColorPictureBox_Click(object sender, EventArgs e)
 		{
 			// set the color with the current back color of the picture box
-			this.colorDialog.Color = defaultFontColorPictureBox.BackColor;
+			colorDialog.Color = defaultFontColorPictureBox.BackColor;
 			// open the color box in modal
-			DialogResult result = this.colorDialog.ShowDialog(this);
+			DialogResult result = colorDialog.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
 				// if the user choose a color, set it back in the back color of the picture box
-				this.defaultFontColorPictureBox.BackColor = this.colorDialog.Color;
-				this.defaultTextFontNameLabel.ForeColor = this.colorDialog.Color;
+				defaultFontColorPictureBox.BackColor = colorDialog.Color;
+				defaultTextFontNameLabel.ForeColor = colorDialog.Color;
 			}
 		}
 
 
 		private void gridEnabledCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
-			this.gridSizeNumericUpDown.Enabled = this.gridEnabledCheckBox.Checked;
+			gridSizeNumericUpDown.Enabled = gridEnabledCheckBox.Checked;
 		}
 
 		private void subGridEnabledCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
-			this.gridSubdivisionNumericUpDown.Enabled = this.subGridEnabledCheckBox.Checked;
+			gridSubdivisionNumericUpDown.Enabled = subGridEnabledCheckBox.Checked;
 		}
 		#endregion
 
@@ -1205,7 +1205,7 @@ namespace BlueBrick
 		private void fillPartLibraryListBox(bool isForResetingDefaultSetting)
 		{
 			// get the list of tabs
-			List<string> tabNames = BlueBrick.MainForm.Instance.PartsTabControl.getTabNames();
+			List<string> tabNames = MainForm.Instance.PartsTabControl.getTabNames();
 
 			// if we need to reset the order from the setting, change the tab name list
 			// according to the default setting
@@ -1231,9 +1231,9 @@ namespace BlueBrick
 			}
 
 			// fill the list with it
-			this.PartLibTabListBox.Items.Clear();
+			PartLibTabListBox.Items.Clear();
 			foreach (string name in tabNames)
-				this.PartLibTabListBox.Items.Add(name);
+				PartLibTabListBox.Items.Add(name);
 		}
 
 		private void savePartLibraryTabOrder()
@@ -1243,147 +1243,147 @@ namespace BlueBrick
 				// recreate the setting array
 				Settings.Default.PartLibTabOrder = new System.Collections.Specialized.StringCollection();
 				// iterate on the list in the control
-				foreach (object item in this.PartLibTabListBox.Items)
+				foreach (object item in PartLibTabListBox.Items)
 					Settings.Default.PartLibTabOrder.Add(item as string);
 			}
 		}
 
 		private void MoveUpButton_Click(object sender, EventArgs e)
 		{
-			int selectedIndex = this.PartLibTabListBox.SelectedIndex;
+			int selectedIndex = PartLibTabListBox.SelectedIndex;
 			if (selectedIndex > 0)
 			{
-				string name = this.PartLibTabListBox.Items[selectedIndex] as string;
-				this.PartLibTabListBox.Items.RemoveAt(selectedIndex);
+				string name = PartLibTabListBox.Items[selectedIndex] as string;
+				PartLibTabListBox.Items.RemoveAt(selectedIndex);
 				int newIndex = selectedIndex - 1;
-				this.PartLibTabListBox.Items.Insert(newIndex, name);
-				this.PartLibTabListBox.SelectedIndex = newIndex;
+				PartLibTabListBox.Items.Insert(newIndex, name);
+				PartLibTabListBox.SelectedIndex = newIndex;
 				mHasPartLibOrderChanged = true;
 			}
 		}
 
 		private void MoveDownButton_Click(object sender, EventArgs e)
 		{
-			int selectedIndex = this.PartLibTabListBox.SelectedIndex;
-			if ((selectedIndex >= 0) && (selectedIndex < this.PartLibTabListBox.Items.Count - 1))
+			int selectedIndex = PartLibTabListBox.SelectedIndex;
+			if ((selectedIndex >= 0) && (selectedIndex < PartLibTabListBox.Items.Count - 1))
 			{
-				string name = this.PartLibTabListBox.Items[selectedIndex] as string;
-				this.PartLibTabListBox.Items.RemoveAt(selectedIndex);
+				string name = PartLibTabListBox.Items[selectedIndex] as string;
+				PartLibTabListBox.Items.RemoveAt(selectedIndex);
 				int newIndex = selectedIndex + 1;
-				this.PartLibTabListBox.Items.Insert(newIndex, name);
-				this.PartLibTabListBox.SelectedIndex = newIndex;
+				PartLibTabListBox.Items.Insert(newIndex, name);
+				PartLibTabListBox.SelectedIndex = newIndex;
 				mHasPartLibOrderChanged = true;
 			}
 		}
 
 		private void PartLibTabListBox_SelectedValueChanged(object sender, EventArgs e)
 		{
-			int selectedIndex = this.PartLibTabListBox.SelectedIndex;
-			MoveUpButton.Enabled = (selectedIndex > 0);
-			MoveDownButton.Enabled = (selectedIndex >= 0) && (selectedIndex < this.PartLibTabListBox.Items.Count - 1);
+			int selectedIndex = PartLibTabListBox.SelectedIndex;
+			MoveUpButton.Enabled = selectedIndex > 0;
+			MoveDownButton.Enabled = (selectedIndex >= 0) && (selectedIndex < PartLibTabListBox.Items.Count - 1);
 		}
 
 		private void alphabeticOrderButton_Click(object sender, EventArgs e)
 		{
-			this.PartLibTabListBox.Sorted = true;
-			this.PartLibTabListBox.Sorted = false;
+			PartLibTabListBox.Sorted = true;
+			PartLibTabListBox.Sorted = false;
 			mHasPartLibOrderChanged = true;
 		}
 
 		private void PartLibDisplayPartInfoCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
-			bool isEnabled = this.PartLibDisplayPartInfoCheckBox.Checked;
-			this.PartLibDisplayPartPartIDCheckBox.Enabled = isEnabled;
-			this.PartLibDisplayPartPartColorCheckBox.Enabled = isEnabled;
-			this.PartLibDisplayPartPartDescriptionCheckBox.Enabled = isEnabled;
+			bool isEnabled = PartLibDisplayPartInfoCheckBox.Checked;
+			PartLibDisplayPartPartIDCheckBox.Enabled = isEnabled;
+			PartLibDisplayPartPartColorCheckBox.Enabled = isEnabled;
+			PartLibDisplayPartPartDescriptionCheckBox.Enabled = isEnabled;
 		}
 
 		private void PartLibDisplayPartPartIDCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
 			// avoid having all the 3 checkbox empty
-			if (!this.PartLibDisplayPartPartIDCheckBox.Checked && !this.PartLibDisplayPartPartColorCheckBox.Checked && !this.PartLibDisplayPartPartDescriptionCheckBox.Checked)
-				this.PartLibDisplayPartPartDescriptionCheckBox.Checked = true;
+			if (!PartLibDisplayPartPartIDCheckBox.Checked && !PartLibDisplayPartPartColorCheckBox.Checked && !PartLibDisplayPartPartDescriptionCheckBox.Checked)
+				PartLibDisplayPartPartDescriptionCheckBox.Checked = true;
 		}
 
 		private void PartLibDisplayPartPartColorCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
 			// avoid having all the 3 checkbox empty
-			if (!this.PartLibDisplayPartPartIDCheckBox.Checked && !this.PartLibDisplayPartPartColorCheckBox.Checked && !this.PartLibDisplayPartPartDescriptionCheckBox.Checked)
-				this.PartLibDisplayPartPartDescriptionCheckBox.Checked = true;
+			if (!PartLibDisplayPartPartIDCheckBox.Checked && !PartLibDisplayPartPartColorCheckBox.Checked && !PartLibDisplayPartPartDescriptionCheckBox.Checked)
+				PartLibDisplayPartPartDescriptionCheckBox.Checked = true;
 		}
 
 		private void PartLibDisplayPartPartDescriptionCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
 			// avoid having all the 3 checkbox empty
-			if (!this.PartLibDisplayPartPartIDCheckBox.Checked && !this.PartLibDisplayPartPartColorCheckBox.Checked && !this.PartLibDisplayPartPartDescriptionCheckBox.Checked)
-				this.PartLibDisplayPartPartIDCheckBox.Checked = true;
+			if (!PartLibDisplayPartPartIDCheckBox.Checked && !PartLibDisplayPartPartColorCheckBox.Checked && !PartLibDisplayPartPartDescriptionCheckBox.Checked)
+				PartLibDisplayPartPartIDCheckBox.Checked = true;
 		}
 
 		private void displayBubbleInfoCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
-			bool isEnabled = this.PartLibDisplayBubbleInfoCheckBox.Checked;
-			this.PartLibDisplayBubblePartIDCheckBox.Enabled = isEnabled;
-			this.PartLibDisplayBubblePartColorCheckBox.Enabled = isEnabled;
-			this.PartLibDisplayBubblePartDescriptionCheckBox.Enabled = isEnabled;
+			bool isEnabled = PartLibDisplayBubbleInfoCheckBox.Checked;
+			PartLibDisplayBubblePartIDCheckBox.Enabled = isEnabled;
+			PartLibDisplayBubblePartColorCheckBox.Enabled = isEnabled;
+			PartLibDisplayBubblePartDescriptionCheckBox.Enabled = isEnabled;
 		}
 
 		private void PartLibDisplayBubblePartIDCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
 			// avoid having all the 3 checkbox empty
-			if (!this.PartLibDisplayBubblePartIDCheckBox.Checked && !this.PartLibDisplayBubblePartColorCheckBox.Checked && !this.PartLibDisplayBubblePartDescriptionCheckBox.Checked)
-				this.PartLibDisplayBubblePartDescriptionCheckBox.Checked = true;
+			if (!PartLibDisplayBubblePartIDCheckBox.Checked && !PartLibDisplayBubblePartColorCheckBox.Checked && !PartLibDisplayBubblePartDescriptionCheckBox.Checked)
+				PartLibDisplayBubblePartDescriptionCheckBox.Checked = true;
 		}
 
 		private void PartLibDisplayBubblePartColorCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
 			// avoid having all the 3 checkbox empty
-			if (!this.PartLibDisplayBubblePartIDCheckBox.Checked && !this.PartLibDisplayBubblePartColorCheckBox.Checked && !this.PartLibDisplayBubblePartDescriptionCheckBox.Checked)
-				this.PartLibDisplayBubblePartDescriptionCheckBox.Checked = true;
+			if (!PartLibDisplayBubblePartIDCheckBox.Checked && !PartLibDisplayBubblePartColorCheckBox.Checked && !PartLibDisplayBubblePartDescriptionCheckBox.Checked)
+				PartLibDisplayBubblePartDescriptionCheckBox.Checked = true;
 		}
 
 		private void PartLibDisplayBubblePartDescriptionCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
 			// avoid having all the 3 checkbox empty
-			if (!this.PartLibDisplayBubblePartIDCheckBox.Checked && !this.PartLibDisplayBubblePartColorCheckBox.Checked && !this.PartLibDisplayBubblePartDescriptionCheckBox.Checked)
-				this.PartLibDisplayBubblePartIDCheckBox.Checked = true;
+			if (!PartLibDisplayBubblePartIDCheckBox.Checked && !PartLibDisplayBubblePartColorCheckBox.Checked && !PartLibDisplayBubblePartDescriptionCheckBox.Checked)
+				PartLibDisplayBubblePartIDCheckBox.Checked = true;
 		}
 
 		private void PartLibBackColorPictureBox_Click(object sender, EventArgs e)
 		{
 			// set the color with the current back color of the picture box
-			this.colorDialog.Color = PartLibBackColorPictureBox.BackColor;
+			colorDialog.Color = PartLibBackColorPictureBox.BackColor;
 			// open the color box in modal
-			DialogResult result = this.colorDialog.ShowDialog(this);
+			DialogResult result = colorDialog.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
 				// if the user choose a color, set it back in the back color of the picture box
-				PartLibBackColorPictureBox.BackColor = this.colorDialog.Color;
+				PartLibBackColorPictureBox.BackColor = colorDialog.Color;
 			}
 		}
 
 		private void partLibBudgetFilterBackColorPictureBox_Click(object sender, EventArgs e)
 		{
 			// set the color with the current back color of the picture box
-			this.colorDialog.Color = partLibBudgetFilterBackColorPictureBox.BackColor;
+			colorDialog.Color = partLibBudgetFilterBackColorPictureBox.BackColor;
 			// open the color box in modal
-			DialogResult result = this.colorDialog.ShowDialog(this);
+			DialogResult result = colorDialog.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
 				// if the user choose a color, set it back in the back color of the picture box
-				partLibBudgetFilterBackColorPictureBox.BackColor = this.colorDialog.Color;
+				partLibBudgetFilterBackColorPictureBox.BackColor = colorDialog.Color;
 			}
 		}
 
 		private void PartLibFilteredBackColorPictureBox_Click(object sender, EventArgs e)
 		{
 			// set the color with the current back color of the picture box
-			this.colorDialog.Color = PartLibFilteredBackColorPictureBox.BackColor;
+			colorDialog.Color = PartLibFilteredBackColorPictureBox.BackColor;
 			// open the color box in modal
-			DialogResult result = this.colorDialog.ShowDialog(this);
+			DialogResult result = colorDialog.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
 				// if the user choose a color, set it back in the back color of the picture box
-				PartLibFilteredBackColorPictureBox.BackColor = this.colorDialog.Color;
+				PartLibFilteredBackColorPictureBox.BackColor = colorDialog.Color;
 			}
 		}
 
@@ -1394,7 +1394,7 @@ namespace BlueBrick
 			// set the filename in the dialog from the setting
 			if (mIsBudgetFilenameToLoadAtStartupSet)
 			{
-				System.IO.FileInfo file = new System.IO.FileInfo(this.PartLibBudgetFilenameTextBox.Text);
+                FileInfo file = new FileInfo(PartLibBudgetFilenameTextBox.Text);
 				openBudgetFileDialog.InitialDirectory = file.DirectoryName;
 				openBudgetFileDialog.FileName = file.Name;
 			}
@@ -1417,8 +1417,8 @@ namespace BlueBrick
 		/// </summary>
 		private class MyListViewItemComparer : System.Collections.IComparer
 		{
-			private int mColumn;
-			private SortOrder mOrder;
+			private readonly int mColumn;
+			private readonly SortOrder mOrder;
 
 			public MyListViewItemComparer(int column, SortOrder order)
 			{
@@ -1453,11 +1453,11 @@ namespace BlueBrick
 			{
 				// key
 				int index = int.Parse(itemNames[0]);
-				subItems[0].Text = this.comboBoxKey.Items[index].ToString();
+				subItems[0].Text = comboBoxKey.Items[index].ToString();
 				subItems[0].Tag = itemNames[0];
 				// action
 				index = int.Parse(itemNames[1]);
-				subItems[1].Text = this.comboBoxAction.Items[index].ToString();
+				subItems[1].Text = comboBoxAction.Items[index].ToString();
 				subItems[1].Tag = itemNames[1];
 			}
 			catch { }
@@ -1466,37 +1466,37 @@ namespace BlueBrick
 
 			// add the new item
 			ListViewItem newItem = new ListViewItem(subItems,0);
-			this.listViewShortcutKeys.Items.Add(newItem);
+			listViewShortcutKeys.Items.Add(newItem);
 		}
 
 		private void comboBoxAction_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			// disable the 2 last combobox if we don't choose the add action
-			bool isEnabled = (this.comboBoxAction.SelectedIndex == 0);
-			this.comboBoxPartNum.Enabled = isEnabled;
-			this.comboBoxConnexion.Enabled = isEnabled;
+			bool isEnabled = comboBoxAction.SelectedIndex == 0;
+			comboBoxPartNum.Enabled = isEnabled;
+			comboBoxConnexion.Enabled = isEnabled;
 		}
 
 		private void comboBoxPartNum_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			// refill the connexion combobox according to the current selected part
-			this.comboBoxConnexion.Items.Clear();
+			comboBoxConnexion.Items.Clear();
 			// ask the list of connexion to the brick library
-			List<BrickLibrary.Brick.ConnectionPoint> connexionList = BrickLibrary.Instance.GetConnectionList(this.comboBoxPartNum.SelectedItem.ToString());
+			List<BrickLibrary.Brick.ConnectionPoint> connexionList = BrickLibrary.Instance.GetConnectionList(comboBoxPartNum.SelectedItem.ToString());
 			int nbConnexion = 1;
 			if (connexionList != null)
 				nbConnexion = connexionList.Count;
 			// fill the combobox
 			for (int i = 0; i < nbConnexion; ++i)
-				this.comboBoxConnexion.Items.Add(i.ToString());
+				comboBoxConnexion.Items.Add(i.ToString());
 			// select the first item
-			this.comboBoxConnexion.SelectedIndex = 0;
+			comboBoxConnexion.SelectedIndex = 0;
 		}
 
 		private void buttonAdd_Click(object sender, EventArgs e)
 		{
-			string[] itemNames = { this.comboBoxKey.SelectedIndex.ToString(), this.comboBoxAction.SelectedIndex.ToString(), this.comboBoxPartNum.SelectedItem.ToString(), this.comboBoxConnexion.SelectedItem.ToString() };
-			if (this.comboBoxAction.SelectedIndex != 0)
+			string[] itemNames = { comboBoxKey.SelectedIndex.ToString(), comboBoxAction.SelectedIndex.ToString(), comboBoxPartNum.SelectedItem.ToString(), comboBoxConnexion.SelectedItem.ToString() };
+			if (comboBoxAction.SelectedIndex != 0)
 			{
 				itemNames[2] = String.Empty;
 				itemNames[3] = String.Empty;
@@ -1504,7 +1504,7 @@ namespace BlueBrick
 			
 			// search for existing shortcut with the same key
 			List<ListViewItem> existingItemForThisKey = new List<ListViewItem>();
-			foreach (ListViewItem item in this.listViewShortcutKeys.Items)
+			foreach (ListViewItem item in listViewShortcutKeys.Items)
 				if (item.SubItems[0].Tag.Equals(itemNames[0]))
 					existingItemForThisKey.Add(item);
 
@@ -1512,17 +1512,17 @@ namespace BlueBrick
 			if (existingItemForThisKey.Count > 0)
 			{
 				DialogResult result = MessageBox.Show(this,
-					BlueBrick.Properties.Resources.ErrorMsgReplaceExistingShortcut,
-					BlueBrick.Properties.Resources.ErrorMsgTitleWarning, MessageBoxButtons.YesNoCancel,
+                    Resources.ErrorMsgReplaceExistingShortcut,
+                    Resources.ErrorMsgTitleWarning, MessageBoxButtons.YesNoCancel,
 					MessageBoxIcon.Question, MessageBoxDefaultButton.Button3);
 				// check the result of the question
-				if (result == System.Windows.Forms.DialogResult.Yes)
+				if (result == DialogResult.Yes)
 				{
 					// delete all the existing shortcut
 					foreach (ListViewItem item in existingItemForThisKey)
-						this.listViewShortcutKeys.Items.Remove(item);
+						listViewShortcutKeys.Items.Remove(item);
 				}
-				else if (result == System.Windows.Forms.DialogResult.Cancel)
+				else if (result == DialogResult.Cancel)
 				{
 					// do not delete neither add shortcut, just exit
 					return;
@@ -1536,41 +1536,41 @@ namespace BlueBrick
 		private void buttonDelete_Click(object sender, EventArgs e)
 		{
 			List<ListViewItem>	itemsToDelete = new List<ListViewItem>();
-			foreach (ListViewItem item in this.listViewShortcutKeys.SelectedItems)
+			foreach (ListViewItem item in listViewShortcutKeys.SelectedItems)
 				itemsToDelete.Add(item);
 			foreach (ListViewItem item in itemsToDelete)
-				this.listViewShortcutKeys.Items.Remove(item);
+				listViewShortcutKeys.Items.Remove(item);
 		}
 
 		private void listViewShortcutKeys_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			// enable the delete button
-			this.buttonDelete.Enabled = (this.listViewShortcutKeys.SelectedItems.Count > 0);
+			buttonDelete.Enabled = listViewShortcutKeys.SelectedItems.Count > 0;
 			
 			// also update the combox below with the values of the selected shortcut if only one is selected
-			if (this.listViewShortcutKeys.SelectedItems.Count == 1)
+			if (listViewShortcutKeys.SelectedItems.Count == 1)
 			{
-				ListViewItem.ListViewSubItemCollection selectedItem = this.listViewShortcutKeys.SelectedItems[0].SubItems;
-				this.comboBoxKey.SelectedIndex = int.Parse(selectedItem[0].Tag as string);
-				this.comboBoxAction.SelectedIndex = int.Parse(selectedItem[1].Tag as string);
-				this.comboBoxPartNum.SelectedItem = selectedItem[2].Text;
-				this.comboBoxConnexion.SelectedItem = selectedItem[3].Text;
+				ListViewItem.ListViewSubItemCollection selectedItem = listViewShortcutKeys.SelectedItems[0].SubItems;
+				comboBoxKey.SelectedIndex = int.Parse(selectedItem[0].Tag as string);
+				comboBoxAction.SelectedIndex = int.Parse(selectedItem[1].Tag as string);
+				comboBoxPartNum.SelectedItem = selectedItem[2].Text;
+				comboBoxConnexion.SelectedItem = selectedItem[3].Text;
 			}
 		}
 
 		private void listViewShortcutKeys_ColumnClick(object sender, ColumnClickEventArgs e)
 		{
 			// start of the update of the control
-			this.listViewShortcutKeys.BeginUpdate();
+			listViewShortcutKeys.BeginUpdate();
 
 			// change the sort order if we click again on the same column
 			// but if we change the column, don't change the sort order
 			if (mGlobalStatsLastColumnSorted == e.Column)
 			{
-				if (this.listViewShortcutKeys.Sorting == SortOrder.Ascending)
-					this.listViewShortcutKeys.Sorting = SortOrder.Descending;
+				if (listViewShortcutKeys.Sorting == SortOrder.Ascending)
+					listViewShortcutKeys.Sorting = SortOrder.Descending;
 				else
-					this.listViewShortcutKeys.Sorting = SortOrder.Ascending;
+					listViewShortcutKeys.Sorting = SortOrder.Ascending;
 			}
 			else
 			{
@@ -1578,20 +1578,20 @@ namespace BlueBrick
 				// and reset it with the same value to FORCE the Sort to be done,
 				// once if the listViewShortcutKeys.Sorting didn't changed the Sort
 				// method does nothing.
-				SortOrder oldOrder = this.listViewShortcutKeys.Sorting;
-				this.listViewShortcutKeys.Sorting = SortOrder.None;
-				this.listViewShortcutKeys.Sorting = oldOrder;
+				SortOrder oldOrder = listViewShortcutKeys.Sorting;
+				listViewShortcutKeys.Sorting = SortOrder.None;
+				listViewShortcutKeys.Sorting = oldOrder;
 			}
 
 			// remove the previous sorting icon, and add the icon to the new column
 			setSortIcon(e.Column);
 
 			// create a new comparer with the right column then call the sort method
-			this.listViewShortcutKeys.ListViewItemSorter = new MyListViewItemComparer(e.Column, this.listViewShortcutKeys.Sorting);
-			this.listViewShortcutKeys.Sort();
+			listViewShortcutKeys.ListViewItemSorter = new MyListViewItemComparer(e.Column, listViewShortcutKeys.Sorting);
+			listViewShortcutKeys.Sort();
 
 			// end of the update of the control
-			this.listViewShortcutKeys.EndUpdate();
+			listViewShortcutKeys.EndUpdate();
 		}
 
 		private void setSortIcon(int columnIndex)
@@ -1599,18 +1599,18 @@ namespace BlueBrick
 			// remove the order sign on the previous sorted column
 			if (mGlobalStatsLastColumnSorted != -1)
 			{
-				string header = this.listViewShortcutKeys.Columns[mGlobalStatsLastColumnSorted].Text;
-				this.listViewShortcutKeys.Columns[mGlobalStatsLastColumnSorted].Text = header.Substring(2);
+				string header = listViewShortcutKeys.Columns[mGlobalStatsLastColumnSorted].Text;
+				listViewShortcutKeys.Columns[mGlobalStatsLastColumnSorted].Text = header.Substring(2);
 			}
 
 			// save the new current column index
 			mGlobalStatsLastColumnSorted = columnIndex;
 
 			// add a descending or ascending sign to the header of the column
-			if (this.listViewShortcutKeys.Sorting == SortOrder.Ascending)
-				this.listViewShortcutKeys.Columns[columnIndex].Text = char.ConvertFromUtf32(0x25B2) + " " + this.listViewShortcutKeys.Columns[columnIndex].Text;
+			if (listViewShortcutKeys.Sorting == SortOrder.Ascending)
+				listViewShortcutKeys.Columns[columnIndex].Text = char.ConvertFromUtf32(0x25B2) + " " + listViewShortcutKeys.Columns[columnIndex].Text;
 			else
-				this.listViewShortcutKeys.Columns[columnIndex].Text = char.ConvertFromUtf32(0x25BC) + " " + this.listViewShortcutKeys.Columns[columnIndex].Text;
+				listViewShortcutKeys.Columns[columnIndex].Text = char.ConvertFromUtf32(0x25BC) + " " + listViewShortcutKeys.Columns[columnIndex].Text;
 		}
 
 		#endregion

@@ -22,10 +22,10 @@ namespace BlueBrick.Actions.Bricks
 {
 	class DuplicateBrick : Items.DuplicateItems
 	{
-		private LayerBrick mBrickLayer = null;
-		private string mPartNumber = string.Empty; //if the list contains only one brick or one group, this is the name of this specific brick or group
-		private List<Layer.LayerItem> mBricksForNotification = null;
-		private bool mWereItemsTrimmed = false;
+		private readonly LayerBrick mBrickLayer = null;
+		private readonly string mPartNumber = string.Empty; //if the list contains only one brick or one group, this is the name of this specific brick or group
+		private readonly List<Layer.LayerItem> mBricksForNotification = null;
+		private readonly bool mWereItemsTrimmed = false;
 
 		/// <summary>
 		/// Tell if some items have been trimmed from the specified list of item to duplicate
@@ -45,7 +45,7 @@ namespace BlueBrick.Actions.Bricks
 			mWereItemsTrimmed = trimItemListWithBudgetLimitation();
 
 			// get bricks for the notification from the trimmed list
-			mBricksForNotification = Layer.sFilterListToGetOnlyBricksInLibrary(mItems);
+			mBricksForNotification = Layer.SFilterListToGetOnlyBricksInLibrary(mItems);
 
 			// remove the group that were added to the item list for brick notification purpose
 			// they are added at the end, so find the first one and erase the end
@@ -58,7 +58,7 @@ namespace BlueBrick.Actions.Bricks
 					}
 
 			// try to get a part number (which can be the name of a group)
-			Layer.LayerItem topItem = Layer.sGetTopItemFromList(mItems);
+			Layer.LayerItem topItem = Layer.SGetTopItemFromList(mItems);
 			if (topItem != null)
 				mPartNumber = topItem.PartNumber;
 		}
@@ -68,13 +68,13 @@ namespace BlueBrick.Actions.Bricks
 			// if the part number is valid, use the specific message
 			if (mPartNumber != string.Empty)
 			{
-				string actionName = BlueBrick.Properties.Resources.ActionDuplicateBrick;
+				string actionName = Properties.Resources.ActionDuplicateBrick;
 				actionName = actionName.Replace("&", mPartNumber);
 				return actionName;
 			}
 			else
 			{
-				return BlueBrick.Properties.Resources.ActionDuplicateSeveralBricks;
+				return Properties.Resources.ActionDuplicateSeveralBricks;
 			}
 		}
 
@@ -100,18 +100,17 @@ namespace BlueBrick.Actions.Bricks
 			foreach (Layer.LayerItem item in mItems)
 				if (item.PartNumber != string.Empty)
 				{
-					// check if we already met this part
-					int count = 0;
-					if (itemCount.TryGetValue(item.PartNumber, out count))
-						itemCount.Remove(item.PartNumber);
-					// increase and add the count
-					itemCount.Add(item.PartNumber, ++count);
+                    // check if we already met this part
+                    if (itemCount.TryGetValue(item.PartNumber, out int count))
+                        itemCount.Remove(item.PartNumber);
+                    // increase and add the count
+                    itemCount.Add(item.PartNumber, ++count);
 					// check if we can add it
 					if (!Budget.Budget.Instance.canAddBrick(item.PartNumber, count, true))
 					{
 						// checked if this item is a group, in that case, we need to remove all the hierachy
 						if (item.IsAGroup)
-							itemToRemove.AddRange((item as Layer.Group).getAllItemsInTheTree());
+							itemToRemove.AddRange((item as Layer.Group).GetAllItemsInTheTree());
 						else
 							itemToRemove.Add(item);
 					}
@@ -146,7 +145,7 @@ namespace BlueBrick.Actions.Bricks
 				mBrickLayer.updateFullBrickConnectivityForOneBrick(mItems[i] as LayerBrick.Brick);
 			}
 			// finally reselect all the duplicated brick
-			mBrickLayer.selectOnlyThisObject(mItems);
+			mBrickLayer.SelectOnlyThisObject(mItems);
 
 			// notify the part list view (after actually adding the brick because the total map size need to be recomputed)
 			foreach (Layer.LayerItem item in mBricksForNotification)

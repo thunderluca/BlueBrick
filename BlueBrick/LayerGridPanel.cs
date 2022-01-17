@@ -20,8 +20,8 @@ namespace BlueBrick
 	{
 		public LayerGridPanel(Layer layer) : base(layer)
 		{
-			this.layerTypePictureBox.Image = BlueBrick.Properties.Resources.layerTypeGrid;
-			this.displayHullButton.Visible = false;
+			layerTypePictureBox.Image = Properties.Resources.layerTypeGrid;
+			displayHullButton.Visible = false;
 		}
 	}
 }

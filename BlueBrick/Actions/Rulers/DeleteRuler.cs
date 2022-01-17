@@ -21,9 +21,9 @@ namespace BlueBrick.Actions.Rulers
 {
 	class DeleteRuler : Action
 	{
-		private LayerRuler mRulerLayer = null;
-		private List<Layer.LayerItem> mRulers = null;
-		private List<int> mRulerIndex = null; // this list of index is for the redo, to add each ruler at the same place
+		private readonly LayerRuler mRulerLayer = null;
+		private readonly List<Layer.LayerItem> mRulers = null;
+		private readonly List<int> mRulerIndex = null; // this list of index is for the redo, to add each ruler at the same place
 
 		public DeleteRuler(LayerRuler layer, List<Layer.LayerItem> rulers)
 		{
@@ -38,9 +38,9 @@ namespace BlueBrick.Actions.Rulers
 		public override string GetName()
 		{
 			if (mRulers.Count == 1)
-				return BlueBrick.Properties.Resources.ActionDeleteRuler;
+				return Properties.Resources.ActionDeleteRuler;
 			else
-				return BlueBrick.Properties.Resources.ActionDeleteSeveralRulers;
+				return Properties.Resources.ActionDeleteSeveralRulers;
 		}
 
 		public override void Redo()
@@ -49,14 +49,14 @@ namespace BlueBrick.Actions.Rulers
 			// but do not delete it, also memorise its last position
 			mRulerIndex.Clear();
 			foreach (Layer.LayerItem obj in mRulers)
-				mRulerIndex.Add(mRulerLayer.removeRulerItem(obj as LayerRuler.RulerItem));
+				mRulerIndex.Add(mRulerLayer.RemoveRulerItem(obj as LayerRuler.RulerItem));
 		}
 
 		public override void Undo()
 		{
 			// and add all the texts in the reverse order
 			for (int i = mRulers.Count - 1; i >= 0; --i)
-				mRulerLayer.addRulerItem(mRulers[i] as LayerRuler.RulerItem, mRulerIndex[i]);
+				mRulerLayer.AddRulerItem(mRulers[i] as LayerRuler.RulerItem, mRulerIndex[i]);
 		}
 	}
 }

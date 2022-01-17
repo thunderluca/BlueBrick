@@ -21,9 +21,9 @@ namespace BlueBrick.Actions.Items
 {
 	class GroupItems : Action
 	{
-		private List<Layer.LayerItem> mItemsToGroup = null;
-		private Layer.Group mGroup = new Layer.Group();
-		private Layer mLayer = null;
+		private readonly List<Layer.LayerItem> mItemsToGroup = null;
+		private readonly Layer.Group mGroup = new Layer.Group();
+		private readonly Layer mLayer = null;
 
         /// <summary>
         /// From a list of items to group, find and construct the top items of the forest, such as
@@ -62,34 +62,34 @@ namespace BlueBrick.Actions.Items
 			// sort the items in the group as they are on the map, because if the user wants to save this group in 
 			// the library, it's important that the items in the group are saved in the correct order to be rendered
 			// in the correct order when a group is instanciated
-			mItemsToGroup.Sort(layer.compareItemOrderOnLayer);
+			mItemsToGroup.Sort(layer.CompareItemOrderOnLayer);
 			// save the layer
 			mLayer = layer;
 		}
 
 		public override string GetName()
 		{
-			return BlueBrick.Properties.Resources.ActionGroupItems;
+			return Properties.Resources.ActionGroupItems;
 		}
 
 		public override void Redo()
 		{
 			// add all the items in the group
-			mGroup.addItem(mItemsToGroup);
+			mGroup.AddItem(mItemsToGroup);
 
             // reselect the current selection, because the regroup may affect a currently selected item
             // and if we don't reselect, we may end up with some items of the same group selected and some
             // not selected. So by reselecting the current selection, the grouping links will ensure to have
             // a correct status.
             List<Layer.LayerItem> currentSelection = new List<Layer.LayerItem>(mLayer.SelectedObjects);
-            mLayer.clearSelection();
-            mLayer.addObjectInSelection(currentSelection);
+            mLayer.ClearSelection();
+            mLayer.AddObjectInSelection(currentSelection);
 		}
 
 		public override void Undo()
 		{
 			// remove all the items from the group
-			mGroup.removeItem(mItemsToGroup);
+			mGroup.RemoveItem(mItemsToGroup);
 		}
 	}
 }

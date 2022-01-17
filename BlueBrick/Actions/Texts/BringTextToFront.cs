@@ -29,17 +29,17 @@ namespace BlueBrick.Actions.Texts
 
 		public override string GetName()
 		{
-			return BlueBrick.Properties.Resources.ActionBringTextToFront;
+			return Properties.Resources.ActionBringTextToFront;
 		}
 
 		protected override int removeItem(Layer.LayerItem item)
 		{
-			return (mLayer as LayerText).removeTextCell(item as LayerText.TextCell);
+			return (mLayer as LayerText).RemoveTextCell(item as LayerText.TextCell);
 		}
 
 		protected override void addItem(Layer.LayerItem item, int position)
 		{
-			(mLayer as LayerText).addTextCell(item as LayerText.TextCell, position);
+			(mLayer as LayerText).AddTextCell(item as LayerText.TextCell, position);
 		}
 	}
 }

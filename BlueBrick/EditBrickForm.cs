@@ -20,14 +20,14 @@ namespace BlueBrick
 	{
 		public float BrickElevation
 		{
-			get { return (float)(this.elevationNumericUpDown.Value); }
+			get { return (float)elevationNumericUpDown.Value; }
 		}
 
 		public EditBrickForm(float currentElevation)
 		{
 			InitializeComponent();
 			// set the UI elevation with the one given in parameter
-			this.elevationNumericUpDown.Value = (int)currentElevation;
+			elevationNumericUpDown.Value = (int)currentElevation;
 		}
 	}
 }

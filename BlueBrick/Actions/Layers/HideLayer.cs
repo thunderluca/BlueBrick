@@ -21,7 +21,7 @@ namespace BlueBrick.Actions
 {
 	public class HideLayer : Action
 	{
-		private Layer mLayer = null;
+		private readonly Layer mLayer = null;
 
 		public HideLayer(Layer layer)
 		{
@@ -31,7 +31,7 @@ namespace BlueBrick.Actions
 
 		public override string GetName()
 		{
-			string actionName = BlueBrick.Properties.Resources.ActionHideLayer;
+			string actionName = Properties.Resources.ActionHideLayer;
 			actionName = actionName.Replace("&", mLayer.Name);
 			return actionName;
 		}

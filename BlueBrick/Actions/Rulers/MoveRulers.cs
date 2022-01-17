@@ -29,9 +29,9 @@ namespace BlueBrick.Actions.Rulers
 		public override string GetName()
 		{
 			if (mItems.Count == 1)
-				return BlueBrick.Properties.Resources.ActionMoveRuler;
+				return Properties.Resources.ActionMoveRuler;
 			else
-				return BlueBrick.Properties.Resources.ActionMoveSeveralRulers;
+				return Properties.Resources.ActionMoveSeveralRulers;
 		}
 	}
 }

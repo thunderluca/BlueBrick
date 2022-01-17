@@ -39,16 +39,16 @@ namespace BlueBrick
 
 		public Color EditedColor
 		{
-			get { return this.fontColorPictureBox.BackColor; }
+			get { return fontColorPictureBox.BackColor; }
 		}
 
 		public StringAlignment EditedAlignment
 		{
 			get
 			{
-				if (this.textBox.TextAlign == HorizontalAlignment.Left)
+				if (textBox.TextAlign == HorizontalAlignment.Left)
 					return StringAlignment.Near;
-				else if (this.textBox.TextAlign == HorizontalAlignment.Center)
+				else if (textBox.TextAlign == HorizontalAlignment.Center)
 					return StringAlignment.Center;
 				else
 					return StringAlignment.Far;
@@ -58,7 +58,7 @@ namespace BlueBrick
 
 		public string EditedText
 		{
-			get { return this.textBox.Text; }
+			get { return textBox.Text; }
 		}
 
 		public EditTextForm(LayerText.TextCell textCell)
@@ -79,7 +79,7 @@ namespace BlueBrick
 				else
 					alignRightButton_Click(null, null);
 				// the text itself
-				this.textBox.Text = textCell.Text;
+				textBox.Text = textCell.Text;
 			}
 			else
 			{
@@ -90,70 +90,70 @@ namespace BlueBrick
 				// text alignement
 				alignCenterButton_Click(null, null);
 				// the text itself
-				this.textBox.Text = BlueBrick.Properties.Resources.TextEnterText;
-				this.textBox.SelectAll();
+				textBox.Text = Properties.Resources.TextEnterText;
+				textBox.SelectAll();
 			}
 
 			// text box font
-			this.labelSize.Text = mEditedFont.Size.ToString();
-			this.textBox.Font = new Font(mEditedFont.FontFamily, FONT_SIZE_FOR_EDITION, mEditedFont.Style);
+			labelSize.Text = mEditedFont.Size.ToString();
+			textBox.Font = new Font(mEditedFont.FontFamily, FONT_SIZE_FOR_EDITION, mEditedFont.Style);
 		}
 
 		private void EditTextForm_Shown(object sender, EventArgs e)
 		{
 			// focus the text box such as the user can type the text immediately
-			this.textBox.Focus();
+			textBox.Focus();
 		}
 
 		private void alignLeftButton_Click(object sender, EventArgs e)
 		{
-			this.textBox.TextAlign = HorizontalAlignment.Left;
-			this.alignLeftButton.FlatStyle = FlatStyle.Popup;
-			this.alignCenterButton.FlatStyle = FlatStyle.Standard;
-			this.alignRightButton.FlatStyle = FlatStyle.Standard;
+			textBox.TextAlign = HorizontalAlignment.Left;
+			alignLeftButton.FlatStyle = FlatStyle.Popup;
+			alignCenterButton.FlatStyle = FlatStyle.Standard;
+			alignRightButton.FlatStyle = FlatStyle.Standard;
 		}
 
 		private void alignCenterButton_Click(object sender, EventArgs e)
 		{
-			this.textBox.TextAlign = HorizontalAlignment.Center;
-			this.alignLeftButton.FlatStyle = FlatStyle.Standard;
-			this.alignCenterButton.FlatStyle = FlatStyle.Popup;
-			this.alignRightButton.FlatStyle = FlatStyle.Standard;
+			textBox.TextAlign = HorizontalAlignment.Center;
+			alignLeftButton.FlatStyle = FlatStyle.Standard;
+			alignCenterButton.FlatStyle = FlatStyle.Popup;
+			alignRightButton.FlatStyle = FlatStyle.Standard;
 		}
 
 		private void alignRightButton_Click(object sender, EventArgs e)
 		{
-			this.textBox.TextAlign = HorizontalAlignment.Right;
-			this.alignLeftButton.FlatStyle = FlatStyle.Standard;
-			this.alignCenterButton.FlatStyle = FlatStyle.Standard;
-			this.alignRightButton.FlatStyle = FlatStyle.Popup;
+			textBox.TextAlign = HorizontalAlignment.Right;
+			alignLeftButton.FlatStyle = FlatStyle.Standard;
+			alignCenterButton.FlatStyle = FlatStyle.Standard;
+			alignRightButton.FlatStyle = FlatStyle.Popup;
 		}
 
 		private void fontButton_Click(object sender, EventArgs e)
 		{
 			// set the color with the current back color of the picture box
-			this.fontDialog.Font = mEditedFont;
+			fontDialog.Font = mEditedFont;
 			// open the color box in modal
-			DialogResult result = this.fontDialog.ShowDialog(this);
+			DialogResult result = fontDialog.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
 				// save the edited font
-				mEditedFont = this.fontDialog.Font;
+				mEditedFont = fontDialog.Font;
 				// and use the same in the edit box, except that we override the font size
-				this.labelSize.Text = mEditedFont.Size.ToString();
-				this.textBox.Font = new Font(mEditedFont.FontFamily, FONT_SIZE_FOR_EDITION, mEditedFont.Style);
+				labelSize.Text = mEditedFont.Size.ToString();
+				textBox.Font = new Font(mEditedFont.FontFamily, FONT_SIZE_FOR_EDITION, mEditedFont.Style);
 			}
 		}
 
 		private void fontColorPictureBox_Click(object sender, EventArgs e)
 		{
 			// set the color with the current back color of the picture box
-			this.colorDialog.Color = fontColorPictureBox.BackColor;
+			colorDialog.Color = fontColorPictureBox.BackColor;
 			// open the color box in modal
-			DialogResult result = this.colorDialog.ShowDialog(this);
+			DialogResult result = colorDialog.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
-				changeColor(this.colorDialog.Color);
+				changeColor(colorDialog.Color);
 			}
 		}
 
@@ -165,7 +165,7 @@ namespace BlueBrick
 
 		private void textBox_TextChanged(object sender, EventArgs e)
 		{
-			this.okButton.Enabled = (this.textBox.Text.Length > 0);
+			okButton.Enabled = textBox.Text.Length > 0;
 		}
 	}
 }

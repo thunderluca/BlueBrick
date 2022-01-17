@@ -64,7 +64,7 @@ namespace BlueBrick
 			public string mException;
 			public string ShortFileName
 			{
-				get { return (new FileInfo(mFilename)).Name; }
+				get { return new FileInfo(mFilename).Name; }
 			}
 			public FileNameWithException(string filename, string exception)
 			{
@@ -110,12 +110,11 @@ namespace BlueBrick
 		{
 			get
 			{
-				if ((this.SelectedTab != null) && (this.SelectedTab.Controls.Count > 0))
+				if ((SelectedTab != null) && (SelectedTab.Controls.Count > 0))
 				{
-					PartListView listView = this.SelectedTab.Controls[0] as PartListView;
-					if (listView != null)
-						return listView.IsEditingBudget;
-				}
+                    if (SelectedTab.Controls[0] is PartListView listView)
+                        return listView.IsEditingBudget;
+                }
 				return false;
 			}
 		}
@@ -127,12 +126,12 @@ namespace BlueBrick
 
 		public static string sFullPathForCustomParts
 		{
-			get { return (PartLibraryPanel.sFullPathForLibrary + @"/" + PartLibraryPanel.sFolderNameForCustomParts + @"/"); }
+			get { return sFullPathForLibrary + @"/" + sFolderNameForCustomParts + @"/"; }
 		}
 
 		public static string sFullPathForLibrary
 		{
-			get { return (Application.StartupPath + @"/parts"); }
+			get { return Application.StartupPath + @"/parts"; }
 		}
 		#endregion
 
@@ -173,7 +172,7 @@ namespace BlueBrick
 		/// </summary>
 		public void clearAllData()
 		{
-			this.TabPages.Clear();
+			TabPages.Clear();
 		}
 
 		/// <summary>
@@ -186,54 +185,72 @@ namespace BlueBrick
 			ContextMenuStrip contextMenu = new ContextMenuStrip();
 			// add the openning event to eventually change some states
 			contextMenu.Opening += new System.ComponentModel.CancelEventHandler(contextMenu_Opening);
-			// menu item to display the icons in large
-			ToolStripMenuItem largeIconsMenuItem = new ToolStripMenuItem(Resources.PartLibMenuItemLargeIcons, null, menuItem_LargeIconClick);
-			largeIconsMenuItem.CheckOnClick = true;
-			largeIconsMenuItem.Checked = useLargeIcon;
-			contextMenu.Items.Add(largeIconsMenuItem);
-			// menu item to repect the proportions
-			ToolStripMenuItem proportionMenuItem = new ToolStripMenuItem(Resources.PartLibMenuItemRespectProportion, null, menuItem_RespectProportionClick);
-			proportionMenuItem.CheckOnClick = true;
-			proportionMenuItem.Checked = respectProportionIsChecked;
-			contextMenu.Items.Add(proportionMenuItem);
-			// menu item to display part info
-			ToolStripMenuItem partInfoMenuItem = new ToolStripMenuItem(Resources.PartLibMenuItemDisplayPartInfo, null, menuItem_DisplayPartInfoClick);
-			partInfoMenuItem.CheckOnClick = true;
-			partInfoMenuItem.Checked = Settings.Default.PartLibDisplayPartInfo;
-			contextMenu.Items.Add(partInfoMenuItem);
-			// menu item to display tooltips
-			ToolStripMenuItem bubbleInfoMenuItem = new ToolStripMenuItem(Resources.PartLibMenuItemDisplayTooltips, null, menuItem_DisplayTooltipsClick);
-			bubbleInfoMenuItem.CheckOnClick = true;
-			bubbleInfoMenuItem.Checked = Settings.Default.PartLibDisplayBubbleInfo;
-			contextMenu.Items.Add(bubbleInfoMenuItem);
-			// add a line
-			ToolStripSeparator separator = new ToolStripSeparator();
-			separator.Name = "budgetSeparator";
-			contextMenu.Items.Add(separator);
-			// menu item to show only the budgeted parts
-			ToolStripMenuItem showOnlyBudgetedPartsMenuItem = new ToolStripMenuItem(Resources.PartLibMenuItemShowOnlyBudgetedParts, null, menuItem_ShowOnlyBudgetedPartsClick);
-			showOnlyBudgetedPartsMenuItem.Name = "showOnlyBudgetedPartsMenuItem";
-			showOnlyBudgetedPartsMenuItem.CheckOnClick = false;
-			showOnlyBudgetedPartsMenuItem.Checked = Properties.Settings.Default.ShowOnlyBudgetedParts;
-			contextMenu.Items.Add(showOnlyBudgetedPartsMenuItem);
-			// menu item to display budget numbers
-			ToolStripMenuItem showBudgetNumbersMenuItem = new ToolStripMenuItem(Resources.PartLibMenuItemShowBudgetNumbers, null, menuItem_ShowBudgetNumberClick);
-			showBudgetNumbersMenuItem.Name = "showBudgetNumbersMenuItem";
-			showBudgetNumbersMenuItem.CheckOnClick = false;
-			showBudgetNumbersMenuItem.Checked = Properties.Settings.Default.ShowBudgetNumbers;
-			contextMenu.Items.Add(showBudgetNumbersMenuItem);
-			// menu item to use the budget limitation
-			ToolStripMenuItem useBudgetLimitationMenuItem = new ToolStripMenuItem(Resources.PartLibMenuItemUseBudgetLimitation, null, menuItem_UseBudgetLimitationClick);
-			useBudgetLimitationMenuItem.Name = "useBudgetLimitationMenuItem";
-			useBudgetLimitationMenuItem.CheckOnClick = false;
-			useBudgetLimitationMenuItem.Checked = Properties.Settings.Default.UseBudgetLimitation;
-			contextMenu.Items.Add(useBudgetLimitationMenuItem);
-			// menu item to display tooltips
-			ToolStripMenuItem editBudgetMenuItem = new ToolStripMenuItem(Resources.PartLibMenuItemEditBudget, null, menuItem_EditBudgetClick);
-			editBudgetMenuItem.Name = "editBudgetMenuItem";
-			editBudgetMenuItem.CheckOnClick = false;
-			editBudgetMenuItem.Checked = false;
-			contextMenu.Items.Add(editBudgetMenuItem);
+            // menu item to display the icons in large
+            ToolStripMenuItem largeIconsMenuItem = new ToolStripMenuItem(Resources.PartLibMenuItemLargeIcons, null, menuItem_LargeIconClick)
+            {
+                CheckOnClick = true,
+                Checked = useLargeIcon
+            };
+            contextMenu.Items.Add(largeIconsMenuItem);
+            // menu item to repect the proportions
+            ToolStripMenuItem proportionMenuItem = new ToolStripMenuItem(Resources.PartLibMenuItemRespectProportion, null, menuItem_RespectProportionClick)
+            {
+                CheckOnClick = true,
+                Checked = respectProportionIsChecked
+            };
+            contextMenu.Items.Add(proportionMenuItem);
+            // menu item to display part info
+            ToolStripMenuItem partInfoMenuItem = new ToolStripMenuItem(Resources.PartLibMenuItemDisplayPartInfo, null, menuItem_DisplayPartInfoClick)
+            {
+                CheckOnClick = true,
+                Checked = Settings.Default.PartLibDisplayPartInfo
+            };
+            contextMenu.Items.Add(partInfoMenuItem);
+            // menu item to display tooltips
+            ToolStripMenuItem bubbleInfoMenuItem = new ToolStripMenuItem(Resources.PartLibMenuItemDisplayTooltips, null, menuItem_DisplayTooltipsClick)
+            {
+                CheckOnClick = true,
+                Checked = Settings.Default.PartLibDisplayBubbleInfo
+            };
+            contextMenu.Items.Add(bubbleInfoMenuItem);
+            // add a line
+            ToolStripSeparator separator = new ToolStripSeparator
+            {
+                Name = "budgetSeparator"
+            };
+            contextMenu.Items.Add(separator);
+            // menu item to show only the budgeted parts
+            ToolStripMenuItem showOnlyBudgetedPartsMenuItem = new ToolStripMenuItem(Resources.PartLibMenuItemShowOnlyBudgetedParts, null, menuItem_ShowOnlyBudgetedPartsClick)
+            {
+                Name = "showOnlyBudgetedPartsMenuItem",
+                CheckOnClick = false,
+                Checked = Settings.Default.ShowOnlyBudgetedParts
+            };
+            contextMenu.Items.Add(showOnlyBudgetedPartsMenuItem);
+            // menu item to display budget numbers
+            ToolStripMenuItem showBudgetNumbersMenuItem = new ToolStripMenuItem(Resources.PartLibMenuItemShowBudgetNumbers, null, menuItem_ShowBudgetNumberClick)
+            {
+                Name = "showBudgetNumbersMenuItem",
+                CheckOnClick = false,
+                Checked = Settings.Default.ShowBudgetNumbers
+            };
+            contextMenu.Items.Add(showBudgetNumbersMenuItem);
+            // menu item to use the budget limitation
+            ToolStripMenuItem useBudgetLimitationMenuItem = new ToolStripMenuItem(Resources.PartLibMenuItemUseBudgetLimitation, null, menuItem_UseBudgetLimitationClick)
+            {
+                Name = "useBudgetLimitationMenuItem",
+                CheckOnClick = false,
+                Checked = Settings.Default.UseBudgetLimitation
+            };
+            contextMenu.Items.Add(useBudgetLimitationMenuItem);
+            // menu item to display tooltips
+            ToolStripMenuItem editBudgetMenuItem = new ToolStripMenuItem(Resources.PartLibMenuItemEditBudget, null, menuItem_EditBudgetClick)
+            {
+                Name = "editBudgetMenuItem",
+                CheckOnClick = false,
+                Checked = false
+            };
+            contextMenu.Items.Add(editBudgetMenuItem);
 			// return the well form context menu
 			return contextMenu;
 		}
@@ -244,14 +261,14 @@ namespace BlueBrick
 		public void initPartsTabControl()
 		{
 			// suspend layout when rebuilding the library
-			this.SuspendLayout();
+			SuspendLayout();
 
 			// init the part tab control based on the folders found on the drive
 			// first clear the tab control
-			this.TabPages.Clear();
+			TabPages.Clear();
 			// then search the "parts" folder, if not here maybe we should display
 			// an error message (something wrong with the installation of the application?)
-			DirectoryInfo partsFolder = new DirectoryInfo(PartLibraryPanel.sFullPathForLibrary);
+			DirectoryInfo partsFolder = new DirectoryInfo(sFullPathForLibrary);
 			if (partsFolder.Exists)
 			{
 				// create two list to record the exception thrown by some files
@@ -290,13 +307,12 @@ namespace BlueBrick
 				// iterate on each folder
 				foreach (DirectoryInfo category in categoryFolder)
 				{
-					// try to get the display setting or construct a default one
-					PartLibDisplaySetting displaySetting = null;
-					if (!tabDisplayStatus.TryGetValue(category.Name, out displaySetting))
-						displaySetting = new PartLibDisplaySetting();
+                    // try to get the display setting or construct a default one
+                    if (!tabDisplayStatus.TryGetValue(category.Name, out PartLibDisplaySetting displaySetting))
+                        displaySetting = new PartLibDisplaySetting();
 
-					// create a building info and add it to the list
-					CategoryBuildingInfo buildingInfo = new CategoryBuildingInfo(displaySetting.mRespectProportion);
+                    // create a building info and add it to the list
+                    CategoryBuildingInfo buildingInfo = new CategoryBuildingInfo(displaySetting.mRespectProportion);
 					categoryList.Add(buildingInfo);
 
 					// create the tab page corresponding to the folder
@@ -329,7 +345,7 @@ namespace BlueBrick
 			}
 
 			// suspend layout when rebuilding the library
-			this.ResumeLayout();
+			ResumeLayout();
 		}
 
 		/// <summary>
@@ -347,10 +363,10 @@ namespace BlueBrick
 			CategoryBuildingInfo buildingInfo = new CategoryBuildingInfo(displaySetting.mRespectProportion);
 
 			// first check if the Custom tab exits. If not we need to create it.
-			if (this.TabPages.ContainsKey(PartLibraryPanel.sFolderNameForCustomParts))
+			if (TabPages.ContainsKey(sFolderNameForCustomParts))
 			{
 				// the tabe page exist, so get it
-				TabPage tabPage = this.TabPages[this.TabPages.IndexOfKey(PartLibraryPanel.sFolderNameForCustomParts)];
+				TabPage tabPage = TabPages[TabPages.IndexOfKey(sFolderNameForCustomParts)];
 				// patch the building info with the correct listview
 				buildingInfo.mListView = tabPage.Controls[0] as PartListView;
 				// now check if the part is already in, and remove it in order to replace it
@@ -364,7 +380,7 @@ namespace BlueBrick
 			else
 			{
 				// The custom page doesn't exist we need to create a new one
-				addOneTabPageWithItsListView(buildingInfo, PartLibraryPanel.sFolderNameForCustomParts, displaySetting);
+				addOneTabPageWithItsListView(buildingInfo, sFolderNameForCustomParts, displaySetting);
 			}
 
 			// now load the xml files
@@ -379,11 +395,11 @@ namespace BlueBrick
 			displayErrorMessage(imageFileUnloadable, xmlFileUnloadable);
 
 			// Select the Custom Tab page
-			int cutsomTabIndex = this.TabPages.IndexOfKey(PartLibraryPanel.sFolderNameForCustomParts);
+			int cutsomTabIndex = TabPages.IndexOfKey(sFolderNameForCustomParts);
 			if (cutsomTabIndex >= 0)
 			{
 				// select the Custom tab
-				this.SelectTab(cutsomTabIndex);
+				SelectTab(cutsomTabIndex);
 				// find the first item created and scroll it in view
 				buildingInfo.mListView.ensureVisibleByTag(groupNames[0]);
 			}
@@ -397,7 +413,7 @@ namespace BlueBrick
 			if (imageFileUnloadable.Count > 0)
 			{
 				// display a warning message
-				message = Properties.Resources.ErrorMsgCanNotLoadImage;
+				message = Resources.ErrorMsgCanNotLoadImage;
 				foreach (FileNameWithException error in imageFileUnloadable)
 				{
                     message += Environment.NewLine + error.mFilename;
@@ -411,7 +427,7 @@ namespace BlueBrick
 				else
                     message += Environment.NewLine + Environment.NewLine;
 				// display a warning message
-				message += Properties.Resources.ErrorMsgCanNotLoadPartXML;
+				message += Resources.ErrorMsgCanNotLoadPartXML;
 				foreach (FileNameWithException error in xmlFileUnloadable)
 				{
                     message += Environment.NewLine + error.mFilename;
@@ -422,7 +438,7 @@ namespace BlueBrick
 			// display the error message if there was some errors
 			if (message != null)
 			{
-				LoadErrorForm messageBox = new LoadErrorForm(Properties.Resources.ErrorMsgTitleWarning, message, details);
+				LoadErrorForm messageBox = new LoadErrorForm(Resources.ErrorMsgTitleWarning, message, details);
 				messageBox.Show();
 			}
 		}
@@ -436,11 +452,13 @@ namespace BlueBrick
 		/// <param name="displaySetting">a display setting to correctly init the tab properties</param>
 		private void addOneTabPageWithItsListView(CategoryBuildingInfo buildingInfo, string tabPageName, PartLibDisplaySetting displaySetting)
 		{
-			// add the tab in the tab control, based on the name of the folder
-			TabPage newTabPage = new TabPage(tabPageName);
-			newTabPage.Name = tabPageName;
-			newTabPage.ContextMenuStrip = createContextMenuItemForATabPage(displaySetting.mLargeIcons, displaySetting.mRespectProportion);
-			this.TabPages.Add(newTabPage);
+            // add the tab in the tab control, based on the name of the folder
+            TabPage newTabPage = new TabPage(tabPageName)
+            {
+                Name = tabPageName,
+                ContextMenuStrip = createContextMenuItemForATabPage(displaySetting.mLargeIcons, displaySetting.mRespectProportion)
+            };
+            TabPages.Add(newTabPage);
 
 			// then for the new tab added, we add a list control to 
 			// fill it with the pictures found in that folder
@@ -454,7 +472,7 @@ namespace BlueBrick
 			else
 				newListView.TileSize = PART_ITEM_SMALL_SIZE_WITH_MARGIN;
             // set the event handler
-			newListView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.listView_MouseMove);
+			newListView.MouseMove += new MouseEventHandler(listView_MouseMove);
 
 			// add the list view to the tab page
 			newTabPage.Controls.Add(newListView);
@@ -471,24 +489,26 @@ namespace BlueBrick
 				// otherwise mono is not happy cause it tries to access the image while creating the item)
 				buildingInfo.mImageList.Add(brick.Image);
 
-				// create a new item for the list view item
-				ListViewItem newItem = new ListViewItem(null as string, imageIndex);
-				newItem.ToolTipText = BrickLibrary.Instance.GetFormatedBrickInfo(brick.mPartNumber,
-															Settings.Default.PartLibBubbleInfoPartID,
-															Settings.Default.PartLibBubbleInfoPartColor,
-															Settings.Default.PartLibBubbleInfoPartDescription);
+                // create a new item for the list view item
+                ListViewItem newItem = new ListViewItem(null as string, imageIndex)
+                {
+                    ToolTipText = BrickLibrary.Instance.GetFormatedBrickInfo(brick.mPartNumber,
+                                                            Settings.Default.PartLibBubbleInfoPartID,
+                                                            Settings.Default.PartLibBubbleInfoPartColor,
+                                                            Settings.Default.PartLibBubbleInfoPartDescription),
 
-				// set the tag to the item 
-				newItem.Tag = brick.mPartNumber;
-				// also set the name to allow the sorting of the part
-				// we could have use the Text property and the Sorting property of the listview, but the stupid
-				// listview display the Text in the bubble info even when ShowToolTips is false.
-				// also concatenate the sorting key with the part number such as we always have a fix order,
-				// even after several filtering and even if the sorting key is not set. But if it is set,
-				// the sorting key has the priority since it is place in front
-				newItem.Name = BrickLibrary.Instance.GetSortingKey(brick.mPartNumber) + brick.mPartNumber;
-				// the text is used to display the count and budget, and maybe other info that the ListView knows better
-				buildingInfo.mListView.updatePartTextAndBackColor(newItem);
+                    // set the tag to the item 
+                    Tag = brick.mPartNumber,
+                    // also set the name to allow the sorting of the part
+                    // we could have use the Text property and the Sorting property of the listview, but the stupid
+                    // listview display the Text in the bubble info even when ShowToolTips is false.
+                    // also concatenate the sorting key with the part number such as we always have a fix order,
+                    // even after several filtering and even if the sorting key is not set. But if it is set,
+                    // the sorting key has the priority since it is place in front
+                    Name = BrickLibrary.Instance.GetSortingKey(brick.mPartNumber) + brick.mPartNumber
+                };
+                // the text is used to display the count and budget, and maybe other info that the ListView knows better
+                buildingInfo.mListView.updatePartTextAndBackColor(newItem);
 
 				// and insert the item
 				buildingInfo.mListView.addNewItem(newItem);
@@ -652,45 +672,51 @@ namespace BlueBrick
 				}
 
 				// compute the rescale factor:
-				globalImageRescaleFactor = (float)PART_ITEM_LARGE_SIZE.Width / (float)biggestSize;
+				globalImageRescaleFactor = PART_ITEM_LARGE_SIZE.Width / (float)biggestSize;
 			}
 
-			// create two image list that will receive a snapshot of each image found in the folder
-			// WARNING: by default the colorDepth of the image list is 8bit, so the palette is recomputed
-			// everytime new images are added. For performance issue, we need a higher palette depth to
-			// avoid quantization. If we use 32bit depth, the selection is not drawn for small image list
-			// 24 bit avoid paletization, without the selection bug on dot net 
-			ImageList largeImageList = new ImageList();
-			largeImageList.ImageSize = PART_ITEM_LARGE_SIZE;
-			largeImageList.ColorDepth = ColorDepth.Depth24Bit;
-			ImageList smallImageList = new ImageList();
-			smallImageList.ImageSize = PART_ITEM_SMALL_SIZE;
-			smallImageList.ColorDepth = ColorDepth.Depth24Bit;
+            // create two image list that will receive a snapshot of each image found in the folder
+            // WARNING: by default the colorDepth of the image list is 8bit, so the palette is recomputed
+            // everytime new images are added. For performance issue, we need a higher palette depth to
+            // avoid quantization. If we use 32bit depth, the selection is not drawn for small image list
+            // 24 bit avoid paletization, without the selection bug on dot net 
+            ImageList largeImageList = new ImageList
+            {
+                ImageSize = PART_ITEM_LARGE_SIZE,
+                ColorDepth = ColorDepth.Depth24Bit
+            };
+            ImageList smallImageList = new ImageList
+            {
+                ImageSize = PART_ITEM_SMALL_SIZE,
+                ColorDepth = ColorDepth.Depth24Bit
+            };
 
-			// now we rescale all the images according to the biggest one in the folder
-			foreach (Image image in imageList)
+            // now we rescale all the images according to the biggest one in the folder
+            foreach (Image image in imageList)
 			{
-				// choose the the current scale that should be used
-				float imageRescaleFactor = 1.0f;
-				if (respectProportion)
+                // choose the the current scale that should be used
+                float imageRescaleFactor;
+                if (respectProportion)
 				{
 					imageRescaleFactor = globalImageRescaleFactor;
 				}
 				else
 				{
 					if (image.Width > image.Height)
-						imageRescaleFactor = (float)PART_ITEM_LARGE_SIZE.Width / (float)image.Width;
+						imageRescaleFactor = PART_ITEM_LARGE_SIZE.Width / (float)image.Width;
 					else
-						imageRescaleFactor = (float)PART_ITEM_LARGE_SIZE.Width / (float)image.Height;
+						imageRescaleFactor = PART_ITEM_LARGE_SIZE.Width / (float)image.Height;
 				}
 
-				// create a snapshot of the current image and replace it in the two image lists
-				// but to avoid a stretching effect, we redraw the picture in a square
-				// first compute the position and size of the bitmap to draw
-				Rectangle drawRectangle = new Rectangle();
-				drawRectangle.Width = (int)(image.Width * imageRescaleFactor);
-				drawRectangle.Height = (int)(image.Height * imageRescaleFactor);
-				drawRectangle.X = (PART_ITEM_LARGE_SIZE.Width - drawRectangle.Width) / 2;
+                // create a snapshot of the current image and replace it in the two image lists
+                // but to avoid a stretching effect, we redraw the picture in a square
+                // first compute the position and size of the bitmap to draw
+                Rectangle drawRectangle = new Rectangle
+                {
+                    Width = (int)(image.Width * imageRescaleFactor),
+                    Height = (int)(image.Height * imageRescaleFactor)
+                };
+                drawRectangle.X = (PART_ITEM_LARGE_SIZE.Width - drawRectangle.Width) / 2;
 				drawRectangle.Y = (PART_ITEM_LARGE_SIZE.Height - drawRectangle.Height) / 2;
 				// create a new bitmap to draw the scaled part
 				Bitmap snapshotImage = new Bitmap(PART_ITEM_LARGE_SIZE.Width, PART_ITEM_LARGE_SIZE.Height);
@@ -724,8 +750,8 @@ namespace BlueBrick
 		#region configuration of the part lib
 		public List<string> getTabNames()
 		{
-			List<string> resultList = new List<string>(this.TabCount);
-			foreach (TabPage tabPage in this.TabPages)
+			List<string> resultList = new List<string>(TabCount);
+			foreach (TabPage tabPage in TabPages)
 				resultList.Add(tabPage.Name);
 			return resultList;
 		}
@@ -738,12 +764,11 @@ namespace BlueBrick
 		/// <param name="filterSentence">several keywords separated by blank characters with or without prefixes</param>
 		public void filterCurrentTab(string filterSentence)
 		{
-			if (this.SelectedTab != null)
+			if (SelectedTab != null)
 			{
-				PartListView listView = this.SelectedTab.Controls[0] as PartListView;
-				if (listView != null)
-					listView.filter(filterSentence, true);
-			}
+                if (SelectedTab.Controls[0] is PartListView listView)
+                    listView.filter(filterSentence, true);
+            }
 		}
 
 		/// <summary>
@@ -758,12 +783,11 @@ namespace BlueBrick
 			Settings.Default.UIFilterAllSentence = filterSentence;
 			Settings.Default.UIFilterAllLibraryTab = true;
 			// and iterate on all the tabs
-			foreach (TabPage tabPage in this.TabPages)
+			foreach (TabPage tabPage in TabPages)
 			{
-				PartListView listView = tabPage.Controls[0] as PartListView;
-				if (listView != null)
-					listView.filter(filterSentence, (tabPage == this.SelectedTab)); // save the filter only for the selected tab
-			}
+                if (tabPage.Controls[0] is PartListView listView)
+                    listView.filter(filterSentence, tabPage == SelectedTab); // save the filter only for the selected tab
+            }
 		}
 
 		/// <summary>
@@ -776,35 +800,33 @@ namespace BlueBrick
 			Settings.Default.UIFilterAllSentence = string.Empty;
 			Settings.Default.UIFilterAllLibraryTab = false;
 			// and iterate on all the tabs
-			foreach (TabPage tabPage in this.TabPages)
+			foreach (TabPage tabPage in TabPages)
 			{
-				PartListView listView = tabPage.Controls[0] as PartListView;
-				if (listView != null)
-				{
-					// if the user hit the "unfilter all button", we need to save the current filter sentence which is displayed 
-				    // in the combo box, in the list view, other wise the refiltering will not be in synch with what is displayed
-					// in the combo box
-					if (tabPage == this.SelectedTab)
-						listView.filter(filterSentence, true);
-					else
-						listView.refilter();
-				}
-			}
+                if (tabPage.Controls[0] is PartListView listView)
+                {
+                    // if the user hit the "unfilter all button", we need to save the current filter sentence which is displayed 
+                    // in the combo box, in the list view, other wise the refiltering will not be in synch with what is displayed
+                    // in the combo box
+                    if (tabPage == SelectedTab)
+                        listView.filter(filterSentence, true);
+                    else
+                        listView.refilter();
+                }
+            }
 		}
 
 		public void updatePartCountAndBudget(Layer.LayerItem brickOrGroup)
 		{
 			// and iterate on all the tabs
-			foreach (TabPage tabPage in this.TabPages)
+			foreach (TabPage tabPage in TabPages)
 			{
-				PartListView listView = tabPage.Controls[0] as PartListView;
-				if (listView != null)
-					listView.updatePartCountAndBudget(brickOrGroup.PartNumber);
-			}
+                if (tabPage.Controls[0] is PartListView listView)
+                    listView.updatePartCountAndBudget(brickOrGroup.PartNumber);
+            }
 			// if the part is a group, also iterate on all it's items
 			if (brickOrGroup.IsAGroup)
 				foreach (Layer.LayerItem item in (brickOrGroup as Layer.Group).Items)
-					this.updatePartCountAndBudget(item);
+					updatePartCountAndBudget(item);
 		}
 
 		/// <summary>
@@ -813,41 +835,40 @@ namespace BlueBrick
 		public void updateAllPartCountAndBudget()
 		{
 			// and iterate on all the tabs
-			foreach (TabPage tabPage in this.TabPages)
+			foreach (TabPage tabPage in TabPages)
 			{
-				PartListView listView = tabPage.Controls[0] as PartListView;
-				if (listView != null)
-					listView.updateAllPartCountAndBudget();
-			}
+                if (tabPage.Controls[0] is PartListView listView)
+                    listView.updateAllPartCountAndBudget();
+            }
 		}
 
 		public void updateAppearanceAccordingToSettings(bool updateTabOrder, bool updateAppearance, bool updateStyle, bool updateBudgetCount, bool updateBubbleInfoFormat, bool updateSelectedTab, bool updateCommonFilter)
 		{
 			// save the selected tab to reselect it after reorder
-			TabPage selectedTab = (this.TabCount > 0) ? this.SelectedTab : null;
+			TabPage selectedTab = (TabCount > 0) ? SelectedTab : null;
 
 			// suspend the layout since we will rearrange everything
-			this.SuspendLayout();
+			SuspendLayout();
 
 			if (updateTabOrder)
 			{
 				// first sort the tabs
 				// get the sorted name list from the settings
-				System.Collections.Specialized.StringCollection sortedNameList = BlueBrick.Properties.Settings.Default.PartLibTabOrder;
+				System.Collections.Specialized.StringCollection sortedNameList = Settings.Default.PartLibTabOrder;
 
 				int insertIndex = 0;
 				foreach (string tabName in sortedNameList)
 				{
-					int currentIndex = this.TabPages.IndexOfKey(tabName);
+					int currentIndex = TabPages.IndexOfKey(tabName);
 					if (currentIndex != -1)
 					{
 						// get the tab page, remove it and reinsert it at the correct position
-						TabPage tabPage = this.TabPages[currentIndex];
-						this.TabPages.Remove(tabPage); // do not use RemoveAt() that throw an exception even if the index is correct
-						this.TabPages.Insert(insertIndex, tabPage);
+						TabPage tabPage = TabPages[currentIndex];
+						TabPages.Remove(tabPage); // do not use RemoveAt() that throw an exception even if the index is correct
+						TabPages.Insert(insertIndex, tabPage);
 
 						// increment the insert point
-						if (insertIndex < this.TabPages.Count)
+						if (insertIndex < TabPages.Count)
 							insertIndex++;
 					}
 				}
@@ -864,7 +885,7 @@ namespace BlueBrick
 				// then update the background color and the part and bubble info status
 				bool displayPartInfo = Settings.Default.PartLibDisplayPartInfo;
 				bool displayBubbleInfo = Settings.Default.PartLibDisplayBubbleInfo;
-				foreach (TabPage tabPage in this.TabPages)
+				foreach (TabPage tabPage in TabPages)
 				{
 					try
 					{
@@ -885,30 +906,30 @@ namespace BlueBrick
 
 			// global filter if we need to do it
 			if (updateCommonFilter && Settings.Default.UIFilterAllLibraryTab && (Settings.Default.UIFilterAllSentence != string.Empty))
-				this.filterAllTabs(Settings.Default.UIFilterAllSentence);
+				filterAllTabs(Settings.Default.UIFilterAllSentence);
 
 			// now resume the layout
-			this.ResumeLayout();
+			ResumeLayout();
 
 			// select the correct tab according to the parameter flag
 			// we do it after the resume of the layout otherwise if done during the suspends, the tab may not be correctly visible
 			if (updateSelectedTab)
 			{
 				// the selected tab from the setting data
-				int selectedTabIndex = BlueBrick.Properties.Settings.Default.UIPartLibSelectedTabIndex;
-				if ((selectedTabIndex >= 0) && (selectedTabIndex < this.TabPages.Count))
-					this.SelectTab(BlueBrick.Properties.Settings.Default.UIPartLibSelectedTabIndex);
+				int selectedTabIndex = Settings.Default.UIPartLibSelectedTabIndex;
+				if ((selectedTabIndex >= 0) && (selectedTabIndex < TabPages.Count))
+					SelectTab(Settings.Default.UIPartLibSelectedTabIndex);
 			}
 			else
 			{
 				// reselect the previous selected tab
 				if (selectedTab != null)
-					this.SelectTab(selectedTab);
+					SelectTab(selectedTab);
 			}
 
 			// redraw the selected tab to have the correct background color for part exceeding budget
-            if ((this.TabCount > 0) && (this.SelectedTab != null))
-			    this.SelectedTab.Invalidate();
+            if ((TabCount > 0) && (SelectedTab != null))
+			    SelectedTab.Invalidate();
 		}
 
 		/// <summary>
@@ -917,12 +938,11 @@ namespace BlueBrick
 		public void updateViewStyle()
 		{
 			// change the view of the list view
-			foreach (TabPage tabPage in this.TabPages)
+			foreach (TabPage tabPage in TabPages)
 			{
-				PartListView listView = tabPage.Controls[0] as PartListView;
-				if (listView != null)
-					listView.updateViewStyle(true);
-			}
+                if (tabPage.Controls[0] is PartListView listView)
+                    listView.updateViewStyle(true);
+            }
 		}
 
 		/// <summary>
@@ -931,12 +951,11 @@ namespace BlueBrick
 		public void updateFilterOnBudgetedParts()
 		{
 			// change the view of the list view
-			foreach (TabPage tabPage in this.TabPages)
+			foreach (TabPage tabPage in TabPages)
 			{
-				PartListView listView = tabPage.Controls[0] as PartListView;
-				if (listView != null)
-					listView.updateFilterOnBudgetedParts();
-			}
+                if (tabPage.Controls[0] is PartListView listView)
+                    listView.updateFilterOnBudgetedParts();
+            }
 		}
 
 		public void savePartListDisplayStatusInSettings()
@@ -944,7 +963,7 @@ namespace BlueBrick
 			// reset the setting list
 			Settings.Default.UIPartLibDisplayConfig = new System.Collections.Specialized.StringCollection();
 			// collect the info for all the pages
-			foreach (TabPage tabPage in this.TabPages)
+			foreach (TabPage tabPage in TabPages)
 			{
 				// get the status
 				bool hasCurrentTabLargeIcon = (tabPage.ContextMenuStrip.Items[(int)ContextMenuIndex.LARGE_ICON] as ToolStripMenuItem).Checked;
@@ -956,8 +975,8 @@ namespace BlueBrick
 				// add the new config in the list
 				Settings.Default.UIPartLibDisplayConfig.Add(tabConfig);
 			}
-			// also save the current tab displayed
-			Properties.Settings.Default.UIPartLibSelectedTabIndex = this.SelectedIndex;
+            // also save the current tab displayed
+            Settings.Default.UIPartLibSelectedTabIndex = SelectedIndex;
 		}
 		#endregion
 
@@ -971,61 +990,58 @@ namespace BlueBrick
 			// separator
 			(contextMenu.Items["budgetSeparator"] as ToolStripSeparator).Visible = isBudgetVisible;
 			// show only budget
-			ToolStripMenuItem menuItem = (contextMenu.Items["showOnlyBudgetedPartsMenuItem"] as ToolStripMenuItem);
+			ToolStripMenuItem menuItem = contextMenu.Items["showOnlyBudgetedPartsMenuItem"] as ToolStripMenuItem;
 			menuItem.Visible = isBudgetVisible;
-			menuItem.Checked = Properties.Settings.Default.ShowOnlyBudgetedParts;
+			menuItem.Checked = Settings.Default.ShowOnlyBudgetedParts;
 			// show budget number
-			menuItem = (contextMenu.Items["showBudgetNumbersMenuItem"] as ToolStripMenuItem);
+			menuItem = contextMenu.Items["showBudgetNumbersMenuItem"] as ToolStripMenuItem;
 			menuItem.Visible = isBudgetVisible;
-			menuItem.Checked = Properties.Settings.Default.ShowBudgetNumbers;
+			menuItem.Checked = Settings.Default.ShowBudgetNumbers;
 			// use budget limitation
-			menuItem = (contextMenu.Items["useBudgetLimitationMenuItem"] as ToolStripMenuItem);
+			menuItem = contextMenu.Items["useBudgetLimitationMenuItem"] as ToolStripMenuItem;
 			menuItem.Visible = isBudgetVisible;
-			menuItem.Checked = Properties.Settings.Default.UseBudgetLimitation;
+			menuItem.Checked = Settings.Default.UseBudgetLimitation;
 			// budget edition
-			menuItem = (contextMenu.Items["editBudgetMenuItem"] as ToolStripMenuItem);
+			menuItem = contextMenu.Items["editBudgetMenuItem"] as ToolStripMenuItem;
 			menuItem.Visible = isBudgetVisible;
 			// enable the edition only if a part is selected
-			menuItem.Enabled = ((this.SelectedTab.Controls[0] as PartListView).SelectedItems.Count > 0);
+			menuItem.Enabled = (SelectedTab.Controls[0] as PartListView).SelectedItems.Count > 0;
 		}
 
 		private void menuItem_LargeIconClick(object sender, EventArgs e)
 		{
-			PartListView listView = this.SelectedTab.Controls[0] as PartListView;
-			if (listView != null)
-			{
-				// also adjust the size of the tile according to the
-				// size of the next current image (which is the small one for the moment)
-				// we change the size before changing the image list, because the change of
-				// the image list will call a refresh anyway
-				if (listView.SmallImageList.ImageSize == PART_ITEM_SMALL_SIZE)
-					listView.TileSize = PART_ITEM_SMALL_SIZE_WITH_MARGIN;
-				else
-					listView.TileSize = PART_ITEM_LARGE_SIZE_WITH_MARGIN;
+            if (SelectedTab.Controls[0] is PartListView listView)
+            {
+                // also adjust the size of the tile according to the
+                // size of the next current image (which is the small one for the moment)
+                // we change the size before changing the image list, because the change of
+                // the image list will call a refresh anyway
+                if (listView.SmallImageList.ImageSize == PART_ITEM_SMALL_SIZE)
+                    listView.TileSize = PART_ITEM_SMALL_SIZE_WITH_MARGIN;
+                else
+                    listView.TileSize = PART_ITEM_LARGE_SIZE_WITH_MARGIN;
 
-				// switch between large view and small view
-				ImageList swap = listView.LargeImageList;
-				listView.LargeImageList = listView.SmallImageList;
-				listView.SmallImageList = swap;
+                // switch between large view and small view
+                ImageList swap = listView.LargeImageList;
+                listView.LargeImageList = listView.SmallImageList;
+                listView.SmallImageList = swap;
 
-				// resize the tabcontrol to handle a layout bug when
-				// the scroll bar disapear
-				this.Size += new Size(1, 1);
-			}
-		}
+                // resize the tabcontrol to handle a layout bug when
+                // the scroll bar disapear
+                Size += new Size(1, 1);
+            }
+        }
 
 		private void menuItem_RespectProportionClick(object sender, EventArgs e)
 		{
-			ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
-			PartListView listView = this.SelectedTab.Controls[0] as PartListView;
-			if (listView != null && menuItem != null)
-			{
-				// we need to reconstruct the image list
-				List<Image> imageList = listView.reconstructImageListFromBrickLibrary();
-				// regenerate the two image list for the current list view (converting the array into a list)
-				fillListViewWithImageList(listView, imageList, menuItem.Checked);
-			}
-		}
+            if (SelectedTab.Controls[0] is PartListView listView && sender is ToolStripMenuItem menuItem)
+            {
+                // we need to reconstruct the image list
+                List<Image> imageList = listView.reconstructImageListFromBrickLibrary();
+                // regenerate the two image list for the current list view (converting the array into a list)
+                fillListViewWithImageList(listView, imageList, menuItem.Checked);
+            }
+        }
 
 		private void menuItem_DisplayPartInfoClick(object sender, EventArgs e)
 		{
@@ -1034,16 +1050,15 @@ namespace BlueBrick
 			// update the setting
 			Settings.Default.PartLibDisplayPartInfo = displayPartInfo;
 			// the display part info is global to all the tabpage, so update all the pages
-			foreach (TabPage tabPage in this.TabPages)
+			foreach (TabPage tabPage in TabPages)
 			{
 				try
 				{
 					(tabPage.ContextMenuStrip.Items[(int)ContextMenuIndex.SHOW_PART_INFO] as ToolStripMenuItem).Checked = displayPartInfo;
-					// also change the style to display or not the text of each item
-					PartListView listView = tabPage.Controls[0] as PartListView;
-					if (listView != null)
-						listView.updateViewStyle(true);
-				}
+                    // also change the style to display or not the text of each item
+                    if (tabPage.Controls[0] is PartListView listView)
+                        listView.updateViewStyle(true);
+                }
 				catch
 				{
 				}
@@ -1057,7 +1072,7 @@ namespace BlueBrick
 			// update the setting
 			Settings.Default.PartLibDisplayBubbleInfo = displayBubbleInfo;
 			// the display tooltip is global to all the tabpage, so update all the pages
-			foreach (TabPage tabPage in this.TabPages)
+			foreach (TabPage tabPage in TabPages)
 			{
 				try
 				{
@@ -1090,16 +1105,14 @@ namespace BlueBrick
 
 		private void menuItem_EditBudgetClick(object sender, EventArgs e)
 		{
-			ToolStripMenuItem menuItem = sender as ToolStripMenuItem;
-			PartListView listView = this.SelectedTab.Controls[0] as PartListView;
-			if (listView != null && menuItem != null)
-				listView.editCurrentSelectedItemLabel();
-		}
+            if (SelectedTab.Controls[0] is PartListView listView && sender is ToolStripMenuItem)
+                listView.editCurrentSelectedItemLabel();
+        }
 
 		private string getSelectedPartNumberInListView(ListView listView)
 		{
 			if (listView.SelectedItems.Count > 0)
-				return (listView.SelectedItems[0].Tag as string);
+				return listView.SelectedItems[0].Tag as string;
 			return null;
 		}
 
@@ -1113,8 +1126,8 @@ namespace BlueBrick
 
 			// get the sender listview
 			ListView listView = sender as ListView;
-			if ((listView == null) && (this.SelectedTab != null) && (this.SelectedTab.Controls.Count > 0))
-				listView = this.SelectedTab.Controls[0] as ListView;
+			if ((listView == null) && (SelectedTab != null) && (SelectedTab.Controls.Count > 0))
+				listView = SelectedTab.Controls[0] as ListView;
 
 			// we need a valid list view
 			if (listView != null)
@@ -1148,7 +1161,7 @@ namespace BlueBrick
 								// the normal code to do a drag and drop
 								DataObject data = new DataObject();
 								data.SetData(DataFormats.StringFormat, partNumber);
-								this.DoDragDrop(data, DragDropEffects.Copy);
+								DoDragDrop(data, DragDropEffects.Copy);
 							}
 							break;
 						}
@@ -1180,12 +1193,11 @@ namespace BlueBrick
 		{
 			// if we don't have a global filtering, update the filter combo box, with the 
 			// filter of the new current tab
-			if (!Settings.Default.UIFilterAllLibraryTab && (this.TabCount > 0) && (this.SelectedTab != null) && (this.SelectedTab.Controls.Count > 0))
+			if (!Settings.Default.UIFilterAllLibraryTab && (TabCount > 0) && (SelectedTab != null) && (SelectedTab.Controls.Count > 0))
 			{
-				PartListView listView = this.SelectedTab.Controls[0] as PartListView;
-				if (listView != null)
-					MainForm.Instance.updateFilterComboBox(listView.FilterSentence);
-			}
+                if (SelectedTab.Controls[0] is PartListView listView)
+                    MainForm.Instance.updateFilterComboBox(listView.FilterSentence);
+            }
 		}
 		#endregion
 	}

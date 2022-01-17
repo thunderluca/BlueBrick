@@ -36,16 +36,16 @@ namespace BlueBrick.Actions.Bricks
 			}
 		}
 
-		private List<LayerBrick> mBrickLayerList = null;
-		private List<List<BrickPair>> mBrickPairList = null;
-		private string mPartNumberToReplace = string.Empty;
+		private readonly List<LayerBrick> mBrickLayerList = null;
+		private readonly List<List<BrickPair>> mBrickPairList = null;
+		private readonly string mPartNumberToReplace = string.Empty;
 
 		// for selection of the replaced bricks
-		private LayerBrick mLayerWhereToSelectTheReplacedBricks = null;
-		private List<BrickPair> mReplacedBricksToSelect = new List<BrickPair>();
+		private readonly LayerBrick mLayerWhereToSelectTheReplacedBricks = null;
+		private readonly List<BrickPair> mReplacedBricksToSelect = new List<BrickPair>();
 
 		// a flag to tell if this replace action was limited by the current budget
-		private bool mIsLimitedByBudget = false;
+		private readonly bool mIsLimitedByBudget = false;
 
 		#region get/set
 		public bool IsLimitedByBudget
@@ -111,7 +111,7 @@ namespace BlueBrick.Actions.Bricks
 
 		public override string GetName()
 		{
-			string actionName = BlueBrick.Properties.Resources.ActionReplaceBrick;
+			string actionName = Properties.Resources.ActionReplaceBrick;
 			actionName = actionName.Replace("&", mPartNumberToReplace);
 			return actionName;
 		}
@@ -153,7 +153,7 @@ namespace BlueBrick.Actions.Bricks
 			if (brick.IsAGroup)
 			{
 				// get the average altitude of all the children
-				List<Layer.LayerItem> children = (brick as Layer.Group).getAllLeafItems();
+				List<Layer.LayerItem> children = (brick as Layer.Group).GetAllLeafItems();
 				if (children.Count > 0)
 				{
 					foreach (Layer.LayerItem child in children)
@@ -166,13 +166,13 @@ namespace BlueBrick.Actions.Bricks
 				altitude = (brick as LayerBrick.Brick).Altitude;
 			}
 
-			// create a new brick and copy all the parameters of the old one
-            Layer.LayerItem newBrick = null;
+            // create a new brick and copy all the parameters of the old one
+            Layer.LayerItem newBrick;
             if (BrickLibrary.Instance.IsAGroup(newPartNumber))
             {
                 newBrick = new Layer.Group(newPartNumber);
 				// set the altitude to all children
-				List<Layer.LayerItem> children = (newBrick as Layer.Group).getAllLeafItems();
+				List<Layer.LayerItem> children = (newBrick as Layer.Group).GetAllLeafItems();
 				foreach (Layer.LayerItem child in children)
 					(child as LayerBrick.Brick).Altitude = altitude;
             }
@@ -196,12 +196,12 @@ namespace BlueBrick.Actions.Bricks
 			// first remove the item from its group, in case it belongs to a group
 			// (so that later if someone ask all item of this group, it won't get this limbo item)
 			if (itemToRemove.Group != null)
-				itemToRemove.Group.removeItem(itemToRemove);
+				itemToRemove.Group.RemoveItem(itemToRemove);
 
             // check if the item to remove is a group or a simple brick
             if (itemToRemove.IsAGroup)
             {
-                List<Layer.LayerItem> bricksToRemove = (itemToRemove as Layer.Group).getAllLeafItems();
+                List<Layer.LayerItem> bricksToRemove = (itemToRemove as Layer.Group).GetAllLeafItems();
                 foreach (Layer.LayerItem item in bricksToRemove)
 					oldItemIndex = layer.removeBrick(item as LayerBrick.Brick);
 				// we alsways take the last index to be sure we don't keep an index bigger than the brick list
@@ -215,7 +215,7 @@ namespace BlueBrick.Actions.Bricks
 			// check if the item to add is a group or a simple brick
 			if (itemToAdd.IsAGroup)
 			{
-				List<Layer.LayerItem> bricksToAdd = (itemToAdd as Layer.Group).getAllLeafItems();
+				List<Layer.LayerItem> bricksToAdd = (itemToAdd as Layer.Group).GetAllLeafItems();
 				// since we will add all the brick at the same index, iterating in the normal order
 				// the insertion order will be reversed. So we reverse the list to make the insertion in correct order
 				bricksToAdd.Reverse();
@@ -229,7 +229,7 @@ namespace BlueBrick.Actions.Bricks
 
 			// then once the item has been added to the layer, add it also to the group if the old item had a group
 			if (oldItemGroup != null)
-				oldItemGroup.addItem(itemToAdd);
+				oldItemGroup.AddItem(itemToAdd);
 
 			// notify the part list view (after actually adding and deleting the bricks because the total map size need to be recomputed)
 			MainForm.Instance.NotifyPartListForBrickRemoved(layer, itemToRemove, false);
@@ -246,7 +246,7 @@ namespace BlueBrick.Actions.Bricks
 				List<BrickPair> currentPairList = mBrickPairList[i];
 
 				// clear the selection (we will select the replaced brick for updating the connectivity)
-				currentLayer.clearSelection();
+				currentLayer.ClearSelection();
 
 				if (currentPairList.Count > 0)
 				{
@@ -265,13 +265,13 @@ namespace BlueBrick.Actions.Bricks
 						// replace the old brick with the new one in the current layer
 						replaceOneItem(currentLayer, oldOne, newOne);
 						// add the brick in the selection for updating connectivity later
-						currentLayer.addObjectInSelection(newOne);
+						currentLayer.AddObjectInSelection(newOne);
 					}
 
 					// update the connectivity of the whole layer after replacement
 					currentLayer.updateFullBrickConnectivityForSelectedBricksOnly();
 					// clear the selection again (it was only use for fast connectivity update)
-					currentLayer.clearSelection();
+					currentLayer.ClearSelection();
 				}
 
 				// If the current layer is the one which has the selection
@@ -280,9 +280,9 @@ namespace BlueBrick.Actions.Bricks
 					foreach (BrickPair brickPair in mReplacedBricksToSelect)
 					{
 						if (newByOld)
-							currentLayer.addObjectInSelection(brickPair.mOldBrick);
+							currentLayer.AddObjectInSelection(brickPair.mOldBrick);
 						else
-							currentLayer.addObjectInSelection(brickPair.mNewBrick);
+							currentLayer.AddObjectInSelection(brickPair.mNewBrick);
 					}
 			}
 		}

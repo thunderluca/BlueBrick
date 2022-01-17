@@ -21,7 +21,7 @@ namespace BlueBrick.Actions
 {
 	class MoveLayerUp : Action
 	{
-		private Layer mLayerMoved;
+		private readonly Layer mLayerMoved;
 
 		public MoveLayerUp(Layer layer)
 		{
@@ -31,7 +31,7 @@ namespace BlueBrick.Actions
 
 		public override string GetName()
 		{
-			return BlueBrick.Properties.Resources.ActionMoveLayerUp.Replace("&", mLayerMoved.Name);
+			return Properties.Resources.ActionMoveLayerUp.Replace("&", mLayerMoved.Name);
 		}
 
 		public override void Redo()

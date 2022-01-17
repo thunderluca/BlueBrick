@@ -19,8 +19,8 @@ namespace BlueBrick.Actions.Bricks
 {
 	class AddBrick : Action
 	{
-		private LayerBrick mBrickLayer = null;
-		private Layer.LayerItem mBrickOrGroup = null;
+		private readonly LayerBrick mBrickLayer = null;
+		private readonly Layer.LayerItem mBrickOrGroup = null;
 		private List<Layer.LayerItem> mBricks = null;
 		private List<int> mBrickIndex = null; // this list of index is for the redo, to add each text at the same place
 
@@ -48,7 +48,7 @@ namespace BlueBrick.Actions.Bricks
 			// init the brick to add list
 			if (mBrickOrGroup.IsAGroup)
 			{
-				mBricks = (mBrickOrGroup as Layer.Group).getAllLeafItems();
+				mBricks = (mBrickOrGroup as Layer.Group).GetAllLeafItems();
 				// since the bricks are added from the end in the redo method,
 				// we reverse the order of the group, such as a group from the library can
 				// be inserted in the correct order.
@@ -68,7 +68,7 @@ namespace BlueBrick.Actions.Bricks
 
 		public override string GetName()
 		{
-			string actionName = BlueBrick.Properties.Resources.ActionAddBrick;
+			string actionName = Properties.Resources.ActionAddBrick;
 			actionName = actionName.Replace("&", mBrickOrGroup.PartNumber);
 			return actionName;
 		}
@@ -85,7 +85,7 @@ namespace BlueBrick.Actions.Bricks
 				mBrickLayer.updateFullBrickConnectivityForOneBrick(mBricks[i] as LayerBrick.Brick);
 			}
 			// finally reselect all the undeleted brick
-			mBrickLayer.selectOnlyThisObject(mBricks);
+			mBrickLayer.SelectOnlyThisObject(mBricks);
 
 			// notify the part list view (after actually adding the brick because the total map size need to be recomputed)
 			MainForm.Instance.NotifyPartListForBrickAdded(mBrickLayer, mBrickOrGroup, false);

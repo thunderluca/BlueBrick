@@ -22,8 +22,8 @@ namespace BlueBrick.Actions.Rulers
 {
 	public class ScaleRuler : Action
 	{
-		private LayerRuler mRulerLayer = null;
-		private LayerRuler.RulerItem mRulerItem = null;
+		private readonly LayerRuler mRulerLayer = null;
+		private readonly LayerRuler.RulerItem mRulerItem = null;
 		private PointF mOriginalPosition = new PointF();
 		private PointF mNewPosition = new PointF();
 
@@ -38,8 +38,8 @@ namespace BlueBrick.Actions.Rulers
 		public override string GetName()
 		{
 			if (mRulerItem is LayerRuler.CircularRuler)
-				return BlueBrick.Properties.Resources.ActionScaleCircularRuler;
-			return BlueBrick.Properties.Resources.ActionScaleLinearRuler;
+				return Properties.Resources.ActionScaleCircularRuler;
+			return Properties.Resources.ActionScaleLinearRuler;
 		}
 
 		public override void Redo()
@@ -47,7 +47,7 @@ namespace BlueBrick.Actions.Rulers
 			// scale to the new position
 			mRulerItem.scaleToPoint(mNewPosition);
 			// update the selection rectangle
-			mRulerLayer.updateBoundingSelectionRectangle();
+			mRulerLayer.UpdateBoundingSelectionRectangle();
 		}
 
 		public override void Undo()
@@ -55,7 +55,7 @@ namespace BlueBrick.Actions.Rulers
 			// scale to the original position
 			mRulerItem.scaleToPoint(mOriginalPosition);
 			// update the selection rectangle
-			mRulerLayer.updateBoundingSelectionRectangle();
+			mRulerLayer.UpdateBoundingSelectionRectangle();
 		}
 	}
 }

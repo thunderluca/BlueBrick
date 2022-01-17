@@ -52,16 +52,16 @@ namespace BlueBrick.MapData
 		private static int mDataVersionOfTheFileLoaded = CURRENT_DATA_VERSION;
 
 		// for the current map
-		private string mMapFileName = Properties.Resources.DefaultSaveFileName;
+		private string mMapFileName = Resources.DefaultSaveFileName;
 		private bool mIsMapNameValid = false;
 
 		// data global to the map that can change the user
-		private string mAuthor = Properties.Resources.DefaultAuthor;
-		private string mLUG = Properties.Resources.DefaultLUG;
-		private string mEvent = Properties.Resources.DefaultEvent;
+		private string mAuthor = Resources.DefaultAuthor;
+		private string mLUG = Resources.DefaultLUG;
+		private string mEvent = Resources.DefaultEvent;
 		private DateTime mDate = DateTime.Today;
 		private string mComment = "";
-		private Color mBackgroundColor = BlueBrick.Properties.Settings.Default.DefaultBackgroundColor;
+		private Color mBackgroundColor = Settings.Default.DefaultBackgroundColor;
 		private string mGeneralInfoWatermark = "";
 
 		// data for the image export (this contains the last export settings for this map)
@@ -69,9 +69,9 @@ namespace BlueBrick.MapData
 		private int mExportFileTypeIndex = 1; // index in the combobox for the different type of export
 		private RectangleF mExportArea = new RectangleF();
 		private double mExportScale = 0.0;
-		private bool mExportWatermark = BlueBrick.Properties.Settings.Default.UIExportWatermark;
-		private bool mExportElectricCircuit = BlueBrick.Properties.Settings.Default.UIExportElectricCircuit;
-		private bool mExportConnectionPoints = BlueBrick.Properties.Settings.Default.UIExportConnection;
+		private bool mExportWatermark = Settings.Default.UIExportWatermark;
+		private bool mExportElectricCircuit = Settings.Default.UIExportElectricCircuit;
+		private bool mExportConnectionPoints = Settings.Default.UIExportConnection;
 		private bool mHasExportSettingsChanged = false; // a boolean flag indicating that the settings has changed and that the file need to be saved
 
 		// some data for compatibility with Track designer
@@ -197,7 +197,7 @@ namespace BlueBrick.MapData
 
 		public bool WasModified
 		{
-			get { return ((mNumberOfModificationSinceLastSave != 0) || mHasExportSettingsChanged); }
+			get { return (mNumberOfModificationSinceLastSave != 0) || mHasExportSettingsChanged; }
 			set
 			{
 				// if the value is false (meaning we just saved the file), reset all the flags
@@ -224,7 +224,7 @@ namespace BlueBrick.MapData
 			{
 				// clear the selection of the previous selected layer
 				if (mSelectedLayer != null)
-					mSelectedLayer.clearSelection();
+					mSelectedLayer.ClearSelection();
 
 				// select the new layer
 				mSelectedLayer = value;
@@ -311,7 +311,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		private void ComputeGeneralInfoWatermark()
 		{
-			mGeneralInfoWatermark = this.Author + ", " + this.LUG + ", " + this.Event + " (" + this.Date.ToShortDateString() + ")";
+			mGeneralInfoWatermark = Author + ", " + LUG + ", " + Event + " (" + Date.ToShortDateString() + ")";
 		}
 		#endregion
 
@@ -333,8 +333,8 @@ namespace BlueBrick.MapData
 			/// a earlier version of BlueBrick
 			if (mDataVersionOfTheFileLoaded > CURRENT_DATA_VERSION)
 			{
-				MessageBox.Show(null, Properties.Resources.ErrorMsgProgramObsolete,
-					Properties.Resources.ErrorMsgTitleError, MessageBoxButtons.OK,
+				MessageBox.Show(null, Resources.ErrorMsgProgramObsolete,
+                    Resources.ErrorMsgTitleError, MessageBoxButtons.OK,
 					MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);				
 				return;
 			}
@@ -443,7 +443,7 @@ namespace BlueBrick.MapData
 
 			// once we have finished to read all the layers thus all the items, we need to recreate all the links they have between them
 			foreach (Layer layer in mLayers)
-				layer.recreateLinksAfterLoading();
+				layer.RecreateLinksAfterLoading();
 			// then clear again the hash table to free the memory
             SaveLoadManager.UniqueId.ClearHashtableForLinkRebuilding();
 
@@ -813,30 +813,30 @@ namespace BlueBrick.MapData
 			{
 				// beep + status message
 				System.Media.SystemSounds.Beep.Play();
-				BlueBrick.MainForm.Instance.setStatusBarMessage(Properties.Resources.StatusMsgBudgetReached);
+                MainForm.Instance.setStatusBarMessage(Resources.StatusMsgBudgetReached);
 				// and check if we need to display a forgetable message box (for trimmed copy it is displayed later)
-				if (Properties.Settings.Default.DisplayWarningMessageForBrickNotAddedDueToBudgetLimitation && (reason == BrickAddability.NO_BUDGET_EXCEEDED))
+				if (Settings.Default.DisplayWarningMessageForBrickNotAddedDueToBudgetLimitation && (reason == BrickAddability.NO_BUDGET_EXCEEDED))
 				{
 					// the flag to forget the messagebox
 					bool dontDisplayMessageAgain = false;
 					// display the warning message
-					ForgetableMessageBox.Show(BlueBrick.MainForm.Instance, Properties.Resources.ErrorMsgCannotAddDueToBudgetLimitation,
-								Properties.Resources.ErrorMsgTitleError, MessageBoxButtons.OK,
+					ForgetableMessageBox.Show(MainForm.Instance, Resources.ErrorMsgCannotAddDueToBudgetLimitation,
+                                Resources.ErrorMsgTitleError, MessageBoxButtons.OK,
 								MessageBoxIcon.Stop, MessageBoxDefaultButton.Button1, ref dontDisplayMessageAgain);
-					// set back the checkbox value in the settings (don't save the settings now, it will be done when exiting the application)
-					Properties.Settings.Default.DisplayWarningMessageForBrickNotAddedDueToBudgetLimitation = !dontDisplayMessageAgain;
+                    // set back the checkbox value in the settings (don't save the settings now, it will be done when exiting the application)
+                    Settings.Default.DisplayWarningMessageForBrickNotAddedDueToBudgetLimitation = !dontDisplayMessageAgain;
 				}
 			}
 			else if (reason == BrickAddability.NO_WRONG_LAYER_TYPE)
 			{
-				// display a status message
-				BlueBrick.MainForm.Instance.setStatusBarMessage(Properties.Resources.StatusMsgWrongLayerType);
+                // display a status message
+                MainForm.Instance.setStatusBarMessage(Resources.StatusMsgWrongLayerType);
 			}
 		}
 
 		public BrickAddability CanAddBrick(string partNumber)
 		{
-			if (Map.sInstance.SelectedLayer is LayerBrick)
+			if (sInstance.SelectedLayer is LayerBrick)
 			{
 				if (Budget.Budget.Instance.canAddBrick(partNumber, true))
 					return BrickAddability.YES;
@@ -850,7 +850,7 @@ namespace BlueBrick.MapData
 		{
 			BrickAddability canAdd = CanAddBrick(partNumber);
 			if (canAdd == BrickAddability.YES)
-				ActionManager.Instance.doAction(new AddBrick(Map.sInstance.SelectedLayer as LayerBrick, partNumber));
+				ActionManager.Instance.doAction(new AddBrick(sInstance.SelectedLayer as LayerBrick, partNumber));
 			else
 				GiveFeedbackForNotAddingBrick(canAdd);
 		}
@@ -859,7 +859,7 @@ namespace BlueBrick.MapData
 		{
 			BrickAddability canAdd = CanAddBrick(brickOrGroup.PartNumber);
 			if (canAdd == BrickAddability.YES)
-				ActionManager.Instance.doAction(new AddBrick(Map.sInstance.SelectedLayer as LayerBrick, brickOrGroup));
+				ActionManager.Instance.doAction(new AddBrick(sInstance.SelectedLayer as LayerBrick, brickOrGroup));
 			else
 				GiveFeedbackForNotAddingBrick(canAdd);
 		}
@@ -869,7 +869,7 @@ namespace BlueBrick.MapData
 			BrickAddability canAdd = CanAddBrick(partNumber);
 			if (canAdd == BrickAddability.YES)
 			{
-                if (Map.sInstance.SelectedLayer is LayerBrick brickLayer)
+                if (sInstance.SelectedLayer is LayerBrick brickLayer)
                 {
                     Layer.LayerItem selectedItem = brickLayer.getSingleBrickOrGroupSelected();
                     if (selectedItem != null)
@@ -960,7 +960,7 @@ namespace BlueBrick.MapData
 					LayerBrick brickLayer = layer as LayerBrick;
 					if ((!onlyBrickLayers) || (brickLayer != null))
 					{
-						RectangleF layerSurface = layer.getTotalAreaInStud();
+						RectangleF layerSurface = layer.GetTotalAreaInStud();
 						if (!layerSurface.IsEmpty)
 						{
 							if (layerSurface.X < topLeft.X)
@@ -1001,7 +1001,7 @@ namespace BlueBrick.MapData
 		public void ClearAllSelection()
 		{
 			foreach (Layer layer in mLayers)
-				layer.clearSelection();
+				layer.ClearSelection();
 		}
 
 		// recompute all the pictures of all the brick of all the brick layers
@@ -1017,8 +1017,8 @@ namespace BlueBrick.MapData
 
 		public void EditSelectedItemsProperties(PointF mouseCoordInStud)
 		{
-			if (Map.sInstance.SelectedLayer != null)
-				Map.sInstance.SelectedLayer.editSelectedItemsProperties(mouseCoordInStud);
+			if (sInstance.SelectedLayer != null)
+                sInstance.SelectedLayer.EditSelectedItemsProperties(mouseCoordInStud);
 		}
 		#endregion
 
@@ -1034,7 +1034,7 @@ namespace BlueBrick.MapData
 		public void Draw(Graphics g, RectangleF areaInStud, double scalePixelPerStud, bool drawSelection)
 		{
 			foreach (Layer layer in mLayers)
-                layer.draw(g, areaInStud, scalePixelPerStud, drawSelection);
+                layer.Draw(g, areaInStud, scalePixelPerStud, drawSelection);
         }
 
         /// <summary>
@@ -1046,13 +1046,13 @@ namespace BlueBrick.MapData
         public void DrawWatermark(Graphics g, RectangleF areaInStud, double scalePixelPerStud)
         {
             // draw the global info if it is enabled
-            if (Properties.Settings.Default.DisplayGeneralInfoWatermark)
+            if (Settings.Default.DisplayGeneralInfoWatermark)
             {
-                SizeF generalInfoSize = g.MeasureString(this.GeneralInfoWatermark, Settings.Default.WatermarkFont);
+                SizeF generalInfoSize = g.MeasureString(GeneralInfoWatermark, Settings.Default.WatermarkFont);
                 float x = (float)(areaInStud.Width * scalePixelPerStud) - generalInfoSize.Width;
                 float y = (float)(areaInStud.Height * scalePixelPerStud) - generalInfoSize.Height;
                 g.FillRectangle(mWatermarkBackgroundBrush, x, y, generalInfoSize.Width, generalInfoSize.Height);
-                g.DrawString(this.GeneralInfoWatermark, Settings.Default.WatermarkFont, mWatermarkBrush, x, y);
+                g.DrawString(GeneralInfoWatermark, Settings.Default.WatermarkFont, mWatermarkBrush, x, y);
             }
 		}
 
@@ -1066,7 +1066,7 @@ namespace BlueBrick.MapData
 			// we ask if the selected layer want to handle this mouse down event
 			if (mSelectedLayer != null)
 			{
-				if (mSelectedLayer.handleMouseDown(e, mouseCoordInStud, ref preferedCursor))
+				if (mSelectedLayer.HandleMouseDown(e, mouseCoordInStud, ref preferedCursor))
 				{
 					mLayerThatHandleMouse = mSelectedLayer;
 					return true;
@@ -1085,7 +1085,7 @@ namespace BlueBrick.MapData
 			// we ask if the selected layer want to handle this mouse down event
 			if (mSelectedLayer != null)
 			{
-				if (mSelectedLayer.handleMouseMoveWithoutClick(e, mouseCoordInStud, ref preferedCursor))
+				if (mSelectedLayer.HandleMouseMoveWithoutClick(e, mouseCoordInStud, ref preferedCursor))
 				{
 					mLayerThatHandleMouse = mSelectedLayer;
 					return true;
@@ -1108,7 +1108,7 @@ namespace BlueBrick.MapData
 		{
 			// we ask if the selected layer want to handle this mouse down event
 			if (mLayerThatHandleMouse != null)
-				return mLayerThatHandleMouse.mouseDown(e, mouseCoordInStud);
+				return mLayerThatHandleMouse.MouseDown(e, mouseCoordInStud);
 			return false;
 		}
 
@@ -1120,7 +1120,7 @@ namespace BlueBrick.MapData
 		public bool MouseMove(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
 		{
 			if (mLayerThatHandleMouse != null)
-				return mLayerThatHandleMouse.mouseMove(e, mouseCoordInStud, ref preferedCursor);
+				return mLayerThatHandleMouse.MouseMove(e, mouseCoordInStud, ref preferedCursor);
 			return false;
 		}
 
@@ -1134,7 +1134,7 @@ namespace BlueBrick.MapData
 			bool mustRefreshView = false;
 			if (mLayerThatHandleMouse != null)
 			{
-				mustRefreshView = mLayerThatHandleMouse.mouseUp(e, mouseCoordInStud);
+				mustRefreshView = mLayerThatHandleMouse.MouseUp(e, mouseCoordInStud);
 				mLayerThatHandleMouse = null;
 			}
 			return mustRefreshView;
@@ -1148,7 +1148,7 @@ namespace BlueBrick.MapData
 		public void ZoomScaleChangeNotification(double oldScaleInPixelPerStud, double newScaleInPixelPerStud)
 		{
 			foreach (Layer layer in mLayers)
-				layer.zoomScaleChangeNotification(oldScaleInPixelPerStud, newScaleInPixelPerStud);
+				layer.ZoomScaleChangeNotification(oldScaleInPixelPerStud, newScaleInPixelPerStud);
 		}
 
 		/// <summary>
@@ -1157,8 +1157,8 @@ namespace BlueBrick.MapData
 		/// <param name="selectionRectangeInStud">the rectangle in which select the items</param>
 		public void SelectInRectangle(RectangleF selectionRectangeInStud)
 		{
-			if (Map.sInstance.SelectedLayer != null)
-				Map.sInstance.SelectedLayer.selectInRectangle(selectionRectangeInStud);
+			if (sInstance.SelectedLayer != null)
+                sInstance.SelectedLayer.SelectInRectangle(selectionRectangeInStud);
 		}
 
 		#endregion

@@ -21,8 +21,8 @@ namespace BlueBrick.Actions.Layers
 {
 	class SelectLayer : Action
 	{
-		private Layer mLayerToSelect = null;
-		private Layer mPreviousSelectedLayer = null;
+		private readonly Layer mLayerToSelect = null;
+		private readonly Layer mPreviousSelectedLayer = null;
 
 		public SelectLayer(Layer layerToSelect)
 		{
@@ -36,7 +36,7 @@ namespace BlueBrick.Actions.Layers
 
 		public override string GetName()
 		{
-			string actionName = BlueBrick.Properties.Resources.ActionSelectLayer;
+			string actionName = Properties.Resources.ActionSelectLayer;
 			actionName = actionName.Replace("&", mLayerToSelect.Name);
 			return actionName;
 		}

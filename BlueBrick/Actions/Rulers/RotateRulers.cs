@@ -32,16 +32,16 @@ namespace BlueBrick.Actions.Rulers
 		public RotateRulers(LayerRuler layer, List<Layer.LayerItem> texts, int rotateSteps, bool forceKeepLastCenter)
 		{
 			// call the common constructor
-			float angle = MapData.Layer.CurrentRotationStep * rotateSteps;
+			float angle = Layer.CurrentRotationStep * rotateSteps;
 			base.commonConstructor(layer, texts, angle, forceKeepLastCenter);
 		}
 
 		public override string GetName()
 		{
 			if (mItems.Count == 1)
-				return BlueBrick.Properties.Resources.ActionRotateRuler;
+				return Properties.Resources.ActionRotateRuler;
 			else
-				return BlueBrick.Properties.Resources.ActionRotateSeveralRulers;
+				return Properties.Resources.ActionRotateSeveralRulers;
 		}
 
 		public override void Redo()
@@ -59,7 +59,7 @@ namespace BlueBrick.Actions.Rulers
 			rotateGroups(rotationAngle);
 
 			// update the bounding rectangle (because the ruler is not square)
-			mLayer.updateBoundingSelectionRectangle();
+			mLayer.UpdateBoundingSelectionRectangle();
 		}
 
 		public override void Undo()
@@ -77,7 +77,7 @@ namespace BlueBrick.Actions.Rulers
 			rotateGroups(rotationAngle);
 
 			// update the bounding rectangle (because the ruler is not square)
-			mLayer.updateBoundingSelectionRectangle();
+			mLayer.UpdateBoundingSelectionRectangle();
 		}
 	}
 }

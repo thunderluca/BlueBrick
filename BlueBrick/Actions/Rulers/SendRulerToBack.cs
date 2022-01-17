@@ -29,17 +29,17 @@ namespace BlueBrick.Actions.Rulers
 
 		public override string GetName()
 		{
-			return BlueBrick.Properties.Resources.ActionSendRulerToBack;
+			return Properties.Resources.ActionSendRulerToBack;
 		}
 
 		protected override int removeItem(Layer.LayerItem item)
 		{
-			return (mLayer as LayerRuler).removeRulerItem(item as LayerRuler.RulerItem);
+			return (mLayer as LayerRuler).RemoveRulerItem(item as LayerRuler.RulerItem);
 		}
 
 		protected override void addItem(Layer.LayerItem item, int position)
 		{
-			(mLayer as LayerRuler).addRulerItem(item as LayerRuler.RulerItem, position);
+			(mLayer as LayerRuler).AddRulerItem(item as LayerRuler.RulerItem, position);
 		}
 	}
 }

@@ -44,7 +44,7 @@ namespace BlueBrick.MapData.Tools
 		///***************************************************************************************
 		private static double SimplifyAngle(double angle)
 		{
-			double twoPi = (2.0 * Math.PI);
+			double twoPi = 2.0 * Math.PI;
 			angle = angle % twoPi;
 			if( angle < -Math.PI )
 				angle += twoPi;
@@ -140,7 +140,7 @@ namespace BlueBrick.MapData.Tools
 				// joint position to the target postion.
 				double cosRotAng;
 				double sinRotAng;
-				double endTargetMag = (curToEndMag*curToTargetMag);
+				double endTargetMag = curToEndMag*curToTargetMag;
 				if( endTargetMag <= epsilon )
 				{
 					cosRotAng = 1;
@@ -165,13 +165,13 @@ namespace BlueBrick.MapData.Tools
 				bool needToRecomputeCosAndSin = false;
 				if (newLocalAngleInRad > maxLocalAngleInRad)
 				{
-					rotAng -= (newLocalAngleInRad - maxLocalAngleInRad);
+					rotAng -= newLocalAngleInRad - maxLocalAngleInRad;
 					newLocalAngleInRad = maxLocalAngleInRad;
 					needToRecomputeCosAndSin = true;
 				}
 				else if (newLocalAngleInRad < -maxLocalAngleInRad)
 				{
-					rotAng -= (newLocalAngleInRad + maxLocalAngleInRad);
+					rotAng -= newLocalAngleInRad + maxLocalAngleInRad;
 					newLocalAngleInRad = -maxLocalAngleInRad;
 					needToRecomputeCosAndSin = true;
 				}
@@ -191,8 +191,8 @@ namespace BlueBrick.MapData.Tools
 				endY = bones[boneIdx].worldY + sinRotAng * curToEndX + cosRotAng * curToEndY;
 
 				// Check for termination (except if we need to swap the target
-			    double endToTargetX = (targetX-endX);
-			    double endToTargetY = (targetY-endY);
+			    double endToTargetX = targetX-endX;
+			    double endToTargetY = targetY-endY;
 			    if (endToTargetX*endToTargetX + endToTargetY*endToTargetY <= arrivalDistSqr)
 			    {
 			        // We found a valid solution.

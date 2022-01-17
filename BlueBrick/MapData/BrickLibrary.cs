@@ -119,7 +119,7 @@ namespace BlueBrick.MapData
 						get
 						{
 							// first try to get the id for the registry set on this machine
-							int id = this.IDForCurrentRegistry;
+							int id = IDForCurrentRegistry;
 							if (id != 0)
 								return id;
 							// else return the default ID
@@ -254,7 +254,7 @@ namespace BlueBrick.MapData
             public BrickType        mBrickType = BrickType.BRICK;
 			public string			mAuthor = string.Empty; // the name of the author of the brick
 			public string			mImageURL = null; // the URL on internet of the image for part list export in HTML
-			public string			mDescription = BlueBrick.Properties.Resources.TextUnknown; // the description of the part in the current language of the application
+			public string			mDescription = Properties.Resources.TextUnknown; // the description of the part in the current language of the application
 			public string			mSortingKey = string.Empty; // the sorting key is used to sort all the part of the same folder inside the tab
 			public string			mPartNumber = null; // the part number (same as the key in the dictionnary), usefull in case of part renaming
 			private Image			mImage = null;	// the image of the brick just as it is loaded from the hardrive. If null, the brick is ignored by BlueBrick.
@@ -359,7 +359,7 @@ namespace BlueBrick.MapData
                     // set the brick type if it is a group
 					if (isGroupPart)
 					{
-						mBrickType = Brick.BrickType.GROUP;
+						mBrickType = BrickType.GROUP;
 						mGroupInfo = new GroupInfo();
 					}
 
@@ -418,7 +418,7 @@ namespace BlueBrick.MapData
                 if (image != null)
                 {
                     // assign the image if not null (this is a normal part)
-                    this.Image = image;
+                    Image = image;
                 }
                 else
                 {
@@ -429,10 +429,10 @@ namespace BlueBrick.MapData
                         // if the image is null for a normal brick, this brick should be ignored by BlueBrick
                         // The ignore bricks have different meaning than the unknown bricks
                         // if the brick should be ignored, set the brick type and create a dummy small image
-						this.mBrickType |= Brick.BrickType.IGNORABLE | Brick.BrickType.NOT_LISTED;
+						mBrickType |= BrickType.IGNORABLE | BrickType.NOT_LISTED;
 						// create a default image otherwise when instanciating this brick, we will try to add
 						// it again to the library as an unknown brick.
-						this.Image = new Bitmap(1, 1); // call the setter to also set the bounding box
+						Image = new Bitmap(1, 1); // call the setter to also set the bounding box
                     }
                 }
 									
@@ -462,7 +462,7 @@ namespace BlueBrick.MapData
 				{
 					// declare a variable to store the default description when we will find it
 					// the default description is in english
-					string defaultDescription = BlueBrick.Properties.Resources.TextUnknown;
+					string defaultDescription = Properties.Resources.TextUnknown;
 					bool isDescriptionFound = false;
 
 					// read the first child node (and check that it is not the end element)
@@ -476,7 +476,7 @@ namespace BlueBrick.MapData
 						// check if we found the language of the application,
 						// else check if it is the default english language,
 						// else read the next entry
-						if (language.Equals(BlueBrick.Properties.Settings.Default.Language))
+						if (language.Equals(Properties.Settings.Default.Language))
 						{
 							mDescription = xmlReader.ReadElementContentAsString();
 							isDescriptionFound = true;
@@ -542,7 +542,7 @@ namespace BlueBrick.MapData
 						if (xmlReader.Name.Equals("OldName"))
 						{
 							string oldName = xmlReader.ReadElementContentAsString().ToUpperInvariant();
-							BrickLibrary.Instance.AddToTempRenamedPartList(oldName, this);
+                            Instance.AddToTempRenamedPartList(oldName, this);
 						}
 						else
 							xmlReader.Read();
@@ -660,14 +660,14 @@ namespace BlueBrick.MapData
 									(mConnectionPoints[i].mElectricPlug == -mConnectionPoints[j].mElectricPlug))
 								{
 									// we found a circuit, so create the list if not already done
-									if (this.mElectricCircuitList == null)
-										this.mElectricCircuitList = new List<ElectricCircuit>();
+									if (mElectricCircuitList == null)
+										mElectricCircuitList = new List<ElectricCircuit>();
 									// compute the distance between the two connection (length of the circuit)
 									PointF distance = new PointF(	mConnectionPoints[i].mPosition.X - mConnectionPoints[j].mPosition.X,
 																	mConnectionPoints[i].mPosition.Y - mConnectionPoints[j].mPosition.Y);
 									float length = (float)Math.Sqrt((distance.X * distance.X) + (distance.Y * distance.Y));
 									// add the new circuit in the list
-									this.mElectricCircuitList.Add(new ElectricCircuit(i, j, length));
+									mElectricCircuitList.Add(new ElectricCircuit(i, j, length));
 								}
 					}
 				}
@@ -878,7 +878,7 @@ namespace BlueBrick.MapData
 							string fullPartId = ReadBlueBrickId(ref xmlReader, ref mLDrawRemapData.mAliasPartNumber, ref mLDrawRemapData.mAliasPartColor);
 							// add the part to the remap list if need
 							if (needToAddRemap)
-								BrickLibrary.Instance.AddToTempRenamedPartList(fullPartId, this);
+                                Instance.AddToTempRenamedPartList(fullPartId, this);
 						}
 						else
 							xmlReader.Read();
@@ -915,8 +915,8 @@ namespace BlueBrick.MapData
 						else if (xmlReader.Name.Equals("PartName"))
 						{
 							m4DBrixRemapData.mPartName = xmlReader.ReadElementContentAsString();
-							// also add me (the current brick we are reading) in the remap dictionary with the 4dBrix part name that we just read
-							BrickLibrary.Instance.AddTo4DBrixPartNumberAssociation(m4DBrixRemapData.mPartName, this);
+                            // also add me (the current brick we are reading) in the remap dictionary with the 4dBrix part name that we just read
+                            Instance.AddTo4DBrixPartNumberAssociation(m4DBrixRemapData.mPartName, this);
 						}
 						else if (xmlReader.Name.Equals("OrientationDifference"))
 							m4DBrixRemapData.mOrientationDifference = xmlReader.ReadElementContentAsFloat();
@@ -945,8 +945,8 @@ namespace BlueBrick.MapData
                     bool canUngroup = xmlReader.ReadElementContentAsBoolean();
 					// we set the flag only if it's false. And also the brick must be a group,
 					// so if we read the "CanUngroup" tag in a normal XML brick file, we just ignore this tag
-                    if (!canUngroup && ((this.mBrickType & BrickType.GROUP) != 0))
-                        this.mBrickType |= BrickType.SEALED_GROUP;
+                    if (!canUngroup && ((mBrickType & BrickType.GROUP) != 0))
+                        mBrickType |= BrickType.SEALED_GROUP;
                 }
                 else
                 {
@@ -1058,7 +1058,7 @@ namespace BlueBrick.MapData
 				{
 					bool shouldIgnore = xmlReader.ReadElementContentAsBoolean();
 					if (shouldIgnore)
-						this.mBrickType |= BrickType.NOT_LISTED;
+						mBrickType |= BrickType.NOT_LISTED;
 				}
 				else
 				{
@@ -1245,7 +1245,7 @@ namespace BlueBrick.MapData
                 System.Xml.XmlReader xmlReader = System.Xml.XmlReader.Create(xmlFileName, xmlSettings);
  
 				// use a variable to know if we need to read another language
-				bool isDefaultLanguageEnglish = BlueBrick.Properties.Settings.Default.Language.Equals("en");
+				bool isDefaultLanguageEnglish = Properties.Settings.Default.Language.Equals("en");
 
 				// the colors
 				bool colorFound = xmlReader.ReadToFollowing("color");
@@ -1263,9 +1263,9 @@ namespace BlueBrick.MapData
                     string colorName;
                     if (isDefaultLanguageEnglish)
 						colorName = defaultColorName;
-					else if (xmlReader.Name.Equals(BlueBrick.Properties.Settings.Default.Language))
+					else if (xmlReader.Name.Equals(Properties.Settings.Default.Language))
 						colorName = xmlReader.ReadElementContentAsString();
-					else if (xmlReader.ReadToNextSibling(BlueBrick.Properties.Settings.Default.Language))
+					else if (xmlReader.ReadToNextSibling(Properties.Settings.Default.Language))
 						colorName = xmlReader.ReadElementContentAsString();
 					else
 						colorName = defaultColorName;
@@ -1527,7 +1527,7 @@ namespace BlueBrick.MapData
 			Pen pen = new Pen(Color.Red, penWidth);
 			Bitmap unknownImage = new Bitmap(widthInPixel, heightInPixel);
 			Graphics graphics = Graphics.FromImage(unknownImage);
-			graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+			graphics.SmoothingMode = SmoothingMode.HighQuality;
 			graphics.DrawLine(pen, new Point(0, 0), new Point(widthInPixel, heightInPixel));
 			graphics.DrawLine(pen, new Point(0, heightInPixel), new Point(widthInPixel, 0));
 			if ((partNumber != null) && (partNumber.Length > 0))
@@ -1542,7 +1542,7 @@ namespace BlueBrick.MapData
 				if (fontSize <= 4.0f)
 					fontSize = 4.0f;
 				Font font = new Font(FontFamily.GenericSansSerif, fontSize);
-				graphics.DrawString(partNumber, font, brush, (float)widthInPixel * 0.5f, (float)heightInPixel * 0.5f, format);
+				graphics.DrawString(partNumber, font, brush, widthInPixel * 0.5f, heightInPixel * 0.5f, format);
 			}
 			// return the image created
 			return unknownImage;
@@ -1983,7 +1983,7 @@ namespace BlueBrick.MapData
 					if (subPart.mSubPartBrick.IsAGroup)
 					{
 						// get the count of the subpart recursively
-						Dictionary<string, int> subpartCount = this.GetSubPartCount(subPart.mSubPartNumber);
+						Dictionary<string, int> subpartCount = GetSubPartCount(subPart.mSubPartNumber);
 						// then merge it in the result
 						foreach (KeyValuePair<string, int> pair in subpartCount)
 						{
@@ -2039,12 +2039,12 @@ namespace BlueBrick.MapData
                     if (mColorNames.TryGetValue(colorId, out string colorName))
                         result[2] = colorName;
                     else
-                        result[2] = BlueBrick.Properties.Resources.TextUnknown;
+                        result[2] = Properties.Resources.TextUnknown;
                 }
                 else
                 {
                     // no valid color id, this case is for the "set" for example
-                    result[2] = BlueBrick.Properties.Resources.TextNA;
+                    result[2] = Properties.Resources.TextNA;
                 }
             }
 			else
@@ -2052,7 +2052,7 @@ namespace BlueBrick.MapData
 				// in case of a logo for example which doesn't have a color
 				result[0] = partNumber;
 				result[1] = string.Empty;
-				result[2] = BlueBrick.Properties.Resources.TextNA;
+				result[2] = Properties.Resources.TextNA;
 			}
 
             // try to get the description
@@ -2060,7 +2060,7 @@ namespace BlueBrick.MapData
             if (brickRef != null)
 				result[3] = brickRef.mDescription;
 			else
-				result[3] = BlueBrick.Properties.Resources.TextUnknown;
+				result[3] = Properties.Resources.TextUnknown;
 
 			return result;
 		}

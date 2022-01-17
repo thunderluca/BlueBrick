@@ -12,46 +12,45 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
 using BlueBrick.MapData;
+using System.Drawing;
 
 namespace BlueBrick.Actions.Texts
 {
-	class AddText : Action
+    class AddText : Action
 	{
-		private LayerText mTextLayer = null;
-		private LayerText.TextCell mTextCell = null;
+		private readonly LayerText mTextLayer = null;
+		private readonly LayerText.TextCell mTextCell = null;
 		private int mTextCellIndex = -1; // this index is for the redo, to add the text at the same place, start with -1 to add it at the end of the list (so on top of the other texts)
 
 		public AddText(LayerText layer, string textToAdd, Font font, Color color, StringAlignment alignment, PointF position)
 		{
 			mTextLayer = layer;
-			mTextCell = new LayerText.TextCell(textToAdd, font, color, alignment);
-			mTextCell.Position = position;
-		}
+            mTextCell = new LayerText.TextCell(textToAdd, font, color, alignment)
+            {
+                Position = position
+            };
+        }
 
 		public override string GetName()
 		{
-			return BlueBrick.Properties.Resources.ActionAddText;
+			return Properties.Resources.ActionAddText;
 		}
 
 		public override void Redo()
 		{
 			// and add this text in the list of the layer
-			mTextLayer.addTextCell(mTextCell, mTextCellIndex);
+			mTextLayer.AddTextCell(mTextCell, mTextCellIndex);
 			// change the selection to the new added text (should be done after the add)
-			mTextLayer.clearSelection();
-			mTextLayer.addObjectInSelection(mTextCell);
+			mTextLayer.ClearSelection();
+			mTextLayer.AddObjectInSelection(mTextCell);
 		}
 
 		public override void Undo()
 		{
 			// remove the specified textCell from the list of the layer,
 			// but do not delete it, also memorise its last position
-			mTextCellIndex = mTextLayer.removeTextCell(mTextCell);
+			mTextCellIndex = mTextLayer.RemoveTextCell(mTextCell);
 		}
 	}
 }

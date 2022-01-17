@@ -27,9 +27,9 @@ namespace BlueBrick.MapData
 		{
             public const float ANTI_ALIASING_FONT_SCALE = 4.0f;
 
-			private StringFormat mTextStringFormat = new StringFormat();
+			private readonly StringFormat mTextStringFormat = new StringFormat();
 			private Font mTextFont = Properties.Settings.Default.DefaultTextFont;
-			private SolidBrush mTextBrush = new SolidBrush(Properties.Settings.Default.DefaultTextColor);
+			private readonly SolidBrush mTextBrush = new SolidBrush(Properties.Settings.Default.DefaultTextColor);
 			private string mText = "";
 			private Bitmap mImage = new Bitmap(1, 1);	// image representing the text to draw in the correct orientation
 
@@ -134,7 +134,7 @@ namespace BlueBrick.MapData
 				mText = text;
 				mTextBrush.Color = color;
 				// then finally use an accessor in order to create the picture
-				this.Font = font;
+				Font = font;
 			}
 			#endregion
 
@@ -229,9 +229,9 @@ namespace BlueBrick.MapData
 
                         // compute the position where to draw according to the alignment (if centered == 0)
                         float posx = 0;
-                        if (this.TextAlignment == StringAlignment.Far)
+                        if (TextAlignment == StringAlignment.Far)
                             posx = halfWidth;
-                        else if (this.TextAlignment == StringAlignment.Near)
+                        else if (TextAlignment == StringAlignment.Near)
                             posx = -halfWidth;
 
                         graphics = Graphics.FromImage(mImage);

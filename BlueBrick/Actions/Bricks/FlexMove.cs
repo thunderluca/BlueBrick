@@ -78,9 +78,9 @@ namespace BlueBrick.Actions.Bricks
 
 		#region data members
 		// global data members
-		private bool mIsValid = false; // tell if this action can be a valid flex move action
+		private readonly bool mIsValid = false; // tell if this action can be a valid flex move action
 		private List<Layer.LayerItem> mBricksInTheFlexChain = null;
-		private List<Layer.LayerItem> mSelectedBricksBeforeFlexMove = null; // this is used to save the selected objets just before a flex move and restore them after the flex move (because we will only select the flex parts during the move for visual feedback)
+		private readonly List<Layer.LayerItem> mSelectedBricksBeforeFlexMove = null; // this is used to save the selected objets just before a flex move and restore them after the flex move (because we will only select the flex parts during the move for visual feedback)
 
 		// data members for flex edition
 		private List<IKSolver.Bone_2D_CCD> mBoneList = null;
@@ -96,8 +96,8 @@ namespace BlueBrick.Actions.Bricks
 		private IKSolver.CCDResult mCurrentUpdateStatus = IKSolver.CCDResult.Failure;
 
 		// data members for action undo/redo purpose
-		private LayerBrick mBrickLayer = null;
-		private List<BrickTransform> mInitState = null;
+		private readonly LayerBrick mBrickLayer = null;
+		private readonly List<BrickTransform> mInitState = null;
 		private List<BrickTransform> mFinalState = null;
 		#endregion
 
@@ -168,7 +168,7 @@ namespace BlueBrick.Actions.Bricks
 			// Do not save directly the list object because we will modified the selection
 			mSelectedBricksBeforeFlexMove = new List<Layer.LayerItem>(layer.SelectedObjects);
 			// now clear the slection and select only the bricks in the flex chain
-			layer.unsafeSetSelection(mBricksInTheFlexChain);
+			layer.UnsafeSetSelection(mBricksInTheFlexChain);
 		}
 
 		/// <summary>
@@ -198,9 +198,11 @@ namespace BlueBrick.Actions.Bricks
 
 		private void addNewBone(LayerBrick.Brick.ConnectionPoint connection, LayerBrick.Brick brick, double maxAngleInDeg)
 		{
-			IKSolver.Bone_2D_CCD newBone = new IKSolver.Bone_2D_CCD();
-			newBone.maxAbsoluteAngleInRad = maxAngleInDeg * (Math.PI / 180);
-			if (connection != null)
+            IKSolver.Bone_2D_CCD newBone = new IKSolver.Bone_2D_CCD
+            {
+                maxAbsoluteAngleInRad = maxAngleInDeg * (Math.PI / 180)
+            };
+            if (connection != null)
 			{
 				newBone.worldX = connection.PositionInStudWorldCoord.X;
 				newBone.worldY = -connection.PositionInStudWorldCoord.Y; // BlueBrick use an indirect coord sys, and the IKSolver a direct one
@@ -225,7 +227,7 @@ namespace BlueBrick.Actions.Bricks
 			if (connectionLead != null)
 			{
 				// set the flag if not already true
-				isConnectionLeadingToFlexiblePart |= (BrickLibrary.Instance.GetConnexionHingeAngle(connectionLead.Type) != 0.0f);
+				isConnectionLeadingToFlexiblePart |= BrickLibrary.Instance.GetConnexionHingeAngle(connectionLead.Type) != 0.0f;
 				// if we found a flexible part, stop following the path
 				if (isConnectionLeadingToFlexiblePart)
 				{
@@ -461,7 +463,7 @@ namespace BlueBrick.Actions.Bricks
 			mPrimaryTarget = targetInWorldStudCoord;
 
 			// check if we need to compute a second target position
-			mUseTwoTargets = (targetConnection != null);
+			mUseTwoTargets = targetConnection != null;
 			if (mUseTwoTargets)
 			{
 				// rotate the second target vector according to the orientation of the snapped connection
@@ -511,7 +513,7 @@ namespace BlueBrick.Actions.Bricks
 			}
 
 			// return true if we still need to update
-			return (mCurrentUpdateStatus == IKSolver.CCDResult.Processing);
+			return mCurrentUpdateStatus == IKSolver.CCDResult.Processing;
 		}
 
 		/// <summary>
@@ -586,14 +588,14 @@ namespace BlueBrick.Actions.Bricks
 			}
 
 			// update the bounding rectangle and connectivity
-			mBrickLayer.updateBoundingSelectionRectangle();
+			mBrickLayer.UpdateBoundingSelectionRectangle();
 		}
 		#endregion
 
 		#region	Action method
 		public override string GetName()
 		{
-			return BlueBrick.Properties.Resources.ActionFlexMove;
+			return Properties.Resources.ActionFlexMove;
 		}
 
 		private void recordState(ref List<BrickTransform> state)
@@ -625,13 +627,13 @@ namespace BlueBrick.Actions.Bricks
 
 			// we need to reselect the brick that were selected when the action was created to be sure
 			// that the update of the connection will be ok, just after (with a succession of undo/redo the selection can change) 
-			mBrickLayer.selectOnlyThisObject(mBricksInTheFlexChain);
+			mBrickLayer.SelectOnlyThisObject(mBricksInTheFlexChain);
 
 			// update the bounding rectangle and connectivity
 			mBrickLayer.updateBrickConnectivityOfSelection(false);
 
 			// restore the selection
-			mBrickLayer.selectOnlyThisObject(mSelectedBricksBeforeFlexMove);
+			mBrickLayer.SelectOnlyThisObject(mSelectedBricksBeforeFlexMove);
 
 			// notify the main form for the brick move
 			MainForm.Instance.NotifyForPartMoved();

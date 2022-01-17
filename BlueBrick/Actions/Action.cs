@@ -12,16 +12,12 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace BlueBrick.Actions
 {
-	/**
+    /**
 	 * This is the base class for all the actions
 	 */
-	public abstract class Action
+    public abstract class Action
 	{
 		/// <summary>
 		/// This enum describe how this action will impact the views, and

@@ -48,7 +48,7 @@ namespace BlueBrick.MapData
 
 		public static bool IsCurrentToolTheEraser
 		{
-			get { return (sCurrentDrawColor == Color.Empty); }
+			get { return sCurrentDrawColor == Color.Empty; }
 		}
 
 		/// <summary>
@@ -101,7 +101,7 @@ namespace BlueBrick.MapData
 
 		public int AlphaValue
 		{
-			get { return (255 * mTransparency) / 100; }
+			get { return 255 * mTransparency / 100; }
 		}
 
 		public int AreaCellSizeInStud
@@ -149,11 +149,10 @@ namespace BlueBrick.MapData
 		{
 			// call the base method
 			base.CopyOptionsFrom(layerToCopy);
-			// and try to cast in area layer
-			LayerArea areaLayer = layerToCopy as LayerArea;
-			if (areaLayer != null)
-				AreaCellSizeInStud = areaLayer.AreaCellSizeInStud;
-		}
+            // and try to cast in area layer
+            if (layerToCopy is LayerArea areaLayer)
+                AreaCellSizeInStud = areaLayer.AreaCellSizeInStud;
+        }
 		#endregion
 
 		#region IXmlSerializable Members
@@ -197,7 +196,7 @@ namespace BlueBrick.MapData
 		public override void WriteXml(System.Xml.XmlWriter writer)
 		{
 			// write the header
-			writeHeaderAndCommonProperties(writer);
+			WriteHeaderAndCommonProperties(writer);
 			// write area cell size
 			writer.WriteElementString("AreaCellSize", mAreaCellSizeInStud.ToString());
 			// and serialize the area list
@@ -220,7 +219,7 @@ namespace BlueBrick.MapData
 			}
 			writer.WriteEndElement(); // end of Areas
 			// write the footer
-			writeFooter(writer); // end of layer
+			WriteFooter(writer); // end of layer
 		}
 		#endregion
 
@@ -234,13 +233,11 @@ namespace BlueBrick.MapData
 		/// <returns>the solid brush at this position or null if there is nothing here.</returns>
 		private SolidBrush getBrush(int x, int y)
 		{
-			Dictionary<int, SolidBrush> line = null;
-			mColorMap.TryGetValue(x, out line);
-			if (line == null)
+            mColorMap.TryGetValue(x, out Dictionary<int, SolidBrush> line);
+            if (line == null)
 				return null;
-			SolidBrush brush = null;
-			line.TryGetValue(y, out brush);
-			return brush;
+            line.TryGetValue(y, out SolidBrush brush);
+            return brush;
 		}
 
 		/// <summary>
@@ -258,17 +255,15 @@ namespace BlueBrick.MapData
 			if (color != Color.Empty)
 				newColor = Color.FromArgb(AlphaValue, color);
 			Color oldColor = Color.Empty;
-			// check if the brush already exist and replace it, or create it
-			Dictionary<int, SolidBrush> line = null;
-			mColorMap.TryGetValue(xInCellIndex, out line);
-			if (line == null)
+            // check if the brush already exist and replace it, or create it
+            mColorMap.TryGetValue(xInCellIndex, out Dictionary<int, SolidBrush> line);
+            if (line == null)
 			{
 				line = new Dictionary<int, SolidBrush>();
 				mColorMap.Add(xInCellIndex, line);
 			}
-			SolidBrush brush = null;
-			line.TryGetValue(yInCellIndex, out brush);
-			if (brush == null)
+            line.TryGetValue(yInCellIndex, out SolidBrush brush);
+            if (brush == null)
 			{
 				if (newColor != Color.Empty)
 				{
@@ -320,9 +315,8 @@ namespace BlueBrick.MapData
 				for (int x = startX; x != endX; x += dirX)
 				{
 					int currentLineKey = lineKeys[x];
-					Dictionary<int, SolidBrush> currentLine = null;
-					mColorMap.TryGetValue(currentLineKey, out currentLine);
-					if (currentLine != null)
+                    mColorMap.TryGetValue(currentLineKey, out Dictionary<int, SolidBrush> currentLine);
+                    if (currentLine != null)
 					{
 						// move the line if necessary
 						if (moveX != 0)
@@ -356,9 +350,8 @@ namespace BlueBrick.MapData
 							for (int y = startY; y != endY; y += dirY)
 							{
 								int currentRowKey = rowKeys[y];
-								SolidBrush currentRow = null;
-								currentLine.TryGetValue(currentRowKey, out currentRow);
-								if (currentRow != null)
+                                currentLine.TryGetValue(currentRowKey, out SolidBrush currentRow);
+                                if (currentRow != null)
 								{
 									// move the row
 									currentLine.Remove(currentRowKey);
@@ -383,7 +376,7 @@ namespace BlueBrick.MapData
 			// to add or remove cells
 			if (AreaCellSizeInStud > newCellSize)
 			{
-				int cellSizeFactor = (int)Math.Round((float)AreaCellSizeInStud / (float)newCellSize);
+				int cellSizeFactor = (int)Math.Round(AreaCellSizeInStud / (float)newCellSize);
 				Dictionary<int, Dictionary<int, SolidBrush>> newColorMap = new Dictionary<int, Dictionary<int, SolidBrush>>();
 				// iterate on the current color map and fill the new one
 				foreach (KeyValuePair<int, Dictionary<int, SolidBrush>> line in mColorMap)
@@ -405,7 +398,7 @@ namespace BlueBrick.MapData
 			}
 			else if (AreaCellSizeInStud < newCellSize)
 			{
-				int cellSizeFactor = (int)Math.Round((float)newCellSize / (float)AreaCellSizeInStud);
+				int cellSizeFactor = (int)Math.Round(newCellSize / (float)AreaCellSizeInStud);
 				Dictionary<int, Dictionary<int, SolidBrush>> newColorMap = new Dictionary<int, Dictionary<int, SolidBrush>>();
 				// iterate on the current color map and fill the new one
 				foreach (KeyValuePair<int, Dictionary<int, SolidBrush>> line in mColorMap)
@@ -434,7 +427,7 @@ namespace BlueBrick.MapData
 		/// get the total area in stud covered by all the area cells in this layer
 		/// </summary>
 		/// <returns></returns>
-		public override RectangleF getTotalAreaInStud()
+		public override RectangleF GetTotalAreaInStud()
 		{
 			PointF topLeft = new PointF(float.MaxValue, float.MaxValue);
 			PointF bottomRight = new PointF(float.MinValue, float.MinValue);
@@ -454,13 +447,15 @@ namespace BlueBrick.MapData
 					if (y > bottomRight.Y)
 						bottomRight.Y = y;
 				}
-			// compute the result by transforming the cell coordinates into studs coord
-			RectangleF result = new RectangleF();
-			result.X = topLeft.X * mAreaCellSizeInStud;
-			result.Y = topLeft.Y * mAreaCellSizeInStud;
-			result.Width = (bottomRight.X - topLeft.X + 1) * mAreaCellSizeInStud;
-			result.Height = (bottomRight.Y - topLeft.Y + 1) * mAreaCellSizeInStud;
-			return result;
+            // compute the result by transforming the cell coordinates into studs coord
+            RectangleF result = new RectangleF
+            {
+                X = topLeft.X * mAreaCellSizeInStud,
+                Y = topLeft.Y * mAreaCellSizeInStud,
+                Width = (bottomRight.X - topLeft.X + 1) * mAreaCellSizeInStud,
+                Height = (bottomRight.Y - topLeft.Y + 1) * mAreaCellSizeInStud
+            };
+            return result;
 		}
 
 		/// <summary>
@@ -470,7 +465,7 @@ namespace BlueBrick.MapData
 		/// <param name="areaInStud">The region in which we should draw</param>
 		/// <param name="scalePixelPerStud">The scale to use to draw</param>
 		/// <param name="drawSelection">If true draw the selection rectangle and also the selection overlay (this can be set to false when exporting the map to an image)</param>
-		public override void draw(Graphics g, RectangleF areaInStud, double scalePixelPerStud, bool drawSelection)
+		public override void Draw(Graphics g, RectangleF areaInStud, double scalePixelPerStud, bool drawSelection)
 		{
 			if (!Visible)
 				return;
@@ -497,14 +492,12 @@ namespace BlueBrick.MapData
 			float startPixelY = (float)(-areaInStud.Top * scalePixelPerStud);
 			for (int x = startX; x <= endX; ++x)
 			{
-				Dictionary<int, SolidBrush> line = null;
-				mColorMap.TryGetValue(x, out line);
-				if (line != null)
+                mColorMap.TryGetValue(x, out Dictionary<int, SolidBrush> line);
+                if (line != null)
 					for (int y = startY; y <= endY; ++y)
 					{
-						SolidBrush brush = null;
-						line.TryGetValue(y, out brush);
-						if (brush != null)
+                        line.TryGetValue(y, out SolidBrush brush);
+                        if (brush != null)
 							g.FillRectangle(brush, startPixelX + (x * areaCellSizeInPixel), startPixelY + (y * areaCellSizeInPixel), areaCellSizeInPixel, areaCellSizeInPixel);
 					}
 			}
@@ -512,9 +505,9 @@ namespace BlueBrick.MapData
 			// check if the user is painting some new area and draw a new rectangle
 			if (mIsPaintingNewArea)
 			{
-				// choose the right brush according to the current draw color
-				Brush brush = null;
-				if (sCurrentDrawColor != Color.Empty)
+                // choose the right brush according to the current draw color
+                Brush brush;
+                if (sCurrentDrawColor != Color.Empty)
 					brush = new SolidBrush(Color.FromArgb(0x70, sCurrentDrawColor));
 				else
 					brush = sEraseBrush;
@@ -534,16 +527,16 @@ namespace BlueBrick.MapData
 		/// Return the cursor that should be display when the mouse is above the map without mouse click
 		/// </summary>
 		/// <param name="mouseCoordInStud"></param>
-		public override Cursor getDefaultCursorWithoutMouseClick(PointF mouseCoordInStud)
+		public override Cursor GetDefaultCursorWithoutMouseClick(PointF mouseCoordInStud)
 		{
 			// if the layer is not visible you can basically do nothing on it
 			if (!Visible)
 				return MainForm.Instance.HiddenLayerCursor;
-			else if (Control.ModifierKeys == BlueBrick.Properties.Settings.Default.MouseMultipleSelectionKey)
+			else if (Control.ModifierKeys == Properties.Settings.Default.MouseMultipleSelectionKey)
 				return MainForm.Instance.AreaMoveCursor;
-			else if (Control.ModifierKeys == BlueBrick.Properties.Settings.Default.MouseZoomPanKey)
+			else if (Control.ModifierKeys == Properties.Settings.Default.MouseZoomPanKey)
 				return MainForm.Instance.PanOrZoomViewCursor;
-			else if (LayerArea.IsCurrentToolTheEraser)
+			else if (IsCurrentToolTheEraser)
 				return MainForm.Instance.AreaEraserCursor;
 			return MainForm.Instance.AreaPaintCursor;
 		}
@@ -568,7 +561,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the mouse click</param>
 		/// <returns>true if this layer wants to handle it</returns>
-		public override bool handleMouseDown(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
+		public override bool HandleMouseDown(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
 		{
 			// if the layer is not visible it is not sensible to mouse click
 			if (!Visible)
@@ -576,7 +569,7 @@ namespace BlueBrick.MapData
 
 			// we can paint every part, so we are always interested in the left click mouse event
 			// and the right click for canceling
-			return ((e.Button == MouseButtons.Left) || ((mIsMovingArea || mIsPaintingNewArea) && (e.Button == MouseButtons.Right)));
+			return (e.Button == MouseButtons.Left) || ((mIsMovingArea || mIsPaintingNewArea) && (e.Button == MouseButtons.Right));
 		}
 
 		/// <summary>
@@ -585,12 +578,12 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the click</param>
 		/// <returns>true if the view should be refreshed</returns>
-		public override bool mouseDown(MouseEventArgs e, PointF mouseCoordInStud)
+		public override bool MouseDown(MouseEventArgs e, PointF mouseCoordInStud)
 		{
 			if (e.Button == MouseButtons.Left)
 			{
 				// check if we paint or move the area
-				mIsMovingArea = (Control.ModifierKeys == BlueBrick.Properties.Settings.Default.MouseMultipleSelectionKey);
+				mIsMovingArea = Control.ModifierKeys == Properties.Settings.Default.MouseMultipleSelectionKey;
 				mIsPaintingNewArea = !mIsMovingArea;
 				// record the initial position
 				mMouseDownInitialPosition = computeCellCoordFromStudCoord(mouseCoordInStud);
@@ -611,7 +604,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the mouse move</param>
 		/// <returns>true if the view should be refreshed</returns>
-		public override bool mouseMove(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
+		public override bool MouseMove(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
 		{
 			if (mIsMovingArea || mIsPaintingNewArea)
 			{
@@ -631,7 +624,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the click</param>
 		/// <returns>true if the view should be refreshed</returns>
-		public override bool mouseUp(MouseEventArgs e, PointF mouseCoordInStud)
+		public override bool MouseUp(MouseEventArgs e, PointF mouseCoordInStud)
 		{
 			if (mIsMovingArea)
 			{
@@ -665,7 +658,7 @@ namespace BlueBrick.MapData
 		/// Select all the item inside the rectangle in the current selected layer
 		/// </summary>
 		/// <param name="selectionRectangeInStud">the rectangle in which select the items</param>
-		public override void selectInRectangle(RectangleF selectionRectangeInStud)
+		public override void SelectInRectangle(RectangleF selectionRectangeInStud)
 		{
 			// nothing to select on an area,
 			// since we always take the mouse down event, this event is never called by the map

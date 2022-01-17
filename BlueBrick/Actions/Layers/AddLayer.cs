@@ -18,9 +18,9 @@ namespace BlueBrick.Actions
 {
 	class AddLayer : Action
 	{
-		private string	mLayerType = "";
-		private Layer mLayerAdded = null;
-		private int mInsertionIndex = 0;
+		private readonly string	mLayerType = "";
+		private readonly Layer mLayerAdded = null;
+		private readonly int mInsertionIndex = 0;
 
 		public AddLayer(string layerType, bool updateLayerView)
 		{
@@ -58,15 +58,15 @@ namespace BlueBrick.Actions
 			switch (mLayerType)
 			{
 				case "LayerGrid":
-					return BlueBrick.Properties.Resources.ActionAddLayerGrid;
+					return Properties.Resources.ActionAddLayerGrid;
 				case "LayerText":
-					return BlueBrick.Properties.Resources.ActionAddLayerText;
+					return Properties.Resources.ActionAddLayerText;
 				case "LayerArea":
-					return BlueBrick.Properties.Resources.ActionAddLayerArea;
+					return Properties.Resources.ActionAddLayerArea;
 				case "LayerRuler":
-					return BlueBrick.Properties.Resources.ActionAddLayerRuler;
+					return Properties.Resources.ActionAddLayerRuler;
 			}
-			return BlueBrick.Properties.Resources.ActionAddLayerBrick;
+			return Properties.Resources.ActionAddLayerBrick;
 		}
 
 		public override void Redo()

@@ -129,8 +129,8 @@ namespace BlueBrick.MapData.Tools
 		/// <param name="model">the model from which copy</param>
 		public Circle(Circle model)
 		{
-			this.mCenter = model.Center;
-			this.mRadius = model.Radius;
+			mCenter = model.Center;
+			mRadius = model.Radius;
 		}
 
 		/// <summary>
@@ -158,7 +158,7 @@ namespace BlueBrick.MapData.Tools
 			float dy = mCenter.Y - point.Y;
 			// true if the distance is lower than the radius
 			float distance = (float)Math.Sqrt((dx * dx) + (dy * dy));
-			return (distance < mRadius);
+			return distance < mRadius;
 		}
 
 		/// <summary>
@@ -170,25 +170,25 @@ namespace BlueBrick.MapData.Tools
 		public override bool isRectangleIntersect(RectangleF rectangle)
 		{
 			// check the angles first
-			bool isOnLeft = (mCenter.X < rectangle.Left);
-			bool isOnRight = (mCenter.X > rectangle.Right);
-			bool isOnTop = (mCenter.Y < rectangle.Top);
-			bool isOnBottom = (mCenter.Y > rectangle.Bottom);
+			bool isOnLeft = mCenter.X < rectangle.Left;
+			bool isOnRight = mCenter.X > rectangle.Right;
+			bool isOnTop = mCenter.Y < rectangle.Top;
+			bool isOnBottom = mCenter.Y > rectangle.Bottom;
 			if (isOnLeft && isOnTop)
 			{
-				return (isPointInside(new PointF(rectangle.Left, rectangle.Top)));
+				return isPointInside(new PointF(rectangle.Left, rectangle.Top));
 			}
 			else if (isOnRight && isOnTop)
 			{
-				return (isPointInside(new PointF(rectangle.Right, rectangle.Top)));
+				return isPointInside(new PointF(rectangle.Right, rectangle.Top));
 			}
 			else if (isOnRight && isOnBottom)
 			{
-				return (isPointInside(new PointF(rectangle.Right, rectangle.Bottom)));
+				return isPointInside(new PointF(rectangle.Right, rectangle.Bottom));
 			}
 			else if (isOnLeft && isOnBottom)
 			{
-				return (isPointInside(new PointF(rectangle.Left, rectangle.Bottom))) ;
+				return isPointInside(new PointF(rectangle.Left, rectangle.Bottom)) ;
 			}
 			else
 			{
@@ -197,8 +197,8 @@ namespace BlueBrick.MapData.Tools
 				RectangleF bigRectangle = new RectangleF(rectangle.X - mRadius, rectangle.Y - mRadius,
 											rectangle.Width + diameter, rectangle.Height + diameter);
 				// then check if the center is inside the big rectangle
-				return ((mCenter.X > bigRectangle.Left) && (mCenter.X < bigRectangle.Right) &&
-						(mCenter.Y > bigRectangle.Top) && (mCenter.Y < bigRectangle.Bottom));
+				return (mCenter.X > bigRectangle.Left) && (mCenter.X < bigRectangle.Right) &&
+						(mCenter.Y > bigRectangle.Top) && (mCenter.Y < bigRectangle.Bottom);
 			}
 		}
 
@@ -265,7 +265,7 @@ namespace BlueBrick.MapData.Tools
 		/// <param name="model">the model from which copy</param>
 		public Polygon(Polygon model)
 		{
-			this.mVertice = model.Vertice;
+			mVertice = model.Vertice;
 		}
 
 		/// <summary>
@@ -350,7 +350,7 @@ namespace BlueBrick.MapData.Tools
 							// else: if both vertice on the left, we don't count the crossing
 						}
 					}
-                    else if (((point.Y == vertex1.Y) && (point.Y == vertex2.Y)) &&
+                    else if ((point.Y == vertex1.Y) && (point.Y == vertex2.Y) &&
                             ((point.X < vertex1.X) || (point.X < vertex2.X)))
                     {
                         // in this case the point is on the left and on the same line as an perfectly horizontal edge of the polygon
@@ -363,7 +363,7 @@ namespace BlueBrick.MapData.Tools
 				}
 
 				// the point is inside the polygon if we have an odd number of crossing
-				return ((segmentCrossCount % 2) == 1);
+				return (segmentCrossCount % 2) == 1;
 			}
 			catch
 			{
@@ -427,7 +427,7 @@ namespace BlueBrick.MapData.Tools
 				PointF vector3 = new PointF(line1Point1.X - line2Point1.X, line1Point1.Y - line2Point1.Y);
 				float s = ((-vector1.Y * vector3.X) + (vector1.X * vector3.Y)) / divider;
 				float t = ((vector2.X * vector3.Y) - (vector2.Y * vector3.X)) / divider;
-				return (s >= 0.0f && s <= 1.0f && t >= 0.0f && t <= 1.0f);
+				return s >= 0.0f && s <= 1.0f && t >= 0.0f && t <= 1.0f;
 			}
 			return false;
 		}

@@ -14,10 +14,10 @@ namespace BlueBrick
 		{
 			InitializeComponent();
 			// set the message and detail texts
-			this.MessageTextBox.Text = message;
-			this.DetailsTextBox.Text = details;
+			MessageTextBox.Text = message;
+			DetailsTextBox.Text = details;
 			// set the title
-			this.Text = title;
+			Text = title;
 			// hide the detail box by default
 			showHideDetails(false);
 		}
@@ -25,31 +25,31 @@ namespace BlueBrick
 		private void DetailButton_Click(object sender, EventArgs e)
 		{
 			// revert the status based on the status of the detail box
-			showHideDetails(!this.DetailsTextBox.Visible);
+			showHideDetails(!DetailsTextBox.Visible);
 		}
 
 		private void showHideDetails(bool isVisible)
 		{
 			// show or hide the slip container and the detail box
-			this.splitContainer2.Panel2Collapsed = !isVisible;
-			this.DetailsTextBox.Visible = isVisible;
+			splitContainer2.Panel2Collapsed = !isVisible;
+			DetailsTextBox.Visible = isVisible;
 			// if the split container is visible add some border
 			// and change the text of the button
 			if (isVisible)
 			{
-				this.splitContainer2.BorderStyle = BorderStyle.FixedSingle;
-				this.DetailButton.Text = Properties.Resources.HideDetails;
+				splitContainer2.BorderStyle = BorderStyle.FixedSingle;
+				DetailButton.Text = Properties.Resources.HideDetails;
 			}
 			else
 			{
-				this.splitContainer2.BorderStyle = BorderStyle.None;
-				this.DetailButton.Text = Properties.Resources.ShowDetails;
+				splitContainer2.BorderStyle = BorderStyle.None;
+				DetailButton.Text = Properties.Resources.ShowDetails;
 			}
 		}
 
 		private void OkButton_Click(object sender, EventArgs e)
 		{
-			this.Close();
+			Close();
 		}
 	}
 }

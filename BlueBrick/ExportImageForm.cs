@@ -29,8 +29,8 @@ namespace BlueBrick
 		private RectangleF mSelectedAreaInStud;
 		private double mTotalScalePixelPerStud = 0.5;
 		private Bitmap mMapImage = null;
-		private Pen mSelectionPen = new Pen(Color.Red, 2);
-		SolidBrush mMarginBlackOverlayBrush = new SolidBrush(Color.FromArgb(127, Color.Black));
+		private readonly Pen mSelectionPen = new Pen(Color.Red, 2);
+        readonly SolidBrush mMarginBlackOverlayBrush = new SolidBrush(Color.FromArgb(127, Color.Black));
 		private NumericUpDown mFirstSender = null;
 		private bool mIsDragingSelectionRectangle = false;
 		private PointF mStartDragPoint = new PointF();
@@ -52,16 +52,16 @@ namespace BlueBrick
 
         public void loadUISettingFromDefaultSettings()
         {
-            this.exportWatermarkCheckBox.Checked = Settings.Default.UIExportWatermark;
-            this.exportElectricCircuitCheckBox.Checked = Settings.Default.UIExportElectricCircuit;
-            this.exportConnectionPointCheckBox.Checked = Settings.Default.UIExportConnection;
+            exportWatermarkCheckBox.Checked = Settings.Default.UIExportWatermark;
+            exportElectricCircuitCheckBox.Checked = Settings.Default.UIExportElectricCircuit;
+            exportConnectionPointCheckBox.Checked = Settings.Default.UIExportConnection;
         }
 
         public void saveUISettingInDefaultSettings()
         {
-            Settings.Default.UIExportWatermark = this.exportWatermarkCheckBox.Checked;
-            Settings.Default.UIExportElectricCircuit = this.exportElectricCircuitCheckBox.Checked;
-            Settings.Default.UIExportConnection = this.exportConnectionPointCheckBox.Checked;
+            Settings.Default.UIExportWatermark = exportWatermarkCheckBox.Checked;
+            Settings.Default.UIExportElectricCircuit = exportElectricCircuitCheckBox.Checked;
+            Settings.Default.UIExportConnection = exportConnectionPointCheckBox.Checked;
         }
 
 		public void init()
@@ -123,10 +123,10 @@ namespace BlueBrick
             drawAll();
 
 			//init the numericupdown controls for image size
-			this.imageHeightNumericUpDown.Minimum = (Decimal)1;
-			this.imageHeightNumericUpDown.Maximum = (Decimal)MAX_IMAGE_SIZE_IN_PIXEL;
-			this.imageWidthNumericUpDown.Minimum = (Decimal)1;
-			this.imageWidthNumericUpDown.Maximum = (Decimal)MAX_IMAGE_SIZE_IN_PIXEL;
+			imageHeightNumericUpDown.Minimum = 1;
+			imageHeightNumericUpDown.Maximum = MAX_IMAGE_SIZE_IN_PIXEL;
+			imageWidthNumericUpDown.Minimum = 1;
+			imageWidthNumericUpDown.Maximum = MAX_IMAGE_SIZE_IN_PIXEL;
 
 			// set the min, max, inc and value for the scale
 			updateMinAndMaxScaleAccordingToSelectedArea();
@@ -135,33 +135,33 @@ namespace BlueBrick
 			if (Map.Instance.ExportScale != 0.0)
 				scaleValue = Map.Instance.ExportScale;
 			// ensure that the scale value is inside the min and max and set it the numeric updown control
-			scaleValue = Math.Max(Math.Min(scaleValue, (double)this.scaleNumericUpDown.Maximum),
-									(double)this.scaleNumericUpDown.Minimum);
-			this.scaleNumericUpDown.Value = (Decimal)scaleValue;
+			scaleValue = Math.Max(Math.Min(scaleValue, (double)scaleNumericUpDown.Maximum),
+									(double)scaleNumericUpDown.Minimum);
+			scaleNumericUpDown.Value = (Decimal)scaleValue;
 
 			// init the numericupdown controls for area
 			// start by setting the min/max to avoid an out of bound exception when setting the value
             // Use a margin of 1, because if you set the area by typing the values in the text box and
             // setting a right value smaller than a left value, then the left value is set one pixel aside the right value
-			this.areaLeftNumericUpDown.Minimum = (Decimal)(mTotalAreaInStud.Left - 1.0f);
-            this.areaLeftNumericUpDown.Maximum = (Decimal)(mTotalAreaInStud.Right);
+			areaLeftNumericUpDown.Minimum = (Decimal)(mTotalAreaInStud.Left - 1.0f);
+            areaLeftNumericUpDown.Maximum = (Decimal)mTotalAreaInStud.Right;
 
-            this.areaRightNumericUpDown.Minimum = (Decimal)(mTotalAreaInStud.Left);
-            this.areaRightNumericUpDown.Maximum = (Decimal)(mTotalAreaInStud.Right + 1.0f);
+            areaRightNumericUpDown.Minimum = (Decimal)mTotalAreaInStud.Left;
+            areaRightNumericUpDown.Maximum = (Decimal)(mTotalAreaInStud.Right + 1.0f);
 
-			this.areaTopNumericUpDown.Minimum = (Decimal)(mTotalAreaInStud.Top - 1.0f);
-            this.areaTopNumericUpDown.Maximum = (Decimal)(mTotalAreaInStud.Bottom);
+			areaTopNumericUpDown.Minimum = (Decimal)(mTotalAreaInStud.Top - 1.0f);
+            areaTopNumericUpDown.Maximum = (Decimal)mTotalAreaInStud.Bottom;
 
-            this.areaBottomNumericUpDown.Minimum = (Decimal)(mTotalAreaInStud.Top);
-            this.areaBottomNumericUpDown.Maximum = (Decimal)(mTotalAreaInStud.Bottom + 1.0f);
+            areaBottomNumericUpDown.Minimum = (Decimal)mTotalAreaInStud.Top;
+            areaBottomNumericUpDown.Maximum = (Decimal)(mTotalAreaInStud.Bottom + 1.0f);
 
 			// set the value after setting the minimum and maximum otherwise we can raise an exeption
 			// and used the local saved variable because the min/max setting may have already call
 			// the value changed event to clamp the value, and in the event the mSelectedAreaInStud is changed
-			this.areaLeftNumericUpDown.Value = (Decimal)(initialSelectedAreaInStud.Left);
-			this.areaRightNumericUpDown.Value = (Decimal)(initialSelectedAreaInStud.Right);
-			this.areaTopNumericUpDown.Value = (Decimal)(initialSelectedAreaInStud.Top);
-			this.areaBottomNumericUpDown.Value = (Decimal)(initialSelectedAreaInStud.Bottom);
+			areaLeftNumericUpDown.Value = (Decimal)initialSelectedAreaInStud.Left;
+			areaRightNumericUpDown.Value = (Decimal)initialSelectedAreaInStud.Right;
+			areaTopNumericUpDown.Value = (Decimal)initialSelectedAreaInStud.Top;
+			areaBottomNumericUpDown.Value = (Decimal)initialSelectedAreaInStud.Bottom;
 		}
 
         private void saveAndChangeDisplaySettings()
@@ -171,14 +171,14 @@ namespace BlueBrick
             mOriginalDisplayElectricCircuitInSetting = Settings.Default.DisplayElectricCircuit;
             mOriginalDisplayConnectionPointInSetting = Settings.Default.DisplayFreeConnexionPoints;
             // now change them: for each we change the check state and simulate a click
-            this.exportWatermarkCheckBox.Checked = Map.Instance.ExportWatermark;
-            this.exportWatermarkCheckBox_Click(null, null);
+            exportWatermarkCheckBox.Checked = Map.Instance.ExportWatermark;
+            exportWatermarkCheckBox_Click(null, null);
 
-            this.exportElectricCircuitCheckBox.Checked = Map.Instance.ExportElectricCircuit;
-            this.exportElectricCircuitCheckBox_Click(null, null);
+            exportElectricCircuitCheckBox.Checked = Map.Instance.ExportElectricCircuit;
+            exportElectricCircuitCheckBox_Click(null, null);
 
-            this.exportConnectionPointCheckBox.Checked = Map.Instance.ExportConnectionPoints;
-            this.exportConnectionPointCheckBox_Click(null, null);
+            exportConnectionPointCheckBox.Checked = Map.Instance.ExportConnectionPoints;
+            exportConnectionPointCheckBox_Click(null, null);
         }
 
         /// <summary>
@@ -196,8 +196,8 @@ namespace BlueBrick
 		private void computePreviewPictureSizeAndPos()
 		{
 			// get the new available width and height
-			int parentWidth = this.topTableLayoutPanel.ClientSize.Width - 4;
-			int parentHeight = this.topTableLayoutPanel.ClientSize.Height - TOTAL_HEIGHT_OF_FIXED_PANEL;
+			int parentWidth = topTableLayoutPanel.ClientSize.Width - 4;
+			int parentHeight = topTableLayoutPanel.ClientSize.Height - TOTAL_HEIGHT_OF_FIXED_PANEL;
 			// check that the width and height are not negative, this can happen
 			// when the sizeChanged event is called before the tableLayout has its correct size
 			if (parentWidth < 4)
@@ -212,19 +212,19 @@ namespace BlueBrick
 			{
 				mTotalScalePixelPerStud = xScale;
 				int newHeight = (int)(xScale * mTotalAreaInStud.Height) + 2;
-				this.previewPictureBox.Top += (parentHeight - newHeight) / 2;
-				this.previewPictureBox.Height = newHeight - 1;
-				this.previewPictureBox.Left = 0;
-				this.previewPictureBox.Width = parentWidth;
+				previewPictureBox.Top += (parentHeight - newHeight) / 2;
+				previewPictureBox.Height = newHeight - 1;
+				previewPictureBox.Left = 0;
+				previewPictureBox.Width = parentWidth;
 			}
 			else
 			{
 				mTotalScalePixelPerStud = yScale;
 				int newWidth = (int)(yScale * mTotalAreaInStud.Width) + 2;
-				this.previewPictureBox.Left += (parentWidth - newWidth) / 2;
-				this.previewPictureBox.Width = newWidth - 1;
-				this.previewPictureBox.Top = 0;
-				this.previewPictureBox.Height = parentHeight;
+				previewPictureBox.Left += (parentWidth - newWidth) / 2;
+				previewPictureBox.Width = newWidth - 1;
+				previewPictureBox.Top = 0;
+				previewPictureBox.Height = parentHeight;
 			}
 		}
 
@@ -232,10 +232,10 @@ namespace BlueBrick
 		{
 			// create the map image with the correct size
 			// check that the size is not null, which can happen if the window is minimized
-			if ((this.previewPictureBox.Width > 0) && (this.previewPictureBox.Height > 0))
+			if ((previewPictureBox.Width > 0) && (previewPictureBox.Height > 0))
 			{
 				// the constructor of the bitmap throw an exception if the size of the image is negative or null
-				mMapImage = new Bitmap(this.previewPictureBox.Width, this.previewPictureBox.Height);
+				mMapImage = new Bitmap(previewPictureBox.Width, previewPictureBox.Height);
 				// get the graphic context from the preview picture box
 				Graphics graphics = Graphics.FromImage(mMapImage);
 				graphics.Clear(Map.Instance.BackgroundColor);
@@ -261,9 +261,9 @@ namespace BlueBrick
 			if (mMapImage != null)
 			{
 				// recreate the preview image
-				this.previewPictureBox.Image = new Bitmap(mMapImage);
+				previewPictureBox.Image = new Bitmap(mMapImage);
 				// get the graphic context from the preview picture box
-				Graphics graphics = Graphics.FromImage(this.previewPictureBox.Image);
+				Graphics graphics = Graphics.FromImage(previewPictureBox.Image);
 				graphics.CompositingMode = CompositingMode.SourceOver;
 				graphics.SmoothingMode = SmoothingMode.None;
 				graphics.CompositingQuality = CompositingQuality.HighSpeed;
@@ -282,23 +282,23 @@ namespace BlueBrick
 				Map.Instance.DrawWatermark(graphics, watermarkRectangleInStud, mTotalScalePixelPerStud);
 
 				// draw black overlay to over the margins
-				graphics.FillRectangle(mMarginBlackOverlayBrush, 0, 0, selectedAreaInPixel.Left, this.previewPictureBox.Image.Height);
-				graphics.FillRectangle(mMarginBlackOverlayBrush, selectedAreaInPixel.Right, 0, this.previewPictureBox.Image.Width - selectedAreaInPixel.Right, this.previewPictureBox.Image.Height);
+				graphics.FillRectangle(mMarginBlackOverlayBrush, 0, 0, selectedAreaInPixel.Left, previewPictureBox.Image.Height);
+				graphics.FillRectangle(mMarginBlackOverlayBrush, selectedAreaInPixel.Right, 0, previewPictureBox.Image.Width - selectedAreaInPixel.Right, previewPictureBox.Image.Height);
 				graphics.FillRectangle(mMarginBlackOverlayBrush, selectedAreaInPixel.Left, 0, selectedAreaInPixel.Width, selectedAreaInPixel.Top);
-				graphics.FillRectangle(mMarginBlackOverlayBrush, selectedAreaInPixel.Left, selectedAreaInPixel.Bottom, selectedAreaInPixel.Width, this.previewPictureBox.Image.Height - selectedAreaInPixel.Bottom);
+				graphics.FillRectangle(mMarginBlackOverlayBrush, selectedAreaInPixel.Left, selectedAreaInPixel.Bottom, selectedAreaInPixel.Width, previewPictureBox.Image.Height - selectedAreaInPixel.Bottom);
 
 				// and draw the selected area
 				graphics.DrawRectangle(mSelectionPen, selectedAreaInPixel.X, selectedAreaInPixel.Y, selectedAreaInPixel.Width, selectedAreaInPixel.Height);
 
 				// draw the grid inside the select area if there's more than one image to export
-				float columnWidthInPixel = selectedAreaInPixel.Width / (int)this.columnCountNumericUpDown.Value;
-				for (int i = 1; i < this.columnCountNumericUpDown.Value; ++i)
+				float columnWidthInPixel = selectedAreaInPixel.Width / (int)columnCountNumericUpDown.Value;
+				for (int i = 1; i < columnCountNumericUpDown.Value; ++i)
 				{
 					float lineX = selectedAreaInPixel.X + (columnWidthInPixel * i);
 					graphics.DrawLine(mSelectionPen, lineX, selectedAreaInPixel.Top, lineX, selectedAreaInPixel.Bottom);
 				}
-				float rowHeightInPixel = selectedAreaInPixel.Height / (int)this.rowCountNumericUpDown.Value;
-				for (int i = 1; i < this.rowCountNumericUpDown.Value; ++i)
+				float rowHeightInPixel = selectedAreaInPixel.Height / (int)rowCountNumericUpDown.Value;
+				for (int i = 1; i < rowCountNumericUpDown.Value; ++i)
 				{
 					float lineY = selectedAreaInPixel.Y + (rowHeightInPixel * i);
 					graphics.DrawLine(mSelectionPen, selectedAreaInPixel.Left, lineY, selectedAreaInPixel.Right, lineY);
@@ -331,7 +331,7 @@ namespace BlueBrick
 		private void resumeUpdateImage()
 		{
 			mCanUpdateImage = true;
-			updateImage(this.areaLeftNumericUpDown);
+			updateImage(areaLeftNumericUpDown);
 		}
 		#endregion
 
@@ -339,56 +339,58 @@ namespace BlueBrick
 		private void updateMinAndMaxScaleAccordingToSelectedArea()
 		{
 			// get the biggest dimension among width and height of the selected area, and ensure it is not null
-			double bigestDimensionOfSelectedArea = Math.Max(1.0, Math.Max(mSelectedAreaInStud.Width / (float)this.columnCountNumericUpDown.Value, mSelectedAreaInStud.Height / (float)this.rowCountNumericUpDown.Value));
+			double bigestDimensionOfSelectedArea = Math.Max(1.0, Math.Max(mSelectedAreaInStud.Width / (float)columnCountNumericUpDown.Value, mSelectedAreaInStud.Height / (float)rowCountNumericUpDown.Value));
 			// compute the max scale according to the max size of the export image, and the size of the total area (divided by the grid of exported images)
 			double maxScale = MAX_IMAGE_SIZE_IN_PIXEL / bigestDimensionOfSelectedArea;
 			double minScale = Math.Min(0.01, maxScale / 2); // 0.01 by default, the second value is to handle extrem case where the max is under 0.01
 			double incScale = Math.Min(0.01, maxScale / 4); // 0.01 by default, the second value is to handle extrem case where the distance between min and max is less than 0.01
-			this.scaleNumericUpDown.Maximum = (Decimal)maxScale;
-			this.scaleNumericUpDown.Minimum = (Decimal)minScale;
-			this.scaleNumericUpDown.Increment = (Decimal)incScale;
+			scaleNumericUpDown.Maximum = (Decimal)maxScale;
+			scaleNumericUpDown.Minimum = (Decimal)minScale;
+			scaleNumericUpDown.Increment = (Decimal)incScale;
 		}
 
 		private void computeImageSizeFromAreaAndScale()
 		{
-			float newScaleValue = (float)(this.scaleNumericUpDown.Value);
-			if (mFirstSender != this.imageWidthNumericUpDown)
+			float newScaleValue = (float)scaleNumericUpDown.Value;
+			if (mFirstSender != imageWidthNumericUpDown)
 			{
-				int newValue = (int)((mSelectedAreaInStud.Width / (float)this.columnCountNumericUpDown.Value) * newScaleValue);
-				if (newValue < (int)(this.imageWidthNumericUpDown.Minimum))
-					newValue = (int)(this.imageWidthNumericUpDown.Minimum);
-				if (newValue > (int)(this.imageWidthNumericUpDown.Maximum))
-					newValue = (int)(this.imageWidthNumericUpDown.Maximum);
-				this.imageWidthNumericUpDown.Value = (Decimal)newValue;
+				int newValue = (int)(mSelectedAreaInStud.Width / (float)columnCountNumericUpDown.Value * newScaleValue);
+				if (newValue < (int)imageWidthNumericUpDown.Minimum)
+					newValue = (int)imageWidthNumericUpDown.Minimum;
+				if (newValue > (int)imageWidthNumericUpDown.Maximum)
+					newValue = (int)imageWidthNumericUpDown.Maximum;
+				imageWidthNumericUpDown.Value = newValue;
 			}
-			if (mFirstSender != this.imageHeightNumericUpDown)
+			if (mFirstSender != imageHeightNumericUpDown)
 			{
-				int newValue = (int)((mSelectedAreaInStud.Height / (float)this.rowCountNumericUpDown.Value) * newScaleValue);
-				if (newValue < (int)(this.imageHeightNumericUpDown.Minimum))
-					newValue = (int)(this.imageHeightNumericUpDown.Minimum);
-				if (newValue > (int)(this.imageHeightNumericUpDown.Maximum))
-					newValue = (int)(this.imageHeightNumericUpDown.Maximum);
-				this.imageHeightNumericUpDown.Value = (Decimal)newValue;
+				int newValue = (int)(mSelectedAreaInStud.Height / (float)rowCountNumericUpDown.Value * newScaleValue);
+				if (newValue < (int)imageHeightNumericUpDown.Minimum)
+					newValue = (int)imageHeightNumericUpDown.Minimum;
+				if (newValue > (int)imageHeightNumericUpDown.Maximum)
+					newValue = (int)imageHeightNumericUpDown.Maximum;
+				imageHeightNumericUpDown.Value = newValue;
 			}
 		}
 
 		private PointF getAreaPointFromMousePoint(Point mouseCoord)
 		{
-			PointF result = new PointF();
-			// compute x
-			result.X = (float)mouseCoord.X / (float)mTotalScalePixelPerStud;
-			result.X += mTotalAreaInStud.X;
-			if (result.X < (float)(this.areaLeftNumericUpDown.Minimum))
-				result.X = (float)(this.areaLeftNumericUpDown.Minimum);
-			if (result.X > (float)(this.areaLeftNumericUpDown.Maximum))
-				result.X = (float)(this.areaLeftNumericUpDown.Maximum);
+            PointF result = new PointF
+            {
+                // compute x
+                X = mouseCoord.X / (float)mTotalScalePixelPerStud
+            };
+            result.X += mTotalAreaInStud.X;
+			if (result.X < (float)areaLeftNumericUpDown.Minimum)
+				result.X = (float)areaLeftNumericUpDown.Minimum;
+			if (result.X > (float)areaLeftNumericUpDown.Maximum)
+				result.X = (float)areaLeftNumericUpDown.Maximum;
 			// compute y
-			result.Y = (float)mouseCoord.Y / (float)mTotalScalePixelPerStud;
+			result.Y = mouseCoord.Y / (float)mTotalScalePixelPerStud;
 			result.Y += mTotalAreaInStud.Y;
-			if (result.Y < (float)(this.areaTopNumericUpDown.Minimum))
-				result.Y = (float)(this.areaTopNumericUpDown.Minimum);
-			if (result.Y > (float)(this.areaTopNumericUpDown.Maximum))
-				result.Y = (float)(this.areaTopNumericUpDown.Maximum);
+			if (result.Y < (float)areaTopNumericUpDown.Minimum)
+				result.Y = (float)areaTopNumericUpDown.Minimum;
+			if (result.Y > (float)areaTopNumericUpDown.Maximum)
+				result.Y = (float)areaTopNumericUpDown.Maximum;
 			// return the result
 			return result;
 		}
@@ -399,7 +401,7 @@ namespace BlueBrick
 		private void exportWatermarkCheckBox_Click(object sender, EventArgs e)
 		{
 			// we use the click event and not the CheckedChanged, because we don't want this to be called at startup, when the form is initialized
-			Settings.Default.DisplayGeneralInfoWatermark = this.exportWatermarkCheckBox.Checked;
+			Settings.Default.DisplayGeneralInfoWatermark = exportWatermarkCheckBox.Checked;
 			// if the sender is null, this method is just called from the init function, so no need to draw several times
 			if (sender != null)
 				drawAll();
@@ -408,7 +410,7 @@ namespace BlueBrick
 		private void exportElectricCircuitCheckBox_Click(object sender, EventArgs e)
 		{
 			// we use the click event and not the CheckedChanged, because we don't want this to be called at startup, when the form is initialized
-			Settings.Default.DisplayElectricCircuit = this.exportElectricCircuitCheckBox.Checked;
+			Settings.Default.DisplayElectricCircuit = exportElectricCircuitCheckBox.Checked;
 			// if the sender is null, this method is just called from the init function, so no need to draw several times
 			if (sender != null)
 				drawAll();
@@ -417,7 +419,7 @@ namespace BlueBrick
 		private void exportConnectionPointCheckBox_Click(object sender, EventArgs e)
 		{
 			// we use the click event and not the CheckedChanged, because we don't want this to be called at startup, when the form is initialized
-			Settings.Default.DisplayFreeConnexionPoints = this.exportConnectionPointCheckBox.Checked;
+			Settings.Default.DisplayFreeConnexionPoints = exportConnectionPointCheckBox.Checked;
 			// if the sender is null, this method is just called from the init function, so no need to draw several times
 			if (sender != null)
 				drawAll();
@@ -427,67 +429,67 @@ namespace BlueBrick
 		#region aera size
 		private void areaLeftNumericUpDown_ValueChanged(object sender, EventArgs e)
 		{
-			float newValue = (float)(this.areaLeftNumericUpDown.Value);
+			float newValue = (float)areaLeftNumericUpDown.Value;
 			mSelectedAreaInStud.Width += mSelectedAreaInStud.X - newValue;
 			mSelectedAreaInStud.X = newValue;
             // if the new Width is valid, update the image, otherwise move the left value also
             if (mSelectedAreaInStud.Width > 0.0f)
             {
 			    updateMinAndMaxScaleAccordingToSelectedArea();
-			    updateImage(this.areaLeftNumericUpDown);
+			    updateImage(areaLeftNumericUpDown);
             }
             else
             {
-                this.areaRightNumericUpDown.Value = (Decimal)(newValue + 1.0f);
+                areaRightNumericUpDown.Value = (Decimal)(newValue + 1.0f);
             }
         }
 
 		private void areaTopNumericUpDown_ValueChanged(object sender, EventArgs e)
 		{
-			float newValue = (float)(this.areaTopNumericUpDown.Value);
+			float newValue = (float)areaTopNumericUpDown.Value;
 			mSelectedAreaInStud.Height += mSelectedAreaInStud.Y - newValue;
 			mSelectedAreaInStud.Y = newValue;
             // if the new height is valid, update the image, otherwise move the bottom value also (which will update the image)
             if (mSelectedAreaInStud.Height > 0.0f)
             {
                 updateMinAndMaxScaleAccordingToSelectedArea();
-                updateImage(this.areaTopNumericUpDown);
+                updateImage(areaTopNumericUpDown);
             }
             else
             {
-                this.areaBottomNumericUpDown.Value = (Decimal)(newValue + 1.0f);
+                areaBottomNumericUpDown.Value = (Decimal)(newValue + 1.0f);
             }
 		}
 
 		private void areaRightNumericUpDown_ValueChanged(object sender, EventArgs e)
 		{
-			float newValue = (float)(this.areaRightNumericUpDown.Value);
+			float newValue = (float)areaRightNumericUpDown.Value;
 			mSelectedAreaInStud.Width = newValue - mSelectedAreaInStud.X;
             // if the new Width is valid, update the image, otherwise move the left value also
             if (mSelectedAreaInStud.Width > 0.0f)
             {
                 updateMinAndMaxScaleAccordingToSelectedArea();
-                updateImage(this.areaRightNumericUpDown);
+                updateImage(areaRightNumericUpDown);
             }
             else
             {
-                this.areaLeftNumericUpDown.Value = (Decimal)(newValue - 1.0f);
+                areaLeftNumericUpDown.Value = (Decimal)(newValue - 1.0f);
             }
 		}
 
 		private void areaBottomNumericUpDown_ValueChanged(object sender, EventArgs e)
 		{
-			float newValue = (float)(this.areaBottomNumericUpDown.Value);
+			float newValue = (float)areaBottomNumericUpDown.Value;
             mSelectedAreaInStud.Height = newValue - mSelectedAreaInStud.Y;
             // if the new height is valid, update the image, otherwise move the top value also
             if (mSelectedAreaInStud.Height > 0.0f)
             {
                 updateMinAndMaxScaleAccordingToSelectedArea();
-                updateImage(this.areaBottomNumericUpDown);
+                updateImage(areaBottomNumericUpDown);
             }
             else
             {
-                this.areaTopNumericUpDown.Value = (Decimal)(newValue - 1.0f);
+                areaTopNumericUpDown.Value = (Decimal)(newValue - 1.0f);
             }
 		}
 		#endregion
@@ -525,13 +527,13 @@ namespace BlueBrick
 		{
 			if (mFirstSender == null)
 			{
-				mFirstSender = this.imageWidthNumericUpDown;
-				double newScaleValue = (double)(this.imageWidthNumericUpDown.Value * this.columnCountNumericUpDown.Value) / mSelectedAreaInStud.Width;
-				if (newScaleValue < (double)(this.scaleNumericUpDown.Minimum))
-					newScaleValue = (double)(this.scaleNumericUpDown.Minimum);
-				if (newScaleValue > (double)(this.scaleNumericUpDown.Maximum))
-					newScaleValue = (double)(this.scaleNumericUpDown.Maximum);
-				this.scaleNumericUpDown.Value = (Decimal)newScaleValue;
+				mFirstSender = imageWidthNumericUpDown;
+				double newScaleValue = (double)(imageWidthNumericUpDown.Value * columnCountNumericUpDown.Value) / mSelectedAreaInStud.Width;
+				if (newScaleValue < (double)scaleNumericUpDown.Minimum)
+					newScaleValue = (double)scaleNumericUpDown.Minimum;
+				if (newScaleValue > (double)scaleNumericUpDown.Maximum)
+					newScaleValue = (double)scaleNumericUpDown.Maximum;
+				scaleNumericUpDown.Value = (Decimal)newScaleValue;
 				mFirstSender = null;
 			}
 		}
@@ -540,13 +542,13 @@ namespace BlueBrick
 		{
 			if (mFirstSender == null)
 			{
-				mFirstSender = this.imageHeightNumericUpDown;
-				double newScaleValue = (double)(this.imageHeightNumericUpDown.Value * this.rowCountNumericUpDown.Value) / mSelectedAreaInStud.Height;
-				if (newScaleValue < (double)(this.scaleNumericUpDown.Minimum))
-					newScaleValue = (double)(this.scaleNumericUpDown.Minimum);
-				if (newScaleValue > (double)(this.scaleNumericUpDown.Maximum))
-					newScaleValue = (double)(this.scaleNumericUpDown.Maximum);
-				this.scaleNumericUpDown.Value = (Decimal)newScaleValue;
+				mFirstSender = imageHeightNumericUpDown;
+				double newScaleValue = (double)(imageHeightNumericUpDown.Value * rowCountNumericUpDown.Value) / mSelectedAreaInStud.Height;
+				if (newScaleValue < (double)scaleNumericUpDown.Minimum)
+					newScaleValue = (double)scaleNumericUpDown.Minimum;
+				if (newScaleValue > (double)scaleNumericUpDown.Maximum)
+					newScaleValue = (double)scaleNumericUpDown.Maximum;
+				scaleNumericUpDown.Value = (Decimal)newScaleValue;
 				mFirstSender = null;
 			}
 		}
@@ -555,7 +557,7 @@ namespace BlueBrick
 		{
 			if (mFirstSender == null)
 			{
-				mFirstSender = this.scaleNumericUpDown;
+				mFirstSender = scaleNumericUpDown;
 				computeImageSizeFromAreaAndScale();
 				mFirstSender = null;
 			}
@@ -648,10 +650,10 @@ namespace BlueBrick
 			//suspend the update of image
 			suspendUpdateImage();
 			// reset the selection to the total area
-			areaLeftNumericUpDown.Value = (Decimal)(mTotalAreaInStud.Left);
-			areaRightNumericUpDown.Value = (Decimal)(mTotalAreaInStud.Right);
-			areaTopNumericUpDown.Value = (Decimal)(mTotalAreaInStud.Top);
-			areaBottomNumericUpDown.Value = (Decimal)(mTotalAreaInStud.Bottom);
+			areaLeftNumericUpDown.Value = (Decimal)mTotalAreaInStud.Left;
+			areaRightNumericUpDown.Value = (Decimal)mTotalAreaInStud.Right;
+			areaTopNumericUpDown.Value = (Decimal)mTotalAreaInStud.Top;
+			areaBottomNumericUpDown.Value = (Decimal)mTotalAreaInStud.Bottom;
 			//resume the update of image
 			resumeUpdateImage();
 		}
@@ -671,22 +673,20 @@ namespace BlueBrick
 			saveUISettingInDefaultSettings();
 
 			// save the setting chosen in the Map
-			Map.Instance.SaveExportAreaAndDisplaySettings(mSelectedAreaInStud, (double)(this.scaleNumericUpDown.Value),
-                this.exportWatermarkCheckBox.Checked, this.exportElectricCircuitCheckBox.Checked, this.exportConnectionPointCheckBox.Checked);
+			Map.Instance.SaveExportAreaAndDisplaySettings(mSelectedAreaInStud, (double)scaleNumericUpDown.Value,
+                exportWatermarkCheckBox.Checked, exportElectricCircuitCheckBox.Checked, exportConnectionPointCheckBox.Checked);
 
-			// then ask the user to choose a filename and format
-			string fileName;
-			ImageFormat choosenFormat;
-			if (getExportFileName(out fileName, out choosenFormat))
-			{
-				// the user have chosen a correct filename and format
-				// save the new settings in the map
-				Map.Instance.SaveExportFileSettings(fileName, saveExportImageDialog.FilterIndex);
+            // then ask the user to choose a filename and format
+            if (getExportFileName(out string fileName, out ImageFormat choosenFormat))
+            {
+                // the user have chosen a correct filename and format
+                // save the new settings in the map
+                Map.Instance.SaveExportFileSettings(fileName, saveExportImageDialog.FilterIndex);
 
-				// then call the function to export all the images
-				exportAllImages(fileName, choosenFormat);
-			}
-		}
+                // then call the function to export all the images
+                exportAllImages(fileName, choosenFormat);
+            }
+        }
 
 		private void ExportImageForm_FormClosed(object sender, FormClosedEventArgs e)
 		{
@@ -696,7 +696,7 @@ namespace BlueBrick
 			// set the visible to false for catching this strange case:
 			// Minimize the window, then right click on the task bar and choose close
 			// in such case, next time you try do do a Show Dialog, an exception is raised
-			this.Visible = false;
+			Visible = false;
 		}
 
 		private bool getExportFileName(out string fileName, out ImageFormat choosenFormat)
@@ -705,20 +705,20 @@ namespace BlueBrick
 			choosenFormat = ImageFormat.Png;
 
 			// check if we need to use the export settings saved in the file
-			this.saveExportImageDialog.FilterIndex = Map.Instance.ExportFileTypeIndex; // it's 1 by default anyway
+			saveExportImageDialog.FilterIndex = Map.Instance.ExportFileTypeIndex; // it's 1 by default anyway
 																					   // by default set the same name for the exported picture than the name of the map
 			string fullFileName = Map.Instance.MapFileName;
 			if (Map.Instance.ExportAbsoluteFileName != string.Empty)
 				fullFileName = Map.Instance.ExportAbsoluteFileName;
 
 			// remove the extension from the full file name and also set the starting directory
-			this.saveExportImageDialog.FileName = Path.GetFileNameWithoutExtension(fullFileName);
-			this.saveExportImageDialog.InitialDirectory = Path.GetDirectoryName(fullFileName);
-			if (this.saveExportImageDialog.InitialDirectory.Length == 0)
-				this.saveExportImageDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			saveExportImageDialog.FileName = Path.GetFileNameWithoutExtension(fullFileName);
+			saveExportImageDialog.InitialDirectory = Path.GetDirectoryName(fullFileName);
+			if (saveExportImageDialog.InitialDirectory.Length == 0)
+				saveExportImageDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
 			// open the save dialog
-			DialogResult result = this.saveExportImageDialog.ShowDialog();
+			DialogResult result = saveExportImageDialog.ShowDialog();
 			if (result == DialogResult.OK)
 			{
 				// find the correct format according to the last extension.
@@ -778,13 +778,13 @@ namespace BlueBrick
 		private bool exportAllImages(string fileName, ImageFormat choosenFormat)
 		{
 			// compute the column and row size depending on the selected area to export and the number of cells in the grid
-			float columnWidthInStud = mSelectedAreaInStud.Width / (int)this.columnCountNumericUpDown.Value;
-			float rowHeightInStud = mSelectedAreaInStud.Height / (int)this.rowCountNumericUpDown.Value;
+			float columnWidthInStud = mSelectedAreaInStud.Width / (int)columnCountNumericUpDown.Value;
+			float rowHeightInStud = mSelectedAreaInStud.Height / (int)rowCountNumericUpDown.Value;
 
 			// get the image width, height and scale from the numeric updown
-			int imageWidth = (int)(this.imageWidthNumericUpDown.Value); 
-			int imageHeight = (int)(this.imageHeightNumericUpDown.Value);
-			double scalePixelPerStud = (double)(this.scaleNumericUpDown.Value);
+			int imageWidth = (int)imageWidthNumericUpDown.Value; 
+			int imageHeight = (int)imageHeightNumericUpDown.Value;
+			double scalePixelPerStud = (double)scaleNumericUpDown.Value;
 
 			// create a fileInfo to get the filename and the extension separately
 			FileInfo fileInfo = new FileInfo(fileName);
@@ -796,8 +796,8 @@ namespace BlueBrick
 			bool shouldCheckForExistingFile = Settings.Default.DisplayWarningMessageForOverridingExportFiles;
 
 			// iterate on the grid of image to export
-			for (int i = 0; i < this.columnCountNumericUpDown.Value; ++i)
-				for (int j = 0; j < this.rowCountNumericUpDown.Value; ++j)
+			for (int i = 0; i < columnCountNumericUpDown.Value; ++i)
+				for (int j = 0; j < rowCountNumericUpDown.Value; ++j)
 				{
 					// create the Bitmap and get the graphic context from it
 					Bitmap image = new Bitmap(imageWidth, imageHeight, PixelFormat.Format24bppRgb);
@@ -817,7 +817,7 @@ namespace BlueBrick
 
 					// construct a filename for each image (if there's more than one image)
 					string cellImageFileName = fileName;
-					if ((this.columnCountNumericUpDown.Value > 1) || (this.rowCountNumericUpDown.Value > 1))
+					if ((columnCountNumericUpDown.Value > 1) || (rowCountNumericUpDown.Value > 1))
 						cellImageFileName = fileNameWithoutExtension +
 											MapData.Tools.AlphabeticIndex.ConvertIndexToHumanFriendlyIndex(i + 1, true) + 
 											MapData.Tools.AlphabeticIndex.ConvertIndexToHumanFriendlyIndex(j + 1, false) +

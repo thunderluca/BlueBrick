@@ -30,7 +30,7 @@ namespace BlueBrick.MapData.Tools
 		private static short sTimeStamp = 1;
 
 		// the list of all the node still to explore
-		private static List<LayerBrick.Brick> mBricksToExplore = new List<LayerBrick.Brick>();
+		private static readonly List<LayerBrick.Brick> mBricksToExplore = new List<LayerBrick.Brick>();
 
 		public static void check(LayerBrick.Brick startingBrick)
 		{
@@ -86,7 +86,7 @@ namespace BlueBrick.MapData.Tools
 			// if the first connection is connected to another brick, also add this brick in the list
 			if (firstConnection.ConnectionLink != null)
 			{
-				firstConnection.ConnectionLink.Polarity = (short)(-sTimeStamp);
+				firstConnection.ConnectionLink.Polarity = (short)-sTimeStamp;
 				mBricksToExplore.Add(firstConnection.ConnectedBrick);
 			}
 
@@ -137,7 +137,7 @@ namespace BlueBrick.MapData.Tools
 								// his neighbor for future exploration.
 
 								// transfert the electricity to the end
-								end.Polarity = (short)(-start.Polarity);
+								end.Polarity = (short)-start.Polarity;
 
 								// for complex part that has several circuit in it, if we transfert electricity
 								// in a circuit, this circuit may also be linked to a previous one already iterated.
@@ -165,7 +165,7 @@ namespace BlueBrick.MapData.Tools
 									else if (connectionLink.Polarity != -end.Polarity)
 									{
 										// transfert the polarity to the linked connection
-										connectionLink.Polarity = (short)(-end.Polarity);
+										connectionLink.Polarity = (short)-end.Polarity;
 										// and add the new brick in the list for furture exploration
 										mBricksToExplore.Add(end.ConnectedBrick);
 									}

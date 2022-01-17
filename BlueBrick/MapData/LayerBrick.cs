@@ -41,15 +41,15 @@ namespace BlueBrick.MapData
 		}
 
 		[NonSerialized]
-		private ImageAttributes mImageAttributeForSelection = new ImageAttributes();
+		private readonly ImageAttributes mImageAttributeForSelection = new ImageAttributes();
 		[NonSerialized]
-		private ImageAttributes mImageAttributeForSnapping = new ImageAttributes();
+		private readonly ImageAttributes mImageAttributeForSnapping = new ImageAttributes();
 		[NonSerialized]
-		private ImageAttributes mImageAttributeDefault = new ImageAttributes();
+		private readonly ImageAttributes mImageAttributeDefault = new ImageAttributes();
 
 		// list of bricks and connection points
 		private List<Brick> mBricks = new List<Brick>(); // all the bricks in the layer
-		private FreeConnectionSet mFreeConnectionPoints = new FreeConnectionSet();
+		private readonly FreeConnectionSet mFreeConnectionPoints = new FreeConnectionSet();
 
 		// a flag to tell if this layer should display the brick altitude
 		private bool mDisplayBrickElevation = false;
@@ -68,9 +68,9 @@ namespace BlueBrick.MapData
 		private float mSnappingOrientation = 0.0f; // this orientation is just used during the the edition of a group of part if they snap to a free connexion point
 
 		// some default parameters to draw the altitude
-		static private Font sFontToDrawAltitude = new Font(FontFamily.GenericSansSerif, 8f);
-		static private Brush sBrushToDrawAltitude = Brushes.Black;
-		static private Pen sPenToDrawAltitudeFrame = new Pen(Color.Black, 1f);
+		private static readonly Font sFontToDrawAltitude = new Font(FontFamily.GenericSansSerif, 8f);
+		private static readonly Brush sBrushToDrawAltitude = Brushes.Black;
+		private static readonly Pen sPenToDrawAltitudeFrame = new Pen(Color.Black, 1f);
 
 		#region get/set
 		/// <summary>
@@ -88,7 +88,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		public List<LayerItem> LibraryBrickList
 		{
-			get { return sFilterListToGetOnlyBricksInLibrary(mBricks); }
+			get { return SFilterListToGetOnlyBricksInLibrary(mBricks); }
 		}
 		
 		/// <summary>
@@ -112,9 +112,11 @@ namespace BlueBrick.MapData
 			set
 			{
 				mTransparency = value;
-				ColorMatrix colorMatrix = new ColorMatrix();
-				colorMatrix.Matrix33 = (float)value / 100.0f;
-				mImageAttributeDefault.SetColorMatrix(colorMatrix);
+                ColorMatrix colorMatrix = new ColorMatrix
+                {
+                    Matrix33 = value / 100.0f
+                };
+                mImageAttributeDefault.SetColorMatrix(colorMatrix);
 				mImageAttributeForSelection.SetColorMatrix(colorMatrix);
 				mImageAttributeForSnapping.SetColorMatrix(colorMatrix);
 			}
@@ -158,9 +160,9 @@ namespace BlueBrick.MapData
 		/// <param name="item1">the first item to compare</param>
 		/// <param name="item2">the second item t compare</param>
 		/// <returns>distance between the two items in the layer list (index1 - index2)</returns>
-		public override int compareItemOrderOnLayer(Layer.LayerItem item1, Layer.LayerItem item2)
+		public override int CompareItemOrderOnLayer(LayerItem item1, LayerItem item2)
 		{
-			return compareItemOrderOnLayer(mBricks, item1, item2);
+			return CompareItemOrderOnLayer(mBricks, item1, item2);
 		}
 
 		/// <summary>
@@ -171,11 +173,10 @@ namespace BlueBrick.MapData
 		{
 			// call the base method
 			base.CopyOptionsFrom(layerToCopy);
-			// and try to cast in area layer
-			LayerBrick brickLayer = layerToCopy as LayerBrick;
-			if (brickLayer != null)
-				mDisplayBrickElevation = brickLayer.mDisplayBrickElevation;
-		}
+            // and try to cast in area layer
+            if (layerToCopy is LayerBrick brickLayer)
+                mDisplayBrickElevation = brickLayer.mDisplayBrickElevation;
+        }
 		#endregion
 
 		#region XmlSerializable Members
@@ -189,8 +190,8 @@ namespace BlueBrick.MapData
 			if (Map.DataVersionOfTheFileLoaded >= 9)
 				mDisplayBrickElevation = reader.ReadElementContentAsBoolean();
 
-			// read all the bricks
-			readItemsListFromXml<Brick>(reader, ref mBricks, "Bricks", true);
+            // read all the bricks
+            ReadItemsListFromXml(reader, ref mBricks, "Bricks", true);
 
 			// reconstruct the freeConnexion points list by iterating on all the connexion of all the bricks
 			mFreeConnectionPoints.removeAll();
@@ -238,23 +239,23 @@ namespace BlueBrick.MapData
 			ElectricCircuitChecker.check(this);
 		}
 
-		protected override T readItem<T>(System.Xml.XmlReader reader)
+		protected override T ReadItem<T>(System.Xml.XmlReader reader)
 		{
 			Brick brick = new Brick();
 			brick.ReadXml(reader);
-			return (brick as T);
+			return brick as T;
 		}
 
 		public override void WriteXml(System.Xml.XmlWriter writer)
 		{
 			// write the header
-			writeHeaderAndCommonProperties(writer);
+			WriteHeaderAndCommonProperties(writer);
 			// write the display brick elevation property
 			writer.WriteElementString("DisplayBrickElevation", mDisplayBrickElevation.ToString().ToLower());
 			// write all the bricks
-			writeItemsListToXml(writer, mBricks, "Bricks", true);
+			WriteItemsListToXml(writer, mBricks, "Bricks", true);
 			// write the footer
-			writeFooter(writer);
+			WriteFooter(writer);
 		}
 		#endregion
 
@@ -329,7 +330,7 @@ namespace BlueBrick.MapData
 				mBricks.Remove(brickToRemove);
 				// remove also the item from the selection list if in it
 				if (mSelectedObjects.Contains(brickToRemove))
-					removeObjectFromSelection(brickToRemove);
+					RemoveObjectFromSelection(brickToRemove);
 			}
 			else
 			{
@@ -355,7 +356,7 @@ namespace BlueBrick.MapData
 				mBricks.Remove(brickToRemove);
 				// remove also the item from the selection list if in it
 				if (mSelectedObjects.Contains(brickToRemove))
-					removeObjectFromSelection(brickToRemove);
+					RemoveObjectFromSelection(brickToRemove);
 			}
 			else
 			{
@@ -371,19 +372,19 @@ namespace BlueBrick.MapData
 		/// Copy the list of the selected bricks in a separate list for later use.
 		/// This method should be called on a CTRL+C
 		/// </summary>
-		public override void copyCurrentSelectionToClipboard()
+		public override void CopyCurrentSelectionToClipboard()
 		{
-			base.copyCurrentSelectionToClipboard(mBricks);
+            CopyCurrentSelectionToClipboard(mBricks);
 		}
 
 		/// <summary>
 		/// Select all the items in this layer.
 		/// </summary>
-		public override void selectAll()
+		public override void SelectAll()
 		{
 			// clear the selection and add all the item of this layer
-			clearSelection();
-			addObjectInSelection(mBricks);
+			ClearSelection();
+			AddObjectInSelection(mBricks);
 		}
 
 		/// <summary>
@@ -397,13 +398,13 @@ namespace BlueBrick.MapData
 		/// <returns>The brick that is connectable and should display its active connection point, or null</returns>
 		public Brick getConnectableBrick()
 		{
-			LayerItem topItem = Layer.sGetTopItemFromList(mSelectedObjects);
+			LayerItem topItem = SGetTopItemFromList(mSelectedObjects);
 			if (topItem != null)
 			{
 				if (topItem.IsAGroup)
 					return (topItem as Group).BrickThatHoldsActiveConnection;
 				else
-					return (topItem as Brick);
+					return topItem as Brick;
 			}
 			return null;
 		}
@@ -417,7 +418,7 @@ namespace BlueBrick.MapData
 		/// <returns>The single item selected or the top parent of the single group selected, or null if there's no object selected, or if there are multiple item selected which don't belongs to the same group.</returns>
 		public LayerItem getSingleBrickOrGroupSelected()
 		{
-			return Layer.sGetTopItemFromList(mSelectedObjects);
+			return SGetTopItemFromList(mSelectedObjects);
 		}
 		#endregion
 
@@ -474,7 +475,7 @@ namespace BlueBrick.MapData
 		private static bool arePositionsEqual(PointF pos1, PointF pos2)
 		{
 			if (Math.Abs(pos1.X - pos2.X) < 0.5)
-				return (Math.Abs(pos1.Y - pos2.Y) < 0.5);
+				return Math.Abs(pos1.Y - pos2.Y) < 0.5;
 			return false;
 		}
 
@@ -582,15 +583,15 @@ namespace BlueBrick.MapData
 		/// WARNING! Never call this function if the bricks are already on the layer, as it won't update the free
 		/// connection set of the layer. Use this function for a spare set of brick, like a non yet added group.
 		/// </summary>
-		public static void updateBrickConnectivityForASpareSetOfBrickAmongThemselve(List<Layer.LayerItem> bricksToConnectTogether)
+		public static void updateBrickConnectivityForASpareSetOfBrickAmongThemselve(List<LayerItem> bricksToConnectTogether)
 		{
 			// first get all the free connections among the bricks in the set, and save them in a FreeConnectionSet
 			FreeConnectionSet freeConnectionSetOfTheBrickList = new FreeConnectionSet();
-			foreach (LayerBrick.Brick brick in bricksToConnectTogether)
+			foreach (Brick brick in bricksToConnectTogether)
 				freeConnectionSetOfTheBrickList.addAllBrickConnections(brick);
 
 			// then connect all the brick between themselves
-			foreach (LayerBrick.Brick brick in bricksToConnectTogether)
+			foreach (Brick brick in bricksToConnectTogether)
 				updateFullBrickConnectivityForOneBrick(brick, freeConnectionSetOfTheBrickList, false);
 		}
 
@@ -601,7 +602,7 @@ namespace BlueBrick.MapData
 		public void updateFullBrickConnectivityForSelectedBricksOnly()
 		{
 			// for optimization reason do not update the electric circuit for every brick
-			foreach (Layer.LayerItem item in mSelectedObjects)
+			foreach (LayerItem item in mSelectedObjects)
 				updateFullBrickConnectivityForOneBrick(item as Brick, mFreeConnectionPoints, false);
 
 			// update the electric circuit for the whole layer
@@ -650,19 +651,18 @@ namespace BlueBrick.MapData
 		/// Edit the properties of the selected bricks (which is only the altitude property for now)
 		/// </summary>
 		/// <param name="mouseCoordInStud">the mouse coordinate where the edit property was triggered</param>
-		public override void editSelectedItemsProperties(PointF mouseCoordInStud)
+		public override void EditSelectedItemsProperties(PointF mouseCoordInStud)
 		{
 			// does nothing if the selection is empty
 			if (mSelectedObjects.Count > 0)
 			{
-				// in priority get the brick under the mouse, if there's several brick selected
-				Brick priorityBrick = getLayerItemUnderMouse(mSelectedObjects, mouseCoordInStud) as Brick;
-				// but if user click outside of the item, get the first one of the list
-				if (priorityBrick == null)
-					priorityBrick = mSelectedObjects[0] as Brick;
+                // in priority get the brick under the mouse, if there's several brick selected
+                // but if user click outside of the item, get the first one of the list
+                if (!(GetLayerItemUnderMouse(mSelectedObjects, mouseCoordInStud) is Brick priorityBrick))
+                    priorityBrick = mSelectedObjects[0] as Brick;
 
-				// open the form to edit the properties in modal mode (given the altitude of the priority brick)
-				EditBrickForm editBrickForm = new EditBrickForm(priorityBrick.Altitude);
+                // open the form to edit the properties in modal mode (given the altitude of the priority brick)
+                EditBrickForm editBrickForm = new EditBrickForm(priorityBrick.Altitude);
 				editBrickForm.ShowDialog();
 				if (editBrickForm.DialogResult == DialogResult.OK)
 				{
@@ -709,9 +709,9 @@ namespace BlueBrick.MapData
 		/// get the total area in stud covered by all the bricks in this layer
 		/// </summary>
 		/// <returns></returns>
-		public override RectangleF getTotalAreaInStud()
+		public override RectangleF GetTotalAreaInStud()
 		{
-			return getTotalAreaInStud(mBricks);
+			return GetTotalAreaInStud(mBricks);
 		}
 
 		/// <summary>
@@ -721,14 +721,14 @@ namespace BlueBrick.MapData
 		/// <param name="areaInStud">The region in which we should draw</param>
 		/// <param name="scalePixelPerStud">The scale to use to draw</param>
 		/// <param name="drawSelection">If true draw the selection rectangle and also the selection overlay (this can be set to false when exporting the map to an image)</param>
-		public override void draw(Graphics g, RectangleF areaInStud, double scalePixelPerStud, bool drawSelection)
+		public override void Draw(Graphics g, RectangleF areaInStud, double scalePixelPerStud, bool drawSelection)
 		{
 			if (!Visible)
 				return;
 
-			// compute the mipmap level according to the current scale
-			int mipmapLevel = 0;
-			if (scalePixelPerStud < 0.75f)
+            // compute the mipmap level according to the current scale
+            int mipmapLevel;
+            if (scalePixelPerStud < 0.75f)
 				mipmapLevel = 4;
 			else if (scalePixelPerStud < 1.5f)
 				mipmapLevel = 3;
@@ -740,7 +740,7 @@ namespace BlueBrick.MapData
 				mipmapLevel = 0;
 
 			// compute the transparency on one byte
-			int alphaValue = (255 * mTransparency) / 100;
+			int alphaValue = 255 * mTransparency / 100;
 
 			// compute the min and max brick altitudes if we need to draw them, on all the brick of the layer even if they are not in the display area
 			float minBrickAltitudeOnLayer = float.MaxValue;
@@ -800,7 +800,7 @@ namespace BlueBrick.MapData
 							g.DrawImage(image, destinationPoints, image.GetBounds(ref unit), GraphicsUnit.Pixel, mImageAttributeDefault);
 
 						if (mDisplayHulls)
-                            g.DrawPolygon(mPenToDrawHull, Layer.sConvertPolygonInStudToPixel(brick.SelectionArea.Vertice, areaInStud, scalePixelPerStud));
+                            g.DrawPolygon(mPenToDrawHull, SConvertPolygonInStudToPixel(brick.SelectionArea.Vertice, areaInStud, scalePixelPerStud));
 
 						// draw eventually the altitude of the brick
 						if (mDisplayBrickElevation)
@@ -915,7 +915,7 @@ namespace BlueBrick.MapData
 			}
 
 			// call the base class to draw the surrounding selection rectangle
-            base.draw(g, areaInStud, scalePixelPerStud, drawSelection);
+            base.Draw(g, areaInStud, scalePixelPerStud, drawSelection);
 
 			// check if there's a brick for which we need to draw the current connection point (red dot)
 			// two conditions: one brick under the mouse, or only one brick selected.
@@ -938,16 +938,16 @@ namespace BlueBrick.MapData
 				float x = (float)((brickThatHasActiveConnection.ActiveConnectionPosition.X - sizeInStud - areaInStud.Left) * scalePixelPerStud);
 				float y = (float)((brickThatHasActiveConnection.ActiveConnectionPosition.Y - sizeInStud - areaInStud.Top) * scalePixelPerStud);
 				float size = (float)(sizeInStud * 2 * scalePixelPerStud);
-				Brush brush = new SolidBrush(Color.FromArgb((mTransparency * BrickLibrary.ConnectionType.sSelectedConnection.Color.A) / 100, BrickLibrary.ConnectionType.sSelectedConnection.Color));
+				Brush brush = new SolidBrush(Color.FromArgb(mTransparency * BrickLibrary.ConnectionType.sSelectedConnection.Color.A / 100, BrickLibrary.ConnectionType.sSelectedConnection.Color));
 				g.FillEllipse(brush, x, y, size, size);
 			}
 
 			// draw the free connexion points if needed
-			if (BlueBrick.Properties.Settings.Default.DisplayFreeConnexionPoints)
+			if (Properties.Settings.Default.DisplayFreeConnexionPoints)
 				for (int i = 1; i < mFreeConnectionPoints.ConnectionTypeCount; ++i)
 				{
 					BrickLibrary.ConnectionType connectionType = BrickLibrary.Instance.ConnectionTypes[i];
-					Brush brush = new SolidBrush(Color.FromArgb((mTransparency * connectionType.Color.A) / 100, connectionType.Color));
+					Brush brush = new SolidBrush(Color.FromArgb(mTransparency * connectionType.Color.A / 100, connectionType.Color));
 					foreach (Brick.ConnectionPoint connexion in mFreeConnectionPoints.getListForType(i))
 					{
 						float sizeInStud = connectionType.Size;
@@ -976,7 +976,7 @@ namespace BlueBrick.MapData
 		/// Return the cursor that should be display when the mouse is above the map without mouse click
 		/// </summary>
 		/// <param name="mouseCoordInStud">The coordinate of the mouse pointer</param>
-		public override Cursor getDefaultCursorWithoutMouseClick(PointF mouseCoordInStud)
+		public override Cursor GetDefaultCursorWithoutMouseClick(PointF mouseCoordInStud)
 		{
 			// if the layer is not visible you can basically do nothing on it
 			if (!Visible)
@@ -1001,13 +1001,13 @@ namespace BlueBrick.MapData
 				{
 					if (Control.ModifierKeys == Properties.Settings.Default.MouseDuplicateSelectionKey)
 					{
-						if (isPointInsideSelectionRectangle(mouseCoordInStud))
+						if (IsPointInsideSelectionRectangle(mouseCoordInStud))
 							return MainForm.Instance.BrickDuplicateCursor;
 					}
 					else if ((Control.ModifierKeys & Properties.Settings.Default.MouseMultipleSelectionKey) != 0)
 					{
 						// the select path cursor should be displayed only if at least one brick is selected, otherwise just display the multi selection cursor
-						if (Control.ModifierKeys == (Keys)(Properties.Settings.Default.MouseMultipleSelectionKey | Properties.Settings.Default.MouseZoomPanKey) && (SelectedObjects.Count > 0))
+						if (Control.ModifierKeys == (Properties.Settings.Default.MouseMultipleSelectionKey | Properties.Settings.Default.MouseZoomPanKey) && (SelectedObjects.Count > 0))
 							return MainForm.Instance.BrickSelectPathCursor;
 						else
 							return MainForm.Instance.BrickSelectionCursor;
@@ -1016,7 +1016,7 @@ namespace BlueBrick.MapData
 					{
 						return MainForm.Instance.PanOrZoomViewCursor;
 					}
-					else if (isPointInsideSelectionRectangle(mouseCoordInStud))
+					else if (IsPointInsideSelectionRectangle(mouseCoordInStud))
 					{
 						return MainForm.Instance.BrickMoveCursor;
 					}
@@ -1034,7 +1034,7 @@ namespace BlueBrick.MapData
 		/// <returns>the brick that is under the mouse coordinate or null if there is none.</returns>
 		public Brick getBrickUnderMouse(PointF mouseCoordInStud)
 		{
-			return getLayerItemUnderMouse(mBricks, mouseCoordInStud) as Brick;
+			return GetLayerItemUnderMouse(mBricks, mouseCoordInStud) as Brick;
 		}
 
 		private void setBrickUnderMouse(Brick brick, PointF mouseCoordInStud)
@@ -1055,7 +1055,7 @@ namespace BlueBrick.MapData
 				if ((topGroup == null) || (topGroup.PartNumber == string.Empty))
 					topGroup = brickUnderMouse;
 				else if (topGroup.IsAGroup)
-					(topGroup as Group).computeDisplayArea(true);
+					(topGroup as Group).ComputeDisplayArea(true);
 
 				// ------
 				// compute the position of the top left corner of the brick or group of brick including the snap margin
@@ -1072,7 +1072,7 @@ namespace BlueBrick.MapData
 				// we need to compute the vector from the corner to the mouse and not the vector from
 				// the mouse to the corner because, the snapToGrid is a Floor type of snapping so the
 				// resulting snapped vector won't be the same
-				PointF anchorCornerToMouseSnapped = Layer.snapToGrid(new PointF(mouseCoordInStud.X - currentAnchorCornerPosition.X,
+				PointF anchorCornerToMouseSnapped = SnapToGrid(new PointF(mouseCoordInStud.X - currentAnchorCornerPosition.X,
 																				mouseCoordInStud.Y - currentAnchorCornerPosition.Y), false);
 
 				// compute the grab delta between the mouse and the center of the brick 
@@ -1101,7 +1101,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the mouse click</param>
 		/// <returns>true if this layer wants to handle it</returns>
-		public override bool handleMouseDown(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
+		public override bool HandleMouseDown(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
 		{
 			// if the layer is not visible it is not sensible to mouve click
 			if (!Visible)
@@ -1111,18 +1111,18 @@ namespace BlueBrick.MapData
 			if (e.Button == MouseButtons.Left)
 			{
 				// the key to select a path is a combination of modifier
-				Keys mouseSelectPathKey = (Keys)(Properties.Settings.Default.MouseMultipleSelectionKey | Properties.Settings.Default.MouseZoomPanKey);
+				Keys mouseSelectPathKey = Properties.Settings.Default.MouseMultipleSelectionKey | Properties.Settings.Default.MouseZoomPanKey;
 
 				// check if the mouse is inside the bounding rectangle of the selected objects
-				bool isMouseInsideSelectedObjects = isPointInsideSelectionRectangle(mouseCoordInStud);
+				bool isMouseInsideSelectedObjects = IsPointInsideSelectionRectangle(mouseCoordInStud);
 				if (!isMouseInsideSelectedObjects && (Control.ModifierKeys != Properties.Settings.Default.MouseMultipleSelectionKey)
 					&& (Control.ModifierKeys != mouseSelectPathKey)
 					&& (Control.ModifierKeys != Properties.Settings.Default.MouseDuplicateSelectionKey))
-					clearSelection();
+					ClearSelection();
 
 				// find the current brick under the mouse
 				// We search if there is a cell under the mouse but in priority we choose from the current selected bricks
-				Brick currentBrickUnderMouseInSelection = getLayerItemUnderMouse(mSelectedObjects, mouseCoordInStud) as Brick;
+				Brick currentBrickUnderMouseInSelection = GetLayerItemUnderMouse(mSelectedObjects, mouseCoordInStud) as Brick;
 
 				// If we found a brick under the mouse and in the selection, just give that brick as the current brick under the mouse
 				// otherwise, ask the current brick under mouse on the whole layer (not only among the selection)
@@ -1146,7 +1146,7 @@ namespace BlueBrick.MapData
 					// a flex move can only happen if a brick is double clicked
 					if (currentBrickUnderMouseInSelection != null)
 					{
-						mMouseFlexMoveAction = new FlexMove(this, this.SelectedObjects, currentBrickUnderMouseInSelection, mouseCoordInStud);
+						mMouseFlexMoveAction = new FlexMove(this, SelectedObjects, currentBrickUnderMouseInSelection, mouseCoordInStud);
 						if (mMouseFlexMoveAction.IsValid)
 						{
 							mEditAction = EditAction.FLEX_MOVE;
@@ -1200,12 +1200,12 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the click</param>
 		/// <returns>true if the view should be refreshed</returns>
-		public override bool mouseDown(MouseEventArgs e, PointF mouseCoordInStud)
+		public override bool MouseDown(MouseEventArgs e, PointF mouseCoordInStud)
 		{
 			mMouseIsBetweenDownAndUpEvent = true;
 
 			// if there's a brick under the mouse, we have to refresh the view to display the highlight
-			bool mustRefresh = (mCurrentBrickUnderMouse != null);
+			bool mustRefresh = mCurrentBrickUnderMouse != null;
 
 			if (e.Button == MouseButtons.Left)
 			{
@@ -1217,7 +1217,7 @@ namespace BlueBrick.MapData
 					List<LayerItem> brickToSelect = AStar.findPath(SelectedObjects[SelectedObjects.Count - 1] as Brick, mCurrentBrickUnderMouse);
 					// if AStar found a path, select the path
 					if (brickToSelect.Count > 0)
-						addObjectInSelection(brickToSelect);
+						AddObjectInSelection(brickToSelect);
 				}
 				// we add the cell under the mouse if the selection list is empty
 				else if ((mCurrentBrickUnderMouse != null) && (mEditAction != EditAction.DUPLICATE_SELECTION)
@@ -1226,7 +1226,7 @@ namespace BlueBrick.MapData
 				{
 					// if the selection is empty add the brick, else check the control key state
 					if (mSelectedObjects.Count == 0)
-						addObjectInSelection(mCurrentBrickUnderMouse);
+						AddObjectInSelection(mCurrentBrickUnderMouse);
 
 					// Break all the connections between the selected bricks and the non selected bricks
 					// meaning iterate on all the brick of the selection and when we find a link to a brick which
@@ -1288,12 +1288,12 @@ namespace BlueBrick.MapData
 
 					// reset the initial position to each brick
 					if ((deltaMove.X != 0) || (deltaMove.Y != 0))
-						foreach (LayerBrick.Brick brick in mSelectedObjects)
+						foreach (Brick brick in mSelectedObjects)
 							brick.Center = new PointF(brick.Center.X - deltaMove.X, brick.Center.Y - deltaMove.Y);
 
 					// reconnect the bricks and update the bounding rectangle
 					updateBrickConnectivityOfSelection(false);
-					this.updateBoundingSelectionRectangle();
+					UpdateBoundingSelectionRectangle();
 				}
 
 				mEditAction = EditAction.NONE;
@@ -1309,16 +1309,15 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the mouse move</param>
 		/// <returns>true if the view should be refreshed</returns>
-		public override bool mouseMove(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
+		public override bool MouseMove(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
 		{
 			if ((mEditAction != EditAction.NONE) && (mEditAction != EditAction.SELECT_PATH) && (mSelectedObjects.Count > 0))
 			{
-				// snap the mouse coord to the grid
-				Brick.ConnectionPoint snappedConnection = null;
-				PointF mouseCoordInStudSnapped = getMovedSnapPoint(mouseCoordInStud, mCurrentBrickUnderMouse, out snappedConnection);
+                // snap the mouse coord to the grid
+                PointF mouseCoordInStudSnapped = getMovedSnapPoint(mouseCoordInStud, mCurrentBrickUnderMouse, out Brick.ConnectionPoint snappedConnection);
 
-				// check if it is a flex move or normal move
-				if (mEditAction == EditAction.FLEX_MOVE)
+                // check if it is a flex move or normal move
+                if (mEditAction == EditAction.FLEX_MOVE)
 				{
 					mMouseFlexMoveAction.reachTarget(mouseCoordInStudSnapped, snappedConnection);
 					// set the flag to tell that we move the mouse
@@ -1341,9 +1340,9 @@ namespace BlueBrick.MapData
 							// and this will change the current selection, that will be move normally after
 							if (mLastDuplicateAction == null)
 							{
-								this.copyCurrentSelectionToClipboard();
+								CopyCurrentSelectionToClipboard();
 								AddActionInHistory addInHistory = AddActionInHistory.DO_NOT_ADD_TO_HISTORY_EXCEPT_IF_POPUP_OCCURED;
-								this.pasteClipboardInLayer(AddOffsetAfterPaste.NO, ref addInHistory);
+								PasteClipboardInLayer(AddOffsetAfterPaste.NO, ref addInHistory);
 								// if a popup has occured, we will not received the mouse up event, so clear everything that should usually be cleared in the up event
 								if ((addInHistory == AddActionInHistory.WAS_ADDED_TO_HISTORY_DUE_TO_POPUP) ||
 									(addInHistory == AddActionInHistory.POPUP_OCCURRED_BUT_WASNT_ADDED_DUE_TO_USER_CANCEL) ||
@@ -1366,7 +1365,7 @@ namespace BlueBrick.MapData
 						}
 						// the duplication above will change the current selection
 						// The code below is to move the selection, either the original one or the duplicated one
-						foreach (LayerBrick.Brick brick in mSelectedObjects)
+						foreach (Brick brick in mSelectedObjects)
 						{
 							PointF brickCenter = brick.Center;
 							brick.Center = new PointF(brickCenter.X + deltaMove.X, brickCenter.Y + deltaMove.Y);
@@ -1374,11 +1373,11 @@ namespace BlueBrick.MapData
 						// update the free connexion list
 						updateBrickConnectivityOfSelection(true);
 						// move also the bounding rectangle
-						moveBoundingSelectionRectangle(deltaMove);
+						MoveBoundingSelectionRectangle(deltaMove);
 						// after we moved the selection check if we need to refresh the current highlighted brick
 						if (wereBrickJustDuplicated)
 						{
-							Brick currentBrickUnderMouse = getLayerItemUnderMouse(mSelectedObjects, mouseCoordInStud) as Brick;
+							Brick currentBrickUnderMouse = GetLayerItemUnderMouse(mSelectedObjects, mouseCoordInStud) as Brick;
 							setBrickUnderMouse(currentBrickUnderMouse, mouseCoordInStud);
 						}
 						// memorize the last position of the mouse
@@ -1391,7 +1390,7 @@ namespace BlueBrick.MapData
 					{
 						// give a second chance to duplicate if the user press the duplicate key
 						// after pressing down the mouse key, but not if the user already moved
-						if (Control.ModifierKeys == BlueBrick.Properties.Settings.Default.MouseDuplicateSelectionKey)
+						if (Control.ModifierKeys == Properties.Settings.Default.MouseDuplicateSelectionKey)
 						{
 							mEditAction = EditAction.DUPLICATE_SELECTION;
 							updateBrickConnectivityOfSelection(false);
@@ -1407,7 +1406,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the click</param>
 		/// <returns>true if the view should be refreshed</returns>
-		public override bool mouseUp(MouseEventArgs e, PointF mouseCoordInStud)
+		public override bool MouseUp(MouseEventArgs e, PointF mouseCoordInStud)
 		{
 			// if it's a double click, we should prompt a box for text editing
 			// WARNING: prompt the box in the mouse up event,
@@ -1425,7 +1424,7 @@ namespace BlueBrick.MapData
 				}
 
 				// call the function to add or edit, which open the edit text dialog in modal
-				editSelectedItemsProperties(mouseCoordInStud);
+				EditSelectedItemsProperties(mouseCoordInStud);
 			}
 			else if (mEditAction == EditAction.FLEX_MOVE)
 			{
@@ -1472,7 +1471,7 @@ namespace BlueBrick.MapData
 								isComplexActionNeeded = true;
 							}
 							// reset the initial position to each brick
-							foreach (LayerBrick.Brick brick in mSelectedObjects)
+							foreach (Brick brick in mSelectedObjects)
 								brick.Center = new PointF(brick.Center.X - deltaMove.X, brick.Center.Y - deltaMove.Y);
 
 							// create a move or complex move action depending if some roatation are needed
@@ -1523,12 +1522,12 @@ namespace BlueBrick.MapData
 					// if we didn't move the item and use the control key, we need to add or remove object from the selection
 					// we must do it in the up event because if we do it in the down, we may remove an object before moving
 					// we do this only if the mMouseHasMoved flag is not set to avoid this change if we move
-					if ((mCurrentBrickUnderMouse != null) && (Control.ModifierKeys == BlueBrick.Properties.Settings.Default.MouseMultipleSelectionKey))
+					if ((mCurrentBrickUnderMouse != null) && (Control.ModifierKeys == Properties.Settings.Default.MouseMultipleSelectionKey))
 					{
 						if (mSelectedObjects.Contains(mCurrentBrickUnderMouse))
-							removeObjectFromSelection(mCurrentBrickUnderMouse);
+							RemoveObjectFromSelection(mCurrentBrickUnderMouse);
 						else
-							addObjectInSelection(mCurrentBrickUnderMouse);
+							AddObjectInSelection(mCurrentBrickUnderMouse);
 					}
 				}
 			}
@@ -1543,9 +1542,9 @@ namespace BlueBrick.MapData
 		/// Select all the item inside the rectangle in the current selected layer
 		/// </summary>
 		/// <param name="selectionRectangeInStud">the rectangle in which select the items</param>
-		public override void selectInRectangle(RectangleF selectionRectangeInStud)
+		public override void SelectInRectangle(RectangleF selectionRectangeInStud)
 		{
-			selectInRectangle(selectionRectangeInStud, mBricks);
+			SelectInRectangle(selectionRectangeInStud, mBricks);
 		}
 
 		/// <summary>
@@ -1577,7 +1576,7 @@ namespace BlueBrick.MapData
 				else
 				{
 					// there's no master brick, just do a relative snapping
-					result = Layer.snapToGrid(pointInStud, false);
+					result = SnapToGrid(pointInStud, false);
 				}
 			}
 			else
@@ -1596,9 +1595,8 @@ namespace BlueBrick.MapData
 		/// <returns>a near snap point</returns>
 		public PointF getMovedSnapPoint(PointF pointInStud, LayerItem referenceItem)
 		{
-			Brick.ConnectionPoint ignoredSnappedConnection = null;
-			return getMovedSnapPoint(pointInStud, referenceItem, out ignoredSnappedConnection);
-		}
+            return getMovedSnapPoint(pointInStud, referenceItem, out _);
+        }
 
 		/// <summary>
 		/// This method return a snap point near the specified point according to different
@@ -1698,10 +1696,12 @@ namespace BlueBrick.MapData
 									if (mSnappingOrientation < 0.0f)
 										mSnappingOrientation += 360.0f;
 
-									// and create a new action for the new angle
-									mRotationForSnappingDuringBrickMove = new RotateBrickOnPivotBrick(this, SelectedObjects, mSnappingOrientation, mCurrentBrickUnderMouse);
-									mRotationForSnappingDuringBrickMove.MustUpdateBrickConnectivity = false;
-									mRotationForSnappingDuringBrickMove.Redo();
+                                    // and create a new action for the new angle
+                                    mRotationForSnappingDuringBrickMove = new RotateBrickOnPivotBrick(this, SelectedObjects, mSnappingOrientation, mCurrentBrickUnderMouse)
+                                    {
+                                        MustUpdateBrickConnectivity = false
+                                    };
+                                    mRotationForSnappingDuringBrickMove.Redo();
 
 									// compute the position from the connection points
 									snapPosition.X += referenceItem.Center.X - activeBrickConnexion.PositionInStudWorldCoord.X;
@@ -1723,7 +1723,7 @@ namespace BlueBrick.MapData
 					// This is the normal case for snapping the brick under the mouse.
 					// Snap the position of the mouse on the grid (the snapping is a Floor style one)
 					// then add the center shift of the part and the snapping offset
-					pointInStud = Layer.snapToGrid(pointInStud, false);
+					pointInStud = SnapToGrid(pointInStud, false);
 					
 					// shift the point according to the center and the snap grabbed delta
 					pointInStud.X += mMouseGrabDeltaToCenter.X;
@@ -1733,7 +1733,7 @@ namespace BlueBrick.MapData
 
 				// the snapping is enable but the group of brick was grab from an empty place
 				// i.e. there's no bricks under the mouse so just do a normal snapping on the grid
-				return Layer.snapToGrid(pointInStud, false);
+				return SnapToGrid(pointInStud, false);
 			}
 
 			// by default do not change anything
@@ -1748,7 +1748,7 @@ namespace BlueBrick.MapData
 		/// is then patch with this temporary part.
 		/// </summary>
 		/// <param name="itemDrop">The temporary part to add which can be a Brick or a Group</param>
-		public void addTemporaryPartDrop(Layer.LayerItem itemDrop)
+		public void addTemporaryPartDrop(LayerItem itemDrop)
 		{
 			// clear the selection to only select the part(s) drop
 			mSelectedObjects.Clear();
@@ -1756,11 +1756,11 @@ namespace BlueBrick.MapData
 			// check if it is a single Brick or a group
 			if (itemDrop.IsAGroup)
 			{
+                // the part to drop is a group
+                Group groupDrop = itemDrop as Group;
 				// the part to drop is a group
-				Layer.Group groupDrop = itemDrop as Layer.Group;
-				// the part to drop is a group
-				List<Layer.LayerItem> partsInTheGroup = groupDrop.getAllLeafItems();
-				foreach (Layer.LayerItem item in partsInTheGroup)
+				List<LayerItem> partsInTheGroup = groupDrop.GetAllLeafItems();
+				foreach (LayerItem item in partsInTheGroup)
 				{
 					Brick brick = item as Brick;
 					mBricks.Add(brick);
@@ -1774,9 +1774,9 @@ namespace BlueBrick.MapData
 				Brick brickUnderMouse = groupDrop.BrickThatHoldsActiveConnection;
 				if (brickUnderMouse == null)
 				{
-					List<LayerItem> children = groupDrop.getAllLeafItems();
+					List<LayerItem> children = groupDrop.GetAllLeafItems();
 					if (children.Count > 0)
-						brickUnderMouse = (children[0]) as Brick;
+						brickUnderMouse = children[0] as Brick;
 				}
 				setBrickUnderMouse(brickUnderMouse, groupDrop, groupDrop.Center);
 
@@ -1798,7 +1798,7 @@ namespace BlueBrick.MapData
 		/// the part library on this layer. The temporary part is removed from the layer.
 		/// </summary>
 		/// <param name="itemDrop">The temporary part to remove which can be a Brick or a Group</param>
-		public void removeTemporaryPartDrop(Layer.LayerItem itemDrop)
+		public void removeTemporaryPartDrop(LayerItem itemDrop)
 		{
 			// clear the data
 			mSelectedObjects.Clear();
@@ -1807,21 +1807,20 @@ namespace BlueBrick.MapData
 			mRotationForSnappingDuringBrickMove = null;
 			mSnappingOrientation = 0.0f;
 
-			// check if it is a single Brick or a group to remove one or several bricks
-			Brick brickDrop = itemDrop as Brick;
-			if (brickDrop != null)
-			{
-				// the cast succeed, this is a brick
-				mBricks.Remove(brickDrop);
-			}
-			else
-			{
-				// the cast failed, the part drop is a group
-				List<Layer.LayerItem> partsInTheGroup = (itemDrop as Layer.Group).getAllLeafItems();
-				foreach (Layer.LayerItem item in partsInTheGroup)
-					mBricks.Remove(item as Brick);
-			}
-		}
+            // check if it is a single Brick or a group to remove one or several bricks
+            if (itemDrop is Brick brickDrop)
+            {
+                // the cast succeed, this is a brick
+                mBricks.Remove(brickDrop);
+            }
+            else
+            {
+                // the cast failed, the part drop is a group
+                List<LayerItem> partsInTheGroup = (itemDrop as Group).GetAllLeafItems();
+                foreach (LayerItem item in partsInTheGroup)
+                    mBricks.Remove(item as Brick);
+            }
+        }
 		#endregion
 	}
 }

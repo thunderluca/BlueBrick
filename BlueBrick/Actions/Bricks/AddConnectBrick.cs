@@ -23,8 +23,8 @@ namespace BlueBrick.Actions.Bricks
 	class AddConnectBrick : Action
 	{
 		// data for this action
-		private LayerBrick mBrickLayer = null;
-		private LayerBrick.Brick mBrick = null;
+		private readonly LayerBrick mBrickLayer = null;
+		private readonly LayerBrick.Brick mBrick = null;
 		private int mBrickIndex = -1; // this index is for the redo, to add the brick at the same place
 
 		/// <summary>
@@ -109,7 +109,7 @@ namespace BlueBrick.Actions.Bricks
 				// the reassing the selected brick with the first brick of the group if the selected item is a group
 				// so that the brick index can correctly be set
 				if (selectedItem.IsAGroup)
-					selectedBrick = (selectedItem as Layer.Group).getAllLeafItems()[0] as LayerBrick.Brick;
+					selectedBrick = (selectedItem as Layer.Group).GetAllLeafItems()[0] as LayerBrick.Brick;
 				else
 					selectedBrick = selectedItem as LayerBrick.Brick;
 			}
@@ -156,7 +156,7 @@ namespace BlueBrick.Actions.Bricks
 			// with the first connexion of the same type that we can find (if the brick as any connection point)
 			if (!isActiveConnectionPointChosen)
 				for (int i = 0; i < brickToAttach.ConnectionPoints.Count; ++i)
-					if ((brickToAttach.ConnectionPoints[i].Type == fixedConnexionType)
+					if (brickToAttach.ConnectionPoints[i].Type == fixedConnexionType
 						/* && brickToAttach.ConnectionPoints[i].IsFree*/) // actually it is useless to check if it is free, because all connection of a new part added are all free
 					{
 						brickToAttach.ActiveConnectionPointIndex = i;
@@ -170,7 +170,7 @@ namespace BlueBrick.Actions.Bricks
 
 		public override string GetName()
 		{
-			string actionName = BlueBrick.Properties.Resources.ActionAddBrick;
+			string actionName = Properties.Resources.ActionAddBrick;
 			actionName = actionName.Replace("&", mBrick.PartNumber);
 			return actionName;
 		}
@@ -181,7 +181,7 @@ namespace BlueBrick.Actions.Bricks
 			mBrickLayer.addBrick(mBrick, mBrickIndex);
 
 			// change the selection to the new added brick (should be done after the add)
-			mBrickLayer.selectOnlyThisObject(mBrick);
+			mBrickLayer.SelectOnlyThisObject(mBrick);
 			// update the connectivity of the bricks after selecting it
 			mBrickLayer.updateBrickConnectivityOfSelection(false);
 

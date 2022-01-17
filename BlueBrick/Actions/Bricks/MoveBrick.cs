@@ -23,13 +23,13 @@ namespace BlueBrick.Actions.Bricks
 {
 	public class MoveBrick : MoveItems
 	{
-		private string mPartNumber = string.Empty; //if the list contains only one brick or one group, this is the name of this specific brick or group
+		private readonly string mPartNumber = string.Empty; //if the list contains only one brick or one group, this is the name of this specific brick or group
 
 		public MoveBrick(LayerBrick layer, List<Layer.LayerItem> bricks, PointF move)
 			: base(layer, bricks, move)
 		{
 			// try to get a part number (which can be the name of a group)
-			Layer.LayerItem topItem = Layer.sGetTopItemFromList(mItems);
+			Layer.LayerItem topItem = Layer.SGetTopItemFromList(mItems);
 			if (topItem != null)
 				mPartNumber = topItem.PartNumber; // part number is virtual, works both for part and group
 		}
@@ -39,13 +39,13 @@ namespace BlueBrick.Actions.Bricks
 			// if the part number is valid, use the specific message
 			if (mPartNumber != string.Empty)
 			{
-				string actionName = BlueBrick.Properties.Resources.ActionMoveBrick;
+				string actionName = Properties.Resources.ActionMoveBrick;
 				actionName = actionName.Replace("&", mPartNumber);
 				return actionName;
 			}
 			else
 			{
-				return BlueBrick.Properties.Resources.ActionMoveSeveralBricks;
+				return Properties.Resources.ActionMoveSeveralBricks;
 			}
 		}
 
@@ -54,7 +54,7 @@ namespace BlueBrick.Actions.Bricks
 			LayerBrick brickLayer = mLayer as LayerBrick;
 			// reselect the items of the action, cause after we will update the connectivity of the selection
 			// and do it before calling the base class cause the base class will update the selection rectangle
-			brickLayer.selectOnlyThisObject(mItems);
+			brickLayer.SelectOnlyThisObject(mItems);
 			// call the base class
 			base.Redo();
 			// update the brick connectivity
@@ -68,7 +68,7 @@ namespace BlueBrick.Actions.Bricks
 			LayerBrick brickLayer = mLayer as LayerBrick;
 			// reselect the items of the action, cause after we will update the connectivity of the selection
 			// and do it before calling the base class cause the base class will update the selection rectangle
-			brickLayer.selectOnlyThisObject(mItems);
+			brickLayer.SelectOnlyThisObject(mItems);
 			// call the base class
 			base.Undo();
 			// update the brick connectivity

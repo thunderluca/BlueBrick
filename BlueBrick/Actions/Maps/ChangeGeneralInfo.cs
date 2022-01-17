@@ -30,7 +30,7 @@ namespace BlueBrick.Actions.Maps
 			public override bool Equals(object obj)
 			{
                 if (obj is GeneralMapInfo other)
-                    return other.mAuthor.Equals(this.mAuthor) && other.mLUG.Equals(this.mLUG) && other.mEvent.Equals(this.mEvent) && other.mDate.Equals(this.mDate) && other.mComment.Equals(this.mComment);
+                    return other.mAuthor.Equals(mAuthor) && other.mLUG.Equals(mLUG) && other.mEvent.Equals(mEvent) && other.mDate.Equals(mDate) && other.mComment.Equals(mComment);
                 return false;
 			}
 
@@ -96,7 +96,7 @@ namespace BlueBrick.Actions.Maps
 		{
             // we only change the new data, to know if something new will be changed
             if (obj is ChangeGeneralInfo other)
-                return other.newInfo.Equals(this.newInfo);
+                return other.newInfo.Equals(newInfo);
             // if the specified action is not of the same type as me, for sure it is different
             return false;
 		}

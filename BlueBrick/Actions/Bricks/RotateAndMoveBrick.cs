@@ -20,12 +20,12 @@ namespace BlueBrick.Actions.Bricks
 {
 	class RotateAndMoveBrick : RotateBrickOnPivotBrick
 	{
-		private MoveBrick mMoveAction = null;
+		private readonly MoveBrick mMoveAction = null;
 
 		public RotateAndMoveBrick(LayerBrick layer, List<Layer.LayerItem> bricks, float angle, LayerBrick.Brick pivotBrick, PointF move)
 			: base(layer, bricks, angle, pivotBrick)
 		{
-			this.MustUpdateBrickConnectivity = false; // the connectivity will be updated by the move action
+			MustUpdateBrickConnectivity = false; // the connectivity will be updated by the move action
 			mMoveAction = new MoveBrick(layer, bricks, move);
 		}
 

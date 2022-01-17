@@ -12,23 +12,22 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
+using BlueBrick.Actions;
+using BlueBrick.SaveLoad;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Text;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using BlueBrick.Actions;
-using System.Collections;
-using BlueBrick.SaveLoad;
 
 namespace BlueBrick.MapData
 {
-	/// <summary>
-	/// A layer is a set of element that are displayed together at a certain height in the <see cref="Map"/>.
-	/// </summary>
-	[Serializable]
+    /// <summary>
+    /// A layer is a set of element that are displayed together at a certain height in the <see cref="Map"/>.
+    /// </summary>
+    [Serializable]
 	public abstract class Layer : IXmlSerializable
 	{
 		/// <summary>
@@ -87,7 +86,7 @@ namespace BlueBrick.MapData
 				set
 				{
 					// translate the selection area before changing the values
-					translateSelectionArea(mDisplayArea.Location, value);
+					TranslateSelectionArea(mDisplayArea.Location, value);
 					// then set the new coordinate of the display area
 					mDisplayArea.X = value.X;
 					mDisplayArea.Y = value.Y;
@@ -110,7 +109,7 @@ namespace BlueBrick.MapData
 					// compute the new corner position
 					PointF newLocation = new PointF(value.X - (mDisplayArea.Width * 0.5f), value.Y - (mDisplayArea.Height * 0.5f));
 					// translate the selection area before changing the values
-					translateSelectionArea(mDisplayArea.Location, newLocation);
+					TranslateSelectionArea(mDisplayArea.Location, newLocation);
 					// then set the new coordinate of the display area
 					mDisplayArea.Location = newLocation;
 				}
@@ -122,8 +121,8 @@ namespace BlueBrick.MapData
 			/// </summary>
 			public virtual PointF Pivot
 			{
-				get { return this.Center; }
-				set { this.Center = value; }
+				get { return Center; }
+				set { Center = value; }
 			}
 
 			/// <summary>
@@ -184,7 +183,7 @@ namespace BlueBrick.MapData
 			{
 				get
 				{
-					Group topGroup = this.Group;
+					Group topGroup = Group;
 					if (topGroup != null)
 					{
 						while (topGroup.Group != null)
@@ -255,12 +254,12 @@ namespace BlueBrick.MapData
 			/// <param name="model"></param>
 			public LayerItem(LayerItem model)
 			{
-				this.mDisplayArea = model.mDisplayArea;
-				this.mOrientation = model.mOrientation;
+				mDisplayArea = model.mDisplayArea;
+				mOrientation = model.mOrientation;
 				// don't copy the group, just leave it null
 				if (model.mSelectionArea != null)
-					this.mSelectionArea = model.mSelectionArea.Clone();
-				this.mSnapToGridOffset = model.mSnapToGridOffset;
+					mSelectionArea = model.mSelectionArea.Clone();
+				mSnapToGridOffset = model.mSnapToGridOffset;
 			}
 
 			/// <summary>
@@ -282,10 +281,10 @@ namespace BlueBrick.MapData
 			{
 				reader.Read(); // read the starting tag of the item
 				mDisplayArea = XmlReadWrite.readRectangleF(reader);
-				readMyGroup(reader);
+				ReadMyGroup(reader);
 			}
 
-			protected void readMyGroup(System.Xml.XmlReader reader)
+			protected void ReadMyGroup(System.Xml.XmlReader reader)
 			{
                 if (Map.DataVersionOfTheFileLoaded > 4)
                 {
@@ -307,7 +306,7 @@ namespace BlueBrick.MapData
                             group = new Group(hashCodeOfTheGroup);
                         }
                         // then add this item in the group
-                        group.addItem(this);
+                        group.AddItem(this);
                     }
                 }
 			}
@@ -317,24 +316,24 @@ namespace BlueBrick.MapData
 			/// have been loaded, in order to recreate links between items of different layers (such as
 			/// for example the attachement of a ruler to a brick)
 			/// </summary>
-			public virtual void recreateLinksAfterLoading()
+			public virtual void RecreateLinksAfterLoading()
 			{
 			}
 
 			public virtual void WriteXml(System.Xml.XmlWriter writer)
 			{
 				XmlReadWrite.writeRectangleF(writer, "DisplayArea", mDisplayArea);
-				writeMyGroup(writer);
+				WriteMyGroup(writer);
 			}
 
-			protected void writeMyGroup(System.Xml.XmlWriter writer)
+			protected void WriteMyGroup(System.Xml.XmlWriter writer)
 			{
 				writer.WriteStartElement("MyGroup");
 				if (mMyGroup != null)
 				{
 					writer.WriteString(mMyGroup.GUID.ToString());
-					if (!LayerItem.sListForGroupSaving.Contains(mMyGroup))
-						LayerItem.sListForGroupSaving.Add(mMyGroup);
+					if (!sListForGroupSaving.Contains(mMyGroup))
+                        sListForGroupSaving.Add(mMyGroup);
 				}
 				writer.WriteEndElement();
 			}
@@ -353,17 +352,17 @@ namespace BlueBrick.MapData
 			#endregion
 
 			#region selection
-			public void select(List<LayerItem> selectionList, bool addToSelection)
+			public void Select(List<LayerItem> selectionList, bool addToSelection)
 			{
 				// check if this item belong to a group, in that case, call the select
 				// method of the group, such as we can move up to the top of the tree
 				if (mMyGroup != null)
-					mMyGroup.select(selectionList, addToSelection);
+					mMyGroup.Select(selectionList, addToSelection);
 				else
-					selectHierachycally(selectionList, addToSelection);
+					SelectHierachycally(selectionList, addToSelection);
 			}
 
-			public virtual void selectHierachycally(List<LayerItem> selectionList, bool addToSelection)
+			public virtual void SelectHierachycally(List<LayerItem> selectionList, bool addToSelection)
 			{
 				// we are on the leaf of the hierarchy, so just select the item
 				if (addToSelection)
@@ -379,16 +378,14 @@ namespace BlueBrick.MapData
 			#endregion
 
 			#region update
-			private void translateSelectionArea(PointF oldPosition, PointF newPosition)
+			private void TranslateSelectionArea(PointF oldPosition, PointF newPosition)
 			{
-				if (mSelectionArea != null)
-					mSelectionArea.translate(new PointF(newPosition.X - oldPosition.X, newPosition.Y - oldPosition.Y));
+				mSelectionArea?.translate(new PointF(newPosition.X - oldPosition.X, newPosition.Y - oldPosition.Y));
 			}
 
-			protected void translateSelectionArea(PointF translation)
+			protected void TranslateSelectionArea(PointF translation)
 			{
-				if (mSelectionArea != null)
-					mSelectionArea.translate(translation);
+				mSelectionArea?.translate(translation);
 			}
 
 			/// <summary>
@@ -396,28 +393,28 @@ namespace BlueBrick.MapData
 			/// defined in the part library (for now, if other type of items need to define their snap margin,
 			/// some refactoring will be required). This update function should be called in the orientation setter.
 			/// </summary>
-			protected void updateSnapMargin()
+			protected void UpdateSnapMargin()
 			{
-				BrickLibrary.Brick.Margin snapMargin = BrickLibrary.Instance.GetSnapMargin(this.PartNumber);
+				BrickLibrary.Brick.Margin snapMargin = BrickLibrary.Instance.GetSnapMargin(PartNumber);
 				if ((snapMargin.mLeft != 0.0f) || (snapMargin.mRight != 0.0f) || (snapMargin.mTop != 0.0f) || (snapMargin.mBottom != 0.0f))
 				{
 					double angleInRadian = mOrientation * Math.PI / 180.0;
 					double cosAngle = Math.Cos(angleInRadian);
 					double sinAngle = Math.Sin(angleInRadian);
-					double xSnapOffset = 0;
-					double ySnapOffset = 0;
-					if (cosAngle > 0)
-					{
-						xSnapOffset = snapMargin.mLeft * cosAngle;
-						ySnapOffset = snapMargin.mTop * cosAngle;
-					}
-					else
-					{
-						cosAngle = -cosAngle;
-						xSnapOffset = snapMargin.mRight * cosAngle;
-						ySnapOffset = snapMargin.mBottom * cosAngle;
-					}
-					if (sinAngle > 0)
+                    double xSnapOffset;
+                    double ySnapOffset;
+                    if (cosAngle > 0)
+                    {
+                        xSnapOffset = snapMargin.mLeft * cosAngle;
+                        ySnapOffset = snapMargin.mTop * cosAngle;
+                    }
+                    else
+                    {
+                        cosAngle = -cosAngle;
+                        xSnapOffset = snapMargin.mRight * cosAngle;
+                        ySnapOffset = snapMargin.mBottom * cosAngle;
+                    }
+                    if (sinAngle > 0)
 					{
 						xSnapOffset += snapMargin.mBottom * sinAngle;
 						ySnapOffset += snapMargin.mLeft * sinAngle;
@@ -444,7 +441,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		public class Group : LayerItem
 		{
-			private List<LayerItem> mItems = new List<LayerItem>();
+			private readonly List<LayerItem> mItems = new List<LayerItem>();
 			private bool mCanUngroup = true; // this flag tells if the group can be ungrouped or not
 			private string mPartNumber = string.Empty;	// id of the group if any
 			private LayerBrick.Brick mBrickThatHoldsActiveConnection = null;
@@ -460,7 +457,7 @@ namespace BlueBrick.MapData
 			/// </summary>
 			public bool IsANamedGroup
 			{
-				get { return (mPartNumber != string.Empty); }
+				get { return mPartNumber != string.Empty; }
 			}
 
 			/// <summary>
@@ -505,7 +502,7 @@ namespace BlueBrick.MapData
 				set
 				{
 					// translate the whole group
-					translate(new PointF(value.X - mDisplayArea.X, value.Y - mDisplayArea.Y));
+					Translate(new PointF(value.X - mDisplayArea.X, value.Y - mDisplayArea.Y));
 				}
 			}
 
@@ -517,7 +514,7 @@ namespace BlueBrick.MapData
 				set
 				{
 					// translate the whole group
-					translate(new PointF(value.X - (mDisplayArea.Width * 0.5f) - mDisplayArea.X,
+					Translate(new PointF(value.X - (mDisplayArea.Width * 0.5f) - mDisplayArea.X,
 										value.Y - (mDisplayArea.Height * 0.5f) - mDisplayArea.Y));
 				}
 			}
@@ -531,7 +528,7 @@ namespace BlueBrick.MapData
 				set
 				{
 					mOrientation = value;
-					updateSnapMargin();
+					UpdateSnapMargin();
 				}
 			}
 
@@ -548,21 +545,20 @@ namespace BlueBrick.MapData
 					// iterate through all the bricks to reach the correct brick
 					if (mBrickThatHoldsActiveConnection != null)
 					{
-						List<LayerItem> bricksInTheGroup = getAllLeafItems();
-						foreach (Layer.LayerItem item in bricksInTheGroup)
+						List<LayerItem> bricksInTheGroup = GetAllLeafItems();
+						foreach (LayerItem item in bricksInTheGroup)
 						{
-							LayerBrick.Brick brick = item as LayerBrick.Brick;
-							if ((brick != null) && (brick.ConnectionPoints != null)) // do not use brick.HasConnection cause this accessor check if the connection type is 0
-							{
-								if (brick == mBrickThatHoldsActiveConnection)
-								{
-									resultIndex += brick.ActiveConnectionPointIndex;
-									break;
-								}
-								else
-									resultIndex += brick.ConnectionPoints.Count;
-							}
-						}
+                            if ((item is LayerBrick.Brick brick) && (brick.ConnectionPoints != null)) // do not use brick.HasConnection cause this accessor check if the connection type is 0
+                            {
+                                if (brick == mBrickThatHoldsActiveConnection)
+                                {
+                                    resultIndex += brick.ActiveConnectionPointIndex;
+                                    break;
+                                }
+                                else
+                                    resultIndex += brick.ConnectionPoints.Count;
+                            }
+                        }
 					}
 					// return the result
 					return resultIndex;
@@ -573,27 +569,26 @@ namespace BlueBrick.MapData
 					int connexionIndex = value;
 					bool needToResetTheActiveConnectionBrick = true;
 					// iterate through all the connection of the first bricks to reach the correct brick
-					List<LayerItem> bricksInTheGroup = getAllLeafItems();
-					foreach (Layer.LayerItem item in bricksInTheGroup)
+					List<LayerItem> bricksInTheGroup = GetAllLeafItems();
+					foreach (LayerItem item in bricksInTheGroup)
 					{
-						LayerBrick.Brick brick = item as LayerBrick.Brick;
-						if ((brick != null) && (brick.ConnectionPoints != null)) // do not use brick.HasConnection cause this accessor check if the connection type is 0
-						{
-							int connectionCount = brick.ConnectionPoints.Count;
-							if (connexionIndex >= connectionCount)
-							{
-								connexionIndex -= connectionCount;
-							}
-							else
-							{
-								// set the active connexion point with the wanted one
-								brick.ActiveConnectionPointIndex = connexionIndex;
-								mBrickThatHoldsActiveConnection = brick;
-								needToResetTheActiveConnectionBrick = false;
-								break;
-							}
-						}
-					}
+                        if ((item is LayerBrick.Brick brick) && (brick.ConnectionPoints != null)) // do not use brick.HasConnection cause this accessor check if the connection type is 0
+                        {
+                            int connectionCount = brick.ConnectionPoints.Count;
+                            if (connexionIndex >= connectionCount)
+                            {
+                                connexionIndex -= connectionCount;
+                            }
+                            else
+                            {
+                                // set the active connexion point with the wanted one
+                                brick.ActiveConnectionPointIndex = connexionIndex;
+                                mBrickThatHoldsActiveConnection = brick;
+                                needToResetTheActiveConnectionBrick = false;
+                                break;
+                            }
+                        }
+                    }
 					// reset the pointer if we didn't find the correct brick
 					if (needToResetTheActiveConnectionBrick)
 						mBrickThatHoldsActiveConnection = null;
@@ -664,8 +659,8 @@ namespace BlueBrick.MapData
 				: base(model)
 			{
 				// we don't clone the list of items in that group
-				this.mCanUngroup = model.mCanUngroup;
-				this.mPartNumber = model.mPartNumber;
+				mCanUngroup = model.mCanUngroup;
+				mPartNumber = model.mPartNumber;
 				// we also don't copy the brick to that have the active connection
 			}
 
@@ -677,7 +672,7 @@ namespace BlueBrick.MapData
 			public Group(string groupName): this(groupName, new Matrix())
 			{
 				// set the active connection to set the brick that hold it
-				this.ActiveConnectionIndex = 0;
+				ActiveConnectionIndex = 0;
 			}
 
 			/// <summary>
@@ -692,7 +687,7 @@ namespace BlueBrick.MapData
 				// set the group name
 				mPartNumber = groupName;
 				// set the orientation of this group after the part number (useful to compute the snap marging)
-				this.Orientation = (float)(Math.Atan2(parentTransform.Elements[1], parentTransform.Elements[0]) * 180.0 / Math.PI);
+				Orientation = (float)(Math.Atan2(parentTransform.Elements[1], parentTransform.Elements[0]) * 180.0 / Math.PI);
 				// set the can ungroup flag
 				mCanUngroup = BrickLibrary.Instance.CanUngroup(groupName);
 				// create all the parts inside the group
@@ -704,9 +699,9 @@ namespace BlueBrick.MapData
 						Matrix worldTransform = subPart.mLocalTransformInStud.Clone();
 						worldTransform.Multiply(parentTransform, MatrixOrder.Append);
 
-						// intanciate a new item (can be a group, or a real brick)
-						LayerItem newItem = null;
-						if (subPart.mSubPartBrick.IsAGroup)
+                        // intanciate a new item (can be a group, or a real brick)
+                        LayerItem newItem;
+                        if (subPart.mSubPartBrick.IsAGroup)
 						{
 							// call this group constructor again
 							newItem = new Group(subPart.mSubPartNumber, worldTransform);
@@ -721,7 +716,7 @@ namespace BlueBrick.MapData
 						}
 
 						// add the item in this group
-						addItem(newItem);
+						AddItem(newItem);
 					}
 			}
 
@@ -744,13 +739,13 @@ namespace BlueBrick.MapData
 				// set the flag according to the group name
 				if (mPartNumber != string.Empty)
 					mCanUngroup = BrickLibrary.Instance.CanUngroup(mPartNumber);
-				readMyGroup(reader);
+				ReadMyGroup(reader);
 			}
 
 			public override void WriteXml(System.Xml.XmlWriter writer)
 			{
 				writer.WriteStartElement("Group");
-				writer.WriteAttributeString("id", this.GUID.ToString());
+				writer.WriteAttributeString("id", GUID.ToString());
 				// we don't need the display area for the group, so we don't call base.WriteXml
 				writer.WriteElementString("PartNumber", mPartNumber);
 				// Don't save canUngroup, this property is got from the library.
@@ -760,19 +755,19 @@ namespace BlueBrick.MapData
 				// The consequence is that is a group with a active connection is saved, when you reload
 				// the file and select the group via rectangle (no click on it), the group has lost is
 				// active connection. But if you select by clicking on it the active connection will be updated
-				writeMyGroup(writer);
+				WriteMyGroup(writer);
 				writer.WriteEndElement();
 			}
 			#endregion
 
 			#region Transformation on the group
-			public void translate(PointF translation)
+			public void Translate(PointF translation)
 			{
 				// change the position of the group
 				mDisplayArea.X += translation.X;
 				mDisplayArea.Y += translation.Y;
 				// add the same translation for all the items of the group
-				foreach (Layer.LayerItem item in mItems)
+				foreach (LayerItem item in mItems)
 				{
 					PointF newItemPosition = item.Position;
 					newItemPosition.X += translation.X;
@@ -786,7 +781,7 @@ namespace BlueBrick.MapData
 			/// <param name="doItRecursive">If this flag is true, it will also update the display area of the sub group.
 			/// Otherwise only use the display area of immediate children</param>
 			/// </summary>
-			public void computeDisplayArea(bool doItRecursive)
+			public void ComputeDisplayArea(bool doItRecursive)
 			{
 				// init the display area with zero, and we will increase it (or stay at zero if there's no item in the group)
 				mDisplayArea.X = mDisplayArea.Y = mDisplayArea.Width = mDisplayArea.Height = 0.0f;
@@ -794,18 +789,18 @@ namespace BlueBrick.MapData
 				if (mItems.Count > 0)
 				{
 					// then iterate on all the items
-					foreach (Layer.LayerItem item in mItems)
+					foreach (LayerItem item in mItems)
 					{
 						// check if we also need to update the sub group
 						if (doItRecursive && item.IsAGroup)
-							(item as Group).computeDisplayArea(doItRecursive);
+							(item as Group).ComputeDisplayArea(doItRecursive);
 						// and after increase the area with the area of this item
-						increaseDisplayAreaWithThisItem(item);
+						IncreaseDisplayAreaWithThisItem(item);
 					}
 				}
 			}
 
-			private void increaseDisplayAreaWithThisItem(Layer.LayerItem item)
+			private void IncreaseDisplayAreaWithThisItem(LayerItem item)
 			{
 				// check if the new item added increase the size of the display area
 				if (mDisplayArea.Width == 0f)
@@ -849,14 +844,14 @@ namespace BlueBrick.MapData
 			/// If the item already belongs to this group, then nothing happen.
 			/// </summary>
 			/// <param name="item">The item that you want to add to the group. Cannot be null.</param>
-			public void addItem(LayerItem item)
+			public void AddItem(LayerItem item)
 			{
 				// check if the item belong to another group
 				if (item.Group != null)
 				{
 					// check if the item doesn't belongs already to this group (in that case does nothing)
 					if (item.Group != this)
-						item.Group.removeItem(item);
+						item.Group.RemoveItem(item);
 					else
 						return; // does nothing if the item already belongs to this group
 				}
@@ -869,7 +864,7 @@ namespace BlueBrick.MapData
 				if (mItems.Count == 1)
 					mDisplayArea = item.DisplayArea;
 				else
-					increaseDisplayAreaWithThisItem(item);
+					IncreaseDisplayAreaWithThisItem(item);
 			}
 
 			/// <summary>
@@ -878,11 +873,11 @@ namespace BlueBrick.MapData
 			/// read the doc of that method for more details.
 			/// </summary>
 			/// <param name="itemList">the list of all the items that you want to add to this group.</param>
-			public void addItem(List<Layer.LayerItem> itemList)
+			public void AddItem(List<LayerItem> itemList)
 			{
 				// add all the items from the list into the group
-				foreach (Layer.LayerItem item in itemList)
-					addItem(item);				
+				foreach (LayerItem item in itemList)
+					AddItem(item);
 				// set the active connection index to 0 by default, this will set the brick that hold the connection
 				// this won't have any effect, if the group is grouping items that are not bricks
 				ActiveConnectionIndex = 0;
@@ -894,7 +889,7 @@ namespace BlueBrick.MapData
 			/// is null or equals to this group, then it is removed from this group.
 			/// </summary>
 			/// <param name="item">The item that you want to remove from this group. Cannot be null.</param>
-			public void removeItem(LayerItem item)
+			public void RemoveItem(LayerItem item)
 			{
 				// we need to check if the group is null, in case the item has been ungrouped, the Group property is null but you still want to remove it from the list
 				if ((item.Group == this) || (item.Group == null))
@@ -902,7 +897,7 @@ namespace BlueBrick.MapData
 					mItems.Remove(item);
 					item.Group = null;
 					// recompute the whole display area of the group
-					computeDisplayArea(false);
+					ComputeDisplayArea(false);
 				}
 			}
 
@@ -911,17 +906,17 @@ namespace BlueBrick.MapData
 			/// If a specified item belongs to another group, this item is skipped and nothing happen for it.
 			/// </summary>
 			/// <param name="itemList">The list of all the items that you want to remove from the group.</param>
-			public void removeItem(List<Layer.LayerItem> itemList)
+			public void RemoveItem(List<LayerItem> itemList)
 			{
 				// for optim reason call the compute display area one time after removing all the items
-				foreach (Layer.LayerItem item in itemList)
+				foreach (LayerItem item in itemList)
 					if ((item.Group == this) || (item.Group == null))
 					{
 						mItems.Remove(item);
 						item.Group = null;
 					}
 				// recompute the whole display area of the group
-				computeDisplayArea(false);
+				ComputeDisplayArea(false);
 			}
 
 			/// <summary>
@@ -930,7 +925,7 @@ namespace BlueBrick.MapData
 			/// item list of this group, so that you can call the regroup() method to reform the group.
 			/// </summary>
 			/// <param name="layer">The layer in which belong this group. Can be null.</param>
-			public void ungroup(Layer layer)
+			public void Ungroup(Layer layer)
 			{
 				// reset the group property of every item of this group
 				foreach (LayerItem item in mItems)
@@ -938,13 +933,12 @@ namespace BlueBrick.MapData
 
 				// notifify the budget count and part count, that a group disapeared if it's a named group
 				// and add all the items of this group if they have a valid name
-				if (this.IsANamedGroup)
+				if (IsANamedGroup)
 				{
-					// cast the layer into brick layer (it should not be null normally, cause only group of bricks are named)
-					LayerBrick brickLayer = layer as LayerBrick;
-					if (brickLayer != null)
-						MainForm.Instance.NotifyPartListForBrickRemoved(brickLayer, this, true);
-				}
+                    // cast the layer into brick layer (it should not be null normally, cause only group of bricks are named)
+                    if (layer is LayerBrick brickLayer)
+                        MainForm.Instance.NotifyPartListForBrickRemoved(brickLayer, this, true);
+                }
 			}
 
 			/// <summary>
@@ -952,7 +946,7 @@ namespace BlueBrick.MapData
 			/// so that all the items can think again that it belongs to this group.
 			/// </summary>
 			/// <param name="layer">The layer in which belong this group. Can be null.</param>
-			public void regroup(Layer layer)
+			public void Regroup(Layer layer)
 			{
 				// reset the group property with this group
 				foreach (LayerItem item in mItems)
@@ -960,13 +954,12 @@ namespace BlueBrick.MapData
 
 				// notifify the budget count and part count, that a group reappeared if it's a named group
 				// and remove all the items of this group if they have a valid name
-				if (this.IsANamedGroup)
+				if (IsANamedGroup)
 				{
-					// cast the layer into brick layer (it should not be null normally, cause only group of bricks are named)
-					LayerBrick brickLayer = layer as LayerBrick;
-					if (brickLayer != null)
-						MainForm.Instance.NotifyPartListForBrickAdded(brickLayer, this, true);
-				}
+                    // cast the layer into brick layer (it should not be null normally, cause only group of bricks are named)
+                    if (layer is LayerBrick brickLayer)
+                        MainForm.Instance.NotifyPartListForBrickAdded(brickLayer, this, true);
+                }
 			}
 
 			/// <summary>
@@ -974,10 +967,10 @@ namespace BlueBrick.MapData
 			/// the leaf items (which are not group) in all the branches below this group
 			/// </summary>
 			/// <returns>A flat list of all the items found in the group and sub-group</returns>
-			public List<LayerItem> getAllLeafItems()
+			public List<LayerItem> GetAllLeafItems()
 			{
 				List<LayerItem> resultList = new List<LayerItem>(mItems.Count);
-				getAllChildrenItemsRecursive(resultList, false);
+				GetAllChildrenItemsRecursive(resultList, false);
 				return resultList;
 			}
 
@@ -987,39 +980,43 @@ namespace BlueBrick.MapData
 			/// This group is also included in the list.
 			/// </summary>
 			/// <returns>A flat list of all the items found in the group and sub-group</returns>
-			public List<LayerItem> getAllItemsInTheTree()
+			public List<LayerItem> GetAllItemsInTheTree()
 			{
-				List<LayerItem> resultList = new List<LayerItem>(mItems.Count+1);
-				resultList.Add(this);
-				getAllChildrenItemsRecursive(resultList, true);
+                var resultList = new List<LayerItem>(mItems.Count + 1)
+                {
+                    this
+                };
+                GetAllChildrenItemsRecursive(resultList, true);
 				return resultList;
 			}
 
-			private void getAllChildrenItemsRecursive(List<LayerItem> resultList, bool addGroup)
+			private void GetAllChildrenItemsRecursive(List<LayerItem> resultList, bool addGroup)
 			{
 				foreach (LayerItem item in mItems)
+				{
 					if (item.IsAGroup)
 					{
 						// check if we need to add the group in the list
 						if (addGroup)
 							resultList.Add(item);
 						// then recursive calls
-						(item as Group).getAllChildrenItemsRecursive(resultList, addGroup);
+						(item as Group).GetAllChildrenItemsRecursive(resultList, addGroup);
 					}
 					else
 					{
 						resultList.Add(item);
 					}
+				}
 			}
 			#endregion
 
 			#region selection
-			public override void selectHierachycally(List<LayerItem> selectionList, bool addToSelection)
+			public override void SelectHierachycally(List<LayerItem> selectionList, bool addToSelection)
 			{
 				// call the same method on all the items of the group
 				// in order to select the wall tree
 				foreach (LayerItem item in mItems)
-					item.selectHierachycally(selectionList, addToSelection);
+					item.SelectHierachycally(selectionList, addToSelection);
 			}
 			#endregion
 		}
@@ -1041,7 +1038,7 @@ namespace BlueBrick.MapData
 
 		// common data to all layers
         protected SaveLoadManager.UniqueId mGUID = new SaveLoadManager.UniqueId();
-        protected string mName = BlueBrick.Properties.Resources.DefaultLayerName;
+        protected string mName = Properties.Resources.DefaultLayerName;
 		protected bool mVisible = true;
 		protected int mTransparency = 100; // percentage (in int because it is easier to modify with a slider)
 		protected bool mDisplayHulls = false;
@@ -1167,7 +1164,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		public virtual bool HasSomethingToSelect
 		{
-			get { return (this.NbItems > 0); }
+			get { return NbItems > 0; }
 		}
 
 		/// <summary>
@@ -1214,7 +1211,7 @@ namespace BlueBrick.MapData
 		/// this function reset the instance counter use to name automatically the new layer created.
 		/// This counter is typically reset when a new map is open or created.
 		/// </summary>
-		public static void resetNameInstanceCounter()
+		public static void ResetNameInstanceCounter()
 		{
 			nameInstanceCounter = 0;
 		}
@@ -1226,7 +1223,7 @@ namespace BlueBrick.MapData
 		/// <param name="item1">the first item to compare</param>
 		/// <param name="item2">the second item t compare</param>
 		/// <returns>distance between the two items in the layer list (index1 - index2)</returns>
-		public virtual int compareItemOrderOnLayer(Layer.LayerItem item1, Layer.LayerItem item2)
+		public virtual int CompareItemOrderOnLayer(LayerItem item1, LayerItem item2)
 		{
 			return 0;
 		}
@@ -1241,14 +1238,14 @@ namespace BlueBrick.MapData
 		/// <param name="item1">the first item to compare</param>
 		/// <param name="item2">the second item t compare</param>
 		/// <returns>distance between the two items in the layer list (index1 - index2)</returns>
-		protected int compareItemOrderOnLayer<T>(List<T> itemList, Layer.LayerItem item1, Layer.LayerItem item2) where T : Layer.LayerItem
-		{
+		protected int CompareItemOrderOnLayer<T>(List<T> itemList, LayerItem item1, LayerItem item2) where T : LayerItem
+        {
 			// get the max index of the first item
 			int index1 = 0;
 			if (item1.IsAGroup)
 			{
-				List<Layer.LayerItem> item1Children = (item1 as Layer.Group).getAllLeafItems();
-				foreach (Layer.LayerItem item in item1Children)
+				List<LayerItem> item1Children = (item1 as Group).GetAllLeafItems();
+				foreach (LayerItem item in item1Children)
 					index1 = Math.Max(index1, itemList.IndexOf(item as T));
 			}
 			else
@@ -1259,8 +1256,8 @@ namespace BlueBrick.MapData
 			int index2 = 0;
 			if (item2.IsAGroup)
 			{
-				List<Layer.LayerItem> item2Children = (item2 as Layer.Group).getAllLeafItems();
-				foreach (Layer.LayerItem item in item2Children)
+				List<LayerItem> item2Children = (item2 as Group).GetAllLeafItems();
+				foreach (LayerItem item in item2Children)
 					index2 = Math.Max(index2, itemList.IndexOf(item as T));
 			}
 			else
@@ -1268,7 +1265,7 @@ namespace BlueBrick.MapData
 				index2 = itemList.IndexOf(item2 as T);
 			}
 			// return the comparison
-			return (index1 - index2);
+			return index1 - index2;
 		}
 		#endregion
 
@@ -1301,27 +1298,27 @@ namespace BlueBrick.MapData
 			}
 		}
 
-		protected virtual T readItem<T>(System.Xml.XmlReader reader) where T : LayerItem
+		protected virtual T ReadItem<T>(System.Xml.XmlReader reader) where T : LayerItem
 		{
 			// by default return null for layers that don't have items
 			return null;
 		}
 
-		private void readItemListFromClipboard(System.Xml.XmlReader reader, ref List<Layer.LayerItem> itemsList)
+		private void ReadItemListFromClipboard(System.Xml.XmlReader reader, ref List<LayerItem> itemsList)
 		{
 			// first clear the hashtable that contains all the bricks
             SaveLoadManager.UniqueId.ClearHashtableForLinkRebuilding();
 			// skip the common properties of the layer
 			if (reader.ReadToDescendant("Items"))
-				this.readItemsListFromXml<Layer.LayerItem>(reader, ref itemsList, "Items", false);
+                ReadItemsListFromXml(reader, ref itemsList, "Items", false);
 			// update the links
-			foreach (Layer.LayerItem item in itemsList)
-				item.recreateLinksAfterLoading();
+			foreach (LayerItem item in itemsList)
+				item.RecreateLinksAfterLoading();
 			// then clear again the hashmap to free the memory
             SaveLoadManager.UniqueId.ClearHashtableForLinkRebuilding();
 		}
 
-		protected void readItemsListFromXml<T>(System.Xml.XmlReader reader, ref List<T> resultingList, string itemsListName, bool useProgressBar) where T : LayerItem
+		protected void ReadItemsListFromXml<T>(System.Xml.XmlReader reader, ref List<T> resultingList, string itemsListName, bool useProgressBar) where T : LayerItem
 		{
 			// check if the list is not empty and read the first child
 			if (!reader.IsEmptyElement)
@@ -1333,7 +1330,7 @@ namespace BlueBrick.MapData
 				while (itemFound)
 				{
 					// instanciate a new text cell, read and add the new text cell
-					LayerItem item = readItem<T>(reader);
+					LayerItem item = ReadItem<T>(reader);
 					resultingList.Add(item as T);
 
 					// check if the next element is a sibling and not the close element of the list
@@ -1353,10 +1350,10 @@ namespace BlueBrick.MapData
 			}
 
 			// call the post read function to read the groups
-			readGroupFromXml(reader);
+			ReadGroupFromXml(reader);
 		}
 
-        protected void readGroupFromXml(System.Xml.XmlReader reader)
+        protected void ReadGroupFromXml(System.Xml.XmlReader reader)
         {
 			if (Map.DataVersionOfTheFileLoaded > 4)
 			{
@@ -1390,7 +1387,7 @@ namespace BlueBrick.MapData
 		/// have been loaded, in order to recreate links between items of different layers (such as
 		/// for example the attachement of a ruler to a brick)
 		/// </summary>
-		public virtual void recreateLinksAfterLoading()
+		public virtual void RecreateLinksAfterLoading()
 		{
 		}
 
@@ -1398,14 +1395,14 @@ namespace BlueBrick.MapData
 		{
 		}
 
-		protected void writeHeaderAndCommonProperties(System.Xml.XmlWriter writer)
+		protected void WriteHeaderAndCommonProperties(System.Xml.XmlWriter writer)
 		{
 			// clear all the content of the hash table
 			LayerItem.sListForGroupSaving.Clear();
 			// layer with its type and id
 			writer.WriteStartElement("Layer");
-			writer.WriteAttributeString("type", this.XmlTypeName);
-			writer.WriteAttributeString("id", this.mGUID.ToString());
+			writer.WriteAttributeString("type", XmlTypeName);
+			writer.WriteAttributeString("id", mGUID.ToString());
 			// write the common properties
 			writer.WriteElementString("Name", mName);
 			writer.WriteElementString("Visible", mVisible.ToString().ToLower());
@@ -1414,26 +1411,26 @@ namespace BlueBrick.MapData
 			writer.WriteStartElement("HullProperties");
 				writer.WriteAttributeString("isVisible", mDisplayHulls.ToString().ToLower());
 				XmlReadWrite.writeColor(writer, "hullColor", mPenToDrawHull.Color);
-				writer.WriteElementString("hullThickness", ((int)(mPenToDrawHull.Width)).ToString());
+				writer.WriteElementString("hullThickness", ((int)mPenToDrawHull.Width).ToString());
 			writer.WriteEndElement();
 		}
 
-		protected void writeFooter(System.Xml.XmlWriter writer)
+		protected void WriteFooter(System.Xml.XmlWriter writer)
 		{
 			writer.WriteEndElement(); // end of Layer
 		}
 		
-		private void writeSelectionToClipboard(System.Xml.XmlWriter writer)
+		private void WriteSelectionToClipboard(System.Xml.XmlWriter writer)
 		{
 			// write the header
-			writeHeaderAndCommonProperties(writer);
+			WriteHeaderAndCommonProperties(writer);
 			// write all the bricks
-			writeItemsListToXml(writer, mSelectedObjects, "Items", false);
+			WriteItemsListToXml(writer, mSelectedObjects, "Items", false);
 			// write the footer
-			writeFooter(writer);
+			WriteFooter(writer);
 		}
 
-		protected void writeItemsListToXml<T>(System.Xml.XmlWriter writer, List<T> itemsToWrite, string itemsListName, bool useProgressBar) where T : LayerItem
+		protected void WriteItemsListToXml<T>(System.Xml.XmlWriter writer, List<T> itemsToWrite, string itemsListName, bool useProgressBar) where T : LayerItem
 		{
 			// and serialize the items list
 			writer.WriteStartElement(itemsListName);
@@ -1447,10 +1444,10 @@ namespace BlueBrick.MapData
 			writer.WriteEndElement(); // end of itemsListName
 
 			// call the post write to write the group list
-			writeGroupToXml(writer);
+			WriteGroupToXml(writer);
 		}
 
-        protected void writeGroupToXml(System.Xml.XmlWriter writer)
+        protected void WriteGroupToXml(System.Xml.XmlWriter writer)
         {
 			writer.WriteStartElement("Groups");
 			// write the groups: we don't use a foreach because we will grow the list during iteration
@@ -1478,7 +1475,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="itemList">a list of layer items among which we should search a top item</param>
 		/// <returns>The Group which is at the top of the hierarchical group, or an item, or null</returns>
-		public static LayerItem sGetTopItemFromList(List<LayerItem> itemList)
+		public static LayerItem SGetTopItemFromList(List<LayerItem> itemList)
 		{
 			if (itemList.Count == 1)
 			{
@@ -1486,11 +1483,11 @@ namespace BlueBrick.MapData
 			}
 			else if (itemList.Count > 1)
 			{
-				Layer.Group topGroup = null;
-				foreach (Layer.LayerItem item in itemList)
+                Group topGroup = null;
+				foreach (LayerItem item in itemList)
 				{
-					// get the group of the item
-					Layer.Group fatherGroup = item.Group;
+                    // get the group of the item
+                    Group fatherGroup = item.Group;
 					// if any item doesn't have any group, since there's several items selected,
 					// we know that they cannot be in the same group
 					if (fatherGroup == null)
@@ -1518,7 +1515,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="itemList">a list of layer items among which we should search the top items</param>
 		/// <returns>A list of items which are the top items of each tree, or null if the specified list is empty</returns>
-		public static List<LayerItem> sGetTopItemListFromList(List<LayerItem> itemList)
+		public static List<LayerItem> SGetTopItemListFromList(List<LayerItem> itemList)
 		{
 			if ((itemList == null) || (itemList.Count == 0))
 				return null;
@@ -1530,8 +1527,8 @@ namespace BlueBrick.MapData
 			// don't use a foreach cause we increase the list during the search to add all the group and the group of the group
 			for (int i = 0; i < itemAndGroupListToExplore.Count; ++i)
 			{
-				// if we found a group, add it to the exploration list (if not already in)
-				Layer.Group group = itemAndGroupListToExplore[i].Group;
+                // if we found a group, add it to the exploration list (if not already in)
+                Group group = itemAndGroupListToExplore[i].Group;
 				if ((group != null) && !itemAndGroupListToExplore.Contains(group))
 					itemAndGroupListToExplore.Add(group);
 			}
@@ -1548,7 +1545,7 @@ namespace BlueBrick.MapData
 		/// Compute the bounding rectangle that surround all the object in the
 		/// mSelectedObjects list.
 		/// </summary>
-		public void updateBoundingSelectionRectangle()
+		public void UpdateBoundingSelectionRectangle()
 		{
 			// compute the bounding rectangle if some object are selected
 			if (mSelectedObjects.Count > 0)
@@ -1580,7 +1577,7 @@ namespace BlueBrick.MapData
 		/// Compute the bounding rectangle that surround all the object in the
 		/// mSelectedObjects list.
 		/// </summary>
-		public void moveBoundingSelectionRectangle(PointF move)
+		public void MoveBoundingSelectionRectangle(PointF move)
 		{
 			mBoundingSelectionRectangle.X += move.X;
 			mBoundingSelectionRectangle.Y += move.Y;
@@ -1591,10 +1588,10 @@ namespace BlueBrick.MapData
 		/// This method also refresh the bouding rectangle.
 		/// </summary>
 		/// <param name="obj">The object to add</param>
-		public void addObjectInSelection(LayerItem obj)
+		public void AddObjectInSelection(LayerItem obj)
 		{
-			obj.select(mSelectedObjects, true);
-			updateAfterSelectionChange();
+			obj.Select(mSelectedObjects, true);
+			UpdateAfterSelectionChange();
 		}
 
 		/// <summary>
@@ -1602,11 +1599,11 @@ namespace BlueBrick.MapData
 		/// This method also refresh the bouding rectangle.
 		/// </summary>
 		/// <param name="obj">The list of object to add</param>
-		public void addObjectInSelection<T>(List<T> objList) where T : LayerItem
+		public void AddObjectInSelection<T>(List<T> objList) where T : LayerItem
 		{
 			foreach (LayerItem obj in objList)
-				obj.select(mSelectedObjects, true);
-			updateAfterSelectionChange();
+				obj.Select(mSelectedObjects, true);
+			UpdateAfterSelectionChange();
 		}
 
 		/// <summary>
@@ -1614,10 +1611,10 @@ namespace BlueBrick.MapData
 		/// This method also refresh the bouding rectangle.
 		/// </summary>
 		/// <param name="obj">The object to select</param>
-		public void selectOnlyThisObject(LayerItem obj)
+		public void SelectOnlyThisObject(LayerItem obj)
 		{
 			mSelectedObjects.Clear();
-			addObjectInSelection(obj);
+			AddObjectInSelection(obj);
 		}
 
 		/// <summary>
@@ -1625,10 +1622,10 @@ namespace BlueBrick.MapData
 		/// This method also refresh the bouding rectangle.
 		/// </summary>
 		/// <param name="obj">The list of object to select</param>
-		public void selectOnlyThisObject<T>(List<T> objList) where T : LayerItem
+		public void SelectOnlyThisObject<T>(List<T> objList) where T : LayerItem
 		{
 			mSelectedObjects.Clear();
-			addObjectInSelection(objList);
+			AddObjectInSelection(objList);
 		}
 
 		/// <summary>
@@ -1639,13 +1636,13 @@ namespace BlueBrick.MapData
 		/// This method is used as a temporary selection during the move of a flex move.
 		/// </summary>
 		/// <param name="obj">The list of object to unsafly select</param>
-		public void unsafeSetSelection<T>(List<T> objList) where T : LayerItem
+		public void UnsafeSetSelection<T>(List<T> objList) where T : LayerItem
 		{
 			// set the selection with the specified list
 			mSelectedObjects.Clear();
 			mSelectedObjects.AddRange(objList as List<LayerItem>);
 			// update the bouding selection rectangle
-			updateBoundingSelectionRectangle();
+			UpdateBoundingSelectionRectangle();
 		}
 
 		/// <summary>
@@ -1653,10 +1650,10 @@ namespace BlueBrick.MapData
 		/// This method also refresh the bouding rectangle.
 		/// </summary>
 		/// <param name="obj">The object to remove</param>
-		protected void removeObjectFromSelection(LayerItem obj)
+		protected void RemoveObjectFromSelection(LayerItem obj)
 		{
-			obj.select(mSelectedObjects, false);
-			updateAfterSelectionChange();
+			obj.Select(mSelectedObjects, false);
+			UpdateAfterSelectionChange();
 		}
 
 		/// <summary>
@@ -1664,32 +1661,32 @@ namespace BlueBrick.MapData
 		/// This method also refresh the bouding rectangle.
 		/// </summary>
 		/// <param name="objList">The list of objects to remove</param>
-		public void removeObjectFromSelection<T>(List<T> objList) where T : LayerItem
+		public void RemoveObjectFromSelection<T>(List<T> objList) where T : LayerItem
 		{
 			foreach (LayerItem obj in objList)
-				obj.select(mSelectedObjects, false);
-			updateAfterSelectionChange();
+				obj.Select(mSelectedObjects, false);
+			UpdateAfterSelectionChange();
 		}
 
 		/// <summary>
 		/// Clear the selected object list
 		/// </summary>
-		public void clearSelection()
+		public void ClearSelection()
 		{
 			mSelectedObjects.Clear();
-			updateAfterSelectionChange();
+			UpdateAfterSelectionChange();
 		}
 
 		/// <summary>
 		/// The necessary common update made after any change in the selection list
 		/// </summary>
-		private void updateAfterSelectionChange()
+		private void UpdateAfterSelectionChange()
 		{
 			// update the bouding selection rectangle
-			updateBoundingSelectionRectangle();
-			// clear a flag for continuous rotation in the rotation action (not very clean I know)
-			Actions.Bricks.RotateBrick.sLastCenterIsValid = false;
-			Actions.Texts.RotateText.sLastCenterIsValid = false;
+			UpdateBoundingSelectionRectangle();
+            // clear a flag for continuous rotation in the rotation action (not very clean I know)
+            Actions.Items.RotateItems.sLastCenterIsValid = false;
+            Actions.Items.RotateItems.sLastCenterIsValid = false;
 			// enable or disable the toolbar buttons related to the selection (if it is empty or not)
 			MainForm.Instance.enableToolbarButtonOnItemSelection(mSelectedObjects.Count > 0);
             // enable the grouping button on the main form
@@ -1701,7 +1698,7 @@ namespace BlueBrick.MapData
 		/// <summary>
 		/// Select all the items in this layer.
 		/// </summary>
-		public virtual void selectAll()
+		public virtual void SelectAll()
 		{
 		}
 		#endregion
@@ -1712,7 +1709,7 @@ namespace BlueBrick.MapData
 		/// By default the function does nothing if the items don't have any properties to edit.
 		/// </summary>
 		/// <param name="mouseCoordInStud">The mouse coord in stud where the mouse was when the user did a right click to edit the properties</param>
-		public virtual void editSelectedItemsProperties(PointF mouseCoordInStud)
+		public virtual void EditSelectedItemsProperties(PointF mouseCoordInStud)
 		{
 		}
 		#endregion
@@ -1721,20 +1718,20 @@ namespace BlueBrick.MapData
 		/// <summary>
 		/// This class is used to sort a list of layer item in the same order as in the list provided in the constructor
 		/// </summary>
-		public class LayerItemComparer<T> : System.Collections.Generic.IComparer<LayerItem> where T : LayerItem
+		public class LayerItemComparer<T> : IComparer<LayerItem> where T : LayerItem
 		{
-			private List<T> mListOrderToCopy = null;
+			private readonly List<T> mListOrderToCopy = null;
 
 			public LayerItemComparer(List<T> list)
 			{
 				mListOrderToCopy = list;
 			}
 
-			public int Compare(Layer.LayerItem item1, Layer.LayerItem item2)
+			public int Compare(LayerItem item1, LayerItem item2)
 			{
 				int order1 = mListOrderToCopy.IndexOf(item1 as T);
 				int order2 = mListOrderToCopy.IndexOf(item2 as T);
-				return (order2 - order1);
+				return order2 - order1;
 			}
 		};
 
@@ -1753,7 +1750,7 @@ namespace BlueBrick.MapData
 		/// so that later it can be paste in another layer
 		/// This method should be called on a CTRL+C
 		/// </summary>
-		public virtual void copyCurrentSelectionToClipboard()
+		public virtual void CopyCurrentSelectionToClipboard()
 		{
 		}
 
@@ -1763,7 +1760,7 @@ namespace BlueBrick.MapData
 		/// This method should be called on a CTRL+C
 		/// <param name="allObjList">the list of all the items in the layer, in order to copy the selected items in the same order</param>
 		/// </summary>
-		protected void copyCurrentSelectionToClipboard<T>(List<T> allObjList) where T : LayerItem
+		protected void CopyCurrentSelectionToClipboard<T>(List<T> allObjList) where T : LayerItem
 		{
 			// do nothing if the selection is empty
 			if (SelectedObjects.Count > 0)
@@ -1775,22 +1772,24 @@ namespace BlueBrick.MapData
 
 				// we need to serialize the list of items in XML, for that create a xml writer
 				System.IO.StringWriter stringWriter = new System.IO.StringWriter(System.Globalization.CultureInfo.InvariantCulture);
-				System.Xml.XmlWriterSettings xmlSettings = new System.Xml.XmlWriterSettings();
-				xmlSettings.CheckCharacters = false;
-				xmlSettings.CloseOutput = true;
-				xmlSettings.ConformanceLevel = System.Xml.ConformanceLevel.Fragment;
-				xmlSettings.Encoding = Encoding.UTF8;
-				xmlSettings.Indent = true;
-				xmlSettings.IndentChars = "\t";
-				xmlSettings.OmitXmlDeclaration = true;
-				xmlSettings.NewLineOnAttributes = false;
-				System.Xml.XmlWriter xmlWriter = System.Xml.XmlWriter.Create(stringWriter, xmlSettings);
+                System.Xml.XmlWriterSettings xmlSettings = new System.Xml.XmlWriterSettings
+                {
+                    CheckCharacters = false,
+                    CloseOutput = true,
+                    ConformanceLevel = System.Xml.ConformanceLevel.Fragment,
+                    Encoding = Encoding.UTF8,
+                    Indent = true,
+                    IndentChars = "\t",
+                    OmitXmlDeclaration = true,
+                    NewLineOnAttributes = false
+                };
+                System.Xml.XmlWriter xmlWriter = System.Xml.XmlWriter.Create(stringWriter, xmlSettings);
 
 				// write the version number
 				Map.Instance.SaveVersionNumber(xmlWriter);
 
 				// then call the serialization method on the list of object
-				this.writeSelectionToClipboard(xmlWriter);
+				WriteSelectionToClipboard(xmlWriter);
 				xmlWriter.Flush();
 
 				// finally copy the serialized string into the clipboard
@@ -1813,11 +1812,10 @@ namespace BlueBrick.MapData
 		/// <param name="addPasteActionInHistory">specify if the paste action should be added in the Action Manager History</param>
 		/// <returns>true if the type of item pasted was the same as the type of the layer</returns>
 		/// </summary>
-		public bool pasteClipboardInLayer(AddOffsetAfterPaste offsetRule, ref AddActionInHistory addPasteActionInHistory)
+		public bool PasteClipboardInLayer(AddOffsetAfterPaste offsetRule, ref AddActionInHistory addPasteActionInHistory)
 		{
-			string itemTypeName = null;
-			return pasteClipboardInLayer(offsetRule, out itemTypeName, ref addPasteActionInHistory);
-		}
+            return PasteClipboardInLayer(offsetRule, out _, ref addPasteActionInHistory);
+        }
 
 		/// <summary>
 		/// Paste (duplicate) the list of bricks that was previously copied with a call to copyCurrentSelectionToClipboard()
@@ -1828,17 +1826,19 @@ namespace BlueBrick.MapData
 		/// <param name="addPasteActionInHistory">specify if the paste action should be added in the Action Manager History</param>
 		/// <returns>true if the type of item pasted was the same as the type of the layer</returns>
 		/// </summary>
-		public bool pasteClipboardInLayer(AddOffsetAfterPaste offsetRule, out string itemTypeName, ref AddActionInHistory addPasteActionInHistory)
+		public bool PasteClipboardInLayer(AddOffsetAfterPaste offsetRule, out string itemTypeName, ref AddActionInHistory addPasteActionInHistory)
 		{
 			// that create a xml reader to read the xml copied in the clipboard
 			System.IO.StringReader stringReader = new System.IO.StringReader(Clipboard.GetText());
-			System.Xml.XmlReaderSettings xmlSettings = new System.Xml.XmlReaderSettings();
-			xmlSettings.CheckCharacters = false;
-			xmlSettings.CloseInput = true;
-			xmlSettings.ConformanceLevel = System.Xml.ConformanceLevel.Fragment;
-			xmlSettings.IgnoreComments = true;
-			xmlSettings.IgnoreWhitespace = true;
-			System.Xml.XmlReader xmlReader = System.Xml.XmlReader.Create(stringReader, xmlSettings);
+            System.Xml.XmlReaderSettings xmlSettings = new System.Xml.XmlReaderSettings
+            {
+                CheckCharacters = false,
+                CloseInput = true,
+                ConformanceLevel = System.Xml.ConformanceLevel.Fragment,
+                IgnoreComments = true,
+                IgnoreWhitespace = true
+            };
+            System.Xml.XmlReader xmlReader = System.Xml.XmlReader.Create(stringReader, xmlSettings);
 
 			// try to read the version number if we start with a version tag (otherwise ignore if it is plain text)
 			Map.Instance.ReadVersionNumber(xmlReader);
@@ -1860,41 +1860,41 @@ namespace BlueBrick.MapData
 
 			// check if we need to add an offset
 			int copyStyle = Properties.Settings.Default.OffsetAfterCopyStyle;
-			bool addOffset = (offsetRule == AddOffsetAfterPaste.YES);
+			bool addOffset = offsetRule == AddOffsetAfterPaste.YES;
 			if (offsetRule == AddOffsetAfterPaste.USE_SETTINGS_RULE)
-				addOffset = (copyStyle == 2) || ((copyStyle == 1) && (layerId.Equals(this.mGUID.ToString())));
+				addOffset = (copyStyle == 2) || ((copyStyle == 1) && layerId.Equals(mGUID.ToString()));
 
 			// check if the type of layer match the type of copied items and this must be done before reading the items
 			// basically we check that the read item type name match this layer type, but for the text layer, we also accept
 			// items without type (bare text copied from outside BlueBrick)
-			bool typeMatch = (itemTypeName.Equals(this.XmlTypeName) || ((this is LayerText) && (itemTypeName == string.Empty)));
+			bool typeMatch = itemTypeName.Equals(XmlTypeName) || ((this is LayerText) && (itemTypeName == string.Empty));
 
 			// now if the items to duplicate and the layer match, we can read the item and create the duplicate action
 			if (typeMatch)
 			{
 				// read the items
-				List<Layer.LayerItem> itemsToDuplicates = new List<Layer.LayerItem>();
-				this.readItemListFromClipboard(xmlReader, ref itemsToDuplicates);
+				List<LayerItem> itemsToDuplicates = new List<LayerItem>();
+				ReadItemListFromClipboard(xmlReader, ref itemsToDuplicates);
 
 				// create the duplication action
 				mLastDuplicateAction = null;
 				if (this is LayerText)
 				{
-					if (itemTypeName.Equals(this.XmlTypeName))
+					if (itemTypeName.Equals(XmlTypeName))
 					{
-						mLastDuplicateAction = new Actions.Texts.DuplicateText((this as LayerText), itemsToDuplicates, addOffset);
+						mLastDuplicateAction = new Actions.Texts.DuplicateText(this as LayerText, itemsToDuplicates, addOffset);
 					}
 					else
 					{
 						// this seems to be a bold text (not saved in xml) that may be copied in the clipboard from another program
 						itemsToDuplicates.Clear();
 						itemsToDuplicates.Add(new LayerText.TextCell(Clipboard.GetText(), Properties.Settings.Default.DefaultTextFont, Properties.Settings.Default.DefaultTextColor, StringAlignment.Near));
-						mLastDuplicateAction = new Actions.Texts.DuplicateText((this as LayerText), itemsToDuplicates, addOffset);
+						mLastDuplicateAction = new Actions.Texts.DuplicateText(this as LayerText, itemsToDuplicates, addOffset);
 					}
 				}
 				else if (this is LayerBrick)
 				{
-					mLastDuplicateAction = new Actions.Bricks.DuplicateBrick((this as LayerBrick), itemsToDuplicates, addOffset);
+					mLastDuplicateAction = new Actions.Bricks.DuplicateBrick(this as LayerBrick, itemsToDuplicates, addOffset);
 
 					// for duplicating bricks, we may display a warning message if the list was trimmed
 					if ((mLastDuplicateAction as Actions.Bricks.DuplicateBrick).WereItemsTrimmed &&
@@ -1905,7 +1905,7 @@ namespace BlueBrick.MapData
 						bool dontDisplayMessageAgain = false;
 
 						// display the warning message
-						DialogResult result = ForgetableMessageBox.Show(BlueBrick.MainForm.Instance, Properties.Resources.ErrorMsgSomeBrickWereNotCopiedDueToBudgetLimitation,
+						DialogResult result = ForgetableMessageBox.Show(MainForm.Instance, Properties.Resources.ErrorMsgSomeBrickWereNotCopiedDueToBudgetLimitation,
 										Properties.Resources.ErrorMsgTitleWarning, MessageBoxButtons.YesNo,
 										MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, ref dontDisplayMessageAgain);
 
@@ -1927,7 +1927,7 @@ namespace BlueBrick.MapData
 					}
 
 					// with or without warning message, check if the resulting duplication is degenerated (empty due to budget limitation)
-					if ((mLastDuplicateAction != null) && (mLastDuplicateAction.IsDegenerated))
+					if ((mLastDuplicateAction != null) && mLastDuplicateAction.IsDegenerated)
 					{
 						// if the resulting action is empty just cancel it
 						mLastDuplicateAction = null;
@@ -1936,7 +1936,7 @@ namespace BlueBrick.MapData
 				}
 				else if (this is LayerRuler)
 				{
-					mLastDuplicateAction = new Actions.Rulers.DuplicateRuler((this as LayerRuler), itemsToDuplicates, addOffset);
+					mLastDuplicateAction = new Actions.Rulers.DuplicateRuler(this as LayerRuler, itemsToDuplicates, addOffset);
 				}
 
 				// do the paste action
@@ -1976,7 +1976,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="listToFilter">the list to filter</param>
 		/// <returns>a filtered list as explained in the description</returns>
-		public static List<LayerItem> sFilterListToGetOnlyBricksInLibrary<T>(List<T> listToFilter) where T : LayerItem
+		public static List<LayerItem> SFilterListToGetOnlyBricksInLibrary<T>(List<T> listToFilter) where T : LayerItem
 		{
 			// clone the list (but do not clone the bricks inside) because we want to iterate and decrease the list
 			// as we itare it. Also create a result list, that main contain bricks and named group
@@ -1993,7 +1993,7 @@ namespace BlueBrick.MapData
 				// then remove all the bricks belonging to that named brick
 				if (namedItem.IsAGroup)
 				{
-					List<LayerItem> itemToRemove = (namedItem as Group).getAllItemsInTheTree();
+					List<LayerItem> itemToRemove = (namedItem as Group).GetAllItemsInTheTree();
 					foreach (LayerItem item in itemToRemove)
 						workingList.Remove(item as T);
 				}
@@ -2016,7 +2016,7 @@ namespace BlueBrick.MapData
 		/// <param name="areaInStud">The current displayed area in stud coordinate</param>
 		/// <param name="scalePixelPerStud">The current scale of the view</param>
 		/// <returns>The same point but expressed in pixel coordinate in the current view</returns>
-		public static PointF sConvertPointInStudToPixel(PointF pointInStud, RectangleF areaInStud, double scalePixelPerStud)
+		public static PointF SConvertPointInStudToPixel(PointF pointInStud, RectangleF areaInStud, double scalePixelPerStud)
 		{
 			return new PointF((float)((pointInStud.X - areaInStud.Left) * scalePixelPerStud),
 								(float)((pointInStud.Y - areaInStud.Top) * scalePixelPerStud));
@@ -2030,13 +2030,13 @@ namespace BlueBrick.MapData
 		/// <param name="areaInStud">The current displayed area in stud coordinate</param>
 		/// <param name="scalePixelPerStud">The current scale of the view</param>
 		/// <returns>The same polygon but expressed in pixel coordinate in the current view</returns>
-		public static PointF[] sConvertPolygonInStudToPixel(PointF[] polygonInStud, RectangleF areaInStud, double scalePixelPerStud)
+		public static PointF[] SConvertPolygonInStudToPixel(PointF[] polygonInStud, RectangleF areaInStud, double scalePixelPerStud)
 		{
 			// create an array of the same size
 			PointF[] polygonInPixel = new PointF[polygonInStud.Length];
 			// call the point conversion method on every point
 			for (int i = 0; i < polygonInStud.Length; ++i)
-				polygonInPixel[i] = sConvertPointInStudToPixel(polygonInStud[i], areaInStud, scalePixelPerStud);
+				polygonInPixel[i] = SConvertPointInStudToPixel(polygonInStud[i], areaInStud, scalePixelPerStud);
 			// return the result
 			return polygonInPixel;
 		}
@@ -2049,9 +2049,9 @@ namespace BlueBrick.MapData
 		/// <param name="areaInStud">The current displayed area in stud coordinate</param>
 		/// <param name="scalePixelPerStud">The current scale of the view</param>
 		/// <returns>The same rectangle but expressed in pixel coordinate in the current view</returns>
-		public static RectangleF sConvertRectangleInStudToPixel(RectangleF rectangleInStud, RectangleF areaInStud, double scalePixelPerStud)
+		public static RectangleF SConvertRectangleInStudToPixel(RectangleF rectangleInStud, RectangleF areaInStud, double scalePixelPerStud)
 		{
-			return new RectangleF(sConvertPointInStudToPixel(rectangleInStud.Location, areaInStud, scalePixelPerStud),
+			return new RectangleF(SConvertPointInStudToPixel(rectangleInStud.Location, areaInStud, scalePixelPerStud),
 								new SizeF((float)(rectangleInStud.Width * scalePixelPerStud), (float)(rectangleInStud.Height * scalePixelPerStud)));
 		}
 
@@ -2061,7 +2061,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="pointInStud">The point to test</param>
 		/// <returns>true is the point is inside</returns>
-		protected bool isPointInsideSelectionRectangle(PointF pointInStud)
+		protected bool IsPointInsideSelectionRectangle(PointF pointInStud)
 		{
 			if (mSelectedObjects.Count > 0)
 			{
@@ -2080,7 +2080,7 @@ namespace BlueBrick.MapData
 		/// <param name="pointInStud">The point in stud coord</param>
 		/// <param name="isSnappingCentered">if true the snapping is centered (meaning it can snap to the left or right, or to the top or down), if false, the snapping will be only to the left and top.</param>
 		/// <returns>the nearest point on the grid</returns>
-		public static PointF snapToGrid(PointF pointInStud, bool isSnappingCentered)
+		public static PointF SnapToGrid(PointF pointInStud, bool isSnappingCentered)
 		{
 			if (mSnapGridEnabled)
 			{
@@ -2110,7 +2110,7 @@ namespace BlueBrick.MapData
 		/// <param name="itemList">the list of layer item in which searching</param>
 		/// <param name="mouseCoordInStud">the coordinate of the mouse cursor (in stud), where to look for</param>
 		/// <returns>the layer item that is under the mouse coordinate or null if there is none.</returns>
-		protected LayerItem getLayerItemUnderMouse<T>(List<T> itemList, PointF mouseCoordInStud) where T : LayerItem
+		protected LayerItem GetLayerItemUnderMouse<T>(List<T> itemList, PointF mouseCoordInStud) where T : LayerItem
 		{
 			for (int i = itemList.Count - 1; i >= 0; --i)
 			{
@@ -2128,7 +2128,7 @@ namespace BlueBrick.MapData
 		/// get the total area in stud covered by all the items in the specified list of items
 		/// </summary>
 		/// <returns></returns>
-		protected RectangleF getTotalAreaInStud<T>(List<T> itemList) where T : LayerItem
+		protected RectangleF GetTotalAreaInStud<T>(List<T> itemList) where T : LayerItem
 		{
 			PointF topLeft = new PointF(float.MaxValue, float.MaxValue);
 			PointF bottomRight = new PointF(float.MinValue, float.MinValue);
@@ -2151,7 +2151,7 @@ namespace BlueBrick.MapData
 		/// get the total area in stud covered by all the layer items in this layer
 		/// </summary>
 		/// <returns></returns>
-		public abstract RectangleF getTotalAreaInStud();
+		public abstract RectangleF GetTotalAreaInStud();
 
 		/// <summary>
 		/// Draw the layer.
@@ -2160,12 +2160,12 @@ namespace BlueBrick.MapData
 		/// <param name="areaInStud">The region in which we should draw</param>
 		/// <param name="scalePixelPerStud">The scale to use to draw</param>
 		/// <param name="drawSelection">If true draw the selection rectangle and also the selection overlay (this can be set to false when exporting the map to an image)</param>
-		public virtual void draw(Graphics g, RectangleF areaInStud, double scalePixelPerStud, bool drawSelection)
+		public virtual void Draw(Graphics g, RectangleF areaInStud, double scalePixelPerStud, bool drawSelection)
 		{
 			// draw the surrounding selection rectangle
             if (drawSelection && (mSelectedObjects.Count > 0))
 			{
-				PointF upperLeftCorner = sConvertPointInStudToPixel(mBoundingSelectionRectangle.Location, areaInStud, scalePixelPerStud);
+				PointF upperLeftCorner = SConvertPointInStudToPixel(mBoundingSelectionRectangle.Location, areaInStud, scalePixelPerStud);
 				float width = (float)(mBoundingSelectionRectangle.Width * scalePixelPerStud);
 				float height = (float)(mBoundingSelectionRectangle.Height * scalePixelPerStud);
 				g.DrawRectangle(mBoundingSelectionPen, upperLeftCorner.X, upperLeftCorner.Y, width, height);
@@ -2176,21 +2176,21 @@ namespace BlueBrick.MapData
 		/// Return the cursor that should be display when the mouse is above the map without mouse click
 		/// </summary>
 		/// <param name="mouseCoordInStud"></param>
-		public abstract Cursor getDefaultCursorWithoutMouseClick(PointF mouseCoordInStud);
+		public abstract Cursor GetDefaultCursorWithoutMouseClick(PointF mouseCoordInStud);
 
 		/// <summary>
 		/// This function is called to know if this layer is interested by the specified mouse click
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the mouse click</param>
 		/// <returns>true if this layer wants to handle it</returns>
-		public abstract bool handleMouseDown(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor);
+		public abstract bool HandleMouseDown(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor);
 
 		/// <summary>
 		/// This function is called to know if this layer is interested by the specified mouse click
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the mouse click</param>
 		/// <returns>true if this layer wants to handle it</returns>
-		public virtual bool handleMouseMoveWithoutClick(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
+		public virtual bool HandleMouseMoveWithoutClick(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
 		{
 			return false;
 		}
@@ -2201,28 +2201,28 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the click</param>
 		/// <returns>true if the view should be refreshed</returns>
-		public abstract bool mouseDown(MouseEventArgs e, PointF mouseCoordInStud);
+		public abstract bool MouseDown(MouseEventArgs e, PointF mouseCoordInStud);
 
 		/// <summary>
 		/// This method is called when the mouse move.
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the mouse move</param>
 		/// <returns>true if the view should be refreshed</returns>
-		public abstract bool mouseMove(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor);
+		public abstract bool MouseMove(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor);
 
 		/// <summary>
 		/// This method is called when the mouse button is released.
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the click</param>
 		/// <returns>true if the view should be refreshed</returns>
-		public abstract bool mouseUp(MouseEventArgs e, PointF mouseCoordInStud);
+		public abstract bool MouseUp(MouseEventArgs e, PointF mouseCoordInStud);
 
 		/// <summary>
 		/// This method is called when the zoom scale changed
 		/// </summary>
 		/// <param name="oldScaleInPixelPerStud">The previous scale</param>
 		/// <param name="newScaleInPixelPerStud">The new scale</param>
-		public virtual void zoomScaleChangeNotification(double oldScaleInPixelPerStud, double newScaleInPixelPerStud)
+		public virtual void ZoomScaleChangeNotification(double oldScaleInPixelPerStud, double newScaleInPixelPerStud)
 		{
 		}
 
@@ -2230,7 +2230,7 @@ namespace BlueBrick.MapData
 		/// Select all the item inside the rectangle in the current selected layer
 		/// </summary>
 		/// <param name="selectionRectangeInStud">the rectangle in which select the items</param>
-		public abstract void selectInRectangle(RectangleF selectionRectangeInStud);
+		public abstract void SelectInRectangle(RectangleF selectionRectangeInStud);
 
 		/// <summary>
 		/// Generic implementation to select all the item inside the rectangle from the specified list
@@ -2238,7 +2238,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="selectionRectangeInStud">the rectangle in which select the items</param>
 		/// <param name="itemList">the list of layer item in which searching the selection</param>
-		protected void selectInRectangle<T>(RectangleF selectionRectangeInStud, List<T> itemList) where T : LayerItem
+		protected void SelectInRectangle<T>(RectangleF selectionRectangeInStud, List<T> itemList) where T : LayerItem
 		{
 			// fill it with all the items in the rectangle
 			List<LayerItem> objListInRectangle = new List<LayerItem>(itemList.Count);
@@ -2248,12 +2248,12 @@ namespace BlueBrick.MapData
 					objListInRectangle.Add(item);
 			}
 			// check if it is a brand new selection or a add/remove selection
-			if (Control.ModifierKeys != BlueBrick.Properties.Settings.Default.MouseMultipleSelectionKey)
+			if (Control.ModifierKeys != Properties.Settings.Default.MouseMultipleSelectionKey)
 			{
 				// the control key is not pressed, it is a brand new selection
 				// clear the selection list and add all the object in the rectangle
 				mSelectedObjects.Clear();
-				addObjectInSelection(objListInRectangle);
+				AddObjectInSelection(objListInRectangle);
 			}
 			else
 			{
@@ -2263,12 +2263,12 @@ namespace BlueBrick.MapData
 				foreach (LayerItem item in objListInRectangle)
 					if (!mSelectedObjects.Contains(item))
 					{
-						addObjectInSelection(item);
+						AddObjectInSelection(item);
 						objectToAddFound = true;
 					}
 				// check if it is a remove type
 				if (!objectToAddFound)
-					removeObjectFromSelection(objListInRectangle);
+					RemoveObjectFromSelection(objListInRectangle);
 			}
 		}
 		#endregion

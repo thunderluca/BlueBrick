@@ -28,7 +28,7 @@ namespace BlueBrick.Actions.Items
 
 		public bool IsDegenerated
 		{
-			get { return (mItems.Count == 0); }
+			get { return mItems.Count == 0; }
 		}
 
 		public DuplicateItems(List<Layer.LayerItem> itemsToDuplicate, bool needToAddOffset, bool addGroupsInItemList)
@@ -76,15 +76,14 @@ namespace BlueBrick.Actions.Items
 			{
 				// get the current item
 				Layer.LayerItem originalItem = fullOriginalItemList[i];
-				Layer.LayerItem duplicatedItem = null;
+                Layer.LayerItem duplicatedItem;
 
-				// check if the item is a group or a brick
-				if (originalItem.IsAGroup)
+                // check if the item is a group or a brick
+                if (originalItem.IsAGroup)
 				{
-					// if the item is a group that means the list already grown, and that means we also have it in the dictionnary
-					Layer.Group associatedGroup = null;
-					groupsToCreate.TryGetValue(originalItem as Layer.Group, out associatedGroup);
-					duplicatedItem = associatedGroup;
+                    // if the item is a group that means the list already grown, and that means we also have it in the dictionnary
+                    groupsToCreate.TryGetValue(originalItem as Layer.Group, out Layer.Group associatedGroup);
+                    duplicatedItem = associatedGroup;
 					// check if we also need to add the group
 					if (addGroupsInItemList)
 						result.Add(duplicatedItem);
@@ -101,20 +100,19 @@ namespace BlueBrick.Actions.Items
 				// check if the item to clone belongs to a group then also duplicate the group
 				if (originalItem.Group != null)
 				{
-					// get the duplicated group if already created otherwise create it and add it in the dictionary
-					Layer.Group duplicatedGroup = null;
-					groupsToCreate.TryGetValue(originalItem.Group, out duplicatedGroup);
-					if (duplicatedGroup == null)
+                    // get the duplicated group if already created otherwise create it and add it in the dictionary
+                    groupsToCreate.TryGetValue(originalItem.Group, out Layer.Group duplicatedGroup);
+                    if (duplicatedGroup == null)
 					{
 						duplicatedGroup = new Layer.Group(originalItem.Group);
 						groupsToCreate.Add(originalItem.Group, duplicatedGroup);
 						fullOriginalItemList.Add(originalItem.Group);
 					}
 					// assign the group to the brick
-					duplicatedGroup.addItem(duplicatedItem);
+					duplicatedGroup.AddItem(duplicatedItem);
 					// check if we need to also assign the brick that hold the connection point
 					if (originalItem.Group.BrickThatHoldsActiveConnection == originalItem)
-						duplicatedGroup.BrickThatHoldsActiveConnection = (duplicatedItem as LayerBrick.Brick);
+						duplicatedGroup.BrickThatHoldsActiveConnection = duplicatedItem as LayerBrick.Brick;
 				}
 			}
 

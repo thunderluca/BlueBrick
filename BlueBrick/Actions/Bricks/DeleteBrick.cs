@@ -21,24 +21,24 @@ namespace BlueBrick.Actions.Bricks
 {
 	class DeleteBrick : Action
 	{
-		private LayerBrick mBrickLayer = null;
-		private List<Layer.LayerItem> mBricks = null;
-		private List<Layer.LayerItem> mBricksForNotification = null;
-		private List<int> mBrickIndex = null; // this list of index is for the redo, to add each text at the same place
-		private string mPartNumber = string.Empty; //if the list contains only one brick or one group, this is the name of this specific brick or group
+		private readonly LayerBrick mBrickLayer = null;
+		private readonly List<Layer.LayerItem> mBricks = null;
+		private readonly List<Layer.LayerItem> mBricksForNotification = null;
+		private readonly List<int> mBrickIndex = null; // this list of index is for the redo, to add each text at the same place
+		private readonly string mPartNumber = string.Empty; //if the list contains only one brick or one group, this is the name of this specific brick or group
 
 		public DeleteBrick(LayerBrick layer, List<Layer.LayerItem> bricksToDelete)
 		{
 			mBrickLayer = layer;
 			mBrickIndex = new List<int>(bricksToDelete.Count);
-			mBricksForNotification = Layer.sFilterListToGetOnlyBricksInLibrary(bricksToDelete);
+			mBricksForNotification = Layer.SFilterListToGetOnlyBricksInLibrary(bricksToDelete);
 			// copy the list, because the pointer may change (specially if it is the selection)
 			mBricks = new List<Layer.LayerItem>(bricksToDelete.Count);
 			foreach (Layer.LayerItem obj in bricksToDelete)
 				mBricks.Add(obj);
 
 			// try to get a part number (which can be the name of a group)
-			Layer.LayerItem topItem = Layer.sGetTopItemFromList(mBricks);
+			Layer.LayerItem topItem = Layer.SGetTopItemFromList(mBricks);
 			if (topItem != null)
 			{
 				if (topItem.IsAGroup)
@@ -53,13 +53,13 @@ namespace BlueBrick.Actions.Bricks
 			// if the part number is valid, use the specific message
 			if (mPartNumber != string.Empty)
 			{
-				string actionName = BlueBrick.Properties.Resources.ActionDeleteBrick;
+				string actionName = Properties.Resources.ActionDeleteBrick;
 				actionName = actionName.Replace("&", mPartNumber);
 				return actionName;
 			}
 			else
 			{
-				return BlueBrick.Properties.Resources.ActionDeleteSeveralBricks;
+				return Properties.Resources.ActionDeleteSeveralBricks;
 			}
 		}
 
@@ -96,8 +96,8 @@ namespace BlueBrick.Actions.Bricks
 			// check if we have to select a brick
 			if (nextBrickToSelect != null)
 			{
-				mBrickLayer.clearSelection();
-				mBrickLayer.addObjectInSelection(nextBrickToSelect);
+				mBrickLayer.ClearSelection();
+				mBrickLayer.AddObjectInSelection(nextBrickToSelect);
 				// set also the active connection point
 				if (nextActiveConnectionPointIndex >= 0)
 					nextBrickToSelect.ActiveConnectionPointIndex = nextActiveConnectionPointIndex;
@@ -121,7 +121,7 @@ namespace BlueBrick.Actions.Bricks
 				mBrickLayer.updateFullBrickConnectivityForOneBrick(mBricks[i] as LayerBrick.Brick);
 			}
 			// finally reselect all the undeleted brick
-			mBrickLayer.selectOnlyThisObject(mBricks);
+			mBrickLayer.SelectOnlyThisObject(mBricks);
 
 			// notify the part list view (after actually adding the brick because the total map size need to be recomputed)
 			foreach (Layer.LayerItem item in mBricksForNotification)

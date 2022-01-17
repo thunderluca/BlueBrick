@@ -22,12 +22,12 @@ namespace BlueBrick.Actions.Layers
 {
 	class ChangeLayerOption : Action
 	{
-		private Layer mLayer = null;
-		private Layer mOldLayerData = null;
-		private Layer mNewLayerData = null;
-		private bool mLayerNameChanged = false;
-		private bool mLayerVisibilityChanged = false;
-		private Dictionary<int, Dictionary<int, SolidBrush>> mOldColorMap = null;
+		private readonly Layer mLayer = null;
+		private readonly Layer mOldLayerData = null;
+		private readonly Layer mNewLayerData = null;
+		private readonly bool mLayerNameChanged = false;
+		private readonly bool mLayerVisibilityChanged = false;
+		private readonly Dictionary<int, Dictionary<int, SolidBrush>> mOldColorMap = null;
 
 		public ChangeLayerOption(Layer layer, Layer oldLayerTemplate, Layer newLayerTemplate)
 		{
@@ -41,33 +41,30 @@ namespace BlueBrick.Actions.Layers
 			// check if the name changed
 			mLayerNameChanged = !oldLayerTemplate.Name.Equals(mNewLayerData.Name);
 			// check if visibility changed
-			mLayerVisibilityChanged = (oldLayerTemplate.Visible != newLayerTemplate.Visible);
-			// if the layer is an area layer, save the current color map
-			LayerArea layerArea = layer as LayerArea;
-			if (layerArea != null)
-				mOldColorMap = layerArea.ColorMap;
-		}
+			mLayerVisibilityChanged = oldLayerTemplate.Visible != newLayerTemplate.Visible;
+            // if the layer is an area layer, save the current color map
+            if (layer is LayerArea layerArea)
+                mOldColorMap = layerArea.ColorMap;
+        }
 
 		public override string GetName()
 		{
-			string actionName = BlueBrick.Properties.Resources.ChangeLayerOption;
+			string actionName = Properties.Resources.ChangeLayerOption;
 			actionName = actionName.Replace("&", mLayer.Name);
 			return actionName;
 		}
 
 		public override void Redo()
 		{
-			// if the layer is an area layer, rescale the colormap
-			LayerArea layerArea = mLayer as LayerArea;
-			if (layerArea != null)
-			{
-				LayerArea newlayerArea = mNewLayerData as LayerArea;
-				if (newlayerArea != null)
-					layerArea.rescaleColorMap(newlayerArea.AreaCellSizeInStud);
-			}
-			
-			// copy the options
-			mLayer.CopyOptionsFrom(mNewLayerData);
+            // if the layer is an area layer, rescale the colormap
+            if (mLayer is LayerArea layerArea)
+            {
+                if (mNewLayerData is LayerArea newlayerArea)
+                    layerArea.rescaleColorMap(newlayerArea.AreaCellSizeInStud);
+            }
+
+            // copy the options
+            mLayer.CopyOptionsFrom(mNewLayerData);
 
 			// notify the main form if the visibility changed
 			if (mLayerVisibilityChanged)
@@ -80,13 +77,12 @@ namespace BlueBrick.Actions.Layers
 
 		public override void Undo()
 		{
-			// if the layer is an area layer, restore the colormap
-			LayerArea layerArea = mLayer as LayerArea;
-			if ((layerArea != null) && (mOldColorMap != null))
-				layerArea.ColorMap = mOldColorMap;
+            // if the layer is an area layer, restore the colormap
+            if ((mLayer is LayerArea layerArea) && (mOldColorMap != null))
+                layerArea.ColorMap = mOldColorMap;
 
-			// copy the options
-			mLayer.CopyOptionsFrom(mOldLayerData);
+            // copy the options
+            mLayer.CopyOptionsFrom(mOldLayerData);
 
 			// notify the main form if the visibility changed
 			if (mLayerVisibilityChanged)

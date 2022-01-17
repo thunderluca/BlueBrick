@@ -112,8 +112,8 @@ namespace BlueBrick.MapData.Tools
 
 	public class AStar
 	{
-		private static AStarNodeList sOpenList = new AStarNodeList();
-		private static AStarNodeList sCloseList = new AStarNodeList();
+		private static readonly AStarNodeList sOpenList = new AStarNodeList();
+		private static readonly AStarNodeList sCloseList = new AStarNodeList();
 
 		public static List<Layer.LayerItem> findPath(LayerBrick.Brick startBrick, LayerBrick.Brick goalBrick)
 		{
@@ -154,10 +154,12 @@ namespace BlueBrick.MapData.Tools
 						if (neighborBrick == null)
 							continue;
 
-						// we found a valid connexion, create a new node for this new potential brick to explore
-						AStarNode potentialNewNeighborNode = new AStarNode(neighborBrick);
-						potentialNewNeighborNode.mParentNode = currentNode;
-						potentialNewNeighborNode.ComputeParameters(goalBrick);
+                        // we found a valid connexion, create a new node for this new potential brick to explore
+                        AStarNode potentialNewNeighborNode = new AStarNode(neighborBrick)
+                        {
+                            mParentNode = currentNode
+                        };
+                        potentialNewNeighborNode.ComputeParameters(goalBrick);
 
 						// try to search the neighbor brick in the close list
 						AStarNode neighborNode = sCloseList.Find(neighborBrick);

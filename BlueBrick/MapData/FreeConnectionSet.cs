@@ -27,7 +27,7 @@ namespace BlueBrick.MapData
 	class FreeConnectionSet
 	{
 		// the list of list of connection points
-		private List<List<LayerBrick.Brick.ConnectionPoint>> mFreeConnections = null;
+		private readonly List<List<LayerBrick.Brick.ConnectionPoint>> mFreeConnections = null;
 
 		public int ConnectionTypeCount
 		{

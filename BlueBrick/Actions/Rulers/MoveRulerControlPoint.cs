@@ -22,15 +22,15 @@ namespace BlueBrick.Actions.Rulers
 {
 	public class MoveRulerControlPoint : Action
 	{
-		private LayerRuler mRulerLayer = null;
-		private LayerRuler.RulerItem mRulerItem = null;
-		private int mControlPointIndex = 0;
+		private readonly LayerRuler mRulerLayer = null;
+		private readonly LayerRuler.RulerItem mRulerItem = null;
+		private readonly int mControlPointIndex = 0;
 		private PointF mOriginalPosition = new PointF();
 		private PointF mNewPosition = new PointF();
-		private RulerAttachementSet.Anchor mAnchor = null;
+		private readonly RulerAttachementSet.Anchor mAnchor = null;
 		private PointF mOriginalLocalAttachOffset = new PointF();
 		private PointF mNewLocalAttachOffset = new PointF();
-		private float mAttachedBrickOrientation = 0.0f;
+		private readonly float mAttachedBrickOrientation = 0.0f;
 
 		public MoveRulerControlPoint(LayerRuler layer, LayerRuler.RulerItem rulerItem, PointF originalPosition, PointF newPosition)
 		{
@@ -52,7 +52,7 @@ namespace BlueBrick.Actions.Rulers
 
 		public override string GetName()
 		{
-			return BlueBrick.Properties.Resources.ActionMoveRulerControlPoint;
+			return Properties.Resources.ActionMoveRulerControlPoint;
 		}
 
 		public override void Redo()
@@ -63,7 +63,7 @@ namespace BlueBrick.Actions.Rulers
 			// set the new position
 			mRulerItem.setControlPointPosition(mControlPointIndex, mNewPosition);
 			// update the selection rectangle
-			mRulerLayer.updateBoundingSelectionRectangle();
+			mRulerLayer.UpdateBoundingSelectionRectangle();
 		}
 
 		public override void Undo()
@@ -74,7 +74,7 @@ namespace BlueBrick.Actions.Rulers
 			// set back the original position
 			mRulerItem.setControlPointPosition(mControlPointIndex, mOriginalPosition);
 			// update the selection rectangle
-			mRulerLayer.updateBoundingSelectionRectangle();
+			mRulerLayer.UpdateBoundingSelectionRectangle();
 		}
 	}
 }

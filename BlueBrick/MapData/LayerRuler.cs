@@ -50,7 +50,7 @@ namespace BlueBrick.MapData
 		private List<RulerItem> mRulers = new List<RulerItem>();
 
 		// the image attribute to draw the text including the layer transparency
-		private ImageAttributes mImageAttribute = new ImageAttributes();
+		private readonly ImageAttributes mImageAttribute = new ImageAttributes();
 
 		// variable for selection drawing
 		private const int BASE_SELECTION_TRANSPARENCY = 112;
@@ -100,10 +100,12 @@ namespace BlueBrick.MapData
 			set
 			{
 				mTransparency = value;
-				ColorMatrix colorMatrix = new ColorMatrix();
-				colorMatrix.Matrix33 = (float)value / 100.0f;
-				mImageAttribute.SetColorMatrix(colorMatrix);
-				mSelectionBrush = new SolidBrush(Color.FromArgb((BASE_SELECTION_TRANSPARENCY * value) / 100, 255, 255, 255));
+                ColorMatrix colorMatrix = new ColorMatrix
+                {
+                    Matrix33 = value / 100.0f
+                };
+                mImageAttribute.SetColorMatrix(colorMatrix);
+				mSelectionBrush = new SolidBrush(Color.FromArgb(BASE_SELECTION_TRANSPARENCY * value / 100, 255, 255, 255));
 			}
 		}
 
@@ -152,9 +154,9 @@ namespace BlueBrick.MapData
 		/// <param name="item1">the first item to compare</param>
 		/// <param name="item2">the second item t compare</param>
 		/// <returns>distance between the two items in the layer list (index1 - index2)</returns>
-		public override int compareItemOrderOnLayer(Layer.LayerItem item1, Layer.LayerItem item2)
+		public override int CompareItemOrderOnLayer(LayerItem item1, LayerItem item2)
 		{
-			return compareItemOrderOnLayer(mRulers, item1, item2);
+			return CompareItemOrderOnLayer(mRulers, item1, item2);
 		}
 		#endregion
 
@@ -164,21 +166,21 @@ namespace BlueBrick.MapData
 		{
 			// call the common reader class
 			base.ReadXml(reader);
-			// read all the rulers
-			readItemsListFromXml<RulerItem>(reader, ref mRulers, "RulerItems", true);
+            // read all the rulers
+            ReadItemsListFromXml(reader, ref mRulers, "RulerItems", true);
 		}
 
-		protected override T readItem<T>(System.Xml.XmlReader reader)
+		protected override T ReadItem<T>(System.Xml.XmlReader reader)
 		{
-			// instanciate the correct ruler
-			RulerItem ruler = null;
-			if (reader.Name.Equals("LinearRuler"))
+            // instanciate the correct ruler
+            RulerItem ruler;
+            if (reader.Name.Equals("LinearRuler"))
 				ruler = new LinearRuler();
 			else
 				ruler = new CircularRuler();
 			// then call the read function
 			ruler.ReadXml(reader);
-			return (ruler as T);
+			return ruler as T;
 		}
 
 		/// <summary>
@@ -186,20 +188,20 @@ namespace BlueBrick.MapData
 		/// have been loaded, in order to recreate links between items of different layers (such as
 		/// for example the attachement of a ruler to a brick)
 		/// </summary>
-		public override void recreateLinksAfterLoading()
+		public override void RecreateLinksAfterLoading()
 		{
 			foreach (RulerItem rulerItem in mRulers)
-				rulerItem.recreateLinksAfterLoading();
+				rulerItem.RecreateLinksAfterLoading();
 		}
 
 		public override void WriteXml(System.Xml.XmlWriter writer)
 		{
 			// write the header
-			writeHeaderAndCommonProperties(writer);
+			WriteHeaderAndCommonProperties(writer);
 			// write all the bricks
-			writeItemsListToXml(writer, mRulers, "RulerItems", true);
+			WriteItemsListToXml(writer, mRulers, "RulerItems", true);
 			// write the footer
-			writeFooter(writer);
+			WriteFooter(writer);
 		}
 		#endregion
 
@@ -209,7 +211,7 @@ namespace BlueBrick.MapData
 		///	Add the specified ruler at the specified position.
 		///	If the position is negative, add the item at the end
 		/// </summary>
-		public void addRulerItem(RulerItem rulerToAdd, int index)
+		public void AddRulerItem(RulerItem rulerToAdd, int index)
 		{
 			if (index < 0)
 				mRulers.Add(rulerToAdd);
@@ -222,7 +224,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="rulerToRemove">the ruler item to remove from the layer</param>
 		/// <returns>the previous index of the ruler item deleted</returns>
-		public int removeRulerItem(RulerItem rulerToRemove)
+		public int RemoveRulerItem(RulerItem rulerToRemove)
 		{
 			int index = mRulers.IndexOf(rulerToRemove);
 			if (index >= 0)
@@ -230,29 +232,28 @@ namespace BlueBrick.MapData
 				mRulers.Remove(rulerToRemove);
 				// remove also the item from the selection list if in it
 				if (mSelectedObjects.Contains(rulerToRemove))
-					removeObjectFromSelection(rulerToRemove);
+					RemoveObjectFromSelection(rulerToRemove);
 			}
 			else
 				index = 0;
 			return index;
 		}
 
-		public override void editSelectedItemsProperties(PointF mouseCoordInStud)
+		public override void EditSelectedItemsProperties(PointF mouseCoordInStud)
 		{
 			// does nothing if the selection is empty
 			if (mSelectedObjects.Count > 0)
 			{
-				// in priority get the item under the mouse, if there's several item selected
-				RulerItem rulerToEdit = getLayerItemUnderMouse(mSelectedObjects, mouseCoordInStud) as RulerItem;
-				// but if user click outside of the item, get the first one of the list
-				if (rulerToEdit == null)
-					rulerToEdit = mSelectedObjects[0] as RulerItem;
-				// and call the function to edit the properties
-				editRulerItem(rulerToEdit);
+                // in priority get the item under the mouse, if there's several item selected
+                // but if user click outside of the item, get the first one of the list
+                if (!(GetLayerItemUnderMouse(mSelectedObjects, mouseCoordInStud) is RulerItem rulerToEdit))
+                    rulerToEdit = mSelectedObjects[0] as RulerItem;
+                // and call the function to edit the properties
+                EditRulerItem(rulerToEdit);
 			}
 		}
 
-		private void editRulerItem(RulerItem itemToEdit)
+		private void EditRulerItem(RulerItem itemToEdit)
 		{
 			// open the edit text dialog in modal
 			EditRulerForm editRulerForm = new EditRulerForm(itemToEdit);
@@ -267,19 +268,19 @@ namespace BlueBrick.MapData
 		/// Copy the list of the selected texts in a separate list for later use.
 		/// This method should be called on a CTRL+C
 		/// </summary>
-		public override void copyCurrentSelectionToClipboard()
+		public override void CopyCurrentSelectionToClipboard()
 		{
-			base.copyCurrentSelectionToClipboard(mRulers);
+            CopyCurrentSelectionToClipboard(mRulers);
 		}
 
 		/// <summary>
 		/// Select all the items in this layer.
 		/// </summary>
-		public override void selectAll()
+		public override void SelectAll()
 		{
 			// clear the selection and add all the item of this layer
-			clearSelection();
-			addObjectInSelection(mRulers);
+			ClearSelection();
+			AddObjectInSelection(mRulers);
 		}
 		#endregion
 		#endregion
@@ -297,11 +298,11 @@ namespace BlueBrick.MapData
 		/// <param name="pointInStud">the position to check in stud coord</param>
 		/// <param name="concernedRulerItem">the ruler items that owns the found control point</param>
 		/// <returns>true if the specified position is near a control point</returns>
-		private bool isPointAboveAnyRulerControlPoint(PointF pointInStud, ref RulerItem concernedRulerItem)
+		private bool IsPointAboveAnyRulerControlPoint(PointF pointInStud, ref RulerItem concernedRulerItem)
 		{
 			// We want the distance fixed in pixel (so the snapping is always the same no matter the scale)
 			// so divide the pixel snapping distance by the scale to get a variable distance in stud
-			float bestSquareDistance = (float)BlueBrick.Properties.Settings.Default.RulerControlPointRadiusInPixel / (float)MainForm.Instance.MapViewScale;
+			float bestSquareDistance = Properties.Settings.Default.RulerControlPointRadiusInPixel / (float)MainForm.Instance.MapViewScale;
 			bestSquareDistance *= bestSquareDistance; //square it
 
 			// check if the highlighted ruler will change
@@ -342,7 +343,7 @@ namespace BlueBrick.MapData
 				MainForm.Instance.updateView(Actions.Action.UpdateViewType.LIGHT, Actions.Action.UpdateViewType.NONE);
 
 			// return true if we found a good candidate
-			return (mCurrentRulerWithHighlightedControlPoint != null);
+			return mCurrentRulerWithHighlightedControlPoint != null;
 		}
 
 		/// <summary>
@@ -352,11 +353,11 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="pointInStud">the position to check in stud coord</param>
 		/// <returns>true if the specified position is above any scaling handle</returns>
-		private bool isPointAboveAnyRulerScalingHandle(PointF pointInStud, ref RulerItem concernedRulerItem)
+		private bool IsPointAboveAnyRulerScalingHandle(PointF pointInStud, ref RulerItem concernedRulerItem)
 		{
 			// We want the distance fixed in pixel (so the snapping is always the same no matter the scale)
 			// so divide the pixel snapping distance by the scale to get a variable distance in stud
-			float thicknessInStud = (float)BlueBrick.Properties.Settings.Default.RulerControlPointRadiusInPixel / (float)MainForm.Instance.MapViewScale;
+			float thicknessInStud = Properties.Settings.Default.RulerControlPointRadiusInPixel / (float)MainForm.Instance.MapViewScale;
 
 			// is there selected rulers? if yes check first with it to take it in priority.
             foreach (LayerItem item in mSelectedObjects)
@@ -395,10 +396,10 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="mouseCoordInStud">the mouse coordinate in stud</param>
 		/// <returns>the ruler which is under the specified point or null if there's not</returns>
-		private RulerItem evaluateIfPointIsAboveControlPointOrScaleHandle(PointF mouseCoordInStud, out EditAction action)
+		private RulerItem EvaluateIfPointIsAboveControlPointOrScaleHandle(PointF mouseCoordInStud, out EditAction action)
 		{
-			bool multipleSelectionPressed = (Control.ModifierKeys == BlueBrick.Properties.Settings.Default.MouseMultipleSelectionKey);
-			bool duplicationPressed = (Control.ModifierKeys == BlueBrick.Properties.Settings.Default.MouseDuplicateSelectionKey);
+			bool multipleSelectionPressed = Control.ModifierKeys == Properties.Settings.Default.MouseMultipleSelectionKey;
+			bool duplicationPressed = Control.ModifierKeys == Properties.Settings.Default.MouseDuplicateSelectionKey;
 			RulerItem result = null;
 			action = EditAction.NONE;
 
@@ -409,10 +410,10 @@ namespace BlueBrick.MapData
 			{
 				// for moving a point, we need to have the mouse above a control point
 				// if not this function doesn't change the ruler in reference
-				if (isPointAboveAnyRulerControlPoint(mouseCoordInStud, ref result))
+				if (IsPointAboveAnyRulerControlPoint(mouseCoordInStud, ref result))
 					action = EditAction.MOVE_CONTROL_POINT;
 				// if we are not above a control point, maybe we are above a scale handle
-				else if (isPointAboveAnyRulerScalingHandle(mouseCoordInStud, ref result))
+				else if (IsPointAboveAnyRulerScalingHandle(mouseCoordInStud, ref result))
 					action = EditAction.SCALE_RULER;
 			}
 			// return the found ruler if any
@@ -425,10 +426,10 @@ namespace BlueBrick.MapData
 		/// This function iterate through the selection and check if any ruler is attached to a part.
 		/// </summary>
 		/// <returns>true if at least one selected ruler is attached</returns>
-		private bool areSelectedItemsFullyAttached()
+		private bool AreSelectedItemsFullyAttached()
 		{
 			// if any one is not fully attached, stop searching cause we will be able to move something
-			foreach (LayerItem item in this.SelectedObjects)
+			foreach (LayerItem item in SelectedObjects)
 				if (!(item as RulerItem).IsFullyAttached)
 					return false;
 			return true;
@@ -437,13 +438,13 @@ namespace BlueBrick.MapData
 		/// <summary>
 		/// Tell if the mouse is currently in position to attach a ruler
 		/// </summary>
-		public bool canAttachRuler()
+		public bool CanAttachRuler()
 		{
 			if ((mCurrentRulerWithHighlightedControlPoint != null) && !mCurrentRulerWithHighlightedControlPoint.IsCurrentControlPointAttached)
 			{
 				PointF currentControlPointPosition = mCurrentRulerWithHighlightedControlPoint.CurrentControlPoint;
 				mCurrentBrickUsedForRulerAttachement = Map.Instance.GetTopMostVisibleBrickUnderMouse(currentControlPointPosition);
-				return (mCurrentBrickUsedForRulerAttachement != null);
+				return mCurrentBrickUsedForRulerAttachement != null;
 			}
 			return false;
 		}
@@ -451,12 +452,12 @@ namespace BlueBrick.MapData
 		/// <summary>
 		/// Tell if the mouse is currently in position to detach a ruler
 		/// </summary>
-		public bool canDetachRuler()
+		public bool CanDetachRuler()
 		{
 			if ((mCurrentRulerWithHighlightedControlPoint != null) && mCurrentRulerWithHighlightedControlPoint.IsCurrentControlPointAttached)
 			{
 				mCurrentBrickUsedForRulerAttachement = mCurrentRulerWithHighlightedControlPoint.BrickAttachedToCurrentControlPoint;		
-				return (mCurrentBrickUsedForRulerAttachement != null);
+				return mCurrentBrickUsedForRulerAttachement != null;
 			}
 			return false;
 		}
@@ -467,9 +468,9 @@ namespace BlueBrick.MapData
 		/// get the total area in stud covered by all the ruler items in this layer
 		/// </summary>
 		/// <returns></returns>
-		public override RectangleF getTotalAreaInStud()
+		public override RectangleF GetTotalAreaInStud()
 		{
-			return getTotalAreaInStud(mRulers);
+			return GetTotalAreaInStud(mRulers);
 		}
 
 		/// <summary>
@@ -479,7 +480,7 @@ namespace BlueBrick.MapData
 		/// <param name="areaInStud">The region in which we should draw</param>
 		/// <param name="scalePixelPerStud">The scale to use to draw</param>
 		/// <param name="drawSelection">If true draw the selection rectangle and also the selection overlay (this can be set to false when exporting the map to an image)</param>
-		public override void draw(Graphics g, RectangleF areaInStud, double scalePixelPerStud, bool drawSelection)
+		public override void Draw(Graphics g, RectangleF areaInStud, double scalePixelPerStud, bool drawSelection)
 		{
 			if (!Visible)
 				return;
@@ -503,7 +504,7 @@ namespace BlueBrick.MapData
 				if (Properties.Settings.Default.DisplayRulerAttachPoints)
 				{
 					Color redColor = Color.FromArgb((int)(mTransparency * 2.55f), Color.Red);
-					foreach (LayerItem item in this.SelectedObjects)
+					foreach (LayerItem item in SelectedObjects)
 						if (item != mCurrentRulerWithHighlightedControlPoint)
 							(item as RulerItem).drawControlPoints(g, areaInStud, scalePixelPerStud, redColor);
 				}
@@ -515,7 +516,7 @@ namespace BlueBrick.MapData
 			}
 
 			// call the base class to draw the surrounding selection rectangle
-            base.draw(g, areaInStud, scalePixelPerStud, drawSelection);
+            base.Draw(g, areaInStud, scalePixelPerStud, drawSelection);
 		}
 		#endregion
 
@@ -525,7 +526,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="orientation">orientation of the handle in degrees</param>
 		/// <returns>the best looking cursor</returns>
-		private Cursor getScalingCursorFromOrientation(float orientation)
+		private Cursor GetScalingCursorFromOrientation(float orientation)
 		{
 			// careful the orientation is not in trigo direction but inversed
 			if (orientation > 157.5f)
@@ -552,7 +553,7 @@ namespace BlueBrick.MapData
 		/// Return the cursor that should be display when the mouse is above the map without mouse click
 		/// </summary>
 		/// <param name="mouseCoordInStud">the mouse coordinate in stud</param>
-		public override Cursor getDefaultCursorWithoutMouseClick(PointF mouseCoordInStud)
+		public override Cursor GetDefaultCursorWithoutMouseClick(PointF mouseCoordInStud)
 		{
 			// if the layer is not visible you can basically do nothing on it
 			if (!Visible)
@@ -566,45 +567,44 @@ namespace BlueBrick.MapData
 						// the second test after the or, is because we give a second chance to the user to duplicate
 						// the selection if he press the duplicate key after the mouse down, but before he start to move
 						if (mEditAction == EditAction.DUPLICATE_SELECTION ||
-							(mEditAction == EditAction.MOVE_SELECTION && !mMouseHasMoved && (Control.ModifierKeys == BlueBrick.Properties.Settings.Default.MouseDuplicateSelectionKey)))
+							(mEditAction == EditAction.MOVE_SELECTION && !mMouseHasMoved && (Control.ModifierKeys == Properties.Settings.Default.MouseDuplicateSelectionKey)))
 							return MainForm.Instance.RulerDuplicateCursor;
 						else if (mEditAction == EditAction.MOVE_CONTROL_POINT)
 							return MainForm.Instance.RulerMovePointCursor;
 						else if ((mEditAction == EditAction.SCALE_RULER) && (mCurrentlyEditedRuler != null))
-							return getScalingCursorFromOrientation(mCurrentlyEditedRuler.getScalingOrientation(mouseCoordInStud));
+							return GetScalingCursorFromOrientation(mCurrentlyEditedRuler.getScalingOrientation(mouseCoordInStud));
 					}
 					else
 					{
 						if (mouseCoordInStud != PointF.Empty)
 						{
-							if (Control.ModifierKeys == BlueBrick.Properties.Settings.Default.MouseDuplicateSelectionKey)
+							if (Control.ModifierKeys == Properties.Settings.Default.MouseDuplicateSelectionKey)
 							{
-								if (isPointInsideSelectionRectangle(mouseCoordInStud))
+								if (IsPointInsideSelectionRectangle(mouseCoordInStud))
 									return MainForm.Instance.RulerDuplicateCursor;
 							}
-							else if (Control.ModifierKeys == BlueBrick.Properties.Settings.Default.MouseMultipleSelectionKey)
+							else if (Control.ModifierKeys == Properties.Settings.Default.MouseMultipleSelectionKey)
 							{
 								return MainForm.Instance.RulerSelectionCursor;
 							}
-							else if (Control.ModifierKeys == BlueBrick.Properties.Settings.Default.MouseZoomPanKey)
+							else if (Control.ModifierKeys == Properties.Settings.Default.MouseZoomPanKey)
 							{
 								return MainForm.Instance.PanOrZoomViewCursor;
 							}
 							else
 							{
-								// we need to check if we will modify one ruler by moving its control point or scalling (no matter if there is a selection)
-								EditAction action = EditAction.NONE;
-								RulerItem editableRuler = evaluateIfPointIsAboveControlPointOrScaleHandle(mouseCoordInStud, out action);
+                                // we need to check if we will modify one ruler by moving its control point or scalling (no matter if there is a selection)
+                                RulerItem editableRuler = EvaluateIfPointIsAboveControlPointOrScaleHandle(mouseCoordInStud, out EditAction action);
 
-								// check the resulting action
-								mCurrentRulerUnderMouse = editableRuler;
+                                // check the resulting action
+                                mCurrentRulerUnderMouse = editableRuler;
 								if (action == EditAction.MOVE_CONTROL_POINT)
 									return MainForm.Instance.RulerMovePointCursor;
 								else if ((action == EditAction.SCALE_RULER) && (mCurrentRulerUnderMouse != null))
-									return getScalingCursorFromOrientation(mCurrentRulerUnderMouse.getScalingOrientation(mouseCoordInStud));
+									return GetScalingCursorFromOrientation(mCurrentRulerUnderMouse.getScalingOrientation(mouseCoordInStud));
 
                                 // Now if we are inside with the selection, and not above control point, we will move the selection
-                                if (isPointInsideSelectionRectangle(mouseCoordInStud))
+                                if (IsPointInsideSelectionRectangle(mouseCoordInStud))
                                     return MainForm.Instance.RulerMoveCursor;
                             }
 						}
@@ -626,9 +626,9 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="mouseCoordInStud">the coordinate of the mouse cursor, where to look for</param>
 		/// <returns>the ruler item that is under the mouse coordinate or null if there is none.</returns>
-		public RulerItem getRulerItemUnderMouse(PointF mouseCoordInStud)
+		public RulerItem GetRulerItemUnderMouse(PointF mouseCoordInStud)
 		{
-			return getLayerItemUnderMouse(mRulers, mouseCoordInStud) as RulerItem;
+			return GetLayerItemUnderMouse(mRulers, mouseCoordInStud) as RulerItem;
 		}
 
 		/// <summary>
@@ -636,7 +636,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the mouse click</param>
 		/// <returns>true if this layer wants to handle it</returns>
-		public override bool handleMouseDown(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
+		public override bool HandleMouseDown(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
 		{
 			// if the layer is not visible it is not sensible to mouve click
 			if (!Visible)
@@ -652,27 +652,27 @@ namespace BlueBrick.MapData
 					if (e.Button == MouseButtons.Left)
 					{
 						// boolean flags for the keyboard control keys
-						bool multipleSelectionPressed = (Control.ModifierKeys == BlueBrick.Properties.Settings.Default.MouseMultipleSelectionKey);
-						bool duplicationPressed = (Control.ModifierKeys == BlueBrick.Properties.Settings.Default.MouseDuplicateSelectionKey);
+						bool multipleSelectionPressed = Control.ModifierKeys == Properties.Settings.Default.MouseMultipleSelectionKey;
+						bool duplicationPressed = Control.ModifierKeys == Properties.Settings.Default.MouseDuplicateSelectionKey;
 
 						// check if the mouse is inside the bounding rectangle of the selected objects
-						bool isMouseInsideSelectedObjects = isPointInsideSelectionRectangle(mouseCoordInStud);
+						bool isMouseInsideSelectedObjects = IsPointInsideSelectionRectangle(mouseCoordInStud);
 						bool isMouseOutsideSelectedObjectsWithoutModifier = !isMouseInsideSelectedObjects && !multipleSelectionPressed && !duplicationPressed;
 
 						// clear the selection if we click outside the selection without any key pressed
 						if (isMouseOutsideSelectedObjectsWithoutModifier)
-							clearSelection();
+							ClearSelection();
 
 						// compute the current ruler under the mouse
 						mCurrentRulerUnderMouse = null;
 
 						// We search if there is a cell under the mouse but in priority we choose from the current selected cells
-						mCurrentRulerUnderMouse = getLayerItemUnderMouse(mSelectedObjects, mouseCoordInStud) as RulerItem;
+						mCurrentRulerUnderMouse = GetLayerItemUnderMouse(mSelectedObjects, mouseCoordInStud) as RulerItem;
 
 						// if the current selected ruler is not under the mouse we search among the other rulers
 						// but in reverse order to choose first the brick on top
 						if (mCurrentRulerUnderMouse == null)
-							mCurrentRulerUnderMouse = getRulerItemUnderMouse(mouseCoordInStud);
+							mCurrentRulerUnderMouse = GetRulerItemUnderMouse(mouseCoordInStud);
 
 						// start by clearing the edition action
 						mEditAction = EditAction.NONE;
@@ -694,7 +694,7 @@ namespace BlueBrick.MapData
 						else if (e.Clicks == 1)
 						{
 							// this method will also give the edit action for the editable ruler in out param
-							RulerItem editableRuler = evaluateIfPointIsAboveControlPointOrScaleHandle(mouseCoordInStud, out mEditAction);
+							RulerItem editableRuler = EvaluateIfPointIsAboveControlPointOrScaleHandle(mouseCoordInStud, out mEditAction);
 							// assign the edited ruler if we are editing its point or scale it (after evaluation)
 							if (mEditAction != EditAction.NONE)
 							{
@@ -704,7 +704,7 @@ namespace BlueBrick.MapData
 								if (mEditAction == EditAction.MOVE_CONTROL_POINT)
 									preferedCursor = MainForm.Instance.RulerMovePointCursor;
 								else if (mEditAction == EditAction.SCALE_RULER)
-									preferedCursor = getScalingCursorFromOrientation(editableRuler.getScalingOrientation(mouseCoordInStud));
+									preferedCursor = GetScalingCursorFromOrientation(editableRuler.getScalingOrientation(mouseCoordInStud));
 							}
 							else
 							{
@@ -727,7 +727,7 @@ namespace BlueBrick.MapData
 							// for that of course we must not have a modifier key pressed
 							// and none of the selected objects must be attached
 							else if (!multipleSelectionPressed && !duplicationPressed &&
-								((isMouseInsideSelectedObjects && !areSelectedItemsFullyAttached()) ||
+								((isMouseInsideSelectedObjects && !AreSelectedItemsFullyAttached()) ||
 								((mCurrentRulerUnderMouse != null) && (!mCurrentRulerUnderMouse.IsFullyAttached))))
 							{
 								mEditAction = EditAction.MOVE_SELECTION;
@@ -746,12 +746,12 @@ namespace BlueBrick.MapData
 					if ((e.Button == MouseButtons.Left) && (mEditAction != EditAction.SCALE_RULER))
 						preferedCursor = MainForm.Instance.RulerAddPoint2Cursor;
 					// we handle all the click if it's a left click or if it's right click and we are editing a ruler
-					willHandleMouse = ((e.Button == MouseButtons.Left) || ((e.Button == MouseButtons.Right) && (mCurrentlyEditedRuler != null)));
+					willHandleMouse = (e.Button == MouseButtons.Left) || ((e.Button == MouseButtons.Right) && (mCurrentlyEditedRuler != null));
 					break;
 
 				case EditTool.CIRCLE:
 					// we handle all the click if it's a left click or if it's right click and we are editing a ruler
-					willHandleMouse = ((e.Button == MouseButtons.Left) || ((e.Button == MouseButtons.Right) && (mCurrentlyEditedRuler != null)));
+					willHandleMouse = (e.Button == MouseButtons.Left) || ((e.Button == MouseButtons.Right) && (mCurrentlyEditedRuler != null));
 					break;
 			}
 
@@ -764,11 +764,11 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the mouse click</param>
 		/// <returns>true if this layer wants to handle it</returns>
-		public override bool handleMouseMoveWithoutClick(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
+		public override bool HandleMouseMoveWithoutClick(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
 		{
 			if ((mEditAction == EditAction.SCALE_RULER) && (mCurrentlyEditedRuler != null))
 			{
-				preferedCursor = getScalingCursorFromOrientation(mCurrentlyEditedRuler.getScalingOrientation(mouseCoordInStud));
+				preferedCursor = GetScalingCursorFromOrientation(mCurrentlyEditedRuler.getScalingOrientation(mouseCoordInStud));
 				// for now only handle it if we are editing a linear ruler
 				return true;
 			}
@@ -781,13 +781,13 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the click</param>
 		/// <returns>true if the view should be refreshed</returns>
-		public override bool mouseDown(MouseEventArgs e, PointF mouseCoordInStud)
+		public override bool MouseDown(MouseEventArgs e, PointF mouseCoordInStud)
 		{
 			mMouseIsBetweenDownAndUpEvent = true;
 			mMouseHasMoved = false;
 			bool mustRefresh = false;
 			// snap the mouse coord to the grid
-			PointF mouseCoordInStudSnapped = getSnapPoint(mouseCoordInStud);
+			PointF mouseCoordInStudSnapped = GetSnapPoint(mouseCoordInStud);
 
 			switch (sCurrentEditTool)
 			{
@@ -798,9 +798,9 @@ namespace BlueBrick.MapData
 						if ((mCurrentRulerUnderMouse != null) && (mEditAction != EditAction.DUPLICATE_SELECTION))
 						{
 							// if the selection is empty add the ruler item, else check the control key state
-							if ((mSelectedObjects.Count == 0) && (Control.ModifierKeys != BlueBrick.Properties.Settings.Default.MouseMultipleSelectionKey))
+							if ((mSelectedObjects.Count == 0) && (Control.ModifierKeys != Properties.Settings.Default.MouseMultipleSelectionKey))
 							{
-								addObjectInSelection(mCurrentRulerUnderMouse);
+								AddObjectInSelection(mCurrentRulerUnderMouse);
 							}
 							mustRefresh = true;
 						}
@@ -834,13 +834,13 @@ namespace BlueBrick.MapData
 						{
 							// put back the control point to the original position and update the rectangle
 							mCurrentlyEditedRuler.CurrentControlPoint = mMouseDownInitialPosition;
-							this.updateBoundingSelectionRectangle();
+							UpdateBoundingSelectionRectangle();
 						}
 						else if (mEditAction == EditAction.SCALE_RULER)
 						{
 							// rescale at the original position and update the rectangle
 							mCurrentlyEditedRuler.scaleToPoint(mMouseDownInitialPosition);
-							this.updateBoundingSelectionRectangle();
+							UpdateBoundingSelectionRectangle();
 						}
 						else if (mEditAction == EditAction.DUPLICATE_SELECTION)
 						{
@@ -858,7 +858,7 @@ namespace BlueBrick.MapData
 								foreach (LayerItem item in mSelectedObjects)
 									item.Position = new PointF(item.Position.X - deltaMove.X, item.Position.Y - deltaMove.Y);
 								// reset the bounding rectangle
-								this.updateBoundingSelectionRectangle();
+								UpdateBoundingSelectionRectangle();
 							}
 						}
 						mEditAction = EditAction.NONE;
@@ -921,11 +921,11 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the mouse move</param>
 		/// <returns>true if the view should be refreshed</returns>
-		public override bool mouseMove(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
+		public override bool MouseMove(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
 		{
 			bool mustRefresh = false;
 			// snap the mouse coord to the grid
-			PointF mouseCoordInStudSnapped = getSnapPoint(mouseCoordInStud);
+			PointF mouseCoordInStudSnapped = GetSnapPoint(mouseCoordInStud);
 			// compute the delta move of the mouse
 			PointF deltaMove = new PointF(mouseCoordInStudSnapped.X - mMouseDownLastPosition.X, mouseCoordInStudSnapped.Y - mMouseDownLastPosition.Y);
 			// set the flag that indicate that we moved the mouse
@@ -953,7 +953,7 @@ namespace BlueBrick.MapData
                                     // move the control point
                                     mCurrentlyEditedRuler.CurrentControlPoint = mouseCoordInStudSnapped;
                                     // update the bounding rectangle in any case (even when moving a circle, cause the circle can be part of a selection)
-                                    this.updateBoundingSelectionRectangle();
+                                    UpdateBoundingSelectionRectangle();
                                     mustRefresh = true;
                                 }
 							}
@@ -962,9 +962,9 @@ namespace BlueBrick.MapData
 								mCurrentlyEditedRuler.scaleToPoint(mouseCoordInStudSnapped);
 								// update the cursor if it is a circular ruler
 								if (mCurrentlyEditedRuler is CircularRuler)
-									preferedCursor = getScalingCursorFromOrientation(mCurrentlyEditedRuler.getScalingOrientation(mouseCoordInStudSnapped));
+									preferedCursor = GetScalingCursorFromOrientation(mCurrentlyEditedRuler.getScalingOrientation(mouseCoordInStudSnapped));
 								// update the bounding selection rectangle
-								this.updateBoundingSelectionRectangle();
+								UpdateBoundingSelectionRectangle();
 								mustRefresh = true;
 							}
 						}
@@ -978,9 +978,9 @@ namespace BlueBrick.MapData
 								// and this will change the current selection, that will be move normally after
 								if (mLastDuplicateAction == null)
 								{
-									this.copyCurrentSelectionToClipboard();
+									CopyCurrentSelectionToClipboard();
 									AddActionInHistory addInHistory = AddActionInHistory.DO_NOT_ADD_TO_HISTORY_EXCEPT_IF_POPUP_OCCURED;
-									this.pasteClipboardInLayer(AddOffsetAfterPaste.NO, ref addInHistory);
+									PasteClipboardInLayer(AddOffsetAfterPaste.NO, ref addInHistory);
 									// set the flag
 									wereRulersJustDuplicated = true;
 								}
@@ -991,16 +991,16 @@ namespace BlueBrick.MapData
 							foreach (LayerItem item in mSelectedObjects)
 							{
 								item.Center = new PointF(item.Center.X + deltaMove.X, item.Center.Y + deltaMove.Y);
-								isAnyRulerAttached = isAnyRulerAttached || !((item as RulerItem).IsNotAttached);
+								isAnyRulerAttached = isAnyRulerAttached || !(item as RulerItem).IsNotAttached;
 							}
 							// move also the bounding rectangle
 							if (isAnyRulerAttached)
-								this.updateBoundingSelectionRectangle();
+								UpdateBoundingSelectionRectangle();
 							else
-								moveBoundingSelectionRectangle(deltaMove);
+								MoveBoundingSelectionRectangle(deltaMove);
 							// after we moved the selection check if we need to refresh the current highlighted brick
 							if (wereRulersJustDuplicated)
-								mCurrentRulerUnderMouse = getLayerItemUnderMouse(mSelectedObjects, mouseCoordInStud) as RulerItem;
+								mCurrentRulerUnderMouse = GetLayerItemUnderMouse(mSelectedObjects, mouseCoordInStud) as RulerItem;
 							// refresh the view
 							mustRefresh = true;
 						}
@@ -1009,24 +1009,23 @@ namespace BlueBrick.MapData
 					{
 						// give a second chance to duplicate if the user press the duplicate key
 						// after pressing down the mouse key, but not if the user already moved
-						if (Control.ModifierKeys == BlueBrick.Properties.Settings.Default.MouseDuplicateSelectionKey)
+						if (Control.ModifierKeys == Properties.Settings.Default.MouseDuplicateSelectionKey)
 							mEditAction = EditAction.DUPLICATE_SELECTION;
 					}
 
 					break;
 
 				case EditTool.LINE:
-					LinearRuler linearRuler = mCurrentlyEditedRuler as LinearRuler;
-					if ((linearRuler != null) && mMouseHasMoved)
-					{
-						// adjust the offset or the second point
-						if (mEditAction == EditAction.SCALE_RULER)
-							linearRuler.scaleToPoint(mouseCoordInStudSnapped);
-						else
-							linearRuler.Point2 = mouseCoordInStudSnapped;
-						mustRefresh = true;
-					}
-					break;
+                    if ((mCurrentlyEditedRuler is LinearRuler linearRuler) && mMouseHasMoved)
+                    {
+                        // adjust the offset or the second point
+                        if (mEditAction == EditAction.SCALE_RULER)
+                            linearRuler.scaleToPoint(mouseCoordInStudSnapped);
+                        else
+                            linearRuler.Point2 = mouseCoordInStudSnapped;
+                        mustRefresh = true;
+                    }
+                    break;
 
 				case EditTool.CIRCLE:
 					if ((mCurrentlyEditedRuler != null) && mMouseHasMoved)
@@ -1034,7 +1033,7 @@ namespace BlueBrick.MapData
 						// scale the ruler
 						mCurrentlyEditedRuler.scaleToPoint(mouseCoordInStudSnapped);
 						// update also the prefered cursor because we may move the mouse while scaling
-						preferedCursor = getScalingCursorFromOrientation(mCurrentlyEditedRuler.getScalingOrientation(mouseCoordInStudSnapped));
+						preferedCursor = GetScalingCursorFromOrientation(mCurrentlyEditedRuler.getScalingOrientation(mouseCoordInStudSnapped));
 						mustRefresh = true;
 					}
 					break;
@@ -1048,12 +1047,12 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the click</param>
 		/// <returns>true if the view should be refreshed</returns>
-		public override bool mouseUp(MouseEventArgs e, PointF mouseCoordInStud)
+		public override bool MouseUp(MouseEventArgs e, PointF mouseCoordInStud)
 		{
 			bool mustRefresh = false;
 			bool wasARulerItemCreated = false;
 			// snap the mouse coord to the grid
-			PointF mouseCoordInStudSnapped = getSnapPoint(mouseCoordInStud);
+			PointF mouseCoordInStudSnapped = GetSnapPoint(mouseCoordInStud);
 			// compute the delta move of the mouse
 			PointF deltaMove = new PointF(mouseCoordInStudSnapped.X - mMouseDownInitialPosition.X, mouseCoordInStudSnapped.Y - mMouseDownInitialPosition.Y);
 
@@ -1067,7 +1066,7 @@ namespace BlueBrick.MapData
 					// and this can mess up the click count in mono
 					if (mEditAction == EditAction.CUSTOMIZE_RULER)
 					{
-						editRulerItem(mCurrentRulerUnderMouse);
+						EditRulerItem(mCurrentRulerUnderMouse);
 					}
 					else if (mMouseHasMoved && (mSelectedObjects.Count > 0)) // check if we moved the selected bricks
 					{
@@ -1130,12 +1129,12 @@ namespace BlueBrick.MapData
 						// if we didn't move the item and use the control key, we need to add or remove object from the selection
 						// we must do it in the up event because if we do it in the down, we may remove an object before moving
 						// we do this only if the mMouseHasMoved flag is not set to avoid this change if we move
-						if ((mCurrentRulerUnderMouse != null) && (Control.ModifierKeys == BlueBrick.Properties.Settings.Default.MouseMultipleSelectionKey))
+						if ((mCurrentRulerUnderMouse != null) && (Control.ModifierKeys == Properties.Settings.Default.MouseMultipleSelectionKey))
 						{
 							if (mSelectedObjects.Contains(mCurrentRulerUnderMouse))
-								removeObjectFromSelection(mCurrentRulerUnderMouse);
+								RemoveObjectFromSelection(mCurrentRulerUnderMouse);
 							else
-								addObjectInSelection(mCurrentRulerUnderMouse);
+								AddObjectInSelection(mCurrentRulerUnderMouse);
 						}
 					}
 
@@ -1145,34 +1144,33 @@ namespace BlueBrick.MapData
 					break;
 
 				case EditTool.LINE:
-					LinearRuler linearRuler = mCurrentlyEditedRuler as LinearRuler;
-					if (linearRuler != null)
-					{
-						if (linearRuler.AllowOffset)
-						{
-							if (mEditAction == EditAction.SCALE_RULER)
-							{
-								linearRuler.scaleToPoint(mouseCoordInStudSnapped);
-								Actions.ActionManager.Instance.doAction(new Actions.Rulers.AddRuler(this, linearRuler));
-								mCurrentlyEditedRuler = null;
-								mEditAction = EditAction.NONE;
-								wasARulerItemCreated = true;
-							}
-							else
-							{
-								linearRuler.Point2 = mouseCoordInStudSnapped;
-								mEditAction = EditAction.SCALE_RULER;
-							}
-						}
-						else
-						{
-							Actions.ActionManager.Instance.doAction(new Actions.Rulers.AddRuler(this, linearRuler));
-							mCurrentlyEditedRuler = null;
-							wasARulerItemCreated = true;
-						}
-						mustRefresh = true;
-					}
-					break;
+                    if (mCurrentlyEditedRuler is LinearRuler linearRuler)
+                    {
+                        if (linearRuler.AllowOffset)
+                        {
+                            if (mEditAction == EditAction.SCALE_RULER)
+                            {
+                                linearRuler.scaleToPoint(mouseCoordInStudSnapped);
+                                Actions.ActionManager.Instance.doAction(new Actions.Rulers.AddRuler(this, linearRuler));
+                                mCurrentlyEditedRuler = null;
+                                mEditAction = EditAction.NONE;
+                                wasARulerItemCreated = true;
+                            }
+                            else
+                            {
+                                linearRuler.Point2 = mouseCoordInStudSnapped;
+                                mEditAction = EditAction.SCALE_RULER;
+                            }
+                        }
+                        else
+                        {
+                            Actions.ActionManager.Instance.doAction(new Actions.Rulers.AddRuler(this, linearRuler));
+                            mCurrentlyEditedRuler = null;
+                            wasARulerItemCreated = true;
+                        }
+                        mustRefresh = true;
+                    }
+                    break;
 
 				case EditTool.CIRCLE:
 					if (mCurrentlyEditedRuler != null)
@@ -1191,7 +1189,7 @@ namespace BlueBrick.MapData
 			mMouseHasMoved = false;
 
 			// if we have finished to edit the current ruler, change the tool back to edition
-			if (wasARulerItemCreated && (Properties.Settings.Default.SwitchToEditionAfterRulerCreation))
+			if (wasARulerItemCreated && Properties.Settings.Default.SwitchToEditionAfterRulerCreation)
 				MainForm.Instance.rulerSelectAndEditToolStripMenuItem_Click(null, null);
 
 			return mustRefresh;
@@ -1202,21 +1200,21 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="oldScaleInPixelPerStud">The previous scale</param>
 		/// <param name="newScaleInPixelPerStud">The new scale</param>
-		public override void zoomScaleChangeNotification(double oldScaleInPixelPerStud, double newScaleInPixelPerStud)
+		public override void ZoomScaleChangeNotification(double oldScaleInPixelPerStud, double newScaleInPixelPerStud)
 		{
 			foreach (RulerItem item in mRulers)
 				item.zoomScaleChangeNotification(oldScaleInPixelPerStud, newScaleInPixelPerStud);
 			// then update the selection rectangle because some ruler has been resized
-			updateBoundingSelectionRectangle();
+			UpdateBoundingSelectionRectangle();
 		}
 
 		/// <summary>
 		/// Select all the item inside the rectangle in the current selected layer
 		/// </summary>
 		/// <param name="selectionRectangeInStud">the rectangle in which select the items</param>
-		public override void selectInRectangle(RectangleF selectionRectangeInStud)
+		public override void SelectInRectangle(RectangleF selectionRectangeInStud)
 		{
-			selectInRectangle(selectionRectangeInStud, mRulers);
+			SelectInRectangle(selectionRectangeInStud, mRulers);
 		}
 
 		/// <summary>
@@ -1226,11 +1224,11 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="pointInStud">the rough point to snap</param>
 		/// <returns>a near snap point</returns>
-		public PointF getSnapPoint(PointF pointInStud)
+		public PointF GetSnapPoint(PointF pointInStud)
 		{
 			// don't do anything is the snapping is not enabled
 			if (SnapGridEnabled)
-				return Layer.snapToGrid(pointInStud, true);
+				return SnapToGrid(pointInStud, true);
 
 			// by default do not change anything
 			return pointInStud;

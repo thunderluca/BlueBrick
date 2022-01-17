@@ -23,8 +23,8 @@ namespace BlueBrick.Actions.Rulers
 {
 	class AttachRulerToBrick : Action
 	{
-		private RulerAttachementSet.Anchor mAnchor = null;
-		private LayerBrick.Brick mBrick = null;
+		private readonly RulerAttachementSet.Anchor mAnchor = null;
+		private readonly LayerBrick.Brick mBrick = null;
 
 		public AttachRulerToBrick(LayerRuler.RulerItem rulerItem, LayerBrick.Brick brick)
 		{
@@ -37,7 +37,7 @@ namespace BlueBrick.Actions.Rulers
 
 		public override string GetName()
 		{
-			return BlueBrick.Properties.Resources.ActionAttachRulerToBrick;
+			return Properties.Resources.ActionAttachRulerToBrick;
 		}
 
 		public override void Redo()

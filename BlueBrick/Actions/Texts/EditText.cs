@@ -22,16 +22,16 @@ namespace BlueBrick.Actions.Texts
 {
 	class EditText : Action
 	{
-		private LayerText mTextLayer = null;
-		private LayerText.TextCell mTextCell = null;
-		private string mOldText = null;
-		private string mNewText = null;
-		private Font mOldFont = null;
-		private Font mNewFont = null;
-		private Color mOldColor;
-		private Color mNewColor;
-		private StringAlignment mOldAlignment;
-		private StringAlignment mNewAlignment;
+		private readonly LayerText mTextLayer = null;
+		private readonly LayerText.TextCell mTextCell = null;
+		private readonly string mOldText = null;
+		private readonly string mNewText = null;
+		private readonly Font mOldFont = null;
+		private readonly Font mNewFont = null;
+		private readonly Color mOldColor;
+		private readonly Color mNewColor;
+		private readonly StringAlignment mOldAlignment;
+		private readonly StringAlignment mNewAlignment;
 
 		public EditText(LayerText layer, LayerText.TextCell cellToEdit, string newText, Font newFont, Color newColor, StringAlignment newAlignment)
 		{
@@ -49,7 +49,7 @@ namespace BlueBrick.Actions.Texts
 
 		public override string GetName()
 		{
-			string actionName = BlueBrick.Properties.Resources.ActionEditText;
+			string actionName = Properties.Resources.ActionEditText;
 			string text = mTextCell.Text.Replace("\r\n", " ");
 			if (text.Length > 10)
 				text = text.Substring(0, 10) + "...";
@@ -63,7 +63,7 @@ namespace BlueBrick.Actions.Texts
 			mTextCell.Font = mNewFont;
 			mTextCell.FontColor = mNewColor;
 			mTextCell.TextAlignment = mNewAlignment;
-			mTextLayer.updateBoundingSelectionRectangle();
+			mTextLayer.UpdateBoundingSelectionRectangle();
 		}
 
 		public override void Undo()
@@ -72,7 +72,7 @@ namespace BlueBrick.Actions.Texts
 			mTextCell.Font = mOldFont;
 			mTextCell.FontColor = mOldColor;
 			mTextCell.TextAlignment = mOldAlignment;
-			mTextLayer.updateBoundingSelectionRectangle();
+			mTextLayer.UpdateBoundingSelectionRectangle();
 		}
 	}
 }

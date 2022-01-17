@@ -56,26 +56,26 @@ namespace BlueBrick.MapData.Tools
 			{
 				switch (mCurrentUnit)
 				{
-					case Unit.STUD: return this.DistanceInStud;
-					case Unit.LDU: return this.DistanceInLDU;
-					case Unit.STRAIGHT_TRACK: return this.DistanceInStraightTrack;
-					case Unit.MODULE: return this.DistanceInModule;
-					case Unit.METER: return this.DistanceInMeter;
-					case Unit.FEET: return this.DistanceInFeet;
+					case Unit.STUD: return DistanceInStud;
+					case Unit.LDU: return DistanceInLDU;
+					case Unit.STRAIGHT_TRACK: return DistanceInStraightTrack;
+					case Unit.MODULE: return DistanceInModule;
+					case Unit.METER: return DistanceInMeter;
+					case Unit.FEET: return DistanceInFeet;
 				}
-				return this.DistanceInStud;
+				return DistanceInStud;
 			}
 
 			set
 			{
 				switch (mCurrentUnit)
 				{
-					case Unit.STUD: this.DistanceInStud = value; break;
-					case Unit.LDU: this.DistanceInLDU = value; break;
-					case Unit.STRAIGHT_TRACK: this.DistanceInStraightTrack = value; break;
-					case Unit.MODULE: this.DistanceInModule = value; break;
-					case Unit.METER: this.DistanceInMeter = value; break;
-					case Unit.FEET: this.DistanceInFeet = value; break;
+					case Unit.STUD: DistanceInStud = value; break;
+					case Unit.LDU: DistanceInLDU = value; break;
+					case Unit.STRAIGHT_TRACK: DistanceInStraightTrack = value; break;
+					case Unit.MODULE: DistanceInModule = value; break;
+					case Unit.METER: DistanceInMeter = value; break;
+					case Unit.FEET: DistanceInFeet = value; break;
 				}
 			}
 		}
@@ -94,8 +94,8 @@ namespace BlueBrick.MapData.Tools
 		/// </summary>
 		public float DistanceInLDU
 		{
-			get { return (mDistanceInStud * 20.0f); }
-			set { mDistanceInStud = (value * 0.05f); }
+			get { return mDistanceInStud * 20.0f; }
+			set { mDistanceInStud = value * 0.05f; }
 		}
 
 		/// <summary>
@@ -103,8 +103,8 @@ namespace BlueBrick.MapData.Tools
 		/// </summary>
 		public float DistanceInModule
 		{
-			get { return (mDistanceInStud / 96.0f); }
-			set { mDistanceInStud = (value * 96.0f); }
+			get { return mDistanceInStud / 96.0f; }
+			set { mDistanceInStud = value * 96.0f; }
 		}
 
 		/// <summary>
@@ -112,8 +112,8 @@ namespace BlueBrick.MapData.Tools
 		/// </summary>
 		public float DistanceInMeter
 		{
-			get { return (mDistanceInStud * 0.008f); }
-			set { mDistanceInStud = (value * 125.0f); }
+			get { return mDistanceInStud * 0.008f; }
+			set { mDistanceInStud = value * 125.0f; }
 		}
 
 		/// <summary>
@@ -121,8 +121,8 @@ namespace BlueBrick.MapData.Tools
 		/// </summary>
 		public float DistanceInFeet
 		{
-			get { return (mDistanceInStud * 0.026248f); }
-			set { mDistanceInStud = (value * 38.09814081f); }
+			get { return mDistanceInStud * 0.026248f; }
+			set { mDistanceInStud = value * 38.09814081f; }
 		}
 
 		/// <summary>
@@ -130,8 +130,8 @@ namespace BlueBrick.MapData.Tools
 		/// </summary>
 		public float DistanceInStraightTrack
 		{
-			get { return (mDistanceInStud * 0.0625f); }
-			set { mDistanceInStud = (value * 16.0f); }
+			get { return mDistanceInStud * 0.0625f; }
+			set { mDistanceInStud = value * 16.0f; }
 		}
 		#endregion
 
@@ -149,9 +149,9 @@ namespace BlueBrick.MapData.Tools
 		public Distance(float distance, Unit unit)
 		{
 			// first set the unit
-			this.CurrentUnit = unit;
+			CurrentUnit = unit;
 			// then set the value
-			this.DistanceInCurrentUnit = distance;
+			DistanceInCurrentUnit = distance;
 		}
 		#endregion
 
@@ -165,12 +165,12 @@ namespace BlueBrick.MapData.Tools
 		{
 			switch (mCurrentUnit)
 			{
-				case Unit.STUD: return BlueBrick.Properties.Resources.UnitStud;
-				case Unit.LDU: return BlueBrick.Properties.Resources.UnitLDU;
-				case Unit.STRAIGHT_TRACK: return BlueBrick.Properties.Resources.UnitStraightTrack;
-				case Unit.MODULE: return BlueBrick.Properties.Resources.UnitModule;
-				case Unit.METER: return BlueBrick.Properties.Resources.UnitMeter;
-				case Unit.FEET: return BlueBrick.Properties.Resources.UnitFeet;
+				case Unit.STUD: return Properties.Resources.UnitStud;
+				case Unit.LDU: return Properties.Resources.UnitLDU;
+				case Unit.STRAIGHT_TRACK: return Properties.Resources.UnitStraightTrack;
+				case Unit.MODULE: return Properties.Resources.UnitModule;
+				case Unit.METER: return Properties.Resources.UnitMeter;
+				case Unit.FEET: return Properties.Resources.UnitFeet;
 			}
 			return string.Empty;
 		}
@@ -185,7 +185,7 @@ namespace BlueBrick.MapData.Tools
 		public string ToString(string format, bool withUnit)
 		{
 			// convert the value into string using the format
-			string formatedDistance = this.DistanceInCurrentUnit.ToString(format, System.Globalization.CultureInfo.InvariantCulture);
+			string formatedDistance = DistanceInCurrentUnit.ToString(format, System.Globalization.CultureInfo.InvariantCulture);
 			// add the unit name if needed
 			if (withUnit)
 				formatedDistance += " " + getCurrentUnitName();

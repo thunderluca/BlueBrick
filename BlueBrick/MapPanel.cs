@@ -161,186 +161,186 @@ namespace BlueBrick
 
 		private void InitializeComponent()
 		{
-			this.components = new System.ComponentModel.Container();
+			components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapPanel));
-			this.contextMenuStrip = new ContextMenuStrip(this.components);
-			this.bringToFrontToolStripMenuItem = new ToolStripMenuItem();
-			this.sendToBackToolStripMenuItem = new ToolStripMenuItem();
-			this.selectToolStripSeparator = new ToolStripSeparator();
-			this.selectAllToolStripMenuItem = new ToolStripMenuItem();
-			this.deselectAllToolStripMenuItem = new ToolStripMenuItem();
-			this.selectPathToolStripMenuItem = new ToolStripMenuItem();
-			this.groupToolStripSeparator = new ToolStripSeparator();
-			this.groupToolStripMenuItem = new ToolStripMenuItem();
-			this.ungroupToolStripMenuItem = new ToolStripMenuItem();
-			this.attachRulerToolStripSeparator = new ToolStripSeparator();
-			this.attachToolStripMenuItem = new ToolStripMenuItem();
-			this.detachToolStripMenuItem = new ToolStripMenuItem();
-			this.useAsModelToolStripMenuItem = new ToolStripMenuItem();
-			this.propertiesToolStripSeparator = new ToolStripSeparator();
-			this.propertiesToolStripMenuItem = new ToolStripMenuItem();
-			this.appearanceToolStripSeparator = new ToolStripSeparator();
-			this.scrollBarToolStripMenuItem = new ToolStripMenuItem();
-			this.horizontalScrollBar = new HScrollBar();
-			this.verticalScrollBar = new VScrollBar();
-			this.contextMenuStrip.SuspendLayout();
-			this.SuspendLayout();
+			contextMenuStrip = new ContextMenuStrip(components);
+			bringToFrontToolStripMenuItem = new ToolStripMenuItem();
+			sendToBackToolStripMenuItem = new ToolStripMenuItem();
+			selectToolStripSeparator = new ToolStripSeparator();
+			selectAllToolStripMenuItem = new ToolStripMenuItem();
+			deselectAllToolStripMenuItem = new ToolStripMenuItem();
+			selectPathToolStripMenuItem = new ToolStripMenuItem();
+			groupToolStripSeparator = new ToolStripSeparator();
+			groupToolStripMenuItem = new ToolStripMenuItem();
+			ungroupToolStripMenuItem = new ToolStripMenuItem();
+			attachRulerToolStripSeparator = new ToolStripSeparator();
+			attachToolStripMenuItem = new ToolStripMenuItem();
+			detachToolStripMenuItem = new ToolStripMenuItem();
+			useAsModelToolStripMenuItem = new ToolStripMenuItem();
+			propertiesToolStripSeparator = new ToolStripSeparator();
+			propertiesToolStripMenuItem = new ToolStripMenuItem();
+			appearanceToolStripSeparator = new ToolStripSeparator();
+			scrollBarToolStripMenuItem = new ToolStripMenuItem();
+			horizontalScrollBar = new HScrollBar();
+			verticalScrollBar = new VScrollBar();
+			contextMenuStrip.SuspendLayout();
+			SuspendLayout();
 			// 
 			// contextMenuStrip
 			// 
-			resources.ApplyResources(this.contextMenuStrip, "contextMenuStrip");
-			this.contextMenuStrip.Items.AddRange(new ToolStripItem[] {
-            this.bringToFrontToolStripMenuItem,
-            this.sendToBackToolStripMenuItem,
-            this.selectToolStripSeparator,
-            this.selectAllToolStripMenuItem,
-            this.deselectAllToolStripMenuItem,
-            this.selectPathToolStripMenuItem,
-            this.groupToolStripSeparator,
-            this.groupToolStripMenuItem,
-            this.ungroupToolStripMenuItem,
-            this.attachRulerToolStripSeparator,
-            this.attachToolStripMenuItem,
-            this.detachToolStripMenuItem,
-            this.useAsModelToolStripMenuItem,
-            this.propertiesToolStripSeparator,
-            this.propertiesToolStripMenuItem,
-            this.appearanceToolStripSeparator,
-            this.scrollBarToolStripMenuItem});
-			this.contextMenuStrip.Name = "contextMenuStrip";
-			this.contextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStrip_Opening);
+			resources.ApplyResources(contextMenuStrip, "contextMenuStrip");
+			contextMenuStrip.Items.AddRange(new ToolStripItem[] {
+            bringToFrontToolStripMenuItem,
+            sendToBackToolStripMenuItem,
+            selectToolStripSeparator,
+            selectAllToolStripMenuItem,
+            deselectAllToolStripMenuItem,
+            selectPathToolStripMenuItem,
+            groupToolStripSeparator,
+            groupToolStripMenuItem,
+            ungroupToolStripMenuItem,
+            attachRulerToolStripSeparator,
+            attachToolStripMenuItem,
+            detachToolStripMenuItem,
+            useAsModelToolStripMenuItem,
+            propertiesToolStripSeparator,
+            propertiesToolStripMenuItem,
+            appearanceToolStripSeparator,
+            scrollBarToolStripMenuItem});
+			contextMenuStrip.Name = "contextMenuStrip";
+			contextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(ContextMenuStrip_Opening);
 			// 
 			// bringToFrontToolStripMenuItem
 			// 
-			resources.ApplyResources(this.bringToFrontToolStripMenuItem, "bringToFrontToolStripMenuItem");
-			this.bringToFrontToolStripMenuItem.Name = "bringToFrontToolStripMenuItem";
-			this.bringToFrontToolStripMenuItem.Click += this.BringToFrontToolStripMenuItem_Click;
+			resources.ApplyResources(bringToFrontToolStripMenuItem, "bringToFrontToolStripMenuItem");
+			bringToFrontToolStripMenuItem.Name = "bringToFrontToolStripMenuItem";
+			bringToFrontToolStripMenuItem.Click += BringToFrontToolStripMenuItem_Click;
 			// 
 			// sendToBackToolStripMenuItem
 			// 
-			resources.ApplyResources(this.sendToBackToolStripMenuItem, "sendToBackToolStripMenuItem");
-			this.sendToBackToolStripMenuItem.Name = "sendToBackToolStripMenuItem";
-			this.sendToBackToolStripMenuItem.Click += this.SendToBackToolStripMenuItem_Click;
+			resources.ApplyResources(sendToBackToolStripMenuItem, "sendToBackToolStripMenuItem");
+			sendToBackToolStripMenuItem.Name = "sendToBackToolStripMenuItem";
+			sendToBackToolStripMenuItem.Click += SendToBackToolStripMenuItem_Click;
 			// 
 			// selectToolStripSeparator
 			// 
-			resources.ApplyResources(this.selectToolStripSeparator, "selectToolStripSeparator");
-			this.selectToolStripSeparator.Name = "selectToolStripSeparator";
+			resources.ApplyResources(selectToolStripSeparator, "selectToolStripSeparator");
+			selectToolStripSeparator.Name = "selectToolStripSeparator";
 			// 
 			// selectAllToolStripMenuItem
 			// 
-			resources.ApplyResources(this.selectAllToolStripMenuItem, "selectAllToolStripMenuItem");
-			this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-			this.selectAllToolStripMenuItem.Click += this.SelectAllToolStripMenuItem_Click;
+			resources.ApplyResources(selectAllToolStripMenuItem, "selectAllToolStripMenuItem");
+			selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
+			selectAllToolStripMenuItem.Click += SelectAllToolStripMenuItem_Click;
 			// 
 			// deselectAllToolStripMenuItem
 			// 
-			resources.ApplyResources(this.deselectAllToolStripMenuItem, "deselectAllToolStripMenuItem");
-			this.deselectAllToolStripMenuItem.Name = "deselectAllToolStripMenuItem";
-			this.deselectAllToolStripMenuItem.Click += this.DeselectAllToolStripMenuItem_Click;
+			resources.ApplyResources(deselectAllToolStripMenuItem, "deselectAllToolStripMenuItem");
+			deselectAllToolStripMenuItem.Name = "deselectAllToolStripMenuItem";
+			deselectAllToolStripMenuItem.Click += DeselectAllToolStripMenuItem_Click;
 			// 
 			// selectPathToolStripMenuItem
 			// 
-			resources.ApplyResources(this.selectPathToolStripMenuItem, "selectPathToolStripMenuItem");
-			this.selectPathToolStripMenuItem.Name = "selectPathToolStripMenuItem";
-			this.selectPathToolStripMenuItem.Click += this.SelectPathToolStripMenuItem_Click;
+			resources.ApplyResources(selectPathToolStripMenuItem, "selectPathToolStripMenuItem");
+			selectPathToolStripMenuItem.Name = "selectPathToolStripMenuItem";
+			selectPathToolStripMenuItem.Click += SelectPathToolStripMenuItem_Click;
 			// 
 			// groupToolStripSeparator
 			// 
-			resources.ApplyResources(this.groupToolStripSeparator, "groupToolStripSeparator");
-			this.groupToolStripSeparator.Name = "groupToolStripSeparator";
+			resources.ApplyResources(groupToolStripSeparator, "groupToolStripSeparator");
+			groupToolStripSeparator.Name = "groupToolStripSeparator";
 			// 
 			// groupToolStripMenuItem
 			// 
-			resources.ApplyResources(this.groupToolStripMenuItem, "groupToolStripMenuItem");
-			this.groupToolStripMenuItem.Name = "groupToolStripMenuItem";
-			this.groupToolStripMenuItem.Click += this.GroupToolStripMenuItem_Click;
+			resources.ApplyResources(groupToolStripMenuItem, "groupToolStripMenuItem");
+			groupToolStripMenuItem.Name = "groupToolStripMenuItem";
+			groupToolStripMenuItem.Click += GroupToolStripMenuItem_Click;
 			// 
 			// ungroupToolStripMenuItem
 			// 
-			resources.ApplyResources(this.ungroupToolStripMenuItem, "ungroupToolStripMenuItem");
-			this.ungroupToolStripMenuItem.Name = "ungroupToolStripMenuItem";
-			this.ungroupToolStripMenuItem.Click += this.UngroupToolStripMenuItem_Click;
+			resources.ApplyResources(ungroupToolStripMenuItem, "ungroupToolStripMenuItem");
+			ungroupToolStripMenuItem.Name = "ungroupToolStripMenuItem";
+			ungroupToolStripMenuItem.Click += UngroupToolStripMenuItem_Click;
 			// 
 			// attachRulerToolStripSeparator
 			// 
-			resources.ApplyResources(this.attachRulerToolStripSeparator, "attachRulerToolStripSeparator");
-			this.attachRulerToolStripSeparator.Name = "attachRulerToolStripSeparator";
+			resources.ApplyResources(attachRulerToolStripSeparator, "attachRulerToolStripSeparator");
+			attachRulerToolStripSeparator.Name = "attachRulerToolStripSeparator";
 			// 
 			// attachToolStripMenuItem
 			// 
-			resources.ApplyResources(this.attachToolStripMenuItem, "attachToolStripMenuItem");
-			this.attachToolStripMenuItem.Name = "attachToolStripMenuItem";
-			this.attachToolStripMenuItem.Click += this.AttachToolStripMenuItem_Click;
+			resources.ApplyResources(attachToolStripMenuItem, "attachToolStripMenuItem");
+			attachToolStripMenuItem.Name = "attachToolStripMenuItem";
+			attachToolStripMenuItem.Click += AttachToolStripMenuItem_Click;
 			// 
 			// detachToolStripMenuItem
 			// 
-			resources.ApplyResources(this.detachToolStripMenuItem, "detachToolStripMenuItem");
-			this.detachToolStripMenuItem.Name = "detachToolStripMenuItem";
-			this.detachToolStripMenuItem.Click += this.DetachToolStripMenuItem_Click;
+			resources.ApplyResources(detachToolStripMenuItem, "detachToolStripMenuItem");
+			detachToolStripMenuItem.Name = "detachToolStripMenuItem";
+			detachToolStripMenuItem.Click += DetachToolStripMenuItem_Click;
 			// 
 			// useAsModelToolStripMenuItem
 			// 
-			resources.ApplyResources(this.useAsModelToolStripMenuItem, "useAsModelToolStripMenuItem");
-			this.useAsModelToolStripMenuItem.Name = "useAsModelToolStripMenuItem";
-			this.useAsModelToolStripMenuItem.Click += this.UseAsModelToolStripMenuItem_Click;
+			resources.ApplyResources(useAsModelToolStripMenuItem, "useAsModelToolStripMenuItem");
+			useAsModelToolStripMenuItem.Name = "useAsModelToolStripMenuItem";
+			useAsModelToolStripMenuItem.Click += UseAsModelToolStripMenuItem_Click;
 			// 
 			// propertiesToolStripSeparator
 			// 
-			resources.ApplyResources(this.propertiesToolStripSeparator, "propertiesToolStripSeparator");
-			this.propertiesToolStripSeparator.Name = "propertiesToolStripSeparator";
+			resources.ApplyResources(propertiesToolStripSeparator, "propertiesToolStripSeparator");
+			propertiesToolStripSeparator.Name = "propertiesToolStripSeparator";
 			// 
 			// propertiesToolStripMenuItem
 			// 
-			resources.ApplyResources(this.propertiesToolStripMenuItem, "propertiesToolStripMenuItem");
-			this.propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
-			this.propertiesToolStripMenuItem.Click += this.PropertiesToolStripMenuItem_Click;
+			resources.ApplyResources(propertiesToolStripMenuItem, "propertiesToolStripMenuItem");
+			propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
+			propertiesToolStripMenuItem.Click += PropertiesToolStripMenuItem_Click;
 			// 
 			// appearanceToolStripSeparator
 			// 
-			resources.ApplyResources(this.appearanceToolStripSeparator, "appearanceToolStripSeparator");
-			this.appearanceToolStripSeparator.Name = "appearanceToolStripSeparator";
+			resources.ApplyResources(appearanceToolStripSeparator, "appearanceToolStripSeparator");
+			appearanceToolStripSeparator.Name = "appearanceToolStripSeparator";
 			// 
 			// scrollBarToolStripMenuItem
 			// 
-			resources.ApplyResources(this.scrollBarToolStripMenuItem, "scrollBarToolStripMenuItem");
-			this.scrollBarToolStripMenuItem.CheckOnClick = true;
-			this.scrollBarToolStripMenuItem.Name = "scrollBarToolStripMenuItem";
-			this.scrollBarToolStripMenuItem.Click += this.ScrollBarToolStripMenuItem_Click;
+			resources.ApplyResources(scrollBarToolStripMenuItem, "scrollBarToolStripMenuItem");
+			scrollBarToolStripMenuItem.CheckOnClick = true;
+			scrollBarToolStripMenuItem.Name = "scrollBarToolStripMenuItem";
+			scrollBarToolStripMenuItem.Click += ScrollBarToolStripMenuItem_Click;
 			// 
 			// horizontalScrollBar
 			// 
-			resources.ApplyResources(this.horizontalScrollBar, "horizontalScrollBar");
-			this.horizontalScrollBar.Name = "horizontalScrollBar";
-			this.horizontalScrollBar.Scroll += this.HorizontalScrollBar_Scroll;
-			this.horizontalScrollBar.MouseEnter += this.HorizontalScrollBar_MouseEnter;
+			resources.ApplyResources(horizontalScrollBar, "horizontalScrollBar");
+			horizontalScrollBar.Name = "horizontalScrollBar";
+			horizontalScrollBar.Scroll += HorizontalScrollBar_Scroll;
+			horizontalScrollBar.MouseEnter += HorizontalScrollBar_MouseEnter;
 			// 
 			// verticalScrollBar
 			// 
-			resources.ApplyResources(this.verticalScrollBar, "verticalScrollBar");
-			this.verticalScrollBar.Name = "verticalScrollBar";
-			this.verticalScrollBar.Scroll += this.VerticalScrollBar_Scroll;
-			this.verticalScrollBar.MouseEnter += this.VerticalScrollBar_MouseEnter;
+			resources.ApplyResources(verticalScrollBar, "verticalScrollBar");
+			verticalScrollBar.Name = "verticalScrollBar";
+			verticalScrollBar.Scroll += VerticalScrollBar_Scroll;
+			verticalScrollBar.MouseEnter += VerticalScrollBar_MouseEnter;
 			// 
 			// MapPanel
 			// 
 			resources.ApplyResources(this, "$this");
-			this.AllowDrop = true;
-			this.ContextMenuStrip = this.contextMenuStrip;
-			this.Controls.Add(this.horizontalScrollBar);
-			this.Controls.Add(this.verticalScrollBar);
-			this.SizeChanged += this.MapPanel_SizeChanged;
-			this.DragDrop += this.MapPanel_DragDrop;
-			this.DragEnter += this.MapPanel_DragEnter;
-			this.DragOver += this.MapPanel_DragOver;
-			this.DragLeave += this.MapPanel_DragLeave;
-			this.MouseDown += this.MapPanel_MouseDown;
-			this.MouseEnter += this.MapPanel_MouseEnter;
-			this.MouseMove += this.MapPanel_MouseMove;
-			this.MouseUp += this.MapPanel_MouseUp;
-			this.Resize += this.MapPanel_Resize;
-			this.contextMenuStrip.ResumeLayout(false);
-			this.ResumeLayout(false);
+			AllowDrop = true;
+			ContextMenuStrip = contextMenuStrip;
+			Controls.Add(horizontalScrollBar);
+			Controls.Add(verticalScrollBar);
+			SizeChanged += MapPanel_SizeChanged;
+			DragDrop += MapPanel_DragDrop;
+			DragEnter += MapPanel_DragEnter;
+			DragOver += MapPanel_DragOver;
+			DragLeave += MapPanel_DragLeave;
+			MouseDown += MapPanel_MouseDown;
+			MouseEnter += MapPanel_MouseEnter;
+			MouseMove += MapPanel_MouseMove;
+			MouseUp += MapPanel_MouseUp;
+			Resize += MapPanel_Resize;
+			contextMenuStrip.ResumeLayout(false);
+			ResumeLayout(false);
 
 		}
 
@@ -394,14 +394,14 @@ namespace BlueBrick
             g.PixelOffsetMode = PixelOffsetMode.None;
 
 			// NOTE: the background color is set directly in this.BackColor !!!
-			this.BackColor = Map.Instance.BackgroundColor;
+			BackColor = Map.Instance.BackgroundColor;
 
 			// compute the eventual height of the scrollbar if visible
-			int currentScrollbarHeight = this.horizontalScrollBar.Visible ? this.horizontalScrollBar.Height : 0;
+			int currentScrollbarHeight = horizontalScrollBar.Visible ? horizontalScrollBar.Height : 0;
 
 			// call the draw of the map
-			float widthInStud = (float)(this.Size.Width / mViewScale);
-            float heightInStud = (float)((this.Size.Height - mCurrentStatusBarHeight - currentScrollbarHeight) / mViewScale);			
+			float widthInStud = (float)(Size.Width / mViewScale);
+            float heightInStud = (float)((Size.Height - mCurrentStatusBarHeight - currentScrollbarHeight) / mViewScale);			
 			float startXInStud = (float)mViewCornerX;
 			float startYInStud = (float)mViewCornerY;
 			RectangleF rectangle = new RectangleF(startXInStud, startYInStud, widthInStud, heightInStud);
@@ -428,8 +428,8 @@ namespace BlueBrick
 
 		public void MoveViewToMapCenter()
 		{
-			float halfViewWidthInStud = (float)(this.Size.Width / (mViewScale * 2));
-			float halfViewHeightInStud = (float)(this.Size.Height / (mViewScale * 2));
+			float halfViewWidthInStud = (float)(Size.Width / (mViewScale * 2));
+			float halfViewHeightInStud = (float)(Size.Height / (mViewScale * 2));
 			// get the total area of the map
 			mMapTotalAreaInStud = Map.Instance.GetTotalAreaInStud(false);
 			mViewCornerX = ((mMapTotalAreaInStud.Left + mMapTotalAreaInStud.Right) / 2) - halfViewWidthInStud;
@@ -447,13 +447,13 @@ namespace BlueBrick
 		private Cursor GetDefaultCursor(PointF mouseCoordInStud)
 		{
 			if (Map.Instance.SelectedLayer != null)
-				return Map.Instance.SelectedLayer.getDefaultCursorWithoutMouseClick(mouseCoordInStud);
+				return Map.Instance.SelectedLayer.GetDefaultCursorWithoutMouseClick(mouseCoordInStud);
 			return Cursors.Default;
 		}
 
 		public void SetDefaultCursor()
 		{
-			this.Cursor = GetDefaultCursor(GetPointCoordInStud(this.PointToClient(Cursor.Position)));
+			Cursor = GetDefaultCursor(GetPointCoordInStud(PointToClient(Cursor.Position)));
 		}
 
 		private PointF GetPointCoordInStud(Point pointCoordInPixel)
@@ -481,7 +481,7 @@ namespace BlueBrick
 			bool mustRefreshView = false;
 
 			// take the focus anyway if we clik in the map view
-			this.Focus();
+			Focus();
 
 			// the cursor to set according to the action
 			mLastDownMouseCoordInStud = GetMouseCoordInStud(e);
@@ -491,7 +491,7 @@ namespace BlueBrick
 			switch (e.Button)
 			{
 				case MouseButtons.Left:
-					if (Control.ModifierKeys == Settings.Default.MouseZoomPanKey)
+					if (ModifierKeys == Settings.Default.MouseZoomPanKey)
 					{
 						// this is the pan with the keys, not the wheel
 						actionToDo = ActionToDoInMouseEvent.SCROLL_VIEW;
@@ -502,7 +502,7 @@ namespace BlueBrick
 						mustRefreshView = Map.Instance.MouseDown(e, mLastDownMouseCoordInStud);
 						mIsMouseHandledByMap = true;
 					}
-					else if ((Map.Instance.SelectedLayer != null) && (Map.Instance.SelectedLayer.Visible))
+					else if ((Map.Instance.SelectedLayer != null) && Map.Instance.SelectedLayer.Visible)
 					{
 						// if the selected layer is not visible don't even start a selection or double click
 						if (e.Clicks == 1)
@@ -527,7 +527,7 @@ namespace BlueBrick
 					break;
 
 				case MouseButtons.Right:
-					if (Control.ModifierKeys == Settings.Default.MouseZoomPanKey)
+					if (ModifierKeys == Settings.Default.MouseZoomPanKey)
 					{
 						actionToDo = ActionToDoInMouseEvent.ZOOM_VIEW;
 					}
@@ -546,19 +546,19 @@ namespace BlueBrick
 				case ActionToDoInMouseEvent.SCROLL_VIEW:
 					mIsScrolling = true;
 					mLastScrollMousePos = e.Location;
-					preferedCursor = BlueBrick.MainForm.Instance.PanViewCursor;
+					preferedCursor = MainForm.Instance.PanViewCursor;
 					break;
 
 				case ActionToDoInMouseEvent.ZOOM_VIEW:
 					mIsZooming = true;
 					mFirstZoomMousePos = e.Location;
 					mLastZoomMousePos = e.Location;
-					preferedCursor = BlueBrick.MainForm.Instance.ZoomCursor;
+					preferedCursor = MainForm.Instance.ZoomCursor;
 					break;
 			}
 
 			// set the cursor with the preference
-			this.Cursor = preferedCursor;
+			Cursor = preferedCursor;
 
 			// check if we need to update the view
 			if (mustRefreshView)
@@ -571,14 +571,14 @@ namespace BlueBrick
 			bool mustRefreshView = false;
 			PointF mouseCoordInStud = GetMouseCoordInStud(e);
 			string statusBarMessage = "(" + mouseCoordInStud.X.ToString("F1") + " / " + mouseCoordInStud.Y.ToString("F1") + ") ";
-			Cursor preferedCursor = this.Cursor;
+			Cursor preferedCursor = Cursor;
 
 			switch (e.Button)
 			{
 				case MouseButtons.Left:
 					// take the focus anyway that way, we can receive an event mouseup
 					// and this simulate a dragndrop in the map
-					this.Focus();
+					Focus();
 
 					// check if we are using a selecion rectangle
 					if (mIsSelectionRectangleOn)
@@ -587,14 +587,14 @@ namespace BlueBrick
 						mSelectionRectangle.Y = Math.Min(e.Y, mSelectionRectangleInitialPosition.Y);
 						mSelectionRectangle.Width = Math.Abs(e.X - mSelectionRectangleInitialPosition.X);
 						mSelectionRectangle.Height = Math.Abs(e.Y - mSelectionRectangleInitialPosition.Y);
-						this.Cursor = Cursors.Cross;
+						Cursor = Cursors.Cross;
 						mustRefreshView = true;
 					}
 					else if (mIsMouseHandledByMap)
 					{
 						// left button is handle by layers (so give it to the map)
 						mustRefreshView = Map.Instance.MouseMove(e, mouseCoordInStud, ref preferedCursor);
-						this.Cursor = preferedCursor;
+						Cursor = preferedCursor;
 					}
 					else if (mIsZooming)
 					{
@@ -616,7 +616,7 @@ namespace BlueBrick
 					{
 						// left button is handle by layers (so give it to the map)
 						mustRefreshView = Map.Instance.MouseMove(e, mouseCoordInStud, ref preferedCursor);
-						this.Cursor = preferedCursor;
+						Cursor = preferedCursor;
 					}
 					else if (mIsZooming)
 					{
@@ -631,7 +631,7 @@ namespace BlueBrick
 					if (mIsMouseHandledByMap)
 						mustRefreshView = Map.Instance.MouseMove(e, mouseCoordInStud, ref preferedCursor);
 					// set the cursor with the preference
-					this.Cursor = preferedCursor;
+					Cursor = preferedCursor;
 
 					// nothing to do if we didn't move
 					if ((mLastMousePos.X != e.X) || (mLastMousePos.Y != e.Y))
@@ -648,7 +648,7 @@ namespace BlueBrick
                         {
                             if (Map.Instance.SelectedLayer is LayerText textLayer)
                             {
-                                LayerText.TextCell textUnderMouse = textLayer.getTextCellUnderMouse(mouseCoordInStud);
+                                LayerText.TextCell textUnderMouse = textLayer.GetTextCellUnderMouse(mouseCoordInStud);
                                 if (textUnderMouse != null)
                                 {
                                     statusBarMessage += textUnderMouse.Text.Replace("\r", "");
@@ -738,7 +738,7 @@ namespace BlueBrick
 			}
 
 			// restore the default cursor
-			this.Cursor = GetDefaultCursor(mouseCoordInStud);
+			Cursor = GetDefaultCursor(mouseCoordInStud);
 
 			// check if we need to update the view
 			if (mustRefreshView)
@@ -756,7 +756,7 @@ namespace BlueBrick
 
 				// ask the main window if one part was selected in the part lib
 				// because the getData from the event doesn't work well under mono, normally it should be: e.Data.GetData(DataFormats.SystemString) as string
-				string partDropNumber = (this.TopLevelControl as MainForm).getDraggingPartNumberInPartLib();
+				string partDropNumber = (TopLevelControl as MainForm).getDraggingPartNumberInPartLib();
 
 				// check if we can add it
 				Map.BrickAddability canAdd = Map.Instance.CanAddBrick(partDropNumber);
@@ -780,7 +780,7 @@ namespace BlueBrick
 
 			// check again if we are not dragging a part, maybe we drag a file
 			if (mCurrentPartDrop == null)
-				(this.TopLevelControl as MainForm).MainForm_DragEnter(sender, e);
+				(TopLevelControl as MainForm).MainForm_DragEnter(sender, e);
 		}
 
 		private void MapPanel_DragOver(object sender, DragEventArgs e)
@@ -789,9 +789,9 @@ namespace BlueBrick
 			if ((mCurrentPartDrop != null) && (mBrickLayerThatReceivePartDrop != null))
 			{
 				// memorise the position of the mouse snapped to the grid
-				PointF mouseCoordInStud = GetScreenPointInStud(this.PointToClient(new Point(e.X, e.Y)));
+				PointF mouseCoordInStud = GetScreenPointInStud(PointToClient(new Point(e.X, e.Y)));
 				mCurrentPartDrop.Center = mBrickLayerThatReceivePartDrop.getMovedSnapPoint(mouseCoordInStud, mCurrentPartDrop);
-				mBrickLayerThatReceivePartDrop.updateBoundingSelectionRectangle();
+				mBrickLayerThatReceivePartDrop.UpdateBoundingSelectionRectangle();
 				// refresh the view
 				UpdateView();
 			}
@@ -811,17 +811,17 @@ namespace BlueBrick
 				Map.Instance.AddBrick(mCurrentPartDrop);
 				// reset the dropping part number here and there
 				mCurrentPartDrop = null;
-				(this.TopLevelControl as MainForm).resetDraggingPartNumberInPartLib();
+				(TopLevelControl as MainForm).resetDraggingPartNumberInPartLib();
 				// refresh the view
 				UpdateView();
 				// and give the focus to the map panel such as if the user use the wheel to zoom
 				// just after after the drop, the zoom is performed instead of the part lib scrolling
-				this.Focus();
+				Focus();
 			}
 			else
 			{
 				// if it is not a string, call the drag enter of the main app
-				(this.TopLevelControl as MainForm).MainForm_DragDrop(sender, e);
+				(TopLevelControl as MainForm).MainForm_DragDrop(sender, e);
 			}
 		}
 
@@ -846,15 +846,15 @@ namespace BlueBrick
 		private void MapPanel_MouseEnter(object sender, EventArgs e)
 		{
 			// set the default cursor
-			this.Cursor = GetDefaultCursor(PointF.Empty);
+			Cursor = GetDefaultCursor(PointF.Empty);
 			// focus on the panel for handling the mouse scroll
-			this.Focus();
+			Focus();
 		}
 
 		public void MapPanel_MouseWheel(object sender, MouseEventArgs e)
 		{
 			// use the zoom cursor
-			this.Cursor = MainForm.Instance.ZoomCursor;
+			Cursor = MainForm.Instance.ZoomCursor;
 			// and call the zoom function
 			Zoom((float)(1.0f + (e.Delta * Settings.Default.WheelMouseZoomSpeed)),
 				Settings.Default.WheelMouseIsZoomOnCursor, e.Location);
@@ -872,7 +872,7 @@ namespace BlueBrick
 		private void Zoom(float zoomFactor, bool zoomOnMousePosition, Point mousePosition)
 		{
 			// compute the center of the view in case of we need to zoom in the center
-			Point screenCenterInPixel = new Point(this.ClientSize.Width / 2, this.ClientSize.Height / 2);
+			Point screenCenterInPixel = new Point(ClientSize.Width / 2, ClientSize.Height / 2);
 
 			// if the zoom must be performed on the mouse (or on the center of the screen),
 			// we need to compute the point under the mouse (or under the center of the
@@ -885,7 +885,7 @@ namespace BlueBrick
 
 			// compute the delta of the zoom according to the setting and
 			// set the new scale by using the accessor to clamp and refresh the view
-			ViewScale = (mViewScale * zoomFactor);
+			ViewScale = mViewScale * zoomFactor;
 
 			// recompute the new zoom point in the same way because the scaled changed
 			// but the zoom point (mouse coord or center) in pixel didn't changed
@@ -906,61 +906,61 @@ namespace BlueBrick
 		private void ContextMenuStrip_Opening(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			// if the zoom modifier key is pressed, cancel the opening of the context menu
-			if (mIsMouseHandledByMap || mIsZooming || (Control.ModifierKeys == Settings.Default.MouseZoomPanKey))
+			if (mIsMouseHandledByMap || mIsZooming || (ModifierKeys == Settings.Default.MouseZoomPanKey))
 			{
 				e.Cancel = true;
 			}
 			else
 			{
 				Layer selectedLayer = Map.Instance.SelectedLayer;
-				bool isThereAVisibleSelectedLayer = ((selectedLayer != null) && (selectedLayer.Visible));
-				bool enableItemRelatedToSelection = (isThereAVisibleSelectedLayer && (selectedLayer.SelectedObjects.Count > 0));
-				this.bringToFrontToolStripMenuItem.Enabled = enableItemRelatedToSelection;
-				this.sendToBackToolStripMenuItem.Enabled = enableItemRelatedToSelection;
-				this.selectAllToolStripMenuItem.Enabled = (isThereAVisibleSelectedLayer && (selectedLayer.HasSomethingToSelect));
-				this.deselectAllToolStripMenuItem.Enabled = enableItemRelatedToSelection;
-				this.selectPathToolStripMenuItem.Visible = (selectedLayer is LayerBrick);
-				this.selectPathToolStripMenuItem.Enabled = (isThereAVisibleSelectedLayer && (selectedLayer.SelectedObjects.Count >= 2));
+				bool isThereAVisibleSelectedLayer = (selectedLayer != null) && selectedLayer.Visible;
+				bool enableItemRelatedToSelection = isThereAVisibleSelectedLayer && (selectedLayer.SelectedObjects.Count > 0);
+				bringToFrontToolStripMenuItem.Enabled = enableItemRelatedToSelection;
+				sendToBackToolStripMenuItem.Enabled = enableItemRelatedToSelection;
+				selectAllToolStripMenuItem.Enabled = isThereAVisibleSelectedLayer && selectedLayer.HasSomethingToSelect;
+				deselectAllToolStripMenuItem.Enabled = enableItemRelatedToSelection;
+				selectPathToolStripMenuItem.Visible = selectedLayer is LayerBrick;
+				selectPathToolStripMenuItem.Enabled = isThereAVisibleSelectedLayer && (selectedLayer.SelectedObjects.Count >= 2);
 				if (isThereAVisibleSelectedLayer)
 				{
-					this.groupToolStripMenuItem.Enabled = Actions.Items.GroupItems.findItemsToGroup(selectedLayer.SelectedObjects).Count > 1;
-					this.ungroupToolStripMenuItem.Enabled = Actions.Items.UngroupItems.findItemsToUngroup(selectedLayer.SelectedObjects).Count > 0;
+					groupToolStripMenuItem.Enabled = Actions.Items.GroupItems.findItemsToGroup(selectedLayer.SelectedObjects).Count > 1;
+					ungroupToolStripMenuItem.Enabled = Actions.Items.UngroupItems.findItemsToUngroup(selectedLayer.SelectedObjects).Count > 0;
 				}
 				else
 				{
-					this.groupToolStripMenuItem.Enabled = false;
-					this.ungroupToolStripMenuItem.Enabled = false;
+					groupToolStripMenuItem.Enabled = false;
+					ungroupToolStripMenuItem.Enabled = false;
 				}
 				// check if the current layer is of type ruler
 				bool isSelectedLayerRuler = isThereAVisibleSelectedLayer && (selectedLayer is LayerRuler);
 				bool isSelectedLayerText = isThereAVisibleSelectedLayer && (selectedLayer is LayerText);
-				this.attachRulerToolStripSeparator.Visible = isSelectedLayerRuler;
-				this.attachToolStripMenuItem.Visible = isSelectedLayerRuler;
-				this.detachToolStripMenuItem.Visible = isSelectedLayerRuler;
-				this.useAsModelToolStripMenuItem.Visible = isSelectedLayerRuler || isSelectedLayerText;
-				this.useAsModelToolStripMenuItem.Enabled = (isSelectedLayerRuler || isSelectedLayerText) && (selectedLayer.SelectedObjects.Count == 1);
+				attachRulerToolStripSeparator.Visible = isSelectedLayerRuler;
+				attachToolStripMenuItem.Visible = isSelectedLayerRuler;
+				detachToolStripMenuItem.Visible = isSelectedLayerRuler;
+				useAsModelToolStripMenuItem.Visible = isSelectedLayerRuler || isSelectedLayerText;
+				useAsModelToolStripMenuItem.Enabled = (isSelectedLayerRuler || isSelectedLayerText) && (selectedLayer.SelectedObjects.Count == 1);
 				if (isSelectedLayerRuler)
 				{
 					LayerRuler rulerLayer = selectedLayer as LayerRuler;
-					this.attachToolStripMenuItem.Enabled = rulerLayer.canAttachRuler();
-					this.detachToolStripMenuItem.Enabled = rulerLayer.canDetachRuler();
+					attachToolStripMenuItem.Enabled = rulerLayer.CanAttachRuler();
+					detachToolStripMenuItem.Enabled = rulerLayer.CanDetachRuler();
 				}
 				else
 				{
-					this.attachToolStripMenuItem.Enabled = false;
-					this.detachToolStripMenuItem.Enabled = false;
+					attachToolStripMenuItem.Enabled = false;
+					detachToolStripMenuItem.Enabled = false;
 				}
 
 				// check is we need to enable the properties
-				this.propertiesToolStripMenuItem.Enabled = enableItemRelatedToSelection && ((selectedLayer is LayerRuler) || (selectedLayer is LayerText) || (selectedLayer is LayerBrick));
+				propertiesToolStripMenuItem.Enabled = enableItemRelatedToSelection && ((selectedLayer is LayerRuler) || (selectedLayer is LayerText) || (selectedLayer is LayerBrick));
 
 				// update the check mark of the scrollbar depending on the current state of the scrollbar
-				this.scrollBarToolStripMenuItem.Checked = this.horizontalScrollBar.Visible || this.verticalScrollBar.Visible;
+				scrollBarToolStripMenuItem.Checked = horizontalScrollBar.Visible || verticalScrollBar.Visible;
 
 				// finally after enabling the context menu items
 				// check if at leat one toolstrip menu item is enabled otherwise, cancel the opening
 				bool isEnabled = false;
-				foreach (ToolStripItem stripItem in this.ContextMenuStrip.Items)
+				foreach (ToolStripItem stripItem in ContextMenuStrip.Items)
 					if (stripItem is ToolStripMenuItem)
 						isEnabled = isEnabled || stripItem.Enabled;
 				// do we cancel it? yes if none is enabled
@@ -1061,7 +1061,7 @@ namespace BlueBrick
 		public void MapAreaChangedNotification()
 		{
 			// recompute the total area, but only if the scrollbars are visible, otherwise it's useless
-			if (this.horizontalScrollBar.Visible || this.verticalScrollBar.Visible)
+			if (horizontalScrollBar.Visible || verticalScrollBar.Visible)
 			{
 				// recompute the map area
 				mMapTotalAreaInStud = Map.Instance.GetTotalAreaInStud(false);
@@ -1073,8 +1073,8 @@ namespace BlueBrick
 		public void ShowHideScrollBars(bool isVisible)
 		{
 			// show or hide the two scrollbars
-			this.horizontalScrollBar.Visible = isVisible;
-			this.verticalScrollBar.Visible = isVisible;
+			horizontalScrollBar.Visible = isVisible;
+			verticalScrollBar.Visible = isVisible;
 
 			// call the map area change notification in order to recompute the area size and update the scrollbar size
 			MapAreaChangedNotification();
@@ -1085,13 +1085,13 @@ namespace BlueBrick
 			// update the scrollbar values
 			if (updateX)
 			{
-				int newValue = (int)((((mViewCornerX - mMapTotalAreaInStud.Left + mScrollBarAddedMarginInStud) * mViewScale) / this.Size.Width) * mMapScrollBarSliderSize);
-				this.horizontalScrollBar.Value = Math.Max(Math.Min(newValue, this.horizontalScrollBar.Maximum), this.horizontalScrollBar.Minimum);
+				int newValue = (int)((mViewCornerX - mMapTotalAreaInStud.Left + mScrollBarAddedMarginInStud) * mViewScale / Size.Width * mMapScrollBarSliderSize);
+				horizontalScrollBar.Value = Math.Max(Math.Min(newValue, horizontalScrollBar.Maximum), horizontalScrollBar.Minimum);
 			}
 			if (updateY)
 			{
-				int newValue = (int)((((mViewCornerY - mMapTotalAreaInStud.Top + mScrollBarAddedMarginInStud) * mViewScale) / this.Size.Height) * mMapScrollBarSliderSize);
-				this.verticalScrollBar.Value = Math.Max(Math.Min(newValue, this.verticalScrollBar.Maximum), this.verticalScrollBar.Minimum);
+				int newValue = (int)((mViewCornerY - mMapTotalAreaInStud.Top + mScrollBarAddedMarginInStud) * mViewScale / Size.Height * mMapScrollBarSliderSize);
+				verticalScrollBar.Value = Math.Max(Math.Min(newValue, verticalScrollBar.Maximum), verticalScrollBar.Minimum);
 			}
 		}
 
@@ -1099,29 +1099,29 @@ namespace BlueBrick
 		{
 			// update the view corner
 			if (updateX)
-				mViewCornerX = ((((double)this.horizontalScrollBar.Value / mMapScrollBarSliderSize) * this.Size.Width) / mViewScale) + mMapTotalAreaInStud.Left - mScrollBarAddedMarginInStud;
+				mViewCornerX = ((double)horizontalScrollBar.Value / mMapScrollBarSliderSize * Size.Width / mViewScale) + mMapTotalAreaInStud.Left - mScrollBarAddedMarginInStud;
 			if (updateY)
-				mViewCornerY = ((((double)this.verticalScrollBar.Value / mMapScrollBarSliderSize) * this.Size.Height) / mViewScale) + mMapTotalAreaInStud.Top - mScrollBarAddedMarginInStud;
+				mViewCornerY = ((double)verticalScrollBar.Value / mMapScrollBarSliderSize * Size.Height / mViewScale) + mMapTotalAreaInStud.Top - mScrollBarAddedMarginInStud;
 		}
 
 		private void UpdateScrollbarSize()
 		{
 			// does nothing if the scrollbars are not visible
-			if (this.horizontalScrollBar.Visible || this.verticalScrollBar.Visible)
+			if (horizontalScrollBar.Visible || verticalScrollBar.Visible)
 			{
 				// compute the total area in screen pixel (from studs)
 				double totalWidthInPixel = (mMapTotalAreaInStud.Right - mMapTotalAreaInStud.Left + (mScrollBarAddedMarginInStud * 2)) * mViewScale;
 				double totalHeightInPixel = (mMapTotalAreaInStud.Bottom - mMapTotalAreaInStud.Top + (mScrollBarAddedMarginInStud * 2)) * mViewScale;
 
 				// compute how many screens are needed to display the total map area, that will define how long should be the scroll bar
-				double screenCountToDisplayTotalWidth = totalWidthInPixel / this.Size.Width;
-				double screenCountToDisplayTotalHeight = totalHeightInPixel / this.Size.Height;
+				double screenCountToDisplayTotalWidth = totalWidthInPixel / Size.Width;
+				double screenCountToDisplayTotalHeight = totalHeightInPixel / Size.Height;
 
 				// set the maximum of the scroll bars
-				this.horizontalScrollBar.Maximum = (int)(mMapScrollBarSliderSize * screenCountToDisplayTotalWidth);
-				this.horizontalScrollBar.LargeChange = mMapScrollBarSliderSize;
-				this.verticalScrollBar.Maximum = (int)(mMapScrollBarSliderSize * screenCountToDisplayTotalHeight);
-				this.verticalScrollBar.LargeChange = mMapScrollBarSliderSize;
+				horizontalScrollBar.Maximum = (int)(mMapScrollBarSliderSize * screenCountToDisplayTotalWidth);
+				horizontalScrollBar.LargeChange = mMapScrollBarSliderSize;
+				verticalScrollBar.Maximum = (int)(mMapScrollBarSliderSize * screenCountToDisplayTotalHeight);
+				verticalScrollBar.LargeChange = mMapScrollBarSliderSize;
 
 				// set the value of the scrollbar depending on the current view
 				UpdateScrollBarThumbFromViewCorner(true, true);
@@ -1131,22 +1131,22 @@ namespace BlueBrick
 		private void HorizontalScrollBar_Scroll(object sender, ScrollEventArgs e)
 		{
 			UpdateViewCornerFromScrollBarThumb(true, false);
-			this.Invalidate();
+			Invalidate();
 		}
 
 		private void VerticalScrollBar_Scroll(object sender, ScrollEventArgs e)
 		{
 			UpdateViewCornerFromScrollBarThumb(false, true);
-			this.Invalidate();
+			Invalidate();
 		}
 		private void VerticalScrollBar_MouseEnter(object sender, EventArgs e)
 		{
-			this.Cursor = this.DefaultCursor;
+			Cursor = DefaultCursor;
 		}
 
 		private void HorizontalScrollBar_MouseEnter(object sender, EventArgs e)
 		{
-			this.Cursor = this.DefaultCursor;
+			Cursor = DefaultCursor;
 		}
 
 		private void MapPanel_Resize(object sender, EventArgs e)

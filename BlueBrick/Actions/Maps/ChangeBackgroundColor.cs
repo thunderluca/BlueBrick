@@ -22,8 +22,8 @@ namespace BlueBrick.Actions.Maps
 {
 	class ChangeBackgroundColor : Action
 	{
-		private Color mOldColor = Color.Empty;
-		private Color mNewColor = Color.Empty;
+		private readonly Color mOldColor = Color.Empty;
+		private readonly Color mNewColor = Color.Empty;
 
 		public ChangeBackgroundColor(Color newColor)
 		{
@@ -33,7 +33,7 @@ namespace BlueBrick.Actions.Maps
 
 		public override string GetName()
 		{
-			return BlueBrick.Properties.Resources.ActionChangeBackgroundColor;
+			return Properties.Resources.ActionChangeBackgroundColor;
 		}
 
 		public override void Redo()

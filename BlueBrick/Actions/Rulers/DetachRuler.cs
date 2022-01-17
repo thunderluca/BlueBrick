@@ -21,8 +21,8 @@ namespace BlueBrick.Actions.Rulers
 {
 	class DetachRuler : Action
 	{
-		private RulerAttachementSet.Anchor mAnchor = null;
-		private LayerBrick.Brick mBrick = null;
+		private readonly RulerAttachementSet.Anchor mAnchor = null;
+		private readonly LayerBrick.Brick mBrick = null;
 
 		public DetachRuler(LayerRuler.RulerItem rulerItem, LayerBrick.Brick brick)
 		{
@@ -32,7 +32,7 @@ namespace BlueBrick.Actions.Rulers
 
 		public override string GetName()
 		{
-			return BlueBrick.Properties.Resources.ActionDetachRuler;
+			return Properties.Resources.ActionDetachRuler;
 		}
 
 		public override void Redo()

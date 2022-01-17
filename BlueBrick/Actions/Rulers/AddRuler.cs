@@ -21,8 +21,8 @@ namespace BlueBrick.Actions.Rulers
 {
 	class AddRuler : Action
 	{
-		private LayerRuler mRulerLayer = null;
-		private LayerRuler.RulerItem mRulerItem = null;
+		private readonly LayerRuler mRulerLayer = null;
+		private readonly LayerRuler.RulerItem mRulerItem = null;
 		private int mRulerItemIndex = -1; // this index is for the redo, to add the ruler at the same place, start with -1 to add it at the end of the list (so on top of the other rulers)
 
 		public AddRuler(LayerRuler layer, LayerRuler.RulerItem rulerItem)
@@ -33,23 +33,23 @@ namespace BlueBrick.Actions.Rulers
 
 		public override string GetName()
 		{
-			return BlueBrick.Properties.Resources.ActionAddRuler;
+			return Properties.Resources.ActionAddRuler;
 		}
 
 		public override void Redo()
 		{
 			// and add this ruler in the list of the layer
-			mRulerLayer.addRulerItem(mRulerItem, mRulerItemIndex);
+			mRulerLayer.AddRulerItem(mRulerItem, mRulerItemIndex);
 			// change the selection to the new added text (should be done after the add)
-			mRulerLayer.clearSelection();
-			mRulerLayer.addObjectInSelection(mRulerItem);
+			mRulerLayer.ClearSelection();
+			mRulerLayer.AddObjectInSelection(mRulerItem);
 		}
 
 		public override void Undo()
 		{
 			// remove the specified RulerItem from the list of the layer,
 			// but do not delete it, also memorise its last position
-			mRulerItemIndex = mRulerLayer.removeRulerItem(mRulerItem);
+			mRulerItemIndex = mRulerLayer.RemoveRulerItem(mRulerItem);
 		}
 	}
 }

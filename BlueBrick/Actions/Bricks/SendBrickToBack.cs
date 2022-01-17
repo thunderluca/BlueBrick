@@ -29,7 +29,7 @@ namespace BlueBrick.Actions.Bricks
 
 		public override string GetName()
 		{
-			return BlueBrick.Properties.Resources.ActionSendBrickToBack;
+			return Properties.Resources.ActionSendBrickToBack;
 		}
 
 		protected override int removeItem(Layer.LayerItem item)

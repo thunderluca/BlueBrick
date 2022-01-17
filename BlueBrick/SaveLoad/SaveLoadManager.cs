@@ -53,11 +53,11 @@ namespace BlueBrick
 			}
 
 			// this dictionnary containing all the objects associated with their id, is used to recreate the attachement of rulers to bricks when loading, or the connections between bricks
-            private static Dictionary<ulong, object> sHashtableForRebuildingLinkAfterLoading = new Dictionary<ulong, object>();
+            private static readonly Dictionary<ulong, object> sHashtableForRebuildingLinkAfterLoading = new Dictionary<ulong, object>();
 
 			// this second dictionnary is mostly never used, it is used only when loading an old file generated with a version of bluebrick lower than 1.8.2, and that generated duplicated ids.
 			// this second dictionnary will be used to temporary store the duplicated ids, and try to fix them after the loading.
-			private static Dictionary<ulong, UniqueIdObjectPair> sHashtableForForDuplicatedIds = new Dictionary<ulong, UniqueIdObjectPair>();
+			private static readonly Dictionary<ulong, UniqueIdObjectPair> sHashtableForForDuplicatedIds = new Dictionary<ulong, UniqueIdObjectPair>();
 
 			// We only need unique ids for the duration of the session. So we use an id counter, that is initialized to 0 when the Application starts,
 			// then this counter is incremented everytime we need to create a new Unique Id.
@@ -137,20 +137,18 @@ namespace BlueBrick
 			/// <returns>The object instance associated with this id, or null if there's no object associated, or if the object associated is of a different type.</returns>
             public T getObjectOfThatId<T>() where T : class
             {
-				// try to get the obj from the dictionary
-				object obj = null;
-				sHashtableForRebuildingLinkAfterLoading.TryGetValue(mId, out obj);
+                // try to get the obj from the dictionary
+                sHashtableForRebuildingLinkAfterLoading.TryGetValue(mId, out object obj);
 
-				// cast it (this cast may make it null, which is ok)
-				T objAsT = obj as T;
+                // cast it (this cast may make it null, which is ok)
+                T objAsT = obj as T;
 
 				// if we cannot find it (or if we find an object of the wrong type), try to get the object from the duplicated id dictionary
 				if (objAsT == null)
 				{
-					UniqueIdObjectPair pair;
-					if (sHashtableForForDuplicatedIds.TryGetValue(mId, out pair))
-						objAsT = pair.mObject as T;
-				}
+                    if (sHashtableForForDuplicatedIds.TryGetValue(mId, out UniqueIdObjectPair pair))
+                        objAsT = pair.mObject as T;
+                }
 
 				// return what we found (which can be null)
 				return objAsT;
@@ -234,8 +232,8 @@ namespace BlueBrick
 			}
 			catch (Exception e)
 			{
-				string message = null;
-				if (filenameLower.EndsWith("bbb"))
+                string message;
+                if (filenameLower.EndsWith("bbb"))
 					message = Properties.Resources.ErrorMsgCannotOpenBudget.Replace("&", filename);
 				else
 					message = Properties.Resources.ErrorMsgCannotOpenMap.Replace("&", filename);
@@ -252,8 +250,8 @@ namespace BlueBrick
 			FileInfo fileInfo = new FileInfo(filename);
 			if (fileInfo.Exists && fileInfo.IsReadOnly)
 			{
-				MessageBox.Show(MainForm.Instance, BlueBrick.Properties.Resources.ErrorMsgReadOnlyFile.Replace("&", filename),
-								BlueBrick.Properties.Resources.ErrorMsgTitleError, MessageBoxButtons.OK,
+				MessageBox.Show(MainForm.Instance, Properties.Resources.ErrorMsgReadOnlyFile.Replace("&", filename),
+                                Properties.Resources.ErrorMsgTitleError, MessageBoxButtons.OK,
 								MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
 				return false;
 			}
@@ -277,8 +275,8 @@ namespace BlueBrick
 			}
 			catch (Exception e)
 			{
-				string message = null;
-				if (filenameLower.EndsWith("bbb"))
+                string message;
+                if (filenameLower.EndsWith("bbb"))
 					message = Properties.Resources.ErrorMsgCannotSaveBudget.Replace("&", filename);
 				else
 					message = Properties.Resources.ErrorMsgCannotSaveMap.Replace("&", filename);
@@ -361,7 +359,7 @@ namespace BlueBrick
 		private static readonly string LDRAW_DATE_FORMAT_STRING = "dd/MM/yyyy";
         private static Layer sCurrentLayerLoaded = null;
         private static string sCurrentLayerName = string.Empty;
-        private static Hashtable sHashtableForGroupRebuilding = new Hashtable(); // this hashtable is used to recreate the group hierarchy when loading
+        private static readonly Hashtable sHashtableForGroupRebuilding = new Hashtable(); // this hashtable is used to recreate the group hierarchy when loading
 
         private static string[] splitLDrawLine(string line)
         {
@@ -404,7 +402,7 @@ namespace BlueBrick
 			// open the file
 			StreamReader textReader = new StreamReader(filename);
 			// init the progress bar with the number of bytes of the file
-			MainForm.Instance.resetProgressBar((int)(textReader.BaseStream.Length));
+			MainForm.Instance.resetProgressBar((int)textReader.BaseStream.Length);
 			// create a line spliter array
 			while (!textReader.EndOfStream)
 			{
@@ -444,7 +442,7 @@ namespace BlueBrick
 
 			// iterate on all the layers to recreate all the links between different items (after loading all the layers)
             foreach (Layer layer in Map.Instance.LayerList)
-                layer.recreateLinksAfterLoading();
+                layer.RecreateLinksAfterLoading();
 
 			// again clear the hashmap used to load the groups
 			sHashtableForGroupRebuilding.Clear();
@@ -466,7 +464,7 @@ namespace BlueBrick
 			// open the file
 			StreamReader textReader = new StreamReader(filename);
 			// init the progress bar with the number of bytes of the file
-			MainForm.Instance.resetProgressBar((int)(textReader.BaseStream.Length));
+			MainForm.Instance.resetProgressBar((int)textReader.BaseStream.Length);
 			// use a flag because in MPD, the first "0 FILE" tage is reserved for the file itself, the following one are the submodels
 			bool wasFirstFileTagFound = false;
 			// create a line spliter array
@@ -531,7 +529,7 @@ namespace BlueBrick
             foreach (Layer layer in Map.Instance.LayerList)
             {
                 // also we need to recreate all the links between different items (after loading all the layers)
-                layer.recreateLinksAfterLoading();
+                layer.RecreateLinksAfterLoading();
                 foreach (string hiddenLayerName in hiddenLayerNames)
                     if (layer.Name.Equals(hiddenLayerName))
                     {
@@ -576,7 +574,7 @@ namespace BlueBrick
                 if (sCurrentLayerName != string.Empty)
                     sCurrentLayerLoaded.Name = sCurrentLayerName;
             }
-            return (sCurrentLayerLoaded as T);
+            return sCurrentLayerLoaded as T;
         }
 
         private static void finalizeCurrentLayerAndAddToMap()
@@ -610,7 +608,7 @@ namespace BlueBrick
 			if (mLDrawCurrentGroupInWhichAdd != null)
 			{
 				// add the item to the group
-				mLDrawCurrentGroupInWhichAdd.addItem(item);
+				mLDrawCurrentGroupInWhichAdd.AddItem(item);
 				// clear the reference, a new "MLCAD BTG" command must be find again
 				mLDrawCurrentGroupInWhichAdd = null;
 			}
@@ -621,32 +619,31 @@ namespace BlueBrick
 			// return the part number followed by the hash code
 			// the part number is needed at loading time to ask the part lib if this group can be split
 			// the hash code is needed to make unique group name
-			return group.PartNumber + "#" + ((group != null) ? group.GUID.ToString() : SaveLoadManager.UniqueId.Empty.ToString());
+			return group.PartNumber + "#" + ((group != null) ? group.GUID.ToString() : UniqueId.Empty.ToString());
 		}
 
 		private static Layer.Group createOrGetGroup(string groupName)
 		{
-			// look in the hastable if this group alread exists, else create it
-			Layer.Group group = sHashtableForGroupRebuilding[groupName] as Layer.Group;
-			if (group == null)
-			{
-				// remove the unique hash code at the end of the the group name to get only the part number
-				// and ask to the part lib if it is an non ungroupable group
-				bool canUngroup = true;
-				int hashCodeIndex = groupName.LastIndexOf('#');
-				if (hashCodeIndex > 0)
-				{
-					string partNumber = groupName.Substring(0, hashCodeIndex);
-					if (partNumber != string.Empty)
-						canUngroup = BrickLibrary.Instance.CanUngroup(partNumber);
-				}
-				// instanciate a new group, and add it in the hash table
-				group = new Layer.Group(canUngroup);
-				// then add the group in the hash table
-				sHashtableForGroupRebuilding.Add(groupName, group);
-			}
-			// return the group
-			return group;
+            // look in the hastable if this group alread exists, else create it
+            if (!(sHashtableForGroupRebuilding[groupName] is Layer.Group group))
+            {
+                // remove the unique hash code at the end of the the group name to get only the part number
+                // and ask to the part lib if it is an non ungroupable group
+                bool canUngroup = true;
+                int hashCodeIndex = groupName.LastIndexOf('#');
+                if (hashCodeIndex > 0)
+                {
+                    string partNumber = groupName.Substring(0, hashCodeIndex);
+                    if (partNumber != string.Empty)
+                        canUngroup = BrickLibrary.Instance.CanUngroup(partNumber);
+                }
+                // instanciate a new group, and add it in the hash table
+                group = new Layer.Group(canUngroup);
+                // then add the group in the hash table
+                sHashtableForGroupRebuilding.Add(groupName, group);
+            }
+            // return the group
+            return group;
 		}
 
 		private static string getRemainingOfLineAfterTokenInLDRAW(string line, string token)
@@ -792,14 +789,16 @@ namespace BlueBrick
 					}
 				}
 
-				// create a new brick
-				LayerBrick.Brick brick = new LayerBrick.Brick(BrickLibrary.Instance.GetActualPartNumber(partNumber));
+                // create a new brick
+                LayerBrick.Brick brick = new LayerBrick.Brick(BrickLibrary.Instance.GetActualPartNumber(partNumber))
+                {
 
-				// rotate the brick (will recompute the correct OffsetFromOriginalImage)
-				brick.Orientation = angle;
+                    // rotate the brick (will recompute the correct OffsetFromOriginalImage)
+                    Orientation = angle
+                };
 
-				// rescale the position because 1 stud = 20 LDU and set the center position
-				x = (x / 20.0f) - brick.OffsetFromOriginalImage.X;
+                // rescale the position because 1 stud = 20 LDU and set the center position
+                x = (x / 20.0f) - brick.OffsetFromOriginalImage.X;
 				z = (z / 20.0f) - brick.OffsetFromOriginalImage.Y;
 				brick.Center = new PointF(x, z);
 				brick.Altitude = y;
@@ -818,7 +817,7 @@ namespace BlueBrick
         private static void parseRulerLineLDRAW(string[] token, int startIndex, LayerRuler currentLayer, int commandVersion)
         {
             // create a new ruler depending on the type
-            LayerRuler.RulerItem ruler = null;
+            LayerRuler.RulerItem ruler;
             if (token[startIndex++].Equals("LINEAR"))
                 ruler = new LayerRuler.LinearRuler();
             else
@@ -826,7 +825,7 @@ namespace BlueBrick
             // the call the serialization
             ruler.ReadLDraw(token, ref startIndex, commandVersion);
             // add the ruler to the layer
-            currentLayer.addRulerItem(ruler, -1);
+            currentLayer.AddRulerItem(ruler, -1);
             // check if we need to add this brick to a group
             checkIfItemMustBeAddedToGroup(ruler);
         }
@@ -967,8 +966,8 @@ namespace BlueBrick
 
 		private static void saveBrickLayerInLDRAW(StreamWriter textWriter, LayerBrick brickLayer, bool useMLCADHide)
 		{
-			// clear the group list for saving
-			Layer.Group.sListForGroupSaving.Clear();
+            // clear the group list for saving
+            Layer.LayerItem.sListForGroupSaving.Clear();
 
 			// check if the layer is hidden (and so we should hide all the bricks)
 			bool hideBricks = useMLCADHide && !brickLayer.Visible;
@@ -994,14 +993,13 @@ namespace BlueBrick
 				{
 					partNumberAndColor[0] = brick.PartNumber;
 				}
-				// skip the brick if it is a set, a logo, or a special custom part
-				// so we skip all the parts that don't have a valid color number
-				int intColor = 0;
-				if ((partNumberAndColor[1] == string.Empty) || !int.TryParse(partNumberAndColor[1], out intColor))
-					continue;
+                // skip the brick if it is a set, a logo, or a special custom part
+                // so we skip all the parts that don't have a valid color number
+                if ((partNumberAndColor[1] == string.Empty) || !int.TryParse(partNumberAndColor[1], out _))
+                    continue;
 
-				// compute x and y because the pair bricks doesn't have image in the library
-				float x = brick.Center.X + brick.OffsetFromOriginalImage.X;
+                // compute x and y because the pair bricks doesn't have image in the library
+                float x = brick.Center.X + brick.OffsetFromOriginalImage.X;
 				float z = -brick.Center.Y - brick.OffsetFromOriginalImage.Y;
 
 				// get the remap data
@@ -1024,18 +1022,20 @@ namespace BlueBrick
 					continue;
 
 				// check if we need to add sleepers
-				if ((remapData.mSleeperBrickNumber != null) && (brick.HasConnectionPoint))
+				if ((remapData.mSleeperBrickNumber != null) && brick.HasConnectionPoint)
 				{
 					// this is a rail brick, we need to add 2 sleepers
 					// save the sleeper brick name into the part number array
 					partNumberAndColor[0] = remapData.mSleeperBrickNumber;
 					partNumberAndColor[1] = remapData.mSleeperBrickColor;
-					// and create a temp brick for saving
-					LayerBrick.Brick sleeperBrick = new LayerBrick.Brick(partNumberAndColor[0] + "." + partNumberAndColor[1]);
-					sleeperBrick.Altitude = brick.Altitude;
+                    // and create a temp brick for saving
+                    LayerBrick.Brick sleeperBrick = new LayerBrick.Brick(partNumberAndColor[0] + "." + partNumberAndColor[1])
+                    {
+                        Altitude = brick.Altitude
+                    };
 
-					// get the remap data of the sleeper
-					BrickLibrary.Brick.LDrawRemapData sleeperRemapData = BrickLibrary.Instance.GetLDrawRemapData(sleeperBrick.PartNumber);
+                    // get the remap data of the sleeper
+                    BrickLibrary.Brick.LDrawRemapData sleeperRemapData = BrickLibrary.Instance.GetLDrawRemapData(sleeperBrick.PartNumber);
 
 					// if we found the sleeper remap data, add the difference of height between the rail brick and the sleeper
 					if ((sleeperRemapData != null) && (sleeperBrick.Altitude != 0.0f))
@@ -1069,7 +1069,7 @@ namespace BlueBrick
 								{
 									BrickLibrary.Brick.LDrawRemapData connectedBrickRemapData = BrickLibrary.Instance.GetLDrawRemapData(connexion.ConnectedBrick.PartNumber);
 									if ((connectedBrickRemapData != null) && (connectedBrickRemapData.mSleeperBrickNumber != null))
-										needToAddSleeper = (connectedBrickRemapData.mSleeperBrickNumber.Equals("767"));
+										needToAddSleeper = connectedBrickRemapData.mSleeperBrickNumber.Equals("767");
 								}
 							}
 						}
@@ -1089,10 +1089,10 @@ namespace BlueBrick
 			}
 
 			// now save the groups if we found some
-			foreach (Layer.Group group in Layer.Group.sListForGroupSaving)
+			foreach (Layer.Group group in Layer.LayerItem.sListForGroupSaving)
 				saveOneGroupInLDRAW(textWriter, group, hideBricks);
-			// and clear the group list for saving
-			Layer.Group.sListForGroupSaving.Clear();
+            // and clear the group list for saving
+            Layer.LayerItem.sListForGroupSaving.Clear();
 		}
 
 		private static void saveOneBrickInLDRAW(StreamWriter textWriter, LayerBrick.Brick brick, string[] partNumberAndColor, float x, float z, BrickLibrary.Brick.LDrawRemapData remapData, bool hideBricks)
@@ -1117,8 +1117,8 @@ namespace BlueBrick
 			{
 				textWriter.WriteLine(LDrawReadWrite.MLCAD_COMMAND_BTG + getGroupNameForSaving(brick.Group));
 				// add this group to the temporary list for saving if not already done
-				if (!Layer.Group.sListForGroupSaving.Contains(brick.Group))
-					Layer.Group.sListForGroupSaving.Add(brick.Group);
+				if (!Layer.LayerItem.sListForGroupSaving.Contains(brick.Group))
+                    Layer.LayerItem.sListForGroupSaving.Add(brick.Group);
 			}
 
 			// the position of the brick
@@ -1176,7 +1176,7 @@ namespace BlueBrick
 			textWriter.WriteLine(line);
 		}
 
-		private static void saveOneGroupInLDRAW(StreamWriter textWriter, LayerBrick.Group group, bool hideGroup)
+		private static void saveOneGroupInLDRAW(StreamWriter textWriter, Layer.Group group, bool hideGroup)
 		{
 			// the MLCAD format for a group is:
 			// "0 GROUP <Num items> <group name>"
@@ -1203,8 +1203,8 @@ namespace BlueBrick
 
 		private static void saveRulerLayerInLDRAW(StreamWriter textWriter, LayerRuler rulerLayer, bool useMLCADHide)
 		{
-			// clear the group list for saving
-			Layer.Group.sListForGroupSaving.Clear();
+            // clear the group list for saving
+            Layer.LayerItem.sListForGroupSaving.Clear();
 
 			// check if the layer is hidden (and so we should hide all the bricks)
 			bool hideRulers = useMLCADHide && !rulerLayer.Visible;
@@ -1219,10 +1219,10 @@ namespace BlueBrick
 			}
 
 			// now save the groups if we found some
-			foreach (Layer.Group group in Layer.Group.sListForGroupSaving)
+			foreach (Layer.Group group in Layer.LayerItem.sListForGroupSaving)
 				saveOneGroupInLDRAW(textWriter, group, hideRulers);
-			// and clear the group list for saving
-			Layer.Group.sListForGroupSaving.Clear();
+            // and clear the group list for saving
+            Layer.LayerItem.sListForGroupSaving.Clear();
 		}
 
 		private static void saveOneRulerItemInLDRAW(StreamWriter textWriter, LayerRuler.RulerItem ruler, bool hideRulers)
@@ -1253,8 +1253,8 @@ namespace BlueBrick
 			{
                 textWriter.WriteLine(LDrawReadWrite.MLCAD_COMMAND_BTG + getGroupNameForSaving(ruler.Group));
 				// add this group to the temporary list for saving if not already done
-				if (!Layer.Group.sListForGroupSaving.Contains(ruler.Group))
-					Layer.Group.sListForGroupSaving.Add(ruler.Group);
+				if (!Layer.LayerItem.sListForGroupSaving.Contains(ruler.Group))
+                    Layer.LayerItem.sListForGroupSaving.Add(ruler.Group);
 			}
 
 			string line = "";
@@ -1298,19 +1298,18 @@ namespace BlueBrick
 			LayerBrick baseplateLayer = new LayerBrick();
 			LayerBrick rail9VLayer = new LayerBrick();
 			LayerBrick monorailLayer = new LayerBrick();
-			LayerBrick currentLayer = baseplateLayer;
 
-			// declare a bool to check if we found some part not remaped in the remap file
-			List<int> noRemapablePartFound = new List<int>();
+            // declare a bool to check if we found some part not remaped in the remap file
+            List<int> noRemapablePartFound = new List<int>();
 
-			// update the registry to use
-			BrickLibrary.Instance.UpdateCurrentTrackDesignerRegistryUsed();
+            // update the registry to use
+            BrickLibrary.Instance.UpdateCurrentTrackDesignerRegistryUsed();
 
 			// open the file
 			FileStream myFileStream = new FileStream(filename, FileMode.Open, FileAccess.Read);
 			BinaryReader binaryReader = new BinaryReader(myFileStream);
 			// init the progress bar with the number of bytes of the file
-			MainForm.Instance.resetProgressBar((int)(myFileStream.Length));
+			MainForm.Instance.resetProgressBar((int)myFileStream.Length);
 
 			// read the header which is 124 bytes normally without comments
 			int headerSize = loadTDLHeader(binaryReader);
@@ -1324,9 +1323,9 @@ namespace BlueBrick
 				return false;
 			}
 
-			// read the number of CTrackPieces in the list of parts
-			int nbTrackPieces = binaryReader.ReadInt16();
-			headerSize += 2;
+            // read the number of CTrackPieces in the list of parts
+            _ = binaryReader.ReadInt16();
+            headerSize += 2;
 			// read the header of the CTrackPieces list (containing the string "CTrackPiece")
 			binaryReader.ReadChars(17);
 			headerSize += 17;
@@ -1335,7 +1334,7 @@ namespace BlueBrick
 			MainForm.Instance.stepProgressBar(headerSize);
 
 			// read until we reach the end of file
-			bool endOfFile = (binaryReader.BaseStream.Position >= binaryReader.BaseStream.Length);
+			bool endOfFile = binaryReader.BaseStream.Position >= binaryReader.BaseStream.Length;
 			while (!endOfFile)
 			{
 				// The part number (that contains the class of the part) and separate the number and the class
@@ -1364,14 +1363,14 @@ namespace BlueBrick
 				double x = binaryReader.ReadDouble();
 				// read y in stud
 				double y = binaryReader.ReadDouble();
-				// skip z (also a double), the value is multiplied by 3 compared to the value displayed in TrackDesigner
-				double z = binaryReader.ReadDouble();
+                // skip z (also a double), the value is multiplied by 3 compared to the value displayed in TrackDesigner
+                _ = binaryReader.ReadDouble();
 
-				// le type de la pièce (an int) (0 = Straight, 1 = Left Curve, 2 = Right Curve, 3 = Left Split, 4 = Right Split, 5 = Left Merge, 6 = Right Merge, 7 = Left Join, 8 = Right Join, 9 = Crossover, 10 = T Junction, 11 = Up Ramp, 12 = Down Ramp, 13 = Short Straight, 14 = Short Left Curve In, 15 = Short Right Curve In, 16 = Short Left Curve Out, 17 = Short Right Curve Out, 18 = Left Reverse Switch, 19 = Right Reverse Switch, 20 = Custom)
-				int type = binaryReader.ReadInt32();
+                // le type de la pièce (an int) (0 = Straight, 1 = Left Curve, 2 = Right Curve, 3 = Left Split, 4 = Right Split, 5 = Left Merge, 6 = Right Merge, 7 = Left Join, 8 = Right Join, 9 = Crossover, 10 = T Junction, 11 = Up Ramp, 12 = Down Ramp, 13 = Short Straight, 14 = Short Left Curve In, 15 = Short Right Curve In, 16 = Short Left Curve Out, 17 = Short Right Curve Out, 18 = Left Reverse Switch, 19 = Right Reverse Switch, 20 = Custom)
+                _ = binaryReader.ReadInt32();
 
-				// the id of bitmap (an int) when a part (like a curve) has two bitmap in the TrackDesigner part library, or for two baseplase with different color
-				int portIdOfOrigin = binaryReader.ReadInt32();
+                // the id of bitmap (an int) when a part (like a curve) has two bitmap in the TrackDesigner part library, or for two baseplase with different color
+                int portIdOfOrigin = binaryReader.ReadInt32();
 
 				// skip 4 structures for the connexion, each structure is made of:
 				// - a pointer (instance ID)
@@ -1396,42 +1395,42 @@ namespace BlueBrick
 				if ((TDPartNumber == 232677) && (portIdOfOrigin == 1))
 					TDPartNumber = 232678;
 
-				// try to get the remap data for the BlueBrick part number
-				string BBPartNumber = null;
-				BrickLibrary.Brick.TDRemapData remapData = BrickLibrary.Instance.GetTDRemapData(TDPartNumber, out BBPartNumber);
+                // try to get the remap data for the BlueBrick part number
+                BrickLibrary.Brick.TDRemapData remapData = BrickLibrary.Instance.GetTDRemapData(TDPartNumber, out string BBPartNumber);
 
-				// if it is a valid part, get the class of the brick to know in which layer add
-				// and then create the brick and add it to the layer
-				if (remapData != null)
+                // if it is a valid part, get the class of the brick to know in which layer add
+                // and then create the brick and add it to the layer
+                if (remapData != null)
 				{
 					// create a new brick
 					LayerBrick.Brick brick = new LayerBrick.Brick(BBPartNumber);
 
-					// choose the corect layer according to the type of connexion
-					if (brick.HasConnectionPoint)
-					{
-						// this switch is hard-coded, it should be refactored
-						switch (brick.ConnectionPoints[0].Type)
-						{
-							case 1:
-								currentLayer = rail9VLayer;
-								break;
-							case 3:
-							case 4:
-								currentLayer = monorailLayer;
-								break;
-							default:
-								currentLayer = baseplateLayer;
-								break;
-						}
-					}
-					else
-					{
-						currentLayer = baseplateLayer;
-					}
+                    LayerBrick currentLayer;
+                    // choose the corect layer according to the type of connexion
+                    if (brick.HasConnectionPoint)
+                    {
+                        // this switch is hard-coded, it should be refactored
+                        switch (brick.ConnectionPoints[0].Type)
+                        {
+                            case 1:
+                                currentLayer = rail9VLayer;
+                                break;
+                            case 3:
+                            case 4:
+                                currentLayer = monorailLayer;
+                                break;
+                            default:
+                                currentLayer = baseplateLayer;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        currentLayer = baseplateLayer;
+                    }
 
-					// check if we have to remap the connexion
-					float diffAngleBtwTDandBB = 0;
+                    // check if we have to remap the connexion
+                    float diffAngleBtwTDandBB = 0;
 					// try to get the conexion remap data
 					if (portIdOfOrigin < remapData.mConnexionData.Count)
 					{
@@ -1475,9 +1474,9 @@ namespace BlueBrick
 					// special case for the monorail ramp in TD, it's only one part but in fact it is two part in LDRAW
 					if ((TDPartNumber == 232677) || (TDPartNumber == 232678))
 					{
-						// create the second part of the ramp
-						LayerBrick.Brick rampBrick = null;
-						if (TDPartNumber == 232677)
+                        // create the second part of the ramp
+                        LayerBrick.Brick rampBrick;
+                        if (TDPartNumber == 232677)
 						{
 							rampBrick = new LayerBrick.Brick("2678.7");
 							brick.ActiveConnectionPointIndex = 1;
@@ -1550,13 +1549,13 @@ namespace BlueBrick
 
 		private static int loadTDLHeader(BinaryReader binaryReader)
 		{
-			// read the origin point
-			int originX = binaryReader.ReadInt32();
-			int originY = binaryReader.ReadInt32();
-			// read the number of pieces
-			int nbPieces = binaryReader.ReadInt32();
-			// read the number of the file version that must be 20
-			int fileVersionNumber = binaryReader.ReadInt32();
+            // read the origin point
+            _ = binaryReader.ReadInt32();
+            _ = binaryReader.ReadInt32();
+            // read the number of pieces
+            _ = binaryReader.ReadInt32();
+            // read the number of the file version that must be 20
+            int fileVersionNumber = binaryReader.ReadInt32();
 			if (fileVersionNumber != 20)
 			{
 				MessageBox.Show(null, Properties.Resources.ErrorMsgOldTDFile,
@@ -1564,31 +1563,31 @@ namespace BlueBrick
 					MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
 				return -1;
 			}
-			// read the boundaries of the map (in stud coord)
-			int boundXMin = binaryReader.ReadInt32();
-			int boundYMin = binaryReader.ReadInt32();
-			int boundXMax = binaryReader.ReadInt32();
-			int boundYMax = binaryReader.ReadInt32();
-			// position and angle of the cursor
-			double x = binaryReader.ReadDouble();
-			double y = binaryReader.ReadDouble();
-			double z = binaryReader.ReadDouble();
-			double angle = binaryReader.ReadDouble();
-			// number of the selected port (connection point) of the selected part
-			int selectedPortNumber = binaryReader.ReadInt32();
-			// id of the selected part
-			int partId = binaryReader.ReadInt32();
-			// read the size of boundaries of the map (in stud coord), normally it should be (boundXMax - boundXMin, boundYMax - boundYMin)
-			int boundWidth = binaryReader.ReadInt32();
-			int boundHeight = binaryReader.ReadInt32();
-			// old dummy data (an empty CString)
-			char dummyStringSize = binaryReader.ReadChar();
-			// options flags and slopes??
-			Map.Instance.AllowElectricShortCuts = (binaryReader.ReadInt32() != 0);
-			int slope = binaryReader.ReadInt32();
-			Map.Instance.AllowUnderground = (binaryReader.ReadInt32() != 0);
-			Map.Instance.AllowSteps = (binaryReader.ReadInt32() != 0);
-			Map.Instance.AllowSlopeMismatch = (binaryReader.ReadInt32() != 0);
+            // read the boundaries of the map (in stud coord)
+            _ = binaryReader.ReadInt32();
+            _ = binaryReader.ReadInt32();
+            _ = binaryReader.ReadInt32();
+            _ = binaryReader.ReadInt32();
+            // position and angle of the cursor
+            _ = binaryReader.ReadDouble();
+            _ = binaryReader.ReadDouble();
+            _ = binaryReader.ReadDouble();
+            _ = binaryReader.ReadDouble();
+            // number of the selected port (connection point) of the selected part
+            _ = binaryReader.ReadInt32();
+            // id of the selected part
+            _ = binaryReader.ReadInt32();
+            // read the size of boundaries of the map (in stud coord), normally it should be (boundXMax - boundXMin, boundYMax - boundYMin)
+            _ = binaryReader.ReadInt32();
+            _ = binaryReader.ReadInt32();
+            // old dummy data (an empty CString)
+            _ = binaryReader.ReadChar();
+            // options flags and slopes??
+            Map.Instance.AllowElectricShortCuts = binaryReader.ReadInt32() != 0;
+            _ = binaryReader.ReadInt32();
+            Map.Instance.AllowUnderground = binaryReader.ReadInt32() != 0;
+			Map.Instance.AllowSteps = binaryReader.ReadInt32() != 0;
+			Map.Instance.AllowSlopeMismatch = binaryReader.ReadInt32() != 0;
 			// description string
 			char descriptionStringSize = binaryReader.ReadChar();
 			Map.Instance.Event = new string(binaryReader.ReadChars(descriptionStringSize));
@@ -1606,7 +1605,7 @@ namespace BlueBrick
 				binaryReader.ReadChars(pieceListSize);
 			}
 			// return the total of byte read
-			return (105 + descriptionStringSize + commentStringSize + pieceListSize);
+			return 105 + descriptionStringSize + commentStringSize + pieceListSize;
 		}
 
 		private static bool saveTDL(string filename)
@@ -1615,11 +1614,10 @@ namespace BlueBrick
 			int nbItems = 0;
 			foreach (Layer layer in Map.Instance.LayerList)
 			{
-				// check the type because we only save brick layers
-				LayerBrick brickLayer = layer as LayerBrick;
-				if (brickLayer != null)
-					nbItems += layer.NbItems;
-			}
+                // check the type because we only save brick layers
+                if (layer is LayerBrick brickLayer)
+                    nbItems += layer.NbItems;
+            }
 			// init the progress bar with the number of parts to write
 			MainForm.Instance.resetProgressBar(nbItems + 2);
 
@@ -1648,25 +1646,24 @@ namespace BlueBrick
 				int nbItemsWritten = 0;
 
 				// write the header of the CTrackPieces list (containing the string "CTrackPiece")
-				binaryWriter.Write((int)0x14FFFF);
+				binaryWriter.Write(0x14FFFF);
 				binaryWriter.Write((short)0x0B);
-				binaryWriter.Write((char[])"CTrackPiece".ToCharArray());
+				binaryWriter.Write("CTrackPiece".ToCharArray());
 
 				// save all the bricks
 				foreach (Layer layer in Map.Instance.LayerList)
 				{
-					// check the type because we only save brick layers
-					LayerBrick brickLayer = layer as LayerBrick;
-					if (brickLayer != null)
-						foreach (LayerBrick.Brick brick in brickLayer.BrickList)
-						{
-							// save the brick
-							if (saveOneBrickInTDL(binaryWriter, brick, (nbItemsWritten > 0)))
-								nbItemsWritten++;
-							// step the progress bar
-							MainForm.Instance.stepProgressBar();
-						}
-				}
+                    // check the type because we only save brick layers
+                    if (layer is LayerBrick brickLayer)
+                        foreach (LayerBrick.Brick brick in brickLayer.BrickList)
+                        {
+                            // save the brick
+                            if (saveOneBrickInTDL(binaryWriter, brick, nbItemsWritten > 0))
+                                nbItemsWritten++;
+                            // step the progress bar
+                            MainForm.Instance.stepProgressBar();
+                        }
+                }
 
 				// check if some items were skip, then we have to rewrite the number of items
 				if (nbItemsWritten < nbItems)
@@ -1724,10 +1721,10 @@ namespace BlueBrick
 					binaryWriter.Write((ushort)0x8001);
 
 				// write the TD part number
-				binaryWriter.Write((int)remapData.mTDId.ID);
+				binaryWriter.Write(remapData.mTDId.ID);
 
 				// write an instance ID (use the hash code for that)
-				binaryWriter.Write((int)brick.GetHashCode());
+				binaryWriter.Write(brick.GetHashCode());
 
 				// by default we use the active connection point to find the corresponding
 				// port id of origin. But some parts like the straight or the cross over, can
@@ -1755,39 +1752,40 @@ namespace BlueBrick
 					}
 				}
 
-				// the brick with connections, use there connexion point as origin of their position
-				double orientation = 0.0;
-				PointF position;
-				if ((brick.ConnectionPoints != null) && (connectionPointIndex < brick.ConnectionPoints.Count))
-				{
-					// set the angle of the brick first
-					orientation = (double)(brick.Orientation - diffAngleBtwTDandBB);
-					// then set the position by getting it from the corresponding connection point
-					position = brick.ConnectionPoints[connectionPointIndex].PositionInStudWorldCoord;
-				}
-				else
-				{
-					// set the correct angle of the brick
-					orientation = (double)(brick.Orientation - diffAngleBtwTDandBB);
-					// set the position from the center that we have computed
-					position = brick.Center;
-					// first rotate the brick to have it like in TD
-					// such has the brick.Image.Width is correct
-					LayerBrick.Brick dummyBrickToGetWidth = new LayerBrick.Brick(brick.PartNumber);
-					if (diffAngleBtwTDandBB != 0)
-						dummyBrickToGetWidth.Orientation = diffAngleBtwTDandBB;
-					// if the brick don't have connexion point, the position of the TD brick be the middle
-					// of the left border, but of course we need to rotate this virtual connexion point
-					Matrix rotation = new Matrix();
-					rotation.Rotate((float)orientation);
-					PointF[] originToCenter = { new PointF(dummyBrickToGetWidth.Width / 2, 0) };
-					rotation.TransformVectors(originToCenter);
-					position.X -= originToCenter[0].X;
-					position.Y -= originToCenter[0].Y;
-				}
+                PointF position;
 
-				// normalize the rotation between 0 and 360
-				while (orientation < 0.0f)
+                // the brick with connections, use there connexion point as origin of their position
+                double orientation;
+                if ((brick.ConnectionPoints != null) && (connectionPointIndex < brick.ConnectionPoints.Count))
+                {
+                    // set the angle of the brick first
+                    orientation = brick.Orientation - diffAngleBtwTDandBB;
+                    // then set the position by getting it from the corresponding connection point
+                    position = brick.ConnectionPoints[connectionPointIndex].PositionInStudWorldCoord;
+                }
+                else
+                {
+                    // set the correct angle of the brick
+                    orientation = brick.Orientation - diffAngleBtwTDandBB;
+                    // set the position from the center that we have computed
+                    position = brick.Center;
+                    // first rotate the brick to have it like in TD
+                    // such has the brick.Image.Width is correct
+                    LayerBrick.Brick dummyBrickToGetWidth = new LayerBrick.Brick(brick.PartNumber);
+                    if (diffAngleBtwTDandBB != 0)
+                        dummyBrickToGetWidth.Orientation = diffAngleBtwTDandBB;
+                    // if the brick don't have connexion point, the position of the TD brick be the middle
+                    // of the left border, but of course we need to rotate this virtual connexion point
+                    Matrix rotation = new Matrix();
+                    rotation.Rotate((float)orientation);
+                    PointF[] originToCenter = { new PointF(dummyBrickToGetWidth.Width / 2, 0) };
+                    rotation.TransformVectors(originToCenter);
+                    position.X -= originToCenter[0].X;
+                    position.Y -= originToCenter[0].Y;
+                }
+
+                // normalize the rotation between 0 and 360
+                while (orientation < 0.0f)
 					orientation += 360.0f;
 				while (orientation >= 360.0f)
 					orientation -= 360.0f;
@@ -1800,11 +1798,11 @@ namespace BlueBrick
 				binaryWriter.Write((double)brick.Altitude);
 
 				// the type of the part (an int) (0 = Straight, 1 = Left Curve, 2 = Right Curve, 3 = Left Split, 4 = Right Split, 5 = Left Merge, 6 = Right Merge, 7 = Left Join, 8 = Right Join, 9 = Crossover, 10 = T Junction, 11 = Up Ramp, 12 = Down Ramp, 13 = Short Straight, 14 = Short Left Curve In, 15 = Short Right Curve In, 16 = Short Left Curve Out, 17 = Short Right Curve Out, 18 = Left Reverse Switch, 19 = Right Reverse Switch, 20 = Custom)
-				binaryWriter.Write((int)partType);
+				binaryWriter.Write(partType);
 
 				// the id of bitmap (an int) when a part (like a curve) has two bitmap in the TrackDesigner part library, or for two baseplase with different color
 				// but in TD code, this is since as the port id (i.e. connexion id) that is used as the origin point of the part
-				binaryWriter.Write((int)portIdOfOrigin);
+				binaryWriter.Write(portIdOfOrigin);
 
 				// 4 structures for the 4 possibles connexions
 				for (int i = 0; i < 4; ++i)
@@ -1837,9 +1835,9 @@ namespace BlueBrick
 								// inside the up ramp. So we need to skip the down ramp and continue with the next linked part
 								if (connectedBrick.PartNumber.StartsWith("2678."))
 								{
-									// take the other connexion point of the 2678 part (that only have 2 connexion points)
-									int nextConnexionIndex = 0;
-									if (connectedBrickOtherBBConnexionIndex == 0)
+                                    // take the other connexion point of the 2678 part (that only have 2 connexion points)
+                                    int nextConnexionIndex;
+                                    if (connectedBrickOtherBBConnexionIndex == 0)
 										nextConnexionIndex = 1;
 									else
 										nextConnexionIndex = 0;
@@ -1876,11 +1874,11 @@ namespace BlueBrick
 					}
 
 					// write the instance ID of the first connected brick
-					binaryWriter.Write((int)connectedBrickInstanceId);
+					binaryWriter.Write(connectedBrickInstanceId);
 					// write the Port number connected to on other piece
-					binaryWriter.Write((int)connectedBrickOtherPortId);
+					binaryWriter.Write(connectedBrickOtherPortId);
 					// write the Port polarity: 0 unasasigned, 2 -ve, 3 +ve
-					binaryWriter.Write((int)connectedBrickPolarity);
+					binaryWriter.Write(connectedBrickPolarity);
 				}
 
 				// write the flags
@@ -1888,10 +1886,10 @@ namespace BlueBrick
 				// TPF_SUPPORT        2     // piece is used to support elevation
 				// TPF_MODIFIED       4     // piece has been modified
 				// TPF_CONNECTION_MADE 8    // piece has been modified
-				binaryWriter.Write((int)remapData.mFlags);
+				binaryWriter.Write(remapData.mFlags);
 
 				// write the slope
-				binaryWriter.Write((int)0);
+				binaryWriter.Write(0);
 
 				// the part was correctly written
 				return true;
@@ -1916,10 +1914,10 @@ namespace BlueBrick
 			binaryWriter.Write((int)-boundaries.Top);
 
 			// write the number of pieces
-			binaryWriter.Write((int)nbTotalBricks);
+			binaryWriter.Write(nbTotalBricks);
 
 			// write the number of the file version that must be 20
-			binaryWriter.Write((int)20);
+			binaryWriter.Write(20);
 
 			// save the boundaries
 			binaryWriter.Write((int)boundaries.Left); // x min
@@ -1931,10 +1929,9 @@ namespace BlueBrick
 			LayerBrick.Brick selectedBrick = null;
 			if (Map.Instance.SelectedLayer != null)
 			{
-				LayerBrick brickLayer = Map.Instance.SelectedLayer as LayerBrick;
-				if ((brickLayer != null) && (brickLayer.SelectedObjects.Count > 0))
-					selectedBrick = brickLayer.SelectedObjects[0] as LayerBrick.Brick;
-			}
+                if ((Map.Instance.SelectedLayer is LayerBrick brickLayer) && (brickLayer.SelectedObjects.Count > 0))
+                    selectedBrick = brickLayer.SelectedObjects[0] as LayerBrick.Brick;
+            }
 
 			// get different data to save depending if we have a selected brick or not
 			PointF cursorPosition;
@@ -1944,13 +1941,13 @@ namespace BlueBrick
 			int selectedBrickId = 0;
 			if (selectedBrick != null)
 			{
-				cursorPositionAltitude = (double)selectedBrick.Altitude;
+				cursorPositionAltitude = selectedBrick.Altitude;
 				selectedBrickId = selectedBrick.GetHashCode();
 				if (selectedBrick.HasConnectionPoint)
 				{
 					// get the cursor position from the selected connection of the selected part
 					cursorPosition = selectedBrick.ActiveConnectionPosition;
-					cursorAngle = (double)selectedBrick.ActiveConnectionAngle;
+					cursorAngle = selectedBrick.ActiveConnectionAngle;
 					selectedPort = selectedBrick.ActiveConnectionPointIndex;
 				}
 				else
@@ -1972,9 +1969,9 @@ namespace BlueBrick
 			// save the angle of the cursor
 			binaryWriter.Write((double)cursorAngle);
 			// selected port of the selected part
-			binaryWriter.Write((int)selectedPort);
+			binaryWriter.Write(selectedPort);
 			// selected part hashcode (as an id)
-			binaryWriter.Write((int)selectedBrickId);
+			binaryWriter.Write(selectedBrickId);
 
 			// size of the document
 			binaryWriter.Write((int)boundaries.Width);
@@ -1983,11 +1980,11 @@ namespace BlueBrick
 			binaryWriter.Write((char)0);
 
 			// options flags and slopes??
-			binaryWriter.Write((int)(Map.Instance.AllowElectricShortCuts ? 1 : 0));
-			binaryWriter.Write((int)0); // slopes, what is it ???
-			binaryWriter.Write((int)(Map.Instance.AllowUnderground ? 1 : 0));
-			binaryWriter.Write((int)(Map.Instance.AllowSteps ? 1 : 0));
-			binaryWriter.Write((int)(Map.Instance.AllowSlopeMismatch ? 1 : 0));
+			binaryWriter.Write(Map.Instance.AllowElectricShortCuts ? 1 : 0);
+			binaryWriter.Write(0); // slopes, what is it ???
+			binaryWriter.Write(Map.Instance.AllowUnderground ? 1 : 0);
+			binaryWriter.Write(Map.Instance.AllowSteps ? 1 : 0);
+			binaryWriter.Write(Map.Instance.AllowSlopeMismatch ? 1 : 0);
 
 			// description string (the TDL file only support a maximum number of 255 char
 			// because the first char is the length of the string)
@@ -1995,14 +1992,14 @@ namespace BlueBrick
 			if (description.Length > 255)
 				description = description.Substring(0, 255);
 			binaryWriter.Write((char)description.Length);
-			binaryWriter.Write((char[])description.ToCharArray());
+			binaryWriter.Write(description.ToCharArray());
 			// comment string (the TDL file only support a maximum number of 255 char
 			// because the first char is the length of the string)
 			string comment = Map.Instance.Comment.Clone() as string;
 			if (comment.Length > 255)
 				comment = description.Substring(0, 255);
 			binaryWriter.Write((char)comment.Length);
-			binaryWriter.Write((char[])comment.ToCharArray());
+			binaryWriter.Write(comment.ToCharArray());
 
 			// now the piece list (normally it's an empty list)
 			binaryWriter.Write((short)0); // the number of piece in the piece list
@@ -2054,16 +2051,24 @@ namespace BlueBrick
 		{
 			// create a new map and different layer for different type of parts
 			Map.Instance = new Map();
-			LayerBrick tableLayer = new LayerBrick();
-			tableLayer.Name = "Tables";
-			LayerBrick baseplateLayer = new LayerBrick();
-			baseplateLayer.Name = "Baseplates";
-			LayerBrick trackLayer = new LayerBrick();
-			trackLayer.Name = "Tracks";
-			LayerBrick structureLayer = new LayerBrick();
-			structureLayer.Name = "Structures";
-			// a list to store all the corrdinates of the node found (because in ncp format, the connection points are separated from the bricks)
-			List<FourDBrixNodeCoord> nodeCoordinates = new List<FourDBrixNodeCoord>();
+            LayerBrick tableLayer = new LayerBrick
+            {
+                Name = "Tables"
+            };
+            LayerBrick baseplateLayer = new LayerBrick
+            {
+                Name = "Baseplates"
+            };
+            LayerBrick trackLayer = new LayerBrick
+            {
+                Name = "Tracks"
+            };
+            LayerBrick structureLayer = new LayerBrick
+            {
+                Name = "Structures"
+            };
+            // a list to store all the corrdinates of the node found (because in ncp format, the connection points are separated from the bricks)
+            List<FourDBrixNodeCoord> nodeCoordinates = new List<FourDBrixNodeCoord>();
 			// a list to also store the segment, we then instantiate the bricks by combining the two list after the file as been fully parsed
 			List<FourDBrixSegment> segments = new List<FourDBrixSegment>();
 			// a list to store all the groups that we will read in the file
@@ -2072,18 +2077,20 @@ namespace BlueBrick
 			// declare a bool to check if we found some part not remaped in the library
 			List<string> noRemapablePartFound = new List<string>();
 
-			// create an XML reader to parse the data
-			System.Xml.XmlReaderSettings xmlSettings = new System.Xml.XmlReaderSettings();
-			xmlSettings.ConformanceLevel = System.Xml.ConformanceLevel.Document;
-			xmlSettings.IgnoreWhitespace = true;
-			xmlSettings.IgnoreComments = true;
-			xmlSettings.CheckCharacters = false;
-			xmlSettings.CloseInput = true;
-			System.Xml.XmlReader xmlReader = System.Xml.XmlReader.Create(filename, xmlSettings);
+            // create an XML reader to parse the data
+            System.Xml.XmlReaderSettings xmlSettings = new System.Xml.XmlReaderSettings
+            {
+                ConformanceLevel = System.Xml.ConformanceLevel.Document,
+                IgnoreWhitespace = true,
+                IgnoreComments = true,
+                CheckCharacters = false,
+                CloseInput = true
+            };
+            System.Xml.XmlReader xmlReader = System.Xml.XmlReader.Create(filename, xmlSettings);
 
-			// first find and enter the unique root tag
-			bool rootNodeFound = false;
-			do
+            // first find and enter the unique root tag
+            bool rootNodeFound;
+            do
 			{
 				xmlReader.Read();
 				rootNodeFound = xmlReader.Name.Equals("data");
@@ -2291,11 +2298,10 @@ namespace BlueBrick
 						int.TryParse(xmlReader.GetAttribute("value"), out currentSegment.mOriginNodeIndex); // for now store the local origin node index
 					else if (xmlReader.Name.StartsWith("node") && !xmlReader.Name.Equals("nodes"))
 					{
-						// we also need to read the global node index that this segment use, to store it in the origin after the read is complete
-						int nodeIndex = 0;
-						if (int.TryParse(xmlReader.GetAttribute("value"), out nodeIndex))
-							globalNodesIndexOfTheSegment.Add(nodeIndex);
-					}
+                        // we also need to read the global node index that this segment use, to store it in the origin after the read is complete
+                        if (int.TryParse(xmlReader.GetAttribute("value"), out int nodeIndex))
+                            globalNodesIndexOfTheSegment.Add(nodeIndex);
+                    }
 					// read the tag anyway after having read the property
 					xmlReader.Read();
 					// check if we reach the end of the Description
@@ -2426,14 +2432,16 @@ namespace BlueBrick
 					// if we found a brick in the brick library matching the 4DBrix part name, we can add the brick to the current layer
 					if (libBrick != null)
 					{
-						// create a new brick
-						LayerBrick.Brick brick = new LayerBrick.Brick(libBrick.mPartNumber);
+                        // create a new brick
+                        LayerBrick.Brick brick = new LayerBrick.Brick(libBrick.mPartNumber)
+                        {
 
-						// rotate the brick (will recompute the correct OffsetFromOriginalImage)
-						brick.Orientation = angle;
+                            // rotate the brick (will recompute the correct OffsetFromOriginalImage)
+                            Orientation = angle
+                        };
 
-						// if the coordinates should be interpreted as center coordinate, shift them, as w
-						if (isCoordInCenter)
+                        // if the coordinates should be interpreted as center coordinate, shift them, as w
+                        if (isCoordInCenter)
 						{
 							// rescale the position because in 4DBrix, position are in millimeters (divide by 8), and give the adjustment due to the orientation
 							x = (x * 0.125f) - brick.OffsetFromOriginalImage.X;
@@ -2484,12 +2492,11 @@ namespace BlueBrick
 					if (xmlReader.Name.Equals("segments"))
 					{
 						string[] segmentList = xmlReader.GetAttribute("list").Split(new char[] { ',' });
-						// once the string list is split try to parse all the numbers
-						int guid = 0;
-						foreach (string segmentGUID in segmentList)
-							if (int.TryParse(segmentGUID, out guid))
-								currentGroup.mGUIDInTheGroup.Add(guid);
-					}
+                        // once the string list is split try to parse all the numbers
+                        foreach (string segmentGUID in segmentList)
+                            if (int.TryParse(segmentGUID, out int guid))
+                                currentGroup.mGUIDInTheGroup.Add(guid);
+                    }
 					// read the tag anyway after having read the property, and ignore the bounding box
 					xmlReader.Read();
 					// check if we reach the end of the Description
@@ -2521,7 +2528,7 @@ namespace BlueBrick
 					foreach (FourDBrixSegment segment in segments)
 						if ((segment.mGUID == guid) && (segment.mBrick != null))
 						{
-							bbGroup.addItem(segment.mBrick);
+							bbGroup.AddItem(segment.mBrick);
 							// remove also the segment we found, to speed up the next search iteration
 							// because a segment can only appear in one group
 							segments.Remove(segment);
@@ -2568,7 +2575,7 @@ namespace BlueBrick
 			textWriter.WriteLine("      <description value=\"" + Map.Instance.Date.ToString(dateTimeFormat, System.Globalization.CultureInfo.InvariantCulture) + "\"/>");
 			textWriter.WriteLine("      <info value=\"" + escapeSpecialXMLCharacter(Map.Instance.Comment) + "\"/>");
 			// for the tracklayout size, nControl only accept interger value in studs, and always assume the top left corner is (0,0)
-			textWriter.WriteLine("      <tracklayout width=\"" + ((int)(totalArea.Right)).ToString() + "\" height=\"" + ((int)(totalArea.Bottom)).ToString() + "\" scale=\"0.25\"/>");
+			textWriter.WriteLine("      <tracklayout width=\"" + ((int)totalArea.Right).ToString() + "\" height=\"" + ((int)totalArea.Bottom).ToString() + "\" scale=\"0.25\"/>");
 			textWriter.WriteLine("      <tilepanel rows=\"1\" columns=\"6\"/>");
 			textWriter.WriteLine("   </project>");
 
@@ -2636,11 +2643,10 @@ namespace BlueBrick
 				{
 					// get the current connection
 					LayerBrick.Brick.ConnectionPoint connection = brick.ConnectionPoints[i];
-					// get the global index of the current connection (this should never fail)
-					int globalIndex = 0;
-					connectionGlobalIndex.TryGetValue(connection, out globalIndex);
-					// then write the line
-					textWriter.WriteLine("      <node" + localIndex.ToString() + " value=\"" + globalIndex.ToString() + "\"/>");
+                    // get the global index of the current connection (this should never fail)
+                    connectionGlobalIndex.TryGetValue(connection, out int globalIndex);
+                    // then write the line
+                    textWriter.WriteLine("      <node" + localIndex.ToString() + " value=\"" + globalIndex.ToString() + "\"/>");
 					localIndex++;
 					// increase the index, if we reach the end, loop it from 0
 					i++;
@@ -2737,14 +2743,14 @@ namespace BlueBrick
 			}
 		}
 
-		private static void saveGroupsIn4DBrix(StreamWriter textWriter, List<LayerBrick.Group> groupList)
+		private static void saveGroupsIn4DBrix(StreamWriter textWriter, List<Layer.Group> groupList)
 		{
-			foreach (LayerBrick.Group group in groupList)
+			foreach (Layer.Group group in groupList)
 			{
 				textWriter.WriteLine("   <group>");
 				// write the segment list
 				textWriter.Write("      <segments list=\"");
-				List<Layer.LayerItem> brickList = group.getAllLeafItems();
+				List<Layer.LayerItem> brickList = group.GetAllLeafItems();
 				for (int i = 0; i < brickList.Count; ++i)
 				{
 					Layer.LayerItem brick = brickList[i];
@@ -2774,7 +2780,7 @@ namespace BlueBrick
 			int nbItems = 2;
 			foreach (Layer layer in Map.Instance.LayerList)
 				if (layer is LayerBrick)
-					nbItems += (layer.NbItems * 2);
+					nbItems += layer.NbItems * 2;
 			MainForm.Instance.resetProgressBar(nbItems);
 
 			// step the progressbar after the init of part remap
@@ -2792,7 +2798,7 @@ namespace BlueBrick
 			List<FourDBrixPart> tracks = new List<FourDBrixPart>();
 			List<FourDBrixPart> baseplates = new List<FourDBrixPart>();
 			List<FourDBrixPart> structures = new List<FourDBrixPart>();
-			List<LayerBrick.Group> groups = new List<LayerBrick.Group>();
+			List<Layer.Group> groups = new List<Layer.Group>();
 
 			// iterate on all the layers of the Map
 			foreach (Layer layer in Map.Instance.LayerList)

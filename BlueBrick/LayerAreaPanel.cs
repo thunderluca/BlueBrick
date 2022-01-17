@@ -21,8 +21,8 @@ namespace BlueBrick
 		public LayerAreaPanel(Layer layer)
 			: base(layer)
 		{
-			this.layerTypePictureBox.Image = BlueBrick.Properties.Resources.layerTypeArea;
-			this.displayHullButton.Visible = false;
+			layerTypePictureBox.Image = Properties.Resources.layerTypeArea;
+			displayHullButton.Visible = false;
 		}
 	}
 }

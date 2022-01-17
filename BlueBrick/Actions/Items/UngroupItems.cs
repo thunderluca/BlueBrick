@@ -21,8 +21,8 @@ namespace BlueBrick.Actions.Items
 {
 	class UngroupItems : Action
 	{
-		List<Layer.Group> mGroupToUngroup = null;
-		Layer mLayer = null;
+        readonly List<Layer.Group> mGroupToUngroup = null;
+        readonly Layer mLayer = null;
 
         public static List<Layer.Group> findItemsToUngroup(List<Layer.LayerItem> itemsToUngroup)
         {
@@ -39,9 +39,8 @@ namespace BlueBrick.Actions.Items
                 if (item.Group == null)
                 {
                     // check if this item is a group that can be ungrouped or a simple item by casting it
-                    Layer.Group group = item as Layer.Group;
-					// if it is a group that can be ungrouped and not already in the list, add it to the list
-					if ((group != null) && group.CanUngroup && !result.Contains(group))
+                    // if it is a group that can be ungrouped and not already in the list, add it to the list
+                    if ((item is Layer.Group group) && group.CanUngroup && !result.Contains(group))
                         result.Add(group);
                 }
                 else if (!searchList.Contains(item.Group))
@@ -63,29 +62,29 @@ namespace BlueBrick.Actions.Items
 
 		public override string GetName()
 		{
-			return BlueBrick.Properties.Resources.ActionUngroupItems;
+			return Properties.Resources.ActionUngroupItems;
 		}
 
 		public override void Redo()
 		{
 			// disband the groups
 			foreach (Layer.Group group in mGroupToUngroup)
-				group.ungroup(mLayer);
+				group.Ungroup(mLayer);
 		}
 
 		public override void Undo()
 		{
 			// reform the groups
 			foreach (Layer.Group group in mGroupToUngroup)
-				group.regroup(mLayer);
+				group.Regroup(mLayer);
 
 			// reselect the current selection, because the regroup may affect a currently selected item
 			// and if we don't reselect, we may end up with some items of the same group selected and some
 			// not selected. So by reselecting the current selection, the grouping links will ensure to have
 			// a correct status.
 			List<Layer.LayerItem> currentSelection = new List<Layer.LayerItem>(mLayer.SelectedObjects);
-			mLayer.clearSelection();
-			mLayer.addObjectInSelection(currentSelection);
+			mLayer.ClearSelection();
+			mLayer.AddObjectInSelection(currentSelection);
 		}
 	}
 }

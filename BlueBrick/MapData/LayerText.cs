@@ -12,14 +12,14 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 
+using BlueBrick.Actions;
+using BlueBrick.Actions.Texts;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Windows.Forms;
-using BlueBrick.Actions;
-using BlueBrick.Actions.Texts;
 using System.Drawing.Imaging;
+using System.Windows.Forms;
 
 namespace BlueBrick.MapData
 {
@@ -40,7 +40,7 @@ namespace BlueBrick.MapData
 		private List<TextCell> mTexts = new List<TextCell>();
 
 		// the image attribute to draw the text including the layer transparency
-		private ImageAttributes mImageAttribute = new ImageAttributes();
+		private readonly ImageAttributes mImageAttribute = new ImageAttributes();
 
 		// related to selection
 		private const int BASE_SELECTION_TRANSPARENCY = 112;
@@ -74,10 +74,12 @@ namespace BlueBrick.MapData
 			set
 			{
 				mTransparency = value;
-				ColorMatrix colorMatrix = new ColorMatrix();
-				colorMatrix.Matrix33 = (float)value / 100.0f;
-				mImageAttribute.SetColorMatrix(colorMatrix);
-				mSelectionBrush = new SolidBrush(Color.FromArgb((BASE_SELECTION_TRANSPARENCY * value) / 100, 255, 255, 255));
+                ColorMatrix colorMatrix = new ColorMatrix
+                {
+                    Matrix33 = value / 100.0f
+                };
+                mImageAttribute.SetColorMatrix(colorMatrix);
+				mSelectionBrush = new SolidBrush(Color.FromArgb(BASE_SELECTION_TRANSPARENCY * value / 100, 255, 255, 255));
 			}
 		}
 
@@ -105,9 +107,9 @@ namespace BlueBrick.MapData
 		/// <param name="item1">the first item to compare</param>
 		/// <param name="item2">the second item t compare</param>
 		/// <returns>distance between the two items in the layer list (index1 - index2)</returns>
-		public override int compareItemOrderOnLayer(Layer.LayerItem item1, Layer.LayerItem item2)
+		public override int CompareItemOrderOnLayer(LayerItem item1, LayerItem item2)
 		{
-			return compareItemOrderOnLayer(mTexts, item1, item2);
+			return CompareItemOrderOnLayer(mTexts, item1, item2);
 		}
 		#endregion
 
@@ -117,25 +119,25 @@ namespace BlueBrick.MapData
 		{
 			// call the common reader class
 			base.ReadXml(reader);
-			// read all the texts
-			readItemsListFromXml<TextCell>(reader, ref mTexts, "TextCells", true);
+            // read all the texts
+            ReadItemsListFromXml(reader, ref mTexts, "TextCells", true);
 		}
 
-		protected override T readItem<T>(System.Xml.XmlReader reader)
+		protected override T ReadItem<T>(System.Xml.XmlReader reader)
 		{
 			TextCell cell = new TextCell();
 			cell.ReadXml(reader);
-			return (cell as T);
+			return cell as T;
 		}
 
 		public override void WriteXml(System.Xml.XmlWriter writer)
 		{
 			// write the header
-			writeHeaderAndCommonProperties(writer);
+			WriteHeaderAndCommonProperties(writer);
 			// write all the bricks
-			writeItemsListToXml(writer, mTexts, "TextCells", true);
+			WriteItemsListToXml(writer, mTexts, "TextCells", true);
 			// write the footer
-			writeFooter(writer);
+			WriteFooter(writer);
 		}
 		#endregion
 
@@ -144,7 +146,7 @@ namespace BlueBrick.MapData
 		/// <summary>
 		///	Add the specified text cell at the specified position
 		/// </summary>
-		public void addTextCell(TextCell cellToAdd, int index)
+		public void AddTextCell(TextCell cellToAdd, int index)
 		{
 			if (index < 0)
 				mTexts.Add(cellToAdd);
@@ -157,7 +159,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="cellToRemove"></param>
 		/// <returns>the previous index of the cell deleted</returns>
-		public int removeTextCell(TextCell cellToRemove)
+		public int RemoveTextCell(TextCell cellToRemove)
 		{
 			int index = mTexts.IndexOf(cellToRemove);
 			if (index >= 0)
@@ -165,29 +167,28 @@ namespace BlueBrick.MapData
 				mTexts.Remove(cellToRemove);
 				// remove also the item from the selection list if in it
 				if (mSelectedObjects.Contains(cellToRemove))
-					removeObjectFromSelection(cellToRemove);
+					RemoveObjectFromSelection(cellToRemove);
 			}
 			else
 				index = 0;
 			return index;
 		}
 
-		public override void editSelectedItemsProperties(PointF mouseCoordInStud)
+		public override void EditSelectedItemsProperties(PointF mouseCoordInStud)
 		{
 			// does nothing if the selection is empty
 			if (mSelectedObjects.Count > 0)
 			{
-				// in priority get the item under the mouse, if there's several item selected
-				TextCell textToEdit = getLayerItemUnderMouse(mSelectedObjects, mouseCoordInStud) as TextCell;
-				// but if user click outside of the item, get the first one of the list
-				if (textToEdit == null)
-					textToEdit = mSelectedObjects[0] as TextCell;
-				// and call the function to edit the properties
-				addOrEditItem(textToEdit, mouseCoordInStud);
+                // in priority get the item under the mouse, if there's several item selected
+                // but if user click outside of the item, get the first one of the list
+                if (!(GetLayerItemUnderMouse(mSelectedObjects, mouseCoordInStud) is TextCell textToEdit))
+                    textToEdit = mSelectedObjects[0] as TextCell;
+                // and call the function to edit the properties
+                AddOrEditItem(textToEdit, mouseCoordInStud);
 			}
 		}
 
-		private void addOrEditItem(TextCell itemToAddOrEdit, PointF mouseCoordInStud)
+		private void AddOrEditItem(TextCell itemToAddOrEdit, PointF mouseCoordInStud)
 		{
 			// open the form to edit the properties in modal mode
 			EditTextForm editTextForm = new EditTextForm(itemToAddOrEdit);
@@ -208,28 +209,28 @@ namespace BlueBrick.MapData
 		/// Copy the list of the selected texts in a separate list for later use.
 		/// This method should be called on a CTRL+C
 		/// </summary>
-		public override void copyCurrentSelectionToClipboard()
+		public override void CopyCurrentSelectionToClipboard()
 		{
-			base.copyCurrentSelectionToClipboard(mTexts);
+            CopyCurrentSelectionToClipboard(mTexts);
 		}
 
 		/// <summary>
 		/// Select all the items in this layer.
 		/// </summary>
-		public override void selectAll()
+		public override void SelectAll()
 		{
 			// clear the selection and add all the item of this layer
-			clearSelection();
-			addObjectInSelection(mTexts);
+			ClearSelection();
+			AddObjectInSelection(mTexts);
 		}
 
 		/// <summary>
 		/// Select all the item inside the rectangle in the current selected layer
 		/// </summary>
 		/// <param name="selectionRectangeInStud">the rectangle in which select the items</param>
-		public override void selectInRectangle(RectangleF selectionRectangeInStud)
+		public override void SelectInRectangle(RectangleF selectionRectangeInStud)
 		{
-			selectInRectangle(selectionRectangeInStud, mTexts);
+			SelectInRectangle(selectionRectangeInStud, mTexts);
 		}
 		#endregion
 		#endregion
@@ -240,9 +241,9 @@ namespace BlueBrick.MapData
 		/// get the total area in stud covered by all the text cells in this layer
 		/// </summary>
 		/// <returns></returns>
-		public override RectangleF getTotalAreaInStud()
+		public override RectangleF GetTotalAreaInStud()
 		{
-			return getTotalAreaInStud(mTexts);
+			return GetTotalAreaInStud(mTexts);
 		}
 
 		/// <summary>
@@ -252,7 +253,7 @@ namespace BlueBrick.MapData
 		/// <param name="areaInStud">The region in which we should draw</param>
 		/// <param name="scalePixelPerStud">The scale to use to draw</param>
 		/// <param name="drawSelection">If true draw the selection rectangle and also the selection overlay (this can be set to false when exporting the map to an image)</param>
-		public override void draw(Graphics g, RectangleF areaInStud, double scalePixelPerStud, bool drawSelection)
+		public override void Draw(Graphics g, RectangleF areaInStud, double scalePixelPerStud, bool drawSelection)
 		{
 			if (!Visible)
 				return;
@@ -270,7 +271,7 @@ namespace BlueBrick.MapData
 				{ 
                     // set the transform
                     Matrix rotation = new Matrix();
-                    PointF center = Layer.sConvertPointInStudToPixel(cell.Center, areaInStud, scalePixelPerStud);
+                    PointF center = SConvertPointInStudToPixel(cell.Center, areaInStud, scalePixelPerStud);
                     rotation.Translate(center.X, center.Y);
                     rotation.Rotate(cell.Orientation);
                     // get the source and destination rectangle
@@ -286,7 +287,7 @@ namespace BlueBrick.MapData
 					bool isSelected = drawSelection && mSelectedObjects.Contains(cell);
                     PointF[] hull = null;
                     if (isSelected || mDisplayHulls)
-                        hull = Layer.sConvertPolygonInStudToPixel(cell.SelectionArea.Vertice, areaInStud, scalePixelPerStud);
+                        hull = SConvertPolygonInStudToPixel(cell.SelectionArea.Vertice, areaInStud, scalePixelPerStud);
 
 					// draw the hull if needed
 					if (mDisplayHulls)
@@ -299,7 +300,7 @@ namespace BlueBrick.MapData
 			}
 
 			// call the base class to draw the surrounding selection rectangle
-            base.draw(g, areaInStud, scalePixelPerStud, drawSelection);
+            base.Draw(g, areaInStud, scalePixelPerStud, drawSelection);
 		}
 
 		#endregion
@@ -309,7 +310,7 @@ namespace BlueBrick.MapData
 		/// Return the cursor that should be display when the mouse is above the map without mouse click
 		/// </summary>
 		/// <param name="mouseCoordInStud"></param>
-		public override Cursor getDefaultCursorWithoutMouseClick(PointF mouseCoordInStud)
+		public override Cursor GetDefaultCursorWithoutMouseClick(PointF mouseCoordInStud)
 		{
 			// if the layer is not visible you can basically do nothing on it
 			if (!Visible)
@@ -321,7 +322,7 @@ namespace BlueBrick.MapData
 				// the second test after the or, is because we give a second chance to the user to duplicate
 				// the selection if he press the duplicate key after the mouse down, but before he start to move
 				if ((mEditAction == EditAction.DUPLICATE_SELECTION) ||
-					((mEditAction == EditAction.MOVE_SELECTION) && !mMouseHasMoved && (Control.ModifierKeys == BlueBrick.Properties.Settings.Default.MouseDuplicateSelectionKey)))
+					((mEditAction == EditAction.MOVE_SELECTION) && !mMouseHasMoved && (Control.ModifierKeys == Properties.Settings.Default.MouseDuplicateSelectionKey)))
 					return MainForm.Instance.TextDuplicateCursor;
 				else if (mEditAction == EditAction.MOVE_SELECTION)
 					return MainForm.Instance.TextMoveCursor;
@@ -330,20 +331,20 @@ namespace BlueBrick.MapData
 			{
 				if (mouseCoordInStud != PointF.Empty)
 				{
-					if (Control.ModifierKeys == BlueBrick.Properties.Settings.Default.MouseDuplicateSelectionKey)
+					if (Control.ModifierKeys == Properties.Settings.Default.MouseDuplicateSelectionKey)
 					{
-						if (isPointInsideSelectionRectangle(mouseCoordInStud))
+						if (IsPointInsideSelectionRectangle(mouseCoordInStud))
 							return MainForm.Instance.TextDuplicateCursor;
 					}
-					else if (Control.ModifierKeys == BlueBrick.Properties.Settings.Default.MouseMultipleSelectionKey)
+					else if (Control.ModifierKeys == Properties.Settings.Default.MouseMultipleSelectionKey)
 					{
 						return MainForm.Instance.TextSelectionCursor;
 					}
-					else if (Control.ModifierKeys == BlueBrick.Properties.Settings.Default.MouseZoomPanKey)
+					else if (Control.ModifierKeys == Properties.Settings.Default.MouseZoomPanKey)
 					{
 						return MainForm.Instance.PanOrZoomViewCursor;
 					}
-					else if (isPointInsideSelectionRectangle(mouseCoordInStud))
+					else if (IsPointInsideSelectionRectangle(mouseCoordInStud))
 					{
 						return MainForm.Instance.TextMoveCursor;
 					}
@@ -359,9 +360,9 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="mouseCoordInStud">the coordinate of the mouse cursor, where to look for</param>
 		/// <returns>the text cell that is under the mouse coordinate or null if there is none.</returns>
-		public TextCell getTextCellUnderMouse(PointF mouseCoordInStud)
+		public TextCell GetTextCellUnderMouse(PointF mouseCoordInStud)
 		{
-			return getLayerItemUnderMouse(mTexts, mouseCoordInStud) as TextCell;
+			return GetLayerItemUnderMouse(mTexts, mouseCoordInStud) as TextCell;
 		}
 
 		/// <summary>
@@ -369,7 +370,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the mouse click</param>
 		/// <returns>true if this layer wants to handle it</returns>
-		public override bool handleMouseDown(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
+		public override bool HandleMouseDown(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
 		{
 			// if the layer is not visible it is not sensible to mouve click
 			if (!Visible)
@@ -379,21 +380,21 @@ namespace BlueBrick.MapData
 			if (e.Button == MouseButtons.Left)
 			{
 				// check if the mouse is inside the bounding rectangle of the selected objects
-				bool isMouseInsideSelectedObjects = isPointInsideSelectionRectangle(mouseCoordInStud);
-				if (!isMouseInsideSelectedObjects && (Control.ModifierKeys != BlueBrick.Properties.Settings.Default.MouseMultipleSelectionKey)
-					&& (Control.ModifierKeys != BlueBrick.Properties.Settings.Default.MouseDuplicateSelectionKey))
-					clearSelection();
+				bool isMouseInsideSelectedObjects = IsPointInsideSelectionRectangle(mouseCoordInStud);
+				if (!isMouseInsideSelectedObjects && (Control.ModifierKeys != Properties.Settings.Default.MouseMultipleSelectionKey)
+					&& (Control.ModifierKeys != Properties.Settings.Default.MouseDuplicateSelectionKey))
+					ClearSelection();
 
 				// compute the current text cell under the mouse
 				mCurrentTextCellUnderMouse = null;
 
 				// We search if there is a cell under the mouse but in priority we choose from the current selected cells
-				mCurrentTextCellUnderMouse = getLayerItemUnderMouse(mSelectedObjects, mouseCoordInStud) as TextCell;
+				mCurrentTextCellUnderMouse = GetLayerItemUnderMouse(mSelectedObjects, mouseCoordInStud) as TextCell;
 
 				// if the current selected text is not under the mouse we search among the other texts
 				// but in reverse order to choose first the brick on top
 				if (mCurrentTextCellUnderMouse == null)
-					mCurrentTextCellUnderMouse = getTextCellUnderMouse(mouseCoordInStud);
+					mCurrentTextCellUnderMouse = GetTextCellUnderMouse(mouseCoordInStud);
 
 				// reset the action and the cursor
 				mEditAction = EditAction.NONE;
@@ -402,7 +403,7 @@ namespace BlueBrick.MapData
 				// check if it is a duplicate of the selection
 				// Be carreful for a duplication we take only the selected objects, not the cell
 				// under the mouse that may not be selected
-				if (isMouseInsideSelectedObjects &&	(Control.ModifierKeys == BlueBrick.Properties.Settings.Default.MouseDuplicateSelectionKey))
+				if (isMouseInsideSelectedObjects &&	(Control.ModifierKeys == Properties.Settings.Default.MouseDuplicateSelectionKey))
 				{
 					mEditAction = EditAction.DUPLICATE_SELECTION;
 					preferedCursor = MainForm.Instance.TextDuplicateCursor;
@@ -415,8 +416,8 @@ namespace BlueBrick.MapData
 				}
 				// check if the user plan to move the selected items
 				else if ((isMouseInsideSelectedObjects || (mCurrentTextCellUnderMouse != null))
-						&& (Control.ModifierKeys != BlueBrick.Properties.Settings.Default.MouseMultipleSelectionKey)
-						&& (Control.ModifierKeys != BlueBrick.Properties.Settings.Default.MouseDuplicateSelectionKey))
+						&& (Control.ModifierKeys != Properties.Settings.Default.MouseMultipleSelectionKey)
+						&& (Control.ModifierKeys != Properties.Settings.Default.MouseDuplicateSelectionKey))
 				{
 					mEditAction = EditAction.MOVE_SELECTION;
 					preferedCursor = MainForm.Instance.TextMoveCursor;
@@ -433,7 +434,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the click</param>
 		/// <returns>true if the view should be refreshed</returns>
-		public override bool mouseDown(MouseEventArgs e, PointF mouseCoordInStud)
+		public override bool MouseDown(MouseEventArgs e, PointF mouseCoordInStud)
 		{
 			mMouseIsBetweenDownAndUpEvent = true;
 
@@ -446,9 +447,9 @@ namespace BlueBrick.MapData
 				if ((mCurrentTextCellUnderMouse != null) && (mEditAction != EditAction.DUPLICATE_SELECTION))
 				{
 					// if the selection is empty add the text cell, else check the control key state
-					if ((mSelectedObjects.Count == 0) && (Control.ModifierKeys != BlueBrick.Properties.Settings.Default.MouseMultipleSelectionKey))
+					if ((mSelectedObjects.Count == 0) && (Control.ModifierKeys != Properties.Settings.Default.MouseMultipleSelectionKey))
 					{
-						addObjectInSelection(mCurrentTextCellUnderMouse);
+						AddObjectInSelection(mCurrentTextCellUnderMouse);
 					}
 					mustRefresh = true;
 				}
@@ -475,10 +476,10 @@ namespace BlueBrick.MapData
 					if ((deltaMove.X != 0) || (deltaMove.Y != 0))
 					{
 						// reset the initial position to each text
-						foreach (LayerText.TextCell cell in mSelectedObjects)
+						foreach (TextCell cell in mSelectedObjects)
 							cell.Position = new PointF(cell.Position.X - deltaMove.X, cell.Position.Y - deltaMove.Y);
 						// reset the bounding rectangle
-						this.updateBoundingSelectionRectangle();
+						UpdateBoundingSelectionRectangle();
 					}
 				}
 				mEditAction = EditAction.NONE;
@@ -494,14 +495,14 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the mouse move</param>
 		/// <returns>true if the view should be refreshed</returns>
-		public override bool mouseMove(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
+		public override bool MouseMove(MouseEventArgs e, PointF mouseCoordInStud, ref Cursor preferedCursor)
 		{
 			if ((mEditAction == EditAction.MOVE_SELECTION) || (mEditAction == EditAction.DUPLICATE_SELECTION))
 			{
 				// give a second chance to duplicate if the user press the duplicate key
 				// after pressing down the mouse key, but not if the user already moved
 				if ((mEditAction == EditAction.MOVE_SELECTION) && !mMouseHasMoved &&
-					(Control.ModifierKeys == BlueBrick.Properties.Settings.Default.MouseDuplicateSelectionKey))
+					(Control.ModifierKeys == Properties.Settings.Default.MouseDuplicateSelectionKey))
 					mEditAction = EditAction.DUPLICATE_SELECTION;
 
 				// check if it is a move or a duplicate
@@ -511,18 +512,18 @@ namespace BlueBrick.MapData
 					// and this will change the current selection, that will be move normally after
 					if (mLastDuplicateAction == null)
 					{
-						this.copyCurrentSelectionToClipboard();
+						CopyCurrentSelectionToClipboard();
 						AddActionInHistory addInHistory = AddActionInHistory.DO_NOT_ADD_TO_HISTORY_EXCEPT_IF_POPUP_OCCURED;
-						this.pasteClipboardInLayer(AddOffsetAfterPaste.NO, ref addInHistory);
+						PasteClipboardInLayer(AddOffsetAfterPaste.NO, ref addInHistory);
 					}
 				}
 				// compute the delta move of the mouse
 				PointF deltaMove = new PointF(mouseCoordInStud.X - mMouseDownLastPosition.X, mouseCoordInStud.Y - mMouseDownLastPosition.Y);
 				// this is move of the selection, not a duplicate selection
-				foreach (LayerText.TextCell cell in mSelectedObjects)
+				foreach (TextCell cell in mSelectedObjects)
 					cell.Position = new PointF(cell.Position.X + deltaMove.X, cell.Position.Y + deltaMove.Y);
 				// move also the bounding rectangle
-				moveBoundingSelectionRectangle(deltaMove);
+				MoveBoundingSelectionRectangle(deltaMove);
 				// memorize the last position of the mouse
 				mMouseDownLastPosition = mouseCoordInStud;
 				// reset the current brick under the mouse such as we will not remove or add it in the selection
@@ -540,7 +541,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="e">the mouse event arg that describe the click</param>
 		/// <returns>true if the view should be refreshed</returns>
-		public override bool mouseUp(MouseEventArgs e, PointF mouseCoordInStud)
+		public override bool MouseUp(MouseEventArgs e, PointF mouseCoordInStud)
 		{
 			// if it's a double click, we should prompt a box for text editing
 			// WARNING: prompt the box in the mouse up event,
@@ -549,7 +550,7 @@ namespace BlueBrick.MapData
 			if (mEditAction == EditAction.ADD_OR_EDIT_TEXT)
 			{
 				// call the function to add or edit, which open the edit text dialog in modal
-				addOrEditItem(mCurrentTextCellUnderMouse, mouseCoordInStud);
+				AddOrEditItem(mCurrentTextCellUnderMouse, mouseCoordInStud);
 			}
 			else if (mMouseHasMoved && (mSelectedObjects.Count > 0)) // check if we moved the selected text
 			{
@@ -571,7 +572,7 @@ namespace BlueBrick.MapData
 					else if (mEditAction == EditAction.MOVE_SELECTION)
 					{
 						// reset the initial position to each text
-						foreach (LayerText.TextCell cell in mSelectedObjects)
+						foreach (TextCell cell in mSelectedObjects)
 							cell.Position = new PointF(cell.Position.X - deltaMove.X, cell.Position.Y - deltaMove.Y);
 						// and add an action
 						ActionManager.Instance.doAction(new MoveText(this, mSelectedObjects, deltaMove));
@@ -593,12 +594,12 @@ namespace BlueBrick.MapData
 				// if we didn't move the item and use the control key, we need to add or remove object from the selection
 				// we must do it in the up event because if we do it in the down, we may remove an object before moving
 				// in the move event we reset the mCurrentBrickUnderMouse to avoid this change if we move
-				if ((mCurrentTextCellUnderMouse != null) && (Control.ModifierKeys == BlueBrick.Properties.Settings.Default.MouseMultipleSelectionKey))
+				if ((mCurrentTextCellUnderMouse != null) && (Control.ModifierKeys == Properties.Settings.Default.MouseMultipleSelectionKey))
 				{
 					if (mSelectedObjects.Contains(mCurrentTextCellUnderMouse))
-						removeObjectFromSelection(mCurrentTextCellUnderMouse);
+						RemoveObjectFromSelection(mCurrentTextCellUnderMouse);
 					else
-						addObjectInSelection(mCurrentTextCellUnderMouse);
+						AddObjectInSelection(mCurrentTextCellUnderMouse);
 				}
 			}
 

@@ -25,8 +25,8 @@ namespace BlueBrick.MapData
 	{
 		public class Anchor
 		{
-			private LayerRuler.RulerItem mAttachedRuler = null;
-			private int mAttachedPointIndex = 0;
+			private readonly LayerRuler.RulerItem mAttachedRuler = null;
+			private readonly int mAttachedPointIndex = 0;
 			private PointF mLocalAttachOffsetFromCenter = new PointF();
 			private PointF mWorldAttachOffsetFromCenter = new PointF();
 
@@ -96,8 +96,8 @@ namespace BlueBrick.MapData
 			}
 		}
 
-		private LayerBrick.Brick mOwnerBrick = null;
-		private List<Anchor> mAnchors = new List<Anchor>();
+		private readonly LayerBrick.Brick mOwnerBrick = null;
+		private readonly List<Anchor> mAnchors = new List<Anchor>();
 
 		public RulerAttachementSet(LayerBrick.Brick owner)
 		{
@@ -177,7 +177,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="rulerItem">the anchor or null if the specified control point is not attached</param>
 		/// <returns>the anchor that match both the ruler item and the connection point index</returns>
-		public RulerAttachementSet.Anchor getRulerAttachmentAnchor(LayerRuler.RulerItem rulerItem)
+		public Anchor getRulerAttachmentAnchor(LayerRuler.RulerItem rulerItem)
 		{
 			foreach (Anchor anchor in mAnchors)
 				if ((anchor.AttachedRuler == rulerItem) && (anchor.AttachedPointIndex == rulerItem.CurrentControlPointIndex))

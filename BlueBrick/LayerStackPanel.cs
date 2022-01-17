@@ -54,7 +54,7 @@ namespace BlueBrick
 				{
 					int currentVerticalScrollValue = panel.VerticalScroll != null ? panel.VerticalScroll.Value : 0;
 					nextControlLocation.Y += (controlTotalHeight * panel.Controls.Count) - displayHeight - currentVerticalScrollValue;
-					controlTotalWidthMargin += System.Windows.Forms.SystemInformation.VerticalScrollBarWidth;
+					controlTotalWidthMargin += SystemInformation.VerticalScrollBarWidth;
 				}
 
 				// compute the width for all the controls
@@ -89,7 +89,7 @@ namespace BlueBrick
 
 		#region Fields
 		// the layout engine for this specific panel
-		private BottomUpFlowLayoutEngine mLayoutEngine = new BottomUpFlowLayoutEngine();
+		private readonly BottomUpFlowLayoutEngine mLayoutEngine = new BottomUpFlowLayoutEngine();
 		#endregion
 
 		#region get/set
@@ -105,15 +105,15 @@ namespace BlueBrick
 
 		private void InitializeComponent()
 		{
-			this.SuspendLayout();
+			SuspendLayout();
 			// 
 			// LayerStackPanel
 			// 
-			this.AutoScroll = true;
-			this.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.Margin = new System.Windows.Forms.Padding(0);
-			this.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.LayerStackPanel_ControlAdded);
-			this.ResumeLayout(false);
+			AutoScroll = true;
+			Dock = DockStyle.Fill;
+			Margin = new Padding(0);
+			ControlAdded += new ControlEventHandler(LayerStackPanel_ControlAdded);
+			ResumeLayout(false);
 
 		}
 
@@ -150,10 +150,10 @@ namespace BlueBrick
             if (layerUpdateType == Actions.Action.UpdateViewType.FULL)
 			{
 				// first suspend the layout because we will recreate the full layout
-				this.SuspendLayout();
-				this.Visible = false;
+				SuspendLayout();
+				Visible = false;
 				// clear the layer stack and refill it with the map layer list
-				this.Controls.Clear();
+				Controls.Clear();
 				// recreate all the layer from the map
 				// we create a new panel to handle this layer
 				foreach (Layer layer in Map.Instance.LayerList)
@@ -172,7 +172,7 @@ namespace BlueBrick
 						newLayerPanel = new LayerRulerPanel(layer);
 
 					// add the new layer in the control list
-					this.Controls.Add(newLayerPanel);
+					Controls.Add(newLayerPanel);
 
 					// if the selected layer of the map is the current one,
 					// use the last added layerPanel as the selected layer panel
@@ -181,14 +181,14 @@ namespace BlueBrick
 				}
 
 				// now we can resume the layout
-				this.ResumeLayout(true);
-				this.Visible = true;
+				ResumeLayout(true);
+				Visible = true;
 			}
 			else
 			{
 				// not a full update, just check the property of the layers,
 				// but the layout is unchanged
-				foreach (Control control in this.Controls)
+				foreach (Control control in Controls)
 				{
 					LayerPanel layerPanel = control as LayerPanel;
 					layerPanel.updateView();
@@ -196,24 +196,24 @@ namespace BlueBrick
 			}
 
 			// invalidate the PanelView because we recreated the whole layer panel list
-			this.Invalidate();
+			Invalidate();
 		}
 
 		private void LayerStackPanel_ControlAdded(object sender, ControlEventArgs e)
 		{
 			// resize the added control
-			e.Control.Width = this.ClientSize.Width - 9;
+			e.Control.Width = ClientSize.Width - 9;
 			// there's a bug in Mono, the scrollbar doesn't appear if the number of controls is more
 			// than this panel size. Touching the size will actually force the recomputation of the 
 			// need for the vertical scroll bar but since anyway this panel is docked it will not 
 			// actually change the size in the long term.
-			this.Height += 1;
+			Height += 1;
 		}
 
 		protected override void OnMouseEnter(EventArgs e)
 		{
 			// give focus to me so that user can scroll with mouse, just by moving the mouse above the part list view
-			this.Focus();
+			Focus();
 		}
 	}
 }

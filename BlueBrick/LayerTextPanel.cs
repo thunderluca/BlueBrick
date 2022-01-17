@@ -25,7 +25,7 @@ namespace BlueBrick
 		public LayerTextPanel(Layer layer)
 			: base(layer)
 		{
-			this.layerTypePictureBox.Image = BlueBrick.Properties.Resources.layerTypeText;
+			layerTypePictureBox.Image = Properties.Resources.layerTypeText;
 		}
 	}
 }

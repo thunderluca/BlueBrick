@@ -31,7 +31,7 @@ namespace BlueBrick.MapData
 		{
 			public class ConnectionPoint
 			{
-                private SaveLoadManager.UniqueId mGUID = new SaveLoadManager.UniqueId();
+                private readonly SaveLoadManager.UniqueId mGUID = new SaveLoadManager.UniqueId();
 				public Brick mMyBrick = null; // reference to the brick this connection refer to
 				private PointF mPositionInStudWorldCoord = new PointF(0, 0); // the position of the connection point is world coord stud coord.
 				private ConnectionPoint mConnectionLink = null; // link toward this conection point is connected
@@ -47,7 +47,7 @@ namespace BlueBrick.MapData
 
 				public bool IsFree
 				{
-					get { return (mConnectionLink == null); }
+					get { return mConnectionLink == null; }
 				}
 
 				public int Type
@@ -126,10 +126,10 @@ namespace BlueBrick.MapData
 					get { return mPositionInStudWorldCoord; }
 					set
 					{
-						PointF newBrickCenter = this.mMyBrick.Center;
+						PointF newBrickCenter = mMyBrick.Center;
 						newBrickCenter.X += value.X - mPositionInStudWorldCoord.X;
 						newBrickCenter.Y += value.Y - mPositionInStudWorldCoord.Y;
-						this.mMyBrick.Center = newBrickCenter;
+						mMyBrick.Center = newBrickCenter;
 					}
 				}
 
@@ -156,7 +156,7 @@ namespace BlueBrick.MapData
 
 				public bool HasElectricShortcut
 				{
-					get { return (mHasElectricShortcut != 0); }
+					get { return mHasElectricShortcut != 0; }
 					set { mHasElectricShortcut = (short)(value ? 1 : 0); }
 				}
 				#endregion
@@ -270,7 +270,7 @@ namespace BlueBrick.MapData
 			// the image and the connection point are not serialized, they are built in the constructor
 			// or when the part number property is set by the serializer
 			[NonSerialized]
-			private Image[] mMipmapImages = new Image[5];	// all the images in different LOD level
+			private readonly Image[] mMipmapImages = new Image[5];	// all the images in different LOD level
 			[NonSerialized]
 			private Image mOriginalImageReference = null;	// reference on the original image in the database
 			[NonSerialized]
@@ -281,7 +281,7 @@ namespace BlueBrick.MapData
 			private List<BrickLibrary.Brick.ElectricCircuit> mElectricCircuitIndexList = null; // reference on the array describing the electric circuit for this part
 
 			[NonSerialized]
-			private static Bitmap sInvalidDummyImageToSkip = new Bitmap(1, 1); // a dummy image to indicate the the image is not valid
+			private static readonly Bitmap sInvalidDummyImageToSkip = new Bitmap(1, 1); // a dummy image to indicate the the image is not valid
 
 			#region get/set
 			/// <summary>
@@ -300,7 +300,7 @@ namespace BlueBrick.MapData
 					mElectricCircuitIndexList = BrickLibrary.Instance.GetElectricCircuitList(value);
 					// update the image
 					updateImage();
-					updateSnapMargin();
+					UpdateSnapMargin();
 				}
 			}
 
@@ -313,7 +313,7 @@ namespace BlueBrick.MapData
 				{
 					mOrientation = value;
 					updateImage();
-					updateSnapMargin();
+					UpdateSnapMargin();
 					updateConnectionPosition();
 					if (mAttachedRulers != null)
 						mAttachedRulers.brickRotateNotification();
@@ -360,16 +360,16 @@ namespace BlueBrick.MapData
 				get
 				{
 					// compute the pivot point of the brick
-					PointF brickCenter = this.Center; // use this variable for optimization reason (the center is computed)
-					PointF centerOffset = this.OffsetFromOriginalImage;
+					PointF brickCenter = Center; // use this variable for optimization reason (the center is computed)
+					PointF centerOffset = OffsetFromOriginalImage;
 					return new PointF(brickCenter.X + centerOffset.X, brickCenter.Y + centerOffset.Y);
 				}
 				set
 				{
 					// compute the new center of the part based on the pivot of the part and the new offset
-					PointF centerOffset = this.OffsetFromOriginalImage;
+					PointF centerOffset = OffsetFromOriginalImage;
 					// assign the new center position
-					this.Center = new PointF(value.X - centerOffset.X, value.Y - centerOffset.Y);
+					Center = new PointF(value.X - centerOffset.X, value.Y - centerOffset.Y);
 				}
 			}
 
@@ -390,7 +390,7 @@ namespace BlueBrick.MapData
 			{
 				set
 				{
-					this.Position = new PointF(value.X - (mTopLeftCornerInPixel.X / NUM_PIXEL_PER_STUD_FOR_BRICKS),
+					Position = new PointF(value.X - (mTopLeftCornerInPixel.X / NUM_PIXEL_PER_STUD_FOR_BRICKS),
 												value.Y - (mTopLeftCornerInPixel.Y / NUM_PIXEL_PER_STUD_FOR_BRICKS));
 				}
 				get
@@ -529,8 +529,8 @@ namespace BlueBrick.MapData
 			public Brick(Brick model)
 				: base(model)
 			{
-				this.mActiveConnectionPointIndex = model.mActiveConnectionPointIndex;
-				this.mAltitude = model.mAltitude;
+				mActiveConnectionPointIndex = model.mActiveConnectionPointIndex;
+				mAltitude = model.mAltitude;
 				// we don't clone the attached rulers
 				// call the init after setting the orientation (in the base copy copy constructor)
 				// to compute the image in the right orientation
@@ -558,7 +558,7 @@ namespace BlueBrick.MapData
 				// set the orientation before calling the init method to compute
 				// the image directly with the correct orientation during init.
 				// We do not use the accessor intentionnaly to not trigger an image building
-				this.mOrientation = orientation;
+				mOrientation = orientation;
 				// the init parameter will generate the image
 				init(partNumber, centerPosition);
 			}
@@ -579,7 +579,7 @@ namespace BlueBrick.MapData
 				// call the accessor to recreate the picture
 				PartNumber = partNumber;
 				// adjust the center position after the creation of the display area in the PartNumber accessor
-				this.Center = centerPosition;
+				Center = centerPosition;
 				// create the connection list if any
 				List<BrickLibrary.Brick.ConnectionPoint> connectionList = BrickLibrary.Instance.GetConnectionList(partNumber);
 				if (connectionList != null)
@@ -617,7 +617,7 @@ namespace BlueBrick.MapData
 					mAltitude = reader.ReadElementContentAsFloat();
 				// update the bitmap
 				updateImage();
-				updateSnapMargin();
+				UpdateSnapMargin();
 				// read the connexion points if any
 				reader.ReadAttributeValue();
 				int count = int.Parse(reader.GetAttribute(0));
@@ -653,7 +653,7 @@ namespace BlueBrick.MapData
 						// a boolean saying if the current connection is valid or will be destroyed later
 						// because it is over the number indicated by the part library
 						// be careful mConnectionPoints can be null, so use the int var instead
-						bool isConnectionValid = (connexionIndex < connectionCountInBrickLibrary);
+						bool isConnectionValid = connexionIndex < connectionCountInBrickLibrary;
 
 						// read the id (hashcode key) of the connexion
 						reader.ReadAttributeValue();
@@ -673,7 +673,7 @@ namespace BlueBrick.MapData
 						{
 							// set the connexion type, if not set during the above creation
 							if (isConnectionValid)
-								connexion.Type = BrickLibrary.Instance.GetConnexionType(this.PartNumber, connexionIndex);
+								connexion.Type = BrickLibrary.Instance.GetConnexionType(PartNumber, connexionIndex);
 						}
 
 						//read the connexion data and add it in the Connection list
@@ -720,7 +720,7 @@ namespace BlueBrick.MapData
 
 				// after that all the connections list has been updated (even if the list becomes empty),
 				// call the accesor to set the active connexion point, to make sure that the index stay inside the list size.
-				this.ActiveConnectionPointIndex = activeConnectionPointIndexReadInFile;
+				ActiveConnectionPointIndex = activeConnectionPointIndexReadInFile;
 
 				// read the end element of the brick
 				reader.ReadEndElement();
@@ -793,7 +793,7 @@ namespace BlueBrick.MapData
 				if (mOriginalImageReference == null)
 				{
 					// add a default image in the library and ask it again
-					BrickLibrary.Instance.AddUnknownBrick(mPartNumber, (int)(mDisplayArea.Width), (int)(mDisplayArea.Height));
+					BrickLibrary.Instance.AddUnknownBrick(mPartNumber, (int)mDisplayArea.Width, (int)mDisplayArea.Height);
 					mOriginalImageReference = BrickLibrary.Instance.GetImage(mPartNumber, ref boundingBox, ref hull);
 				}
 				// normally now, we should have an image
@@ -849,7 +849,7 @@ namespace BlueBrick.MapData
 				Matrix translation = new Matrix();
 				translation.Translate(mTopLeftCornerInPixel.X, mTopLeftCornerInPixel.Y);
 				translation.Scale(PIXEL_TO_STUD_RATIO, PIXEL_TO_STUD_RATIO, MatrixOrder.Append);
-				PointF center = this.Center;
+				PointF center = Center;
 				translation.Translate(center.X - (mDisplayArea.Width * 0.5f), center.Y - (mDisplayArea.Height * 0.5f), MatrixOrder.Append);
 				translation.TransformPoints(hullArray);
 
@@ -881,13 +881,13 @@ namespace BlueBrick.MapData
 			private Image createImage(int mipmapLevel)
 			{
 				// create the transform
-				int powerOfTwo = (1 << mipmapLevel);
+				int powerOfTwo = 1 << mipmapLevel;
 				Matrix transform = new Matrix();
 				transform.Rotate(mOrientation);
 				transform.Translate(mTopLeftCornerInPixel.X / powerOfTwo, mTopLeftCornerInPixel.Y / powerOfTwo, MatrixOrder.Append);
 				// create a new image with the correct size
-				int newWidth = (int)((mDisplayArea.Width * NUM_PIXEL_PER_STUD_FOR_BRICKS) / powerOfTwo);
-				int newHeight = (int)((mDisplayArea.Height * NUM_PIXEL_PER_STUD_FOR_BRICKS) / powerOfTwo);
+				int newWidth = (int)(mDisplayArea.Width * NUM_PIXEL_PER_STUD_FOR_BRICKS / powerOfTwo);
+				int newHeight = (int)(mDisplayArea.Height * NUM_PIXEL_PER_STUD_FOR_BRICKS / powerOfTwo);
 				if ((newWidth > 0) && (newHeight > 0))
 				{
 					Bitmap image = new Bitmap(newWidth, newHeight);
@@ -900,7 +900,7 @@ namespace BlueBrick.MapData
 					graphics.CompositingQuality = CompositingQuality.HighSpeed;
 					graphics.InterpolationMode = InterpolationMode.HighQualityBilinear; // the "Bilinear" and "Bicubic" creates moiré effect on baseplates with studs when scaling down. The "HighQualityBilinear" was making tracks become whites when scaling down, due to the transparent pixel around the border, but seems fixed.
 					RectangleF srcRectangle = new RectangleF(-0.5f, -0.5f, mOriginalImageReference.Width + 1f, mOriginalImageReference.Height + 1f);
-					RectangleF destRectangle = new RectangleF(0, 0, ((float)(mOriginalImageReference.Width) / powerOfTwo) + 1f, ((float)(mOriginalImageReference.Height) / powerOfTwo) + 1f);
+					RectangleF destRectangle = new RectangleF(0, 0, ((float)mOriginalImageReference.Width / powerOfTwo) + 1f, ((float)mOriginalImageReference.Height / powerOfTwo) + 1f);
 					graphics.DrawImage(mOriginalImageReference, destRectangle, srcRectangle, GraphicsUnit.Pixel);
 					graphics.Flush();
 					// return the created image
@@ -927,7 +927,7 @@ namespace BlueBrick.MapData
 						PointF[] pointArray = pointList.ToArray();
 						rotation.TransformVectors(pointArray);
 
-						PointF center = this.Center;
+						PointF center = Center;
 						center.X += mOffsetFromOriginalImage.X;
 						center.Y += mOffsetFromOriginalImage.Y;
 
@@ -951,13 +951,13 @@ namespace BlueBrick.MapData
 			/// </summary>
 			/// <param name="myTopGroup">If this brick belongs to a group, set the top group in this param, or null otherwise</param>
 			/// <returns>A list of connection in this brick and other brick of the same group (can be empty)</returns>
-			private List<Brick.ConnectionPoint> getConnectionsListForAllMyGroup(out Group myTopGroup)
+			private List<ConnectionPoint> getConnectionsListForAllMyGroup(out Group myTopGroup)
 			{
 				// get all the bricks in the group of this brick
-				myTopGroup = this.TopGroup;
+				myTopGroup = TopGroup;
 				if (myTopGroup != null)
 				{
-					List<LayerItem> brickList = myTopGroup.getAllLeafItems();
+					List<LayerItem> brickList = myTopGroup.GetAllLeafItems();
 
 					// create the result list with an estimation of the number of connections
 					List<ConnectionPoint> result = new List<ConnectionPoint>(brickList.Count * 2);
@@ -979,18 +979,17 @@ namespace BlueBrick.MapData
 					if (mConnectionPoints != null)
 						return mConnectionPoints;
 					else
-						return (new List<ConnectionPoint>(0));
+						return new List<ConnectionPoint>(0);
 				}
 			}
 
 			public void setActiveConnectionPointUnder(PointF positionInStudCoord)
 			{
-				// get all the connection points
-				Group myTopGroup = null;
-				List<Brick.ConnectionPoint> connectionList = getConnectionsListForAllMyGroup(out myTopGroup);
+                // get all the connection points
+                List<ConnectionPoint> connectionList = getConnectionsListForAllMyGroup(out Group myTopGroup);
 
-				// find the closest free connection point from the mouse position
-				float bestSquareDistance = float.MaxValue;
+                // find the closest free connection point from the mouse position
+                float bestSquareDistance = float.MaxValue;
 				int bestConnectionIndex = -1;
 				for (int i = 0; i < connectionList.Count; ++i)
 					if (connectionList[i].IsFree)
@@ -1013,7 +1012,7 @@ namespace BlueBrick.MapData
 					if (myTopGroup != null)
 						myTopGroup.ActiveConnectionIndex = bestConnectionIndex;
 					else
-						this.ActiveConnectionPointIndex = bestConnectionIndex;
+						ActiveConnectionPointIndex = bestConnectionIndex;
 				}
 			}
 
@@ -1023,12 +1022,11 @@ namespace BlueBrick.MapData
 			/// <param name="ignoreIfNotMainBrickOfAGroup">If true, do nothing if this brick belongs to a group and this brick is not the brick that hold the active connection index</param>
 			public void setActiveConnectionPointWithNextOne(bool ignoreIfNotMainBrickOfAGroup)
 			{
-				// get all the connection points for this brick or among all the connection of my group (if I belong to a group)
-				Group myTopGroup = null;
-				List<Brick.ConnectionPoint> connectionList = getConnectionsListForAllMyGroup(out myTopGroup);
+                // get all the connection points for this brick or among all the connection of my group (if I belong to a group)
+                List<ConnectionPoint> connectionList = getConnectionsListForAllMyGroup(out Group myTopGroup);
 
-				// if there is no connection on this part neither inside my group, just exit the function
-				if (connectionList.Count == 0)
+                // if there is no connection on this part neither inside my group, just exit the function
+                if (connectionList.Count == 0)
 					return;
 
 				// check if we need to ignore this change if this brick belongs to a group
@@ -1132,11 +1130,11 @@ namespace BlueBrick.MapData
 			/// <returns>the image of the brick or null if the image is too small to be seen</returns>
 			public Image getImage(int mipmapLevel)
 			{
-				// the result image
-				Image image = null;
-				// check if the mipmap level is under the level that should be saved in memory
-				// if yes that means the image is not saved and must be recreated every time
-				if (mipmapLevel < Properties.Settings.Default.StartSavedMipmapLevel)
+                // the result image
+                Image image;
+                // check if the mipmap level is under the level that should be saved in memory
+                // if yes that means the image is not saved and must be recreated every time
+                if (mipmapLevel < Properties.Settings.Default.StartSavedMipmapLevel)
 				{
 					image = createImage(mipmapLevel);
 				}

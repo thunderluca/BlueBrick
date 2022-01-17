@@ -26,7 +26,7 @@ namespace BlueBrick
 	public partial class EditRulerForm : Form
 	{
 		// a clone of the ruler given in the constructor, that hold all the modification on the form is closed
-		private LayerRuler.RulerItem mEditedRulerClone = null;
+		private readonly LayerRuler.RulerItem mEditedRulerClone = null;
 
 		#region get/set
 		public LayerRuler.RulerItem EditedRulerClone
@@ -44,105 +44,105 @@ namespace BlueBrick
 
 			// set the different control with the current state of the ruler
 			// line appearance
-			this.lineThicknessNumericUpDown.Value = (decimal)(rulerItem.LineThickness);
-			this.lineColorPictureBox.BackColor = rulerItem.Color;
+			lineThicknessNumericUpDown.Value = (decimal)rulerItem.LineThickness;
+			lineColorPictureBox.BackColor = rulerItem.Color;
 			if (rulerItem is LayerRuler.LinearRuler)
-				this.allowOffsetCheckBox.Checked = (rulerItem as LayerRuler.LinearRuler).AllowOffset;
+				allowOffsetCheckBox.Checked = (rulerItem as LayerRuler.LinearRuler).AllowOffset;
 			else
-				this.allowOffsetCheckBox.Enabled = false;
+				allowOffsetCheckBox.Enabled = false;
 			// guideline appearance
-			this.dashPatternLineNumericUpDown.Value = (decimal)(rulerItem.GuidelineDashPattern[0]);
-			this.dashPatternSpaceNumericUpDown.Value = (decimal)(rulerItem.GuidelineDashPattern[1]);
-			this.guidelineThicknessNumericUpDown.Value = (decimal)(rulerItem.GuidelineThickness);
-			this.guidelineColorPictureBox.BackColor = rulerItem.GuidelineColor;
+			dashPatternLineNumericUpDown.Value = (decimal)rulerItem.GuidelineDashPattern[0];
+			dashPatternSpaceNumericUpDown.Value = (decimal)rulerItem.GuidelineDashPattern[1];
+			guidelineThicknessNumericUpDown.Value = (decimal)rulerItem.GuidelineThickness;
+			guidelineColorPictureBox.BackColor = rulerItem.GuidelineColor;
 			// measure and unit
-			this.displayUnitCheckBox.Checked = rulerItem.DisplayUnit;
-			this.displayMeasureTextCheckBox.Checked = rulerItem.DisplayDistance;
-			this.unitComboBox.SelectedIndex = (int)(rulerItem.CurrentUnit);
-			this.fontColorPictureBox.BackColor = rulerItem.MeasureColor;
+			displayUnitCheckBox.Checked = rulerItem.DisplayUnit;
+			displayMeasureTextCheckBox.Checked = rulerItem.DisplayDistance;
+			unitComboBox.SelectedIndex = (int)rulerItem.CurrentUnit;
+			fontColorPictureBox.BackColor = rulerItem.MeasureColor;
 			updateChosenFont(rulerItem.MeasureFont);
 		}
 
 		private void updateChosenFont(Font newFont)
 		{
-			this.fontNameLabel.ForeColor = this.fontColorPictureBox.BackColor;
-			this.fontNameLabel.Text = newFont.Name + " " + newFont.SizeInPoints.ToString();
-			this.fontNameLabel.Font = newFont;
+			fontNameLabel.ForeColor = fontColorPictureBox.BackColor;
+			fontNameLabel.Text = newFont.Name + " " + newFont.SizeInPoints.ToString();
+			fontNameLabel.Font = newFont;
 		}
 
 		private void okButton_Click(object sender, EventArgs e)
 		{
 			// copy all the properties in the cloned rulers
-			mEditedRulerClone.LineThickness = (float)(this.lineThicknessNumericUpDown.Value);
-			mEditedRulerClone.Color = this.lineColorPictureBox.BackColor;
+			mEditedRulerClone.LineThickness = (float)lineThicknessNumericUpDown.Value;
+			mEditedRulerClone.Color = lineColorPictureBox.BackColor;
 			if (mEditedRulerClone is LayerRuler.LinearRuler)
-				(mEditedRulerClone as LayerRuler.LinearRuler).AllowOffset = this.allowOffsetCheckBox.Checked;
+				(mEditedRulerClone as LayerRuler.LinearRuler).AllowOffset = allowOffsetCheckBox.Checked;
 			// guideline appearance
-			mEditedRulerClone.GuidelineDashPattern = new float[]{(float)(this.dashPatternLineNumericUpDown.Value), (float)(this.dashPatternSpaceNumericUpDown.Value)};
-			mEditedRulerClone.GuidelineThickness = (float)(this.guidelineThicknessNumericUpDown.Value);
-			mEditedRulerClone.GuidelineColor = this.guidelineColorPictureBox.BackColor;
+			mEditedRulerClone.GuidelineDashPattern = new float[]{(float)dashPatternLineNumericUpDown.Value, (float)dashPatternSpaceNumericUpDown.Value};
+			mEditedRulerClone.GuidelineThickness = (float)guidelineThicknessNumericUpDown.Value;
+			mEditedRulerClone.GuidelineColor = guidelineColorPictureBox.BackColor;
 			// measure and unit
-			mEditedRulerClone.DisplayUnit = this.displayUnitCheckBox.Checked;
-			mEditedRulerClone.DisplayDistance = this.displayMeasureTextCheckBox.Checked;
-			mEditedRulerClone.CurrentUnit = (MapData.Tools.Distance.Unit)(this.unitComboBox.SelectedIndex);
-			mEditedRulerClone.MeasureColor = this.fontColorPictureBox.BackColor;
-			mEditedRulerClone.MeasureFont = this.fontNameLabel.Font;
+			mEditedRulerClone.DisplayUnit = displayUnitCheckBox.Checked;
+			mEditedRulerClone.DisplayDistance = displayMeasureTextCheckBox.Checked;
+			mEditedRulerClone.CurrentUnit = (MapData.Tools.Distance.Unit)unitComboBox.SelectedIndex;
+			mEditedRulerClone.MeasureColor = fontColorPictureBox.BackColor;
+			mEditedRulerClone.MeasureFont = fontNameLabel.Font;
 		}
 
 		private void displayMeasureTextCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
 			bool enabled = displayMeasureTextCheckBox.Checked;
 			// change the unit properties
-			this.displayUnitCheckBox.Enabled = enabled;
-			this.unitLabel.Enabled = enabled;
-			this.unitComboBox.Enabled = enabled;
+			displayUnitCheckBox.Enabled = enabled;
+			unitLabel.Enabled = enabled;
+			unitComboBox.Enabled = enabled;
 			// change the font properties
-			this.fontButton.Enabled = enabled;
-			this.fontColorLabel.Enabled = enabled;
-			this.fontColorPictureBox.Enabled = enabled;
-			this.fontNameLabel.Enabled = enabled;
+			fontButton.Enabled = enabled;
+			fontColorLabel.Enabled = enabled;
+			fontColorPictureBox.Enabled = enabled;
+			fontNameLabel.Enabled = enabled;
 		}
 
 		private void openColorDialogAndUpdatePictureBox(PictureBox pictureBox)
 		{
 			// set the color with the current back color of the picture box
-			this.colorDialog.Color = pictureBox.BackColor;
+			colorDialog.Color = pictureBox.BackColor;
 			// open the color box in modal
-			DialogResult result = this.colorDialog.ShowDialog(this);
+			DialogResult result = colorDialog.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
 				// if the user choose a color, set it back in the back color of the picture box
-				pictureBox.BackColor = this.colorDialog.Color;
+				pictureBox.BackColor = colorDialog.Color;
 			}
 		}
 
 		private void fontColorPictureBox_Click(object sender, EventArgs e)
 		{
-			openColorDialogAndUpdatePictureBox(this.fontColorPictureBox);
+			openColorDialogAndUpdatePictureBox(fontColorPictureBox);
 			// update alls the font color
-			this.fontNameLabel.ForeColor = this.fontColorPictureBox.BackColor;
+			fontNameLabel.ForeColor = fontColorPictureBox.BackColor;
 		}
 
 		private void lineColorPictureBox_Click(object sender, EventArgs e)
 		{
-			openColorDialogAndUpdatePictureBox(this.lineColorPictureBox);
+			openColorDialogAndUpdatePictureBox(lineColorPictureBox);
 		}
 
 		private void guidelineColorPictureBox_Click(object sender, EventArgs e)
 		{
-			openColorDialogAndUpdatePictureBox(this.guidelineColorPictureBox);
+			openColorDialogAndUpdatePictureBox(guidelineColorPictureBox);
 		}
 
 		private void fontButton_Click(object sender, EventArgs e)
 		{
 			// set the color with the current back color of the picture box
-			this.fontDialog.Font = this.fontNameLabel.Font;
+			fontDialog.Font = fontNameLabel.Font;
 			// open the color box in modal
-			DialogResult result = this.fontDialog.ShowDialog(this);
+			DialogResult result = fontDialog.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
 				// if the user choose a color, set it back in the back color of the picture box
-				updateChosenFont(this.fontDialog.Font);
+				updateChosenFont(fontDialog.Font);
 			}
 		}
 	}

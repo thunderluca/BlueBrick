@@ -22,7 +22,7 @@ namespace BlueBrick.Actions.Texts
 {
 	class DuplicateText : Items.DuplicateItems
 	{
-		private LayerText mTextLayer = null;
+		private readonly LayerText mTextLayer = null;
 
 		public DuplicateText(LayerText layer, List<Layer.LayerItem> itemsToDuplicate, bool needToAddOffset)
 			: base(itemsToDuplicate, needToAddOffset, false)
@@ -38,26 +38,26 @@ namespace BlueBrick.Actions.Texts
 				string text = (mItems[0] as LayerText.TextCell).Text.Replace("\r\n", " ");
 				if (text.Length > 10)
 					text = text.Substring(0, 10) + "...";
-				return BlueBrick.Properties.Resources.ActionDuplicateText.Replace("&", text);
+				return Properties.Resources.ActionDuplicateText.Replace("&", text);
 			}
 			else
 			{
-				return BlueBrick.Properties.Resources.ActionDuplicateSeveralTexts;
+				return Properties.Resources.ActionDuplicateSeveralTexts;
 			}
 		}
 
 		public override void Redo()
 		{
 			// clear the selection first, because we want to select only all the added texts
-			mTextLayer.clearSelection();
+			mTextLayer.ClearSelection();
 			// add all the texts (by default all the text index are initialized with -1
 			// so the first time they are added, we just add them at the end,
 			// after the index is record in the array during the undo)
 			// We must add all the texts in the reverse order to avoid crash (insert with an index greater than the size of the list)
 			for (int i = mItems.Count - 1; i >= 0; --i)
 			{
-				mTextLayer.addTextCell(mItems[i] as LayerText.TextCell, mItemIndex[i]);
-				mTextLayer.addObjectInSelection(mItems[i]);
+				mTextLayer.AddTextCell(mItems[i] as LayerText.TextCell, mItemIndex[i]);
+				mTextLayer.AddObjectInSelection(mItems[i]);
 			}
 		}
 
@@ -67,7 +67,7 @@ namespace BlueBrick.Actions.Texts
 			// but do not delete it, also memorise its last position
 			mItemIndex.Clear();
 			foreach (Layer.LayerItem obj in mItems)
-				mItemIndex.Add(mTextLayer.removeTextCell(obj as LayerText.TextCell));
+				mItemIndex.Add(mTextLayer.RemoveTextCell(obj as LayerText.TextCell));
 		}
 	}
 }

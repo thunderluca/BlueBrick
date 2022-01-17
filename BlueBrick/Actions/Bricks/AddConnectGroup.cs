@@ -23,11 +23,11 @@ namespace BlueBrick.Actions.Bricks
 	class AddConnectGroup : Action
 	{
 		// data for this action
-		private LayerBrick mBrickLayer = null;
-		private Layer.Group mGroup = null;
-		private List<Layer.LayerItem> mBricksInTheGroup = null;
-		private int mInsertIndex = -1; // this index is for the redo, to add the bricks at the same place
-		private int mNextPreferedActiveConnectionIndex = 0; // the prefered active connection index according to the brick library
+		private readonly LayerBrick mBrickLayer = null;
+		private readonly Layer.Group mGroup = null;
+		private readonly List<Layer.LayerItem> mBricksInTheGroup = null;
+		private readonly int mInsertIndex = -1; // this index is for the redo, to add the bricks at the same place
+		private readonly int mNextPreferedActiveConnectionIndex = 0; // the prefered active connection index according to the brick library
 
 		/// <summary>
 		/// Add a new named group which has the specified partNumber on the specifier layer, and connected it to
@@ -46,7 +46,7 @@ namespace BlueBrick.Actions.Bricks
 			mBrickLayer = layer;
 			mGroup = new Layer.Group(partNumber);
 			// get the flat list of bricks from the hierarchical group
-			mBricksInTheGroup = mGroup.getAllLeafItems();
+			mBricksInTheGroup = mGroup.GetAllLeafItems();
 
 			// get the connectable brick among the selection, and also the selected item (in case the selected item is a single group without connections points)
 			LayerBrick.Brick selectedBrick = layer.getConnectableBrick();
@@ -69,15 +69,17 @@ namespace BlueBrick.Actions.Bricks
 				// Compute the orientation of the bricks
 				float newOrientation = AddConnectBrick.sGetOrientationOfConnectedBrick(selectedBrick, brickToConnectInAddedGroup);
 				newOrientation -= brickToConnectInAddedGroup.Orientation;
-				// Rotate all the bricks of the group first before translating
-				RotateBrickOnPivotBrick rotateBricksAction = new RotateBrickOnPivotBrick(layer, mBricksInTheGroup, newOrientation, brickToConnectInAddedGroup);
-				rotateBricksAction.MustUpdateBrickConnectivity = false;
-				rotateBricksAction.Redo();
+                // Rotate all the bricks of the group first before translating
+                RotateBrickOnPivotBrick rotateBricksAction = new RotateBrickOnPivotBrick(layer, mBricksInTheGroup, newOrientation, brickToConnectInAddedGroup)
+                {
+                    MustUpdateBrickConnectivity = false
+                };
+                rotateBricksAction.Redo();
 
 				// compute the translation to add to all the bricks
 				PointF translation = new PointF(selectedBrick.ActiveConnectionPosition.X - brickToConnectInAddedGroup.ActiveConnectionPosition.X,
 												selectedBrick.ActiveConnectionPosition.Y - brickToConnectInAddedGroup.ActiveConnectionPosition.Y);
-				mGroup.translate(translation);
+				mGroup.Translate(translation);
 			}
 			else
 			{
@@ -89,7 +91,7 @@ namespace BlueBrick.Actions.Bricks
 				// the reassing the selected brick with the first brick of the group if the selected item is a group
 				// so that the brick index can correctly be set
 				if (selectedItem.IsAGroup)
-					selectedBrick = (selectedItem as Layer.Group).getAllLeafItems()[0] as LayerBrick.Brick;
+					selectedBrick = (selectedItem as Layer.Group).GetAllLeafItems()[0] as LayerBrick.Brick;
 				else
 					selectedBrick = selectedItem as LayerBrick.Brick;
 			}
@@ -182,7 +184,7 @@ namespace BlueBrick.Actions.Bricks
 
 		public override string GetName()
 		{
-			string actionName = BlueBrick.Properties.Resources.ActionAddBrick;
+			string actionName = Properties.Resources.ActionAddBrick;
 			actionName = actionName.Replace("&", mGroup.PartNumber);
 			return actionName;
 		}
@@ -190,7 +192,7 @@ namespace BlueBrick.Actions.Bricks
 		public override void Redo()
 		{
 			// clear the selection to reselect the parts of the group
-			mBrickLayer.clearSelection();
+			mBrickLayer.ClearSelection();
 
 			// add all the part of the group in the same order as in the group
 			int insertIndex = mInsertIndex;
@@ -202,7 +204,7 @@ namespace BlueBrick.Actions.Bricks
 				// the selection, the connectivity inside the selection will not change
 				mBrickLayer.updateFullBrickConnectivityForOneBrick(item as LayerBrick.Brick);
 				// select the brick (in order to select the whole group at the end
-				mBrickLayer.addObjectInSelection(item);
+				mBrickLayer.AddObjectInSelection(item);
 				// increase the index if it is valid
 				if (insertIndex != -1)
 					insertIndex++;

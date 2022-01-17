@@ -21,9 +21,9 @@ namespace BlueBrick.Actions.Texts
 {
 	class DeleteText : Action
 	{
-		private LayerText mTextLayer = null;
-		private List<Layer.LayerItem> mTextCells = null;
-		private List<int> mTextCellIndex = null; // this list of index is for the redo, to add each text at the same place
+		private readonly LayerText mTextLayer = null;
+		private readonly List<Layer.LayerItem> mTextCells = null;
+		private readonly List<int> mTextCellIndex = null; // this list of index is for the redo, to add each text at the same place
 
 		public DeleteText(LayerText layer, List<Layer.LayerItem> cells)
 		{
@@ -42,11 +42,11 @@ namespace BlueBrick.Actions.Texts
 				string text = (mTextCells[0] as LayerText.TextCell).Text.Replace("\r\n", " ");
 				if (text.Length > 10)
 					text = text.Substring(0, 10) + "...";
-				return BlueBrick.Properties.Resources.ActionDeleteText.Replace("&", text);
+				return Properties.Resources.ActionDeleteText.Replace("&", text);
 			}
 			else
 			{
-				return BlueBrick.Properties.Resources.ActionDeleteSeveralTexts;
+				return Properties.Resources.ActionDeleteSeveralTexts;
 			}
 		}
 
@@ -56,14 +56,14 @@ namespace BlueBrick.Actions.Texts
 			// but do not delete it, also memorise its last position
 			mTextCellIndex.Clear();
 			foreach (Layer.LayerItem obj in mTextCells)
-				mTextCellIndex.Add(mTextLayer.removeTextCell(obj as LayerText.TextCell));
+				mTextCellIndex.Add(mTextLayer.RemoveTextCell(obj as LayerText.TextCell));
 		}
 
 		public override void Undo()
 		{
 			// and add all the texts in the reverse order
 			for (int i = mTextCells.Count - 1 ; i >= 0 ; --i)
-				mTextLayer.addTextCell(mTextCells[i] as LayerText.TextCell, mTextCellIndex[i]);
+				mTextLayer.AddTextCell(mTextCells[i] as LayerText.TextCell, mTextCellIndex[i]);
 		}
 	}
 }

@@ -30,7 +30,7 @@ namespace BlueBrick.Actions.Items
 		protected Layer mLayer = null;
 		protected List<Layer.LayerItem> mItems = null;
 		protected List<int> mItemIndex = null; // this list of index is for the redo, to add each text at the same place
-		private int mInsertPosition = 0;
+		private readonly int mInsertPosition = 0;
 
 		public ChangeItemOrder(Layer layer, List<Layer.LayerItem> itemsToMove, FrontOrBack whereToSend)
 		{
@@ -56,15 +56,15 @@ namespace BlueBrick.Actions.Items
 			// but do not delete it, also memorise its last position
 			mItemIndex.Clear();
 			foreach (Layer.LayerItem item in mItems)
-				mItemIndex.Add(this.removeItem(item));
+				mItemIndex.Add(removeItem(item));
 
 			// add all the bricks at the begining of the list (so the back = 0) or at the end of the list (so at the front -1)
 			foreach (Layer.LayerItem item in mItems)
-				this.addItem(item, mInsertPosition);
+				addItem(item, mInsertPosition);
 
 			// reselect all the moved brick
-			mLayer.clearSelection();
-			mLayer.addObjectInSelection(mItems);
+			mLayer.ClearSelection();
+			mLayer.AddObjectInSelection(mItems);
 		}
 
 		public override void Undo()
@@ -72,16 +72,16 @@ namespace BlueBrick.Actions.Items
 			// remove the specified brick from the list of the layer (they must be at the end
 			// of the list but we don't care
 			foreach (Layer.LayerItem item in mItems)
-				this.removeItem(item);
+				removeItem(item);
 
 			// add all the bricks at their previous positions
 			// We must add all the bricks in the reverse order to avoid crash (insert with an index greater than the size of the list)
 			for (int i = mItems.Count - 1; i >= 0; --i)
-				this.addItem(mItems[i], mItemIndex[i]);
+				addItem(mItems[i], mItemIndex[i]);
 
 			// reselect all the moved brick
-			mLayer.clearSelection();
-			mLayer.addObjectInSelection(mItems);
+			mLayer.ClearSelection();
+			mLayer.AddObjectInSelection(mItems);
 		}
 	}
 }

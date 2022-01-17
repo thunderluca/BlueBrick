@@ -27,7 +27,7 @@ namespace BlueBrick
 {
 	public partial class LayerGridOptionForm : Form
 	{
-		private LayerGrid mEditedGridLayer = null;
+		private readonly LayerGrid mEditedGridLayer = null;
 		private Font mCurrentChosenFont = null;
 
 		public LayerGridOptionForm(LayerGrid gridLayer)
@@ -37,29 +37,29 @@ namespace BlueBrick
 			mEditedGridLayer = gridLayer;
 			// update the controls with the data of the gridLayer
 			// name and visibility
-			this.nameTextBox.Text = gridLayer.Name;
-			this.isVisibleCheckBox.Checked = gridLayer.Visible;
+			nameTextBox.Text = gridLayer.Name;
+			isVisibleCheckBox.Checked = gridLayer.Visible;
 			// transparency
-			this.alphaNumericUpDown.Value = gridLayer.Transparency;
-			this.alphaTrackBar.Value = gridLayer.Transparency;
+			alphaNumericUpDown.Value = gridLayer.Transparency;
+			alphaTrackBar.Value = gridLayer.Transparency;
 			// grid
-			this.gridCheckBox.Checked = gridLayer.DisplayGrid;
-			this.gridSizeNumericUpDown.Value = gridLayer.GridSizeInStud;
-			this.gridPixelNumericUpDown.Value = (int)gridLayer.GridThickness;
-			this.gridColorPictureBox.BackColor = gridLayer.GridColor;
+			gridCheckBox.Checked = gridLayer.DisplayGrid;
+			gridSizeNumericUpDown.Value = gridLayer.GridSizeInStud;
+			gridPixelNumericUpDown.Value = (int)gridLayer.GridThickness;
+			gridColorPictureBox.BackColor = gridLayer.GridColor;
 			// subgrid
-			this.subGridCheckBox.Checked = gridLayer.DisplaySubGrid;
-			this.subGridSizeNumericUpDown.Value = gridLayer.SubDivisionNumber;
-			this.subGridPixelNumericUpDown.Value = (int)gridLayer.SubGridThickness;
-			this.subGridColorPictureBox.BackColor = gridLayer.SubGridColor;
+			subGridCheckBox.Checked = gridLayer.DisplaySubGrid;
+			subGridSizeNumericUpDown.Value = gridLayer.SubDivisionNumber;
+			subGridPixelNumericUpDown.Value = (int)gridLayer.SubGridThickness;
+			subGridColorPictureBox.BackColor = gridLayer.SubGridColor;
 			// cell index
-			this.cellIndexCheckBox.Checked = gridLayer.DisplayCellIndex;
-			this.cellIndexColumnComboBox.SelectedIndex = (int)gridLayer.CellIndexColumnType;
-			this.cellIndexRowComboBox.SelectedIndex = (int)gridLayer.CellIndexRowType;
+			cellIndexCheckBox.Checked = gridLayer.DisplayCellIndex;
+			cellIndexColumnComboBox.SelectedIndex = (int)gridLayer.CellIndexColumnType;
+			cellIndexRowComboBox.SelectedIndex = (int)gridLayer.CellIndexRowType;
 			updateChosenFont(gridLayer.CellIndexFont);
-			this.cellIndexColorPictureBox.BackColor = gridLayer.CellIndexColor;
-			this.cellIndexOriginXNumericUpDown.Value = gridLayer.CellIndexCornerX;
-			this.cellIndexOriginYNumericUpDown.Value = gridLayer.CellIndexCornerY;
+			cellIndexColorPictureBox.BackColor = gridLayer.CellIndexColor;
+			cellIndexOriginXNumericUpDown.Value = gridLayer.CellIndexCornerX;
+			cellIndexOriginYNumericUpDown.Value = gridLayer.CellIndexCornerY;
 		}
 
 		private void buttonOk_Click(object sender, EventArgs e)
@@ -68,35 +68,37 @@ namespace BlueBrick
 			LayerGrid oldLayerData = new LayerGrid();
 			oldLayerData.CopyOptionsFrom(mEditedGridLayer);
 
-			// create a new layer to store the new data
-			LayerGrid newLayerData = new LayerGrid();
+            // create a new layer to store the new data
+            LayerGrid newLayerData = new LayerGrid
+            {
 
-			// name and visibility
-			newLayerData.Name = this.nameTextBox.Text;
-			newLayerData.Visible = this.isVisibleCheckBox.Checked;
-			//transparency
-			newLayerData.Transparency = (int)(this.alphaNumericUpDown.Value);
-			// grid
-			newLayerData.DisplayGrid = this.gridCheckBox.Checked;
-			newLayerData.GridSizeInStud = (int)this.gridSizeNumericUpDown.Value;
-			newLayerData.GridThickness = (float)this.gridPixelNumericUpDown.Value;
-			newLayerData.GridColor = this.gridColorPictureBox.BackColor;
-			// subgrid
-			newLayerData.DisplaySubGrid = this.subGridCheckBox.Checked;
-			newLayerData.SubDivisionNumber = (int)this.subGridSizeNumericUpDown.Value;
-			newLayerData.SubGridThickness = (float)this.subGridPixelNumericUpDown.Value;
-			newLayerData.SubGridColor = this.subGridColorPictureBox.BackColor;
-			// cell index
-			newLayerData.DisplayCellIndex = this.cellIndexCheckBox.Checked;
-			newLayerData.CellIndexColumnType = (LayerGrid.CellIndexType)this.cellIndexColumnComboBox.SelectedIndex;
-			newLayerData.CellIndexRowType = (LayerGrid.CellIndexType)this.cellIndexRowComboBox.SelectedIndex;
-			newLayerData.CellIndexFont = mCurrentChosenFont;
-			newLayerData.CellIndexColor = this.cellIndexColorPictureBox.BackColor;
-			newLayerData.CellIndexCornerX = (int)this.cellIndexOriginXNumericUpDown.Value;
-			newLayerData.CellIndexCornerY = (int)this.cellIndexOriginYNumericUpDown.Value;
+                // name and visibility
+                Name = nameTextBox.Text,
+                Visible = isVisibleCheckBox.Checked,
+                //transparency
+                Transparency = (int)alphaNumericUpDown.Value,
+                // grid
+                DisplayGrid = gridCheckBox.Checked,
+                GridSizeInStud = (int)gridSizeNumericUpDown.Value,
+                GridThickness = (float)gridPixelNumericUpDown.Value,
+                GridColor = gridColorPictureBox.BackColor,
+                // subgrid
+                DisplaySubGrid = subGridCheckBox.Checked,
+                SubDivisionNumber = (int)subGridSizeNumericUpDown.Value,
+                SubGridThickness = (float)subGridPixelNumericUpDown.Value,
+                SubGridColor = subGridColorPictureBox.BackColor,
+                // cell index
+                DisplayCellIndex = cellIndexCheckBox.Checked,
+                CellIndexColumnType = (LayerGrid.CellIndexType)cellIndexColumnComboBox.SelectedIndex,
+                CellIndexRowType = (LayerGrid.CellIndexType)cellIndexRowComboBox.SelectedIndex,
+                CellIndexFont = mCurrentChosenFont,
+                CellIndexColor = cellIndexColorPictureBox.BackColor,
+                CellIndexCornerX = (int)cellIndexOriginXNumericUpDown.Value,
+                CellIndexCornerY = (int)cellIndexOriginYNumericUpDown.Value
+            };
 
-			// do a change option action
-			ActionManager.Instance.doAction(new ChangeLayerOption(mEditedGridLayer, oldLayerData, newLayerData));
+            // do a change option action
+            ActionManager.Instance.doAction(new ChangeLayerOption(mEditedGridLayer, oldLayerData, newLayerData));
 		}
 		private void alphaTrackBar_Scroll(object sender, EventArgs e)
 		{
@@ -105,7 +107,7 @@ namespace BlueBrick
 
 		private void alphaNumericUpDown_ValueChanged(object sender, EventArgs e)
 		{
-			alphaTrackBar.Value = (int)(alphaNumericUpDown.Value);
+			alphaTrackBar.Value = (int)alphaNumericUpDown.Value;
 		}
 
 		private void alphaNumericUpDown_KeyUp(object sender, KeyEventArgs e)
@@ -116,115 +118,115 @@ namespace BlueBrick
 		private void updateChosenFont(Font newFont)
 		{
 			mCurrentChosenFont = newFont;
-			this.cellIndexFontNameLabel.Text = mCurrentChosenFont.Name + " " + mCurrentChosenFont.SizeInPoints.ToString();
-			this.cellIndexFontNameLabel.Font = mCurrentChosenFont;
+			cellIndexFontNameLabel.Text = mCurrentChosenFont.Name + " " + mCurrentChosenFont.SizeInPoints.ToString();
+			cellIndexFontNameLabel.Font = mCurrentChosenFont;
 		}
 
 		private void gridColorPictureBox_Click(object sender, EventArgs e)
 		{
 			// set the color with the current back color of the picture box
-			this.colorDialog.Color = gridColorPictureBox.BackColor;
+			colorDialog.Color = gridColorPictureBox.BackColor;
 			// open the color box in modal
-			DialogResult result = this.colorDialog.ShowDialog(this);
+			DialogResult result = colorDialog.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
 				// if the user choose a color, set it back in the back color of the picture box
-				gridColorPictureBox.BackColor = this.colorDialog.Color;
+				gridColorPictureBox.BackColor = colorDialog.Color;
 			}
 		}
 
 		private void subGridColorPictureBox_Click(object sender, EventArgs e)
 		{
 			// set the color with the current back color of the picture box
-			this.colorDialog.Color = subGridColorPictureBox.BackColor;
+			colorDialog.Color = subGridColorPictureBox.BackColor;
 			// open the color box in modal
-			DialogResult result = this.colorDialog.ShowDialog(this);
+			DialogResult result = colorDialog.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
 				// if the user choose a color, set it back in the back color of the picture box
-				subGridColorPictureBox.BackColor = this.colorDialog.Color;
+				subGridColorPictureBox.BackColor = colorDialog.Color;
 			}
 		}
 
 		private void cellIndexColorPictureBox_Click(object sender, EventArgs e)
 		{
 			// set the color with the current back color of the picture box
-			this.colorDialog.Color = cellIndexColorPictureBox.BackColor;
+			colorDialog.Color = cellIndexColorPictureBox.BackColor;
 			// open the color box in modal
-			DialogResult result = this.colorDialog.ShowDialog(this);
+			DialogResult result = colorDialog.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
 				// if the user choose a color, set it back in the back color of the picture box
-				cellIndexColorPictureBox.BackColor = this.colorDialog.Color;
+				cellIndexColorPictureBox.BackColor = colorDialog.Color;
 			}
 		}
 
 		private void buttonFont_Click(object sender, EventArgs e)
 		{
 			// set the color with the current back color of the picture box
-			this.fontDialog.Font = mCurrentChosenFont;
+			fontDialog.Font = mCurrentChosenFont;
 			// open the color box in modal
-			DialogResult result = this.fontDialog.ShowDialog(this);
+			DialogResult result = fontDialog.ShowDialog(this);
 			if (result == DialogResult.OK)
 			{
 				// if the user choose a color, set it back in the back color of the picture box
-				updateChosenFont(this.fontDialog.Font);
+				updateChosenFont(fontDialog.Font);
 			}
 		}
 
 		private void gridCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
-			bool enabled = this.gridCheckBox.Checked;
+			bool enabled = gridCheckBox.Checked;
 			// enable or disable all the grid line according to the state
-			this.gridColorlabel.Enabled = enabled;
-			this.gridColorPictureBox.Enabled = enabled;
-			this.gridPixelNumericUpDown.Enabled = enabled;
-			this.gridSizeNumericUpDown.Enabled = enabled;
-			this.gridThicknessLabel.Enabled = enabled;
+			gridColorlabel.Enabled = enabled;
+			gridColorPictureBox.Enabled = enabled;
+			gridPixelNumericUpDown.Enabled = enabled;
+			gridSizeNumericUpDown.Enabled = enabled;
+			gridThicknessLabel.Enabled = enabled;
 		}
 
 		private void subGridCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
-			bool enabled = this.subGridCheckBox.Checked;
+			bool enabled = subGridCheckBox.Checked;
 			// enable or disable all the sub grid line according to the state
-			this.subGridColorlabel.Enabled = enabled;
-			this.subGridColorPictureBox.Enabled = enabled;
-			this.subGridPixelNumericUpDown.Enabled = enabled;
-			this.subGridSizeNumericUpDown.Enabled = enabled;
-			this.subGridThicknessLabel.Enabled = enabled;
+			subGridColorlabel.Enabled = enabled;
+			subGridColorPictureBox.Enabled = enabled;
+			subGridPixelNumericUpDown.Enabled = enabled;
+			subGridSizeNumericUpDown.Enabled = enabled;
+			subGridThicknessLabel.Enabled = enabled;
 		}
 
 		private void cellIndexCheckBox_CheckedChanged(object sender, EventArgs e)
 		{
-			bool enabled = this.cellIndexCheckBox.Checked;
+			bool enabled = cellIndexCheckBox.Checked;
 			// enable or disable all the sub grid line according to the state
-			this.cellIndexColorLabel.Enabled = enabled;
-			this.cellIndexColorPictureBox.Enabled = enabled;
-			this.cellIndexColumnComboBox.Enabled = enabled;
-			this.cellIndexColumnLabel.Enabled = enabled;
-			this.cellIndexFontButton.Enabled = enabled;
-			this.cellIndexFontNameLabel.Enabled = enabled;
-			this.cellIndexRowComboBox.Enabled = enabled;
-			this.cellIndexRowLabel.Enabled = enabled;
-			this.cellIndexOriginLabel.Enabled = enabled;
-			this.cellIndexOriginXNumericUpDown.Enabled = enabled;
-			this.cellIndexOriginYNumericUpDown.Enabled = enabled;
-			this.cellIndexCommaLabel.Enabled = enabled;
-			this.cellIndexOriginButton.Enabled = enabled;
+			cellIndexColorLabel.Enabled = enabled;
+			cellIndexColorPictureBox.Enabled = enabled;
+			cellIndexColumnComboBox.Enabled = enabled;
+			cellIndexColumnLabel.Enabled = enabled;
+			cellIndexFontButton.Enabled = enabled;
+			cellIndexFontNameLabel.Enabled = enabled;
+			cellIndexRowComboBox.Enabled = enabled;
+			cellIndexRowLabel.Enabled = enabled;
+			cellIndexOriginLabel.Enabled = enabled;
+			cellIndexOriginXNumericUpDown.Enabled = enabled;
+			cellIndexOriginYNumericUpDown.Enabled = enabled;
+			cellIndexCommaLabel.Enabled = enabled;
+			cellIndexOriginButton.Enabled = enabled;
 		}
 
 		private void cellIndexOriginButton_Click(object sender, EventArgs e)
 		{
 			PointF position = Map.Instance.GetMostTopLeftBrickPosition();
-			int x = (int)(position.X / (int)this.gridSizeNumericUpDown.Value) - 1;
-			int y = (int)(position.Y / (int)this.gridSizeNumericUpDown.Value) - 1;
+			int x = (int)(position.X / (int)gridSizeNumericUpDown.Value) - 1;
+			int y = (int)(position.Y / (int)gridSizeNumericUpDown.Value) - 1;
 			if (position.X < 0)
 				x--;
 			if (position.Y < 0)
 				y--;
 			// set the new values in the controls
-			this.cellIndexOriginXNumericUpDown.Value = x;
-			this.cellIndexOriginYNumericUpDown.Value = y;
+			cellIndexOriginXNumericUpDown.Value = x;
+			cellIndexOriginYNumericUpDown.Value = y;
 		}
 	}
 }

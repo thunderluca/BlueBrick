@@ -26,7 +26,7 @@ namespace BlueBrick
 			// between panel1.MinWidth and Width - panel2.MinWidth.
 			// I agree, but for an strange reason the splitcontainer.Width == 150 even 
 			// if in the form designer it is not
-			this.Width = 800;
+			Width = 800;
 		}
 	}
 }

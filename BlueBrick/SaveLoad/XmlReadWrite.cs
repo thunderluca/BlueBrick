@@ -187,7 +187,7 @@ namespace BlueBrick.MapData
 			float width = reader.ReadElementContentAsFloat();
 			float height = reader.ReadElementContentAsFloat();
 			reader.ReadEndElement();
-			return (new RectangleF(x, y, width, height));
+			return new RectangleF(x, y, width, height);
 		}
 
 		public static void writeRectangleF(System.Xml.XmlWriter writer, string name, RectangleF rect)

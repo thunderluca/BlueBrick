@@ -68,7 +68,7 @@
 			this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.okButton.Name = "okButton";
 			this.okButton.UseVisualStyleBackColor = true;
-			this.okButton.Click += new System.EventHandler(this.okButton_Click);
+			this.okButton.Click += new System.EventHandler(this.OkButton_Click);
 			// 
 			// label1
 			// 
@@ -94,7 +94,7 @@
 			resources.ApplyResources(this.nameTextBox, "nameTextBox");
 			this.nameTextBox.BackColor = System.Drawing.Color.LightSalmon;
 			this.nameTextBox.Name = "nameTextBox";
-			this.nameTextBox.TextChanged += new System.EventHandler(this.nameTextBox_TextChanged);
+			this.nameTextBox.TextChanged += new System.EventHandler(this.NameTextBox_TextChanged);
 			// 
 			// nameErrorLabel
 			// 
@@ -149,17 +149,17 @@
 			// 
 			resources.ApplyResources(this.descriptionTextBox, "descriptionTextBox");
 			this.descriptionTextBox.Name = "descriptionTextBox";
-			this.descriptionTextBox.Enter += new System.EventHandler(this.descriptionTextBox_Enter);
-			this.descriptionTextBox.Leave += new System.EventHandler(this.descriptionTextBox_Leave);
+			this.descriptionTextBox.Enter += new System.EventHandler(this.DescriptionTextBox_Enter);
+			this.descriptionTextBox.Leave += new System.EventHandler(this.DescriptionTextBox_Leave);
 			// 
 			// languageCodeComboBox
 			// 
 			resources.ApplyResources(this.languageCodeComboBox, "languageCodeComboBox");
 			this.languageCodeComboBox.FormattingEnabled = true;
 			this.languageCodeComboBox.Name = "languageCodeComboBox";
-			this.languageCodeComboBox.SelectedIndexChanged += new System.EventHandler(this.languageCodeComboBox_SelectedIndexChanged);
-			this.languageCodeComboBox.TextChanged += new System.EventHandler(this.languageCodeComboBox_TextChanged);
-			this.languageCodeComboBox.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.languageCodeComboBox_PreviewKeyDown);
+			this.languageCodeComboBox.SelectedIndexChanged += new System.EventHandler(this.LanguageCodeComboBox_SelectedIndexChanged);
+			this.languageCodeComboBox.TextChanged += new System.EventHandler(this.LanguageCodeComboBox_TextChanged);
+			this.languageCodeComboBox.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.LanguageCodeComboBox_PreviewKeyDown);
 			// 
 			// label3
 			// 

@@ -28,8 +28,8 @@ namespace BlueBrick.Actions.Bricks
 
 		// special case for only one brick connected that we must rotate
 		private PointF mConnexionPosition = new PointF(0, 0);	// in Stud coord
-		private LayerBrick.Brick.ConnectionPoint mNewConnectionPoint = null;
-		private LayerBrick.Brick.ConnectionPoint mOldConnectionPoint = null;
+		private readonly LayerBrick.Brick.ConnectionPoint mNewConnectionPoint = null;
+		private readonly LayerBrick.Brick.ConnectionPoint mOldConnectionPoint = null;
 		
 		// Another configuration data, for special case when this action is used during edition
 		private bool mMustUpdateBrickConnectivity = true;
@@ -47,7 +47,7 @@ namespace BlueBrick.Actions.Bricks
 		public RotateBrick(LayerBrick layer, List<Layer.LayerItem> bricks, int rotateSteps, bool forceKeepLastCenter)
 		{
 			// compute the default rotation angle, used if no bricks in the list is connected to something else
-			float angle = MapData.Layer.CurrentRotationStep * rotateSteps;
+			float angle = Layer.CurrentRotationStep * rotateSteps;
 
 			// now check if we can find any brick in the list which is connected to another
 			// brick not in the list: in that case we don't care about the rotation step,
@@ -73,12 +73,11 @@ namespace BlueBrick.Actions.Bricks
 						}
 			}
 
-			// get the biggest group of external connection among all the available types, and also get its type
-			int chosenConnexionType = BrickLibrary.ConnectionType.DEFAULT;
-			List<LayerBrick.Brick.ConnectionPoint> externalConnectionList = externalConnectionSet.getBiggestList(out chosenConnexionType);
+            // get the biggest group of external connection among all the available types, and also get its type
+            List<LayerBrick.Brick.ConnectionPoint> externalConnectionList = externalConnectionSet.getBiggestList(out int chosenConnexionType);
 
-			// check if there is any external connection on which we should rotate
-			if (externalConnectionList.Count > 0)
+            // check if there is any external connection on which we should rotate
+            if (externalConnectionList.Count > 0)
 			{
 				// in that case we don't use the static center
 				sLastCenterIsValid = false;
@@ -97,7 +96,7 @@ namespace BlueBrick.Actions.Bricks
 				List<LayerBrick.Brick.ConnectionPoint> availableConnectionList = availableConnectionSet.getListForType(chosenConnexionType);
 
 				// check in which direction and how many connection we should jump
-				bool rotateCW = (rotateSteps < 0);
+				bool rotateCW = rotateSteps < 0;
 				int nbSteps = Math.Abs(rotateSteps);
 
 				// get the index of the chosen connection in the available connection list				
@@ -106,13 +105,13 @@ namespace BlueBrick.Actions.Bricks
 				// depending on the number of steps and the rotation direction
 				if (rotateCW)
 				{
-					index -= (nbSteps % availableConnectionList.Count);
+					index -= nbSteps % availableConnectionList.Count;
 					if (index < 0)
 						index += availableConnectionList.Count;
 				}
 				else
 				{
-					index += (nbSteps % availableConnectionList.Count);
+					index += nbSteps % availableConnectionList.Count;
 					if (index >= availableConnectionList.Count)
 						index -= availableConnectionList.Count;
 				}
@@ -145,7 +144,7 @@ namespace BlueBrick.Actions.Bricks
 			base.commonConstructor(layer, bricks, angle, forceKeepLastCenter);
 
 			// try to get a part number (which can be the name of a group)
-			Layer.LayerItem topItem = Layer.sGetTopItemFromList(mItems);
+			Layer.LayerItem topItem = Layer.SGetTopItemFromList(mItems);
 			if (topItem != null)
 			{
 				if (topItem.IsAGroup)
@@ -160,13 +159,13 @@ namespace BlueBrick.Actions.Bricks
 			// if the part number is valid, use the specific message
 			if (mPartNumber != string.Empty)
 			{
-				string actionName = BlueBrick.Properties.Resources.ActionRotateBrick;
+				string actionName = Properties.Resources.ActionRotateBrick;
 				actionName = actionName.Replace("&", mPartNumber);
 				return actionName;
 			}
 			else
 			{
-				return BlueBrick.Properties.Resources.ActionRotateSeveralBricks;
+				return Properties.Resources.ActionRotateSeveralBricks;
 			}
 		}
 
@@ -191,7 +190,7 @@ namespace BlueBrick.Actions.Bricks
 
 			// reselect the items of the action, cause after we will update the connectivity of the selection
 			// the selection may have changed ater a succession of undo/redo
-			mLayer.selectOnlyThisObject(mItems);
+			mLayer.SelectOnlyThisObject(mItems);
 
 			// update the bounding rectangle in any case because the brick is not necessary squared
 			if (mMustUpdateBrickConnectivity)
@@ -222,7 +221,7 @@ namespace BlueBrick.Actions.Bricks
 
 			// reselect the items of the action, cause after we will update the connectivity of the selection
 			// the selection may have changed ater a succession of undo/redo
-			mLayer.selectOnlyThisObject(mItems);
+			mLayer.SelectOnlyThisObject(mItems);
 
 			// update the bounding rectangle in any case because the brick is not necessary squared
 			if (mMustUpdateBrickConnectivity)
