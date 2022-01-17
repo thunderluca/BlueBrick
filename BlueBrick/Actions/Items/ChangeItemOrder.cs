@@ -50,7 +50,7 @@ namespace BlueBrick.Actions.Items
 
 		protected abstract void addItem(Layer.LayerItem item, int position);
 
-		public override void redo()
+		public override void Redo()
 		{
 			// remove the specified brick from the list of the layer,
 			// but do not delete it, also memorise its last position
@@ -67,7 +67,7 @@ namespace BlueBrick.Actions.Items
 			mLayer.addObjectInSelection(mItems);
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// remove the specified brick from the list of the layer (they must be at the end
 			// of the list but we don't care

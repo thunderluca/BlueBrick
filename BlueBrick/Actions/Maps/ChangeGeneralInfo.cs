@@ -65,12 +65,12 @@ namespace BlueBrick.Actions.Maps
 			newInfo.mComment = comment.Clone() as string;
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
-			return BlueBrick.Properties.Resources.ActionChangeGeneralInfo;
+			return Properties.Resources.ActionChangeGeneralInfo;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			Map.Instance.Author = newInfo.mAuthor;
 			Map.Instance.LUG = newInfo.mLUG;
@@ -81,7 +81,7 @@ namespace BlueBrick.Actions.Maps
 			MainForm.Instance.updateMapGeneralInfo(false);
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			Map.Instance.Author = oldInfo.mAuthor;
 			Map.Instance.LUG = oldInfo.mLUG;

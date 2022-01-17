@@ -35,7 +35,7 @@ namespace BlueBrick.Actions.Rulers
 				mRulers.Add(obj);
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			if (mRulers.Count == 1)
 				return BlueBrick.Properties.Resources.ActionDeleteRuler;
@@ -43,7 +43,7 @@ namespace BlueBrick.Actions.Rulers
 				return BlueBrick.Properties.Resources.ActionDeleteSeveralRulers;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// remove the specified rulers from the list of the layer,
 			// but do not delete it, also memorise its last position
@@ -52,7 +52,7 @@ namespace BlueBrick.Actions.Rulers
 				mRulerIndex.Add(mRulerLayer.removeRulerItem(obj as LayerRuler.RulerItem));
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// and add all the texts in the reverse order
 			for (int i = mRulers.Count - 1; i >= 0; --i)

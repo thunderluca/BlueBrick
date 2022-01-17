@@ -53,7 +53,7 @@ namespace BlueBrick.Actions
 			mInsertionIndex = Map.Instance.GetIndexAboveTheSelectedLayer();
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			switch (mLayerType)
 			{
@@ -69,12 +69,12 @@ namespace BlueBrick.Actions
 			return BlueBrick.Properties.Resources.ActionAddLayerBrick;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			Map.Instance.AddLayer(mLayerAdded, mInsertionIndex);
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			Map.Instance.RemoveLayer(mLayerAdded);
 			// force back the update (if the update was not asked at the creation)

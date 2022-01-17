@@ -38,7 +38,7 @@ namespace BlueBrick.Actions.Items
 				mItems = new List<Layer.LayerItem>();
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// move all the items (if the item is a group, the whole items of the group will be recursively moved)
 			foreach (Layer.LayerItem item in mItems)
@@ -48,7 +48,7 @@ namespace BlueBrick.Actions.Items
 			mLayer.updateBoundingSelectionRectangle();
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// move all the items (if the item is a group, the whole items of the group will be recursively moved)
 			foreach (Layer.LayerItem item in mItems)

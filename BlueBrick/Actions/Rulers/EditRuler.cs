@@ -36,17 +36,17 @@ namespace BlueBrick.Actions.Rulers
 			mNewRulerItemTemplate = rulerItemTemplateForNewProperties.Clone() as LayerRuler.RulerItem;
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			return BlueBrick.Properties.Resources.ActionEditRuler;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			copyRulerProperties(mNewRulerItemTemplate);
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			copyRulerProperties(mOldRulerItemTemplate);
 		}

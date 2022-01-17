@@ -27,7 +27,7 @@ namespace BlueBrick.Actions.Texts
 		{
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			return BlueBrick.Properties.Resources.ActionBringTextToFront;
 		}

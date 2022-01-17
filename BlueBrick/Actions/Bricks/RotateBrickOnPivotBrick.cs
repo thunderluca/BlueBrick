@@ -16,12 +16,12 @@ namespace BlueBrick.Actions.Bricks
 			mPivotBrick = pivotBrick;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// get the center position of the pivot before the rotation
 			PointF pivotShift = mPivotBrick.Center;
 			// rotate the bricks
-			base.redo();
+			base.Redo();
 			// compute the movement of the pivot and shift all the bricks
 			pivotShift.X -= mPivotBrick.Center.X;
 			pivotShift.Y -= mPivotBrick.Center.Y;
@@ -34,12 +34,12 @@ namespace BlueBrick.Actions.Bricks
 			MainForm.Instance.NotifyForPartMoved();
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// get the center position of the pivot before the rotation
 			PointF pivotShift = mPivotBrick.Center;
 			// rotate the bricks
-			base.undo();
+			base.Undo();
 			// compute the movement of the pivot and shift all the bricks
 			pivotShift.X -= mPivotBrick.Center.X;
 			pivotShift.Y -= mPivotBrick.Center.Y;

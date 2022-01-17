@@ -58,8 +58,8 @@ namespace BlueBrick.Actions
 		}
 		#endregion
 
-		public abstract string getName();
-		public abstract void redo();
-		public abstract void undo();
+		public abstract string GetName();
+		public abstract void Redo();
+		public abstract void Undo();
 	}
 }

@@ -591,7 +591,7 @@ namespace BlueBrick.Actions.Bricks
 		#endregion
 
 		#region	Action method
-		public override string getName()
+		public override string GetName()
 		{
 			return BlueBrick.Properties.Resources.ActionFlexMove;
 		}
@@ -605,12 +605,12 @@ namespace BlueBrick.Actions.Bricks
 				state.Add(new BrickTransform(brick, brick.Position, brick.Orientation));
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			moveBricks(mFinalState);
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			moveBricks(mInitState);
 		}

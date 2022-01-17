@@ -50,12 +50,12 @@ namespace BlueBrick.Actions.Rulers
 			}
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			return BlueBrick.Properties.Resources.ActionMoveRulerControlPoint;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// if the anchor is not null, update it with the new offset
 			if (mAnchor != null)
@@ -66,7 +66,7 @@ namespace BlueBrick.Actions.Rulers
 			mRulerLayer.updateBoundingSelectionRectangle();
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// if the anchor is not null, update it with the old offset
 			if (mAnchor != null)

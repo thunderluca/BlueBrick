@@ -31,14 +31,14 @@ namespace BlueBrick.Actions
 			mIndex = Map.Instance.GetIndexOf(layer);
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			string actionName = BlueBrick.Properties.Resources.ActionRemoveLayer;
 			actionName = actionName.Replace("&", mLayerDeleted.Name);
 			return actionName;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			Map.Instance.RemoveLayer(mLayerDeleted);
 
@@ -46,7 +46,7 @@ namespace BlueBrick.Actions
 			MainForm.Instance.NotifyForLayerVisibilityChangedOrLayerDeletion();
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			Map.Instance.AddLayer(mLayerDeleted, mIndex);
 

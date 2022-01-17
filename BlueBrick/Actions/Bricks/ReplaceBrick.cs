@@ -109,7 +109,7 @@ namespace BlueBrick.Actions.Bricks
             }
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			string actionName = BlueBrick.Properties.Resources.ActionReplaceBrick;
 			actionName = actionName.Replace("&", mPartNumberToReplace);
@@ -287,12 +287,12 @@ namespace BlueBrick.Actions.Bricks
 			}
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			replace(false);
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			replace(true);
 		}

@@ -47,7 +47,7 @@ namespace BlueBrick.Actions.Texts
 			mNewAlignment = newAlignment;
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			string actionName = BlueBrick.Properties.Resources.ActionEditText;
 			string text = mTextCell.Text.Replace("\r\n", " ");
@@ -57,7 +57,7 @@ namespace BlueBrick.Actions.Texts
 			return actionName;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			mTextCell.Text = mNewText;
 			mTextCell.Font = mNewFont;
@@ -66,7 +66,7 @@ namespace BlueBrick.Actions.Texts
 			mTextLayer.updateBoundingSelectionRectangle();
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			mTextCell.Text = mOldText;
 			mTextCell.Font = mOldFont;

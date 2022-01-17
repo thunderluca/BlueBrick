@@ -31,19 +31,19 @@ namespace BlueBrick.Actions.Maps
 			mNewColor = newColor;
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			return BlueBrick.Properties.Resources.ActionChangeBackgroundColor;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			Map.Instance.BackgroundColor = mNewColor;
 			// notify the main form
 			MainForm.Instance.NotifyForMapBackgroundColorChanged();
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			Map.Instance.BackgroundColor = mOldColor;
 			// notify the main form

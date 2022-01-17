@@ -27,7 +27,7 @@ namespace BlueBrick.Actions.Bricks
 		{
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			return BlueBrick.Properties.Resources.ActionSendBrickToBack;
 		}

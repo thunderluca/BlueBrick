@@ -33,12 +33,12 @@ namespace BlueBrick.Actions.Texts
 			mTextCell.Position = position;
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			return BlueBrick.Properties.Resources.ActionAddText;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// and add this text in the list of the layer
 			mTextLayer.addTextCell(mTextCell, mTextCellIndex);
@@ -47,7 +47,7 @@ namespace BlueBrick.Actions.Texts
 			mTextLayer.addObjectInSelection(mTextCell);
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// remove the specified textCell from the list of the layer,
 			// but do not delete it, also memorise its last position

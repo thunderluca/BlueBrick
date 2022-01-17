@@ -3069,14 +3069,14 @@ namespace BlueBrick
 					if (isRealMove)
 					{
 						// undo the action
-						moveAction.undo();
+						moveAction.Undo();
 						// then add it to the undo stack (that will perform the redo)
 						ActionManager.Instance.doAction(moveAction);
 					}
 					else
 					{
 						// do a move action without puting it in the undo stack
-						moveAction.redo();
+						moveAction.Redo();
 					}
 				}
 			}
@@ -3107,7 +3107,7 @@ namespace BlueBrick
 						// we can not create the normal action and undo it because the rotation of connected
 						// brick is not symetrical (because the rotation step is not constant)
 						RotateBrick unrotateAction = new RotateBrick(selectedLayer as LayerBrick, itemList, -angleStep, true);
-						unrotateAction.redo();
+						unrotateAction.Redo();
 						// So create a new move action to add in the undo stack
 						ActionManager.Instance.doAction(new RotateBrick(selectedLayer as LayerBrick, itemList, angleStep, true));
 					}
@@ -3115,7 +3115,7 @@ namespace BlueBrick
 					{
 						// do a move action without puting it in the undo stack
 						RotateBrick rotateAction = new RotateBrick(selectedLayer as LayerBrick, itemList, angleStep, ((angleStep != -1) && (angleStep != 1)));
-						rotateAction.redo();
+						rotateAction.Redo();
 					}
 				}
 				else if (selectedLayer is LayerText)
@@ -3125,7 +3125,7 @@ namespace BlueBrick
 						// create the rotation action
 						RotateText rotateAction = new RotateText(selectedLayer as LayerText, itemList, angleStep, true);
 						// undo the total rotate of all the objects
-						rotateAction.undo();
+						rotateAction.Undo();
 						// then add it to the undo stack (that will perform the redo)
 						ActionManager.Instance.doAction(rotateAction);
 					}
@@ -3133,7 +3133,7 @@ namespace BlueBrick
 					{
 						// do a move action without puting it in the undo stack
 						RotateText rotateAction = new RotateText(selectedLayer as LayerText, itemList, angleStep, ((angleStep != -1) && (angleStep != 1)));
-						rotateAction.redo();
+						rotateAction.Redo();
 					}
 				}
 				else if (selectedLayer is LayerRuler)
@@ -3143,7 +3143,7 @@ namespace BlueBrick
 						// create the rotation action
 						RotateRulers rotateAction = new RotateRulers(selectedLayer as LayerRuler, itemList, angleStep, true);
 						// undo the total rotate of all the objects
-						rotateAction.undo();
+						rotateAction.Undo();
 						// then add it to the undo stack (that will perform the redo)
 						ActionManager.Instance.doAction(rotateAction);
 					}
@@ -3151,7 +3151,7 @@ namespace BlueBrick
 					{
 						// do a move action without puting it in the undo stack
 						RotateRulers rotateAction = new RotateRulers(selectedLayer as LayerRuler, itemList, angleStep, ((angleStep != -1) && (angleStep != 1)));
-						rotateAction.redo();
+						rotateAction.Redo();
 					}
 				}
 			}

@@ -34,12 +34,12 @@ namespace BlueBrick.Actions.Area
 			mAreaInCellIndex = area;
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			return BlueBrick.Properties.Resources.ActionAddArea;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// the first time we do the redo, we should init the old color array
 			if (mOldColor == null)
@@ -58,7 +58,7 @@ namespace BlueBrick.Actions.Area
 			}
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// reset the old color
 			for (int x = 0; x < mAreaInCellIndex.Width; ++x)

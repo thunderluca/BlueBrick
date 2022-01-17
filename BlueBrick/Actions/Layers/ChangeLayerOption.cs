@@ -48,14 +48,14 @@ namespace BlueBrick.Actions.Layers
 				mOldColorMap = layerArea.ColorMap;
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			string actionName = BlueBrick.Properties.Resources.ChangeLayerOption;
 			actionName = actionName.Replace("&", mLayer.Name);
 			return actionName;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// if the layer is an area layer, rescale the colormap
 			LayerArea layerArea = mLayer as LayerArea;
@@ -78,7 +78,7 @@ namespace BlueBrick.Actions.Layers
 				MainForm.Instance.NotifyPartListForLayerRenamed(mLayer);
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// if the layer is an area layer, restore the colormap
 			LayerArea layerArea = mLayer as LayerArea;

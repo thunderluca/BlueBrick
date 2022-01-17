@@ -63,7 +63,7 @@ namespace BlueBrick.Actions.Bricks
 				mPartNumber = topItem.PartNumber;
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			// if the part number is valid, use the specific message
 			if (mPartNumber != string.Empty)
@@ -130,7 +130,7 @@ namespace BlueBrick.Actions.Bricks
 			return false;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// add all the bricks (by default all the brick index are initialized with -1
 			// so the first time they are added, we just add them at the end,
@@ -153,7 +153,7 @@ namespace BlueBrick.Actions.Bricks
 				MainForm.Instance.NotifyPartListForBrickAdded(mBrickLayer, item, false);
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// remove the specified brick from the list of the layer,
 			// but do not delete it, also memorise its last position

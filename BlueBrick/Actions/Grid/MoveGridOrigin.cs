@@ -33,19 +33,19 @@ namespace BlueBrick.Actions.Grid
 			mMoveY = moveY;
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			return BlueBrick.Properties.Resources.ActionMoveGridOrigin;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// move in the normal direction
 			mGridLayer.CellIndexCornerX += mMoveX;
 			mGridLayer.CellIndexCornerY += mMoveY;
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// move in the reverse direction
 			mGridLayer.CellIndexCornerX -= mMoveX;

@@ -33,7 +33,7 @@ namespace BlueBrick.Actions.Texts
 			base.commonConstructor(layer, texts, angle, forceKeepLastCenter);
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			if (mItems.Count == 1)
 			{
@@ -50,7 +50,7 @@ namespace BlueBrick.Actions.Texts
 			}
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// get the rotation angle according to the rotation direction
 			float rotationAngle = mRotateCW ? -mRotationStep : mRotationStep;
@@ -68,7 +68,7 @@ namespace BlueBrick.Actions.Texts
 			mLayer.updateBoundingSelectionRectangle();
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// get the rotation angle according to the rotation direction
 			float rotationAngle = mRotateCW ? mRotationStep : -mRotationStep;

@@ -66,14 +66,14 @@ namespace BlueBrick.Actions.Bricks
 				mBrickIndex.Add(-1);
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			string actionName = BlueBrick.Properties.Resources.ActionAddBrick;
 			actionName = actionName.Replace("&", mBrickOrGroup.PartNumber);
 			return actionName;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// and add all the bricks in the reverse order
 			for (int i = mBricks.Count - 1; i >= 0; --i)
@@ -91,7 +91,7 @@ namespace BlueBrick.Actions.Bricks
 			MainForm.Instance.NotifyPartListForBrickAdded(mBrickLayer, mBrickOrGroup, false);
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// remove the specified brick from the list of the layer,
 			// but do not delete it, also memorise its last position

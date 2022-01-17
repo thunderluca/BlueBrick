@@ -72,7 +72,7 @@ namespace BlueBrick.Actions.Bricks
 				// Rotate all the bricks of the group first before translating
 				RotateBrickOnPivotBrick rotateBricksAction = new RotateBrickOnPivotBrick(layer, mBricksInTheGroup, newOrientation, brickToConnectInAddedGroup);
 				rotateBricksAction.MustUpdateBrickConnectivity = false;
-				rotateBricksAction.redo();
+				rotateBricksAction.Redo();
 
 				// compute the translation to add to all the bricks
 				PointF translation = new PointF(selectedBrick.ActiveConnectionPosition.X - brickToConnectInAddedGroup.ActiveConnectionPosition.X,
@@ -180,14 +180,14 @@ namespace BlueBrick.Actions.Bricks
 			return brickToAttach;
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			string actionName = BlueBrick.Properties.Resources.ActionAddBrick;
 			actionName = actionName.Replace("&", mGroup.PartNumber);
 			return actionName;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// clear the selection to reselect the parts of the group
 			mBrickLayer.clearSelection();
@@ -216,7 +216,7 @@ namespace BlueBrick.Actions.Bricks
 			MainForm.Instance.NotifyPartListForBrickAdded(mBrickLayer, mGroup, false);
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// remove all the bricks of the group but do not delete them
 			foreach (Layer.LayerItem item in mBricksInTheGroup)

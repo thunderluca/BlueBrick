@@ -35,14 +35,14 @@ namespace BlueBrick.Actions.Rulers
 			mNewPosition = newPosition;
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			if (mRulerItem is LayerRuler.CircularRuler)
 				return BlueBrick.Properties.Resources.ActionScaleCircularRuler;
 			return BlueBrick.Properties.Resources.ActionScaleLinearRuler;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// scale to the new position
 			mRulerItem.scaleToPoint(mNewPosition);
@@ -50,7 +50,7 @@ namespace BlueBrick.Actions.Rulers
 			mRulerLayer.updateBoundingSelectionRectangle();
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// scale to the original position
 			mRulerItem.scaleToPoint(mOriginalPosition);

@@ -49,12 +49,12 @@ namespace BlueBrick.Actions.Bricks
 			mBrickIndex.Sort((x, y) => x.mIndex - y.mIndex);
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			return Properties.Resources.ActionChangeBrickElevation.Replace("&", mNewElevation.ToString("F0"));
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// assign the same new elevation to all the bricks
 			foreach (LayerBrick.Brick brick in mBricksToEdit)
@@ -63,7 +63,7 @@ namespace BlueBrick.Actions.Bricks
 			mLayer.sortBricksByElevation();
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// restore the old elevation to all the bricks to edit
 			for (int i = 0; i < mBricksToEdit.Count; ++i)

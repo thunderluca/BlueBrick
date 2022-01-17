@@ -29,24 +29,24 @@ namespace BlueBrick.Actions.Bricks
 			mMoveAction = new MoveBrick(layer, bricks, move);
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			// use the same action name than the move action
-			return mMoveAction.getName();
+			return mMoveAction.GetName();
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// do the move action after to update the connectivity
-			base.redo();
-			mMoveAction.redo();
+			base.Redo();
+			mMoveAction.Redo();
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// do the move action after to update the connectivity
-			base.undo();
-			mMoveAction.undo();
+			base.Undo();
+			mMoveAction.Undo();
 		}
 	}
 }

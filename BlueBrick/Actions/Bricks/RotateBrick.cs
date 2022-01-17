@@ -155,7 +155,7 @@ namespace BlueBrick.Actions.Bricks
 			}
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			// if the part number is valid, use the specific message
 			if (mPartNumber != string.Empty)
@@ -170,7 +170,7 @@ namespace BlueBrick.Actions.Bricks
 			}
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// get the rotation angle according to the rotation direction
 			float rotationAngle = mRotateCW ? -mRotationStep : mRotationStep;
@@ -201,7 +201,7 @@ namespace BlueBrick.Actions.Bricks
 			MainForm.Instance.NotifyForPartMoved();
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// get the rotation angle according to the rotation direction
 			float rotationAngle = mRotateCW ? mRotationStep : -mRotationStep;

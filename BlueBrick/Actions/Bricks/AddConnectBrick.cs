@@ -168,14 +168,14 @@ namespace BlueBrick.Actions.Bricks
 			return isActiveConnectionPointChosen;
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			string actionName = BlueBrick.Properties.Resources.ActionAddBrick;
 			actionName = actionName.Replace("&", mBrick.PartNumber);
 			return actionName;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// and add this brick in the list of the layer
 			mBrickLayer.addBrick(mBrick, mBrickIndex);
@@ -189,7 +189,7 @@ namespace BlueBrick.Actions.Bricks
 			MainForm.Instance.NotifyPartListForBrickAdded(mBrickLayer, mBrick, false);
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// remove the specified brick from the list of the layer,
 			// but do not delete it, also memorise its last position

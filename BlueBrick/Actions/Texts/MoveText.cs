@@ -26,7 +26,7 @@ namespace BlueBrick.Actions.Texts
 		{
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			if (mItems.Count == 1)
 			{

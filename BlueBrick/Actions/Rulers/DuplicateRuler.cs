@@ -30,7 +30,7 @@ namespace BlueBrick.Actions.Rulers
 			mRulerLayer = layer;
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			if (mItems.Count == 1)
 				return BlueBrick.Properties.Resources.ActionDuplicateRuler;
@@ -38,7 +38,7 @@ namespace BlueBrick.Actions.Rulers
 				return BlueBrick.Properties.Resources.ActionDuplicateSeveralRulers;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// clear the selection first, because we want to select only all the added rulers
 			mRulerLayer.clearSelection();
@@ -53,7 +53,7 @@ namespace BlueBrick.Actions.Rulers
 			}
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// remove the specified ruler from the list of the layer,
 			// but do not delete it, also memorise its last position

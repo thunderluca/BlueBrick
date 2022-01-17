@@ -67,12 +67,12 @@ namespace BlueBrick.Actions.Items
 			mLayer = layer;
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			return BlueBrick.Properties.Resources.ActionGroupItems;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// add all the items in the group
 			mGroup.addItem(mItemsToGroup);
@@ -86,7 +86,7 @@ namespace BlueBrick.Actions.Items
             mLayer.addObjectInSelection(currentSelection);
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// remove all the items from the group
 			mGroup.removeItem(mItemsToGroup);

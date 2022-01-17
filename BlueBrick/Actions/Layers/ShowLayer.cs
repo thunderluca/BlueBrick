@@ -29,14 +29,14 @@ namespace BlueBrick.Actions
 			mLayer = layer;
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			string actionName = BlueBrick.Properties.Resources.ActionShowLayer;
 			actionName = actionName.Replace("&", mLayer.Name);
 			return actionName;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			Map.Instance.ShowLayer(mLayer);
 
@@ -44,7 +44,7 @@ namespace BlueBrick.Actions
 			MainForm.Instance.NotifyForLayerVisibilityChangedOrLayerDeletion();
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			Map.Instance.HideLayer(mLayer);
 

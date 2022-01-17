@@ -34,7 +34,7 @@ namespace BlueBrick.Actions.Bricks
 				mPartNumber = topItem.PartNumber; // part number is virtual, works both for part and group
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			// if the part number is valid, use the specific message
 			if (mPartNumber != string.Empty)
@@ -49,28 +49,28 @@ namespace BlueBrick.Actions.Bricks
 			}
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			LayerBrick brickLayer = mLayer as LayerBrick;
 			// reselect the items of the action, cause after we will update the connectivity of the selection
 			// and do it before calling the base class cause the base class will update the selection rectangle
 			brickLayer.selectOnlyThisObject(mItems);
 			// call the base class
-			base.redo();
+			base.Redo();
 			// update the brick connectivity
 			brickLayer.updateBrickConnectivityOfSelection(false);
 			// notify the main form for the brick move
 			MainForm.Instance.NotifyForPartMoved();
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			LayerBrick brickLayer = mLayer as LayerBrick;
 			// reselect the items of the action, cause after we will update the connectivity of the selection
 			// and do it before calling the base class cause the base class will update the selection rectangle
 			brickLayer.selectOnlyThisObject(mItems);
 			// call the base class
-			base.undo();
+			base.Undo();
 			// update the brick connectivity
 			brickLayer.updateBrickConnectivityOfSelection(false);
 			// notify the main form for the brick move

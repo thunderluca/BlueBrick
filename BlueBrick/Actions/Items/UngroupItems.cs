@@ -61,19 +61,19 @@ namespace BlueBrick.Actions.Items
 			mLayer = layer;
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			return BlueBrick.Properties.Resources.ActionUngroupItems;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// disband the groups
 			foreach (Layer.Group group in mGroupToUngroup)
 				group.ungroup(mLayer);
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// reform the groups
 			foreach (Layer.Group group in mGroupToUngroup)

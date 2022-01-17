@@ -31,12 +31,12 @@ namespace BlueBrick.Actions.Rulers
 			mRulerItem = rulerItem;
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			return BlueBrick.Properties.Resources.ActionAddRuler;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// and add this ruler in the list of the layer
 			mRulerLayer.addRulerItem(mRulerItem, mRulerItemIndex);
@@ -45,7 +45,7 @@ namespace BlueBrick.Actions.Rulers
 			mRulerLayer.addObjectInSelection(mRulerItem);
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// remove the specified RulerItem from the list of the layer,
 			// but do not delete it, also memorise its last position

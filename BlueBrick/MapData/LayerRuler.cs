@@ -846,7 +846,7 @@ namespace BlueBrick.MapData
 						{
 							// undo the duplicate action and clear it
 							if (mLastDuplicateAction != null)
-								mLastDuplicateAction.undo();
+								mLastDuplicateAction.Undo();
 							mLastDuplicateAction = null;
 						}
 						else if (mEditAction == EditAction.MOVE_SELECTION)
@@ -1119,7 +1119,7 @@ namespace BlueBrick.MapData
 						if ((mEditAction == EditAction.DUPLICATE_SELECTION) && (mLastDuplicateAction != null))
 						{
 							// undo it and do it in the action manager to add it in the history
-							mLastDuplicateAction.undo();
+							mLastDuplicateAction.Undo();
 							Actions.ActionManager.Instance.doAction(mLastDuplicateAction);
 							// then clear it
 							mLastDuplicateAction = null;

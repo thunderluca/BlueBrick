@@ -1267,7 +1267,7 @@ namespace BlueBrick.MapData
 				{
 					// undo the duplicate action and clear it
 					if (mLastDuplicateAction != null)
-						mLastDuplicateAction.undo();
+						mLastDuplicateAction.Undo();
 					mLastDuplicateAction = null;
 					mRotationForSnappingDuringBrickMove = null;
 					mSnappingOrientation = 0.0f;
@@ -1281,7 +1281,7 @@ namespace BlueBrick.MapData
 					// undo the rotation action if needed
 					if (mRotationForSnappingDuringBrickMove != null)
 					{
-						mRotationForSnappingDuringBrickMove.undo();
+						mRotationForSnappingDuringBrickMove.Undo();
 						mRotationForSnappingDuringBrickMove = null;
 						mSnappingOrientation = 0.0f;
 					}
@@ -1420,7 +1420,7 @@ namespace BlueBrick.MapData
 				// undo the rotation action if there was one
 				if (mRotationForSnappingDuringBrickMove != null)
 				{
-					mRotationForSnappingDuringBrickMove.undo();
+					mRotationForSnappingDuringBrickMove.Undo();
 					mRotationForSnappingDuringBrickMove = null;
 				}
 
@@ -1467,7 +1467,7 @@ namespace BlueBrick.MapData
 							bool isComplexActionNeeded = false;
 							if (mRotationForSnappingDuringBrickMove != null)
 							{
-								mRotationForSnappingDuringBrickMove.undo();
+								mRotationForSnappingDuringBrickMove.Undo();
 								mRotationForSnappingDuringBrickMove = null;
 								isComplexActionNeeded = true;
 							}
@@ -1495,7 +1495,7 @@ namespace BlueBrick.MapData
 						// cancel also this rotation, and more important we need to set the rotation to null
 						if (mRotationForSnappingDuringBrickMove != null)
 						{
-							mRotationForSnappingDuringBrickMove.undo();
+							mRotationForSnappingDuringBrickMove.Undo();
 							mRotationForSnappingDuringBrickMove = null;
 						}
 						// update the free connexion list if the user move the brick and then go back
@@ -1508,7 +1508,7 @@ namespace BlueBrick.MapData
 					if ((mEditAction == EditAction.DUPLICATE_SELECTION) && (mLastDuplicateAction != null))
 					{
 						// undo the action and add it in the manager
-						mLastDuplicateAction.undo();
+						mLastDuplicateAction.Undo();
 						ActionManager.Instance.doAction(mLastDuplicateAction);
 					}
 					// reset anyway the temp reference for the duplication
@@ -1669,7 +1669,7 @@ namespace BlueBrick.MapData
 							// undo the previous rotation
 							if (mRotationForSnappingDuringBrickMove != null)
 							{
-								mRotationForSnappingDuringBrickMove.undo();
+								mRotationForSnappingDuringBrickMove.Undo();
 								mRotationForSnappingDuringBrickMove = null;
 								mSnappingOrientation = 0.0f;
 							}
@@ -1701,7 +1701,7 @@ namespace BlueBrick.MapData
 									// and create a new action for the new angle
 									mRotationForSnappingDuringBrickMove = new RotateBrickOnPivotBrick(this, SelectedObjects, mSnappingOrientation, mCurrentBrickUnderMouse);
 									mRotationForSnappingDuringBrickMove.MustUpdateBrickConnectivity = false;
-									mRotationForSnappingDuringBrickMove.redo();
+									mRotationForSnappingDuringBrickMove.Redo();
 
 									// compute the position from the connection points
 									snapPosition.X += referenceItem.Center.X - activeBrickConnexion.PositionInStudWorldCoord.X;

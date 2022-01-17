@@ -31,7 +31,7 @@ namespace BlueBrick.Actions.Texts
 			mTextLayer = layer;
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			if (mItems.Count == 1)
 			{
@@ -46,7 +46,7 @@ namespace BlueBrick.Actions.Texts
 			}
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// clear the selection first, because we want to select only all the added texts
 			mTextLayer.clearSelection();
@@ -61,7 +61,7 @@ namespace BlueBrick.Actions.Texts
 			}
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// remove the specified brick from the list of the layer,
 			// but do not delete it, also memorise its last position

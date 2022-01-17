@@ -42,7 +42,7 @@ namespace BlueBrick.Actions
 		public void doAction(Action action)
 		{
 			// do the action
-			action.redo();
+			action.Redo();
 			// increase the modification counter on the map
 			BlueBrick.MapData.Map.Instance.IncreaseModificationCounter();
 			// limit the size of the undo stack
@@ -54,7 +54,7 @@ namespace BlueBrick.Actions
 			// each time we add a action, we clear the redo stack
 			mRedoStack.Clear();
 			//display the action in the status bar
-			MainForm.Instance.setStatusBarMessage(action.getName());
+			MainForm.Instance.setStatusBarMessage(action.GetName());
 			// update the main form
 			MainForm.Instance.updateView(action.UpdateMapView, action.UpdateLayerView);
 		}
@@ -69,7 +69,7 @@ namespace BlueBrick.Actions
 				{
 					// undo the action
 					Action action = mUndoStack[mUndoStack.Count-1];
-					action.undo();
+					action.Undo();
 					// decrease the modification counter on the map
 					BlueBrick.MapData.Map.Instance.DecreaseModificationCounter();
 					// add the action undone in the redo stack
@@ -103,7 +103,7 @@ namespace BlueBrick.Actions
 				{
 					// redo the action
 					action = mRedoStack.Pop();
-					action.redo();
+					action.Redo();
 					// increase the modification counter on the map
 					BlueBrick.MapData.Map.Instance.IncreaseModificationCounter();
 					// and add the action in the undo stack
@@ -120,7 +120,7 @@ namespace BlueBrick.Actions
 				}
 			// display the action name of the last action redone in the status bar
 			if (action != null)
-				MainForm.Instance.setStatusBarMessage(action.getName());
+				MainForm.Instance.setStatusBarMessage(action.GetName());
 			// update the main form
 			MainForm.Instance.updateView(maxUpdateMapView, maxUpdateLayerView);
 		}
@@ -148,14 +148,14 @@ namespace BlueBrick.Actions
 		public string getUndoableActionName()
 		{
 			if (mUndoStack.Count > 0)
-				return mUndoStack[mUndoStack.Count - 1].getName();
+				return mUndoStack[mUndoStack.Count - 1].GetName();
 			return null;
 		}
 
 		public string getRedoableActionName()
 		{
 			if (mRedoStack.Count > 0)
-				return mRedoStack.Peek().getName();
+				return mRedoStack.Peek().GetName();
 			return null;
 		}
 
@@ -168,7 +168,7 @@ namespace BlueBrick.Actions
 			string[] result = new string[num];
 			// the undo stack is reversed (old action first, and new ones at the end)
 			for (int i = 0; i < num; ++i)
-				result[i] = mUndoStack[mUndoStack.Count - 1 - i].getName();
+				result[i] = mUndoStack[mUndoStack.Count - 1 - i].GetName();
 			return result;
 		}
 
@@ -182,7 +182,7 @@ namespace BlueBrick.Actions
 			string[] result = new string[num];
 			// the redo stack is in correct order
 			for (int i = 0; i < num; ++i)
-				result[i] = actions[i].getName();
+				result[i] = actions[i].GetName();
 			return result;
 		}
 	}

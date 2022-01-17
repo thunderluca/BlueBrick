@@ -29,17 +29,17 @@ namespace BlueBrick.Actions
 			mLayerMoved = layer;
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			return BlueBrick.Properties.Resources.ActionMoveLayerDown.Replace("&", mLayerMoved.Name);
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			Map.Instance.MoveLayerDown(mLayerMoved);
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			Map.Instance.MoveLayerUp(mLayerMoved);
 		}

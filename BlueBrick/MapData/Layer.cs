@@ -1944,7 +1944,7 @@ namespace BlueBrick.MapData
 				{
 					// if we need to add it in the history, just add it to the action manager, otherwise, just do the action
 					if (addPasteActionInHistory == AddActionInHistory.DO_NOT_ADD_TO_HISTORY_EXCEPT_IF_POPUP_OCCURED)
-						mLastDuplicateAction.redo();
+						mLastDuplicateAction.Redo();
 					else
 						ActionManager.Instance.doAction(mLastDuplicateAction);
 				}

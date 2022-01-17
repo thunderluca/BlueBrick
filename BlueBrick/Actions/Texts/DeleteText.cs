@@ -35,7 +35,7 @@ namespace BlueBrick.Actions.Texts
 				mTextCells.Add(obj);
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			if (mTextCells.Count == 1)
 			{
@@ -50,7 +50,7 @@ namespace BlueBrick.Actions.Texts
 			}
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// remove the specified textCell from the list of the layer,
 			// but do not delete it, also memorise its last position
@@ -59,7 +59,7 @@ namespace BlueBrick.Actions.Texts
 				mTextCellIndex.Add(mTextLayer.removeTextCell(obj as LayerText.TextCell));
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// and add all the texts in the reverse order
 			for (int i = mTextCells.Count - 1 ; i >= 0 ; --i)

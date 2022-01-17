@@ -34,20 +34,20 @@ namespace BlueBrick.Actions.Layers
 			mPreviousSelectedLayer = Map.Instance.SelectedLayer;
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			string actionName = BlueBrick.Properties.Resources.ActionSelectLayer;
 			actionName = actionName.Replace("&", mLayerToSelect.Name);
 			return actionName;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			if (mLayerToSelect != null)
 				Map.Instance.SelectedLayer = mLayerToSelect;
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			if (mPreviousSelectedLayer != null)
 				Map.Instance.SelectedLayer = mPreviousSelectedLayer;

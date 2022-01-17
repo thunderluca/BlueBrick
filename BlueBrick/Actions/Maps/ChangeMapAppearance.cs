@@ -109,12 +109,12 @@ namespace BlueBrick.Actions.Maps
 			}
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			return BlueBrick.Properties.Resources.ActionChangeMapAppearance;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// change the background
 			Map.Instance.BackgroundColor = mNewBackGroundColor;
@@ -137,7 +137,7 @@ namespace BlueBrick.Actions.Maps
 			MainForm.Instance.NotifyForMapBackgroundColorChanged();
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// change the background
 			Map.Instance.BackgroundColor = mOldBackGroundColor;

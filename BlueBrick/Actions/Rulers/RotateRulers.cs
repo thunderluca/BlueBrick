@@ -36,7 +36,7 @@ namespace BlueBrick.Actions.Rulers
 			base.commonConstructor(layer, texts, angle, forceKeepLastCenter);
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			if (mItems.Count == 1)
 				return BlueBrick.Properties.Resources.ActionRotateRuler;
@@ -44,7 +44,7 @@ namespace BlueBrick.Actions.Rulers
 				return BlueBrick.Properties.Resources.ActionRotateSeveralRulers;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// get the rotation angle according to the rotation direction
 			float rotationAngle = mRotateCW ? -mRotationStep : mRotationStep;
@@ -62,7 +62,7 @@ namespace BlueBrick.Actions.Rulers
 			mLayer.updateBoundingSelectionRectangle();
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// get the rotation angle according to the rotation direction
 			float rotationAngle = mRotateCW ? mRotationStep : -mRotationStep;

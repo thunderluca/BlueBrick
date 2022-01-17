@@ -48,7 +48,7 @@ namespace BlueBrick.Actions.Bricks
 			}
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			// if the part number is valid, use the specific message
 			if (mPartNumber != string.Empty)
@@ -63,7 +63,7 @@ namespace BlueBrick.Actions.Bricks
 			}
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			// special case for easy editing: if the group of brick has connection points and is connected
 			// to bricks not deleted we select the connected brick, 
@@ -108,7 +108,7 @@ namespace BlueBrick.Actions.Bricks
 				MainForm.Instance.NotifyPartListForBrickRemoved(mBrickLayer, item, false);
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			// and add all the texts in the reverse order
 			for (int i = mBricks.Count - 1; i >= 0; --i)

@@ -30,17 +30,17 @@ namespace BlueBrick.Actions.Rulers
 			mBrick = brick;
 		}
 
-		public override string getName()
+		public override string GetName()
 		{
 			return BlueBrick.Properties.Resources.ActionDetachRuler;
 		}
 
-		public override void redo()
+		public override void Redo()
 		{
 			mBrick.detachRuler(mAnchor);
 		}
 
-		public override void undo()
+		public override void Undo()
 		{
 			mBrick.attachRuler(mAnchor);
 		}
