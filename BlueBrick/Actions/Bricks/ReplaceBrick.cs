@@ -97,7 +97,7 @@ namespace BlueBrick.Actions.Bricks
 					else
 					{
 						// beep if we reach the limit
-						Map.Instance.giveFeedbackForNotAddingBrick(Map.BrickAddability.YES_AND_NO_REPLACEMENT_LIMITED_BY_BUDGET);
+						Map.Instance.GiveFeedbackForNotAddingBrick(Map.BrickAddability.YES_AND_NO_REPLACEMENT_LIMITED_BY_BUDGET);
 						// no need to continue if we cannot add more bricks, so stop the iteration
 						mIsLimitedByBudget = true;
 						break;
@@ -168,7 +168,7 @@ namespace BlueBrick.Actions.Bricks
 
 			// create a new brick and copy all the parameters of the old one
             Layer.LayerItem newBrick = null;
-            if (BrickLibrary.Instance.isAGroup(newPartNumber))
+            if (BrickLibrary.Instance.IsAGroup(newPartNumber))
             {
                 newBrick = new Layer.Group(newPartNumber);
 				// set the altitude to all children

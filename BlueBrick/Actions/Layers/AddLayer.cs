@@ -50,7 +50,7 @@ namespace BlueBrick.Actions
 					break;
 			}
 			// get the current position of the selected layer
-			mInsertionIndex = Map.Instance.getIndexAboveTheSelectedLayer();
+			mInsertionIndex = Map.Instance.GetIndexAboveTheSelectedLayer();
 		}
 
 		public override string getName()
@@ -71,12 +71,12 @@ namespace BlueBrick.Actions
 
 		public override void redo()
 		{
-			Map.Instance.addLayer(mLayerAdded, mInsertionIndex);
+			Map.Instance.AddLayer(mLayerAdded, mInsertionIndex);
 		}
 
 		public override void undo()
 		{
-			Map.Instance.removeLayer(mLayerAdded);
+			Map.Instance.RemoveLayer(mLayerAdded);
 			// force back the update (if the update was not asked at the creation)
 			mUpdateLayerView = UpdateViewType.FULL;
 		}

@@ -38,7 +38,7 @@ namespace BlueBrick.Actions
 
 		public override void redo()
 		{
-			Map.Instance.hideLayer(mLayer);
+			Map.Instance.HideLayer(mLayer);
 
 			// notify the main form for layer visibility change
 			MainForm.Instance.NotifyForLayerVisibilityChangedOrLayerDeletion();
@@ -46,7 +46,7 @@ namespace BlueBrick.Actions
 
 		public override void undo()
 		{
-			Map.Instance.showLayer(mLayer);
+			Map.Instance.ShowLayer(mLayer);
 
 			// notify the main form for layer visibility change
 			MainForm.Instance.NotifyForLayerVisibilityChangedOrLayerDeletion();

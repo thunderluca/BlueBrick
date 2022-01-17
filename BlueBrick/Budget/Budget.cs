@@ -134,7 +134,7 @@ namespace BlueBrick.Budget
 			while (partFound)
 			{
 				// read the part name and value (get the new value if it was renamed)
-				string partId = BrickLibrary.Instance.getActualPartNumber(reader.GetAttribute("id"));
+				string partId = BrickLibrary.Instance.GetActualPartNumber(reader.GetAttribute("id"));
 				int budget = reader.ReadElementContentAsInt();
 				// and set the budget
 				mBudget.Add(partId, budget);
@@ -241,7 +241,7 @@ namespace BlueBrick.Budget
 			// iterate on the dictionary
 			foreach (KeyValuePair<string, int> budget in mBudget)
 			{
-				string newPartId = BrickLibrary.Instance.getActualPartNumber(budget.Key);
+				string newPartId = BrickLibrary.Instance.GetActualPartNumber(budget.Key);
 				if (!newPartId.Equals(budget.Key))
 					budgetsToRename.Add(budget);
 			}
@@ -250,7 +250,7 @@ namespace BlueBrick.Budget
 			foreach (KeyValuePair<string, int> budget in budgetsToRename)
 			{
 				// rename in the budget
-				string newPartId = BrickLibrary.Instance.getActualPartNumber(budget.Key);
+				string newPartId = BrickLibrary.Instance.GetActualPartNumber(budget.Key);
 				mBudget.Remove(budget.Key);
 				mBudget.Add(newPartId, budget.Value);
 				// no need to rename the count, because the map as been unloaded when this function is called
@@ -632,7 +632,7 @@ namespace BlueBrick.Budget
 				if (canAdd)
 				{
 					// so get the subpart count and if any part fail the whole group will fail
-					Dictionary<string, int> subPartCount = BrickLibrary.Instance.getSubPartCount(partID);
+					Dictionary<string, int> subPartCount = BrickLibrary.Instance.GetSubPartCount(partID);
 					foreach (KeyValuePair<string, int> pair in subPartCount)
 						if (!canAddBrick(pair.Key, pair.Value, shouldIncludeHiddenParts))
 							return false;

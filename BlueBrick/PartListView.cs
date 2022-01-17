@@ -213,11 +213,11 @@ namespace BlueBrick
 
 			// update the items of the three lists
 			foreach (ListViewItem item in mVisibleItems)
-				item.ToolTipText = BrickLibrary.Instance.getFormatedBrickInfo(item.Tag as string, displayPartId, displayColor, displayDescription);
+				item.ToolTipText = BrickLibrary.Instance.GetFormatedBrickInfo(item.Tag as string, displayPartId, displayColor, displayDescription);
 			foreach (ListViewItem item in mFilteredItems)
-				item.ToolTipText = BrickLibrary.Instance.getFormatedBrickInfo(item.Tag as string, displayPartId, displayColor, displayDescription);
+				item.ToolTipText = BrickLibrary.Instance.GetFormatedBrickInfo(item.Tag as string, displayPartId, displayColor, displayDescription);
 			foreach (ListViewItem item in mNotBudgetedItems)
-				item.ToolTipText = BrickLibrary.Instance.getFormatedBrickInfo(item.Tag as string, displayPartId, displayColor, displayDescription);
+				item.ToolTipText = BrickLibrary.Instance.GetFormatedBrickInfo(item.Tag as string, displayPartId, displayColor, displayDescription);
 		}
 
 		/// <summary>
@@ -396,7 +396,7 @@ namespace BlueBrick
 					{
 						ListViewItem item = mVisibleItems[i];
 						string itemId = item.Tag as string;
-						string brickInfo = BrickLibrary.Instance.getFormatedBrickInfo(itemId, true, true, true).ToLower();
+						string brickInfo = BrickLibrary.Instance.GetFormatedBrickInfo(itemId, true, true, true).ToLower();
 						// a flag to stop search if it is already removed
 						bool continueSearch = true;
 						// iterate on the 3 filter lists
@@ -470,11 +470,11 @@ namespace BlueBrick
 			// also take into account the filtered list view items
 			Image[] imageArray = new Image[mVisibleItems.Count + mFilteredItems.Count + mNotBudgetedItems.Count];
 			foreach (ListViewItem item in mVisibleItems)
-				imageArray[item.ImageIndex] = BrickLibrary.Instance.getImage(item.Tag as string);
+				imageArray[item.ImageIndex] = BrickLibrary.Instance.GetImage(item.Tag as string);
 			foreach (ListViewItem item in mFilteredItems)
-				imageArray[item.ImageIndex] = BrickLibrary.Instance.getImage(item.Tag as string);
+				imageArray[item.ImageIndex] = BrickLibrary.Instance.GetImage(item.Tag as string);
 			foreach (ListViewItem item in mNotBudgetedItems)
-				imageArray[item.ImageIndex] = BrickLibrary.Instance.getImage(item.Tag as string);
+				imageArray[item.ImageIndex] = BrickLibrary.Instance.GetImage(item.Tag as string);
 			// return the result as a list of image
 			return (new List<Image>(imageArray));
 		}
@@ -659,7 +659,7 @@ namespace BlueBrick
 						// and add an item if the part number is valid
 						string partNumber = hitTest.Item.Tag as string;
 						if (partNumber != null)
-							Map.Instance.addConnectBrick(partNumber);
+							Map.Instance.AddConnectBrick(partNumber);
 					}
 				}
 			}
@@ -676,7 +676,7 @@ namespace BlueBrick
 			string itemText = string.Empty;
 			if (Properties.Settings.Default.PartLibDisplayPartInfo)
 			{
-				itemText = BrickLibrary.Instance.getFormatedBrickInfo(partID,
+				itemText = BrickLibrary.Instance.GetFormatedBrickInfo(partID,
 								Properties.Settings.Default.PartLibPartInfoPartID,
 								Properties.Settings.Default.PartLibPartInfoPartColor,
 								Properties.Settings.Default.PartLibPartInfoPartDescription) + "\n";

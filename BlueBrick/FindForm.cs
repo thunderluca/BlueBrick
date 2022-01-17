@@ -26,7 +26,7 @@ namespace BlueBrick
 {
 	public partial class FindForm : Form
 	{
-		private string[] mLibraryPartList = BrickLibrary.Instance.getBrickNameList();
+		private string[] mLibraryPartList = BrickLibrary.Instance.GetBrickNameList();
 		private string[] mSelectionPartList = null;
 		private string mBestPartToFindInSelection = null;
 		private List<LayerBrick> mBrickOnlyLayerList = new List<LayerBrick>();
@@ -199,7 +199,7 @@ namespace BlueBrick
 		private void FindComboBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (this.FindComboBox.SelectedItem != null)
-				this.FindPictureBox.Image = BrickLibrary.Instance.getImage(this.FindComboBox.SelectedItem as string);
+				this.FindPictureBox.Image = BrickLibrary.Instance.GetImage(this.FindComboBox.SelectedItem as string);
 			// update the search buttons
 			updateButtonStatusAccordingToQueryValidity();
 		}
@@ -215,7 +215,7 @@ namespace BlueBrick
 		private void ReplaceComboBox_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if (this.ReplaceComboBox.SelectedItem != null)
-				this.ReplacePictureBox.Image = BrickLibrary.Instance.getImage(this.ReplaceComboBox.SelectedItem as string);
+				this.ReplacePictureBox.Image = BrickLibrary.Instance.GetImage(this.ReplaceComboBox.SelectedItem as string);
 			// update the search buttons
 			updateButtonStatusAccordingToQueryValidity();
 		}

@@ -306,7 +306,7 @@ namespace BlueBrick
 					// because the parts will probably need those type of connections
 					string connectionTypeFileName = category.FullName + @"/config/ConnectionTypeList.xml";
 					if (File.Exists(connectionTypeFileName))
-						BrickLibrary.Instance.loadConnectionTypeInfo(connectionTypeFileName, false);
+						BrickLibrary.Instance.LoadConnectionTypeInfo(connectionTypeFileName, false);
 
 					// fill the list view with the parts loaded from the files
 					fillListViewWithParts(buildingInfo, category, imageFileUnloadable, xmlFileUnloadable);
@@ -473,7 +473,7 @@ namespace BlueBrick
 
 				// create a new item for the list view item
 				ListViewItem newItem = new ListViewItem(null as string, imageIndex);
-				newItem.ToolTipText = BrickLibrary.Instance.getFormatedBrickInfo(brick.mPartNumber,
+				newItem.ToolTipText = BrickLibrary.Instance.GetFormatedBrickInfo(brick.mPartNumber,
 															Settings.Default.PartLibBubbleInfoPartID,
 															Settings.Default.PartLibBubbleInfoPartColor,
 															Settings.Default.PartLibBubbleInfoPartDescription);
@@ -486,7 +486,7 @@ namespace BlueBrick
 				// also concatenate the sorting key with the part number such as we always have a fix order,
 				// even after several filtering and even if the sorting key is not set. But if it is set,
 				// the sorting key has the priority since it is place in front
-				newItem.Name = BrickLibrary.Instance.getSortingKey(brick.mPartNumber) + brick.mPartNumber;
+				newItem.Name = BrickLibrary.Instance.GetSortingKey(brick.mPartNumber) + brick.mPartNumber;
 				// the text is used to display the count and budget, and maybe other info that the ListView knows better
 				buildingInfo.mListView.updatePartTextAndBackColor(newItem);
 
@@ -605,7 +605,7 @@ namespace BlueBrick
 				try
 				{
 					// generate the image for the group
-					BrickLibrary.Instance.createGroupImage(group);
+					BrickLibrary.Instance.CreateGroupImage(group);
 					// add this brick in the list view
 					addOnePartInListView(buildingInfo, group);
 				}
@@ -1132,7 +1132,7 @@ namespace BlueBrick
 							// construct the message to display
 							string message = "";
 							if (item != null)
-								message = BrickLibrary.Instance.getFormatedBrickInfo(item.Tag as string, true, true, true);
+								message = BrickLibrary.Instance.GetFormatedBrickInfo(item.Tag as string, true, true, true);
 
 							//display the message in the status bar
 							MainForm.Instance.setStatusBarMessage(message);
@@ -1161,7 +1161,7 @@ namespace BlueBrick
 			// we use our own cursors
 			e.UseDefaultCursors = false;
 			// check if the selected layer is a brick layer, otherwise, we can't drop a part
-			if ((e.Effect == DragDropEffects.Copy) && (Map.Instance.canAddBrick(DraggingPartNumber) == Map.BrickAddability.YES))
+			if ((e.Effect == DragDropEffects.Copy) && (Map.Instance.CanAddBrick(DraggingPartNumber) == Map.BrickAddability.YES))
 			{
 				Cursor.Current = MainForm.Instance.BrickDuplicateCursor;
 			}

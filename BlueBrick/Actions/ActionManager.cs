@@ -44,7 +44,7 @@ namespace BlueBrick.Actions
 			// do the action
 			action.redo();
 			// increase the modification counter on the map
-			BlueBrick.MapData.Map.Instance.increaseModificationCounter();
+			BlueBrick.MapData.Map.Instance.IncreaseModificationCounter();
 			// limit the size of the undo stack
 			// if the stack is full we just discard the older action (first action in the list)
 			while (mUndoStack.Count >= BlueBrick.Properties.Settings.Default.UndoStackDepth)
@@ -71,7 +71,7 @@ namespace BlueBrick.Actions
 					Action action = mUndoStack[mUndoStack.Count-1];
 					action.undo();
 					// decrease the modification counter on the map
-					BlueBrick.MapData.Map.Instance.decreaseModificationCounter();
+					BlueBrick.MapData.Map.Instance.DecreaseModificationCounter();
 					// add the action undone in the redo stack
 					mRedoStack.Push(action);
 					// store the max update type
@@ -105,7 +105,7 @@ namespace BlueBrick.Actions
 					action = mRedoStack.Pop();
 					action.redo();
 					// increase the modification counter on the map
-					BlueBrick.MapData.Map.Instance.increaseModificationCounter();
+					BlueBrick.MapData.Map.Instance.IncreaseModificationCounter();
 					// and add the action in the undo stack
 					mUndoStack.Add(action);
 					// store the max update type

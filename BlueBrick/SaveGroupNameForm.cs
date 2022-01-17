@@ -146,23 +146,23 @@ namespace BlueBrick
 		private void initControlWithPartInfo(string partNumber)
 		{
 			// set the ungroup and sorting key
-			canUngroupCheckBox.Checked = BrickLibrary.Instance.canUngroup(partNumber);
-			sortingKeyTextBox.Text = BrickLibrary.Instance.getSortingKey(partNumber);
+			canUngroupCheckBox.Checked = BrickLibrary.Instance.CanUngroup(partNumber);
+			sortingKeyTextBox.Text = BrickLibrary.Instance.GetSortingKey(partNumber);
 			// for the Author, check if it is the same
 			string author = this.Author;
-			string partAuthor = BrickLibrary.Instance.getAuthor(partNumber);
+			string partAuthor = BrickLibrary.Instance.GetAuthor(partNumber);
 			if (!partAuthor.Contains(author))
 				partAuthor = author + " & " + partAuthor;
 			this.authorTextBox.Text = partAuthor;
 			// get the description
-			string description = BrickLibrary.Instance.getBrickInfo(partNumber)[3];
+			string description = BrickLibrary.Instance.GetBrickInfo(partNumber)[3];
 			if (description != string.Empty)
 			{
 				mDescription.Clear();
 				mDescription.Add(BlueBrick.Properties.Settings.Default.Language, description);
 			}
 			// the image URL
-			this.imageURLTextBox.Text = BrickLibrary.Instance.getImageURL(partNumber);
+			this.imageURLTextBox.Text = BrickLibrary.Instance.GetImageURL(partNumber);
 			// force the event to set the description because we are constructing the window and the focus event is skip
 			descriptionTextBox_Enter(this, null);
 		}
@@ -524,7 +524,7 @@ namespace BlueBrick
 				// No problem with the name, so by default set the text color in white
 				nameTextBox.BackColor = Color.White;
 				// Now check if the name already exist in the library
-				if (BrickLibrary.Instance.isInLibrary(partNumber))
+				if (BrickLibrary.Instance.IsInLibrary(partNumber))
 				{
 					// if yes, check on the disk if the part is inside the custom lib for overriding purpose
 					// which is ok, otherwise if the part is in another folder, it's forbidden

@@ -27,7 +27,7 @@ namespace BlueBrick.Actions.Bricks
 		public AddBrick(LayerBrick layer, string partNumber)
 		{
 			mBrickLayer = layer;
-			if (BrickLibrary.Instance.isAGroup(partNumber))
+			if (BrickLibrary.Instance.IsAGroup(partNumber))
 				mBrickOrGroup = new Layer.Group(partNumber);
 			else
 				mBrickOrGroup = new LayerBrick.Brick(partNumber);

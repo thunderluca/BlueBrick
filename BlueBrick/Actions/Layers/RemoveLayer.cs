@@ -28,7 +28,7 @@ namespace BlueBrick.Actions
 		{
 			mUpdateLayerView = UpdateViewType.FULL;
 			mLayerDeleted = layer;
-			mIndex = Map.Instance.getIndexOf(layer);
+			mIndex = Map.Instance.GetIndexOf(layer);
 		}
 
 		public override string getName()
@@ -40,7 +40,7 @@ namespace BlueBrick.Actions
 
 		public override void redo()
 		{
-			Map.Instance.removeLayer(mLayerDeleted);
+			Map.Instance.RemoveLayer(mLayerDeleted);
 
 			// notify the main form for layer visibility change
 			MainForm.Instance.NotifyForLayerVisibilityChangedOrLayerDeletion();
@@ -48,7 +48,7 @@ namespace BlueBrick.Actions
 
 		public override void undo()
 		{
-			Map.Instance.addLayer(mLayerDeleted, mIndex);
+			Map.Instance.AddLayer(mLayerDeleted, mIndex);
 
 			// notify the main form for layer visibility change
 			MainForm.Instance.NotifyForLayerVisibilityChangedOrLayerDeletion();

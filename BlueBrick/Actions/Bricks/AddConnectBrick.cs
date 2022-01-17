@@ -52,7 +52,7 @@ namespace BlueBrick.Actions.Bricks
 		{
 			// compute the rotation
 			float newOrientation = fixedBrick.Orientation +
-									BrickLibrary.Instance.getConnectionAngleDifference(fixedBrick.PartNumber,
+									BrickLibrary.Instance.GetConnectionAngleDifference(fixedBrick.PartNumber,
 												connectionIndexForFixedBrick,
 												brickToAttach.PartNumber,
 												connectionIndexForBrickToAttach);
@@ -146,7 +146,7 @@ namespace BlueBrick.Actions.Bricks
 			{
 				// check if the new added brick is the same kind of the selected one, if so,
 				// then we choose the previous connection point, but check if it is the same type
-				brickToAttach.ActiveConnectionPointIndex = BrickLibrary.Instance.getConnectionNextPreferedIndex(fixedBrick.PartNumber, fixedBrick.ActiveConnectionPointIndex);
+				brickToAttach.ActiveConnectionPointIndex = BrickLibrary.Instance.GetConnectionNextPreferedIndex(fixedBrick.PartNumber, fixedBrick.ActiveConnectionPointIndex);
 				// check that the connection type is the same
 				isActiveConnectionPointChosen = (brickToAttach.ActiveConnectionPoint.Type == fixedConnexionType) &&
 												brickToAttach.ActiveConnectionPoint.IsFree;

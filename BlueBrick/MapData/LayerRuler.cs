@@ -442,7 +442,7 @@ namespace BlueBrick.MapData
 			if ((mCurrentRulerWithHighlightedControlPoint != null) && !mCurrentRulerWithHighlightedControlPoint.IsCurrentControlPointAttached)
 			{
 				PointF currentControlPointPosition = mCurrentRulerWithHighlightedControlPoint.CurrentControlPoint;
-				mCurrentBrickUsedForRulerAttachement = Map.Instance.getTopMostVisibleBrickUnderMouse(currentControlPointPosition);
+				mCurrentBrickUsedForRulerAttachement = Map.Instance.GetTopMostVisibleBrickUnderMouse(currentControlPointPosition);
 				return (mCurrentBrickUsedForRulerAttachement != null);
 			}
 			return false;

@@ -28,14 +28,13 @@ namespace BlueBrick.MapData
 			public const int DEFAULT = 0;
 
 			// there's a specific connection type for rendering the selected connections
-			public static ConnectionType sSelectedConnection = new ConnectionType(string.Empty, Color.Red, 2.5f, 0.0f);
+			public static ConnectionType sSelectedConnection = new ConnectionType(Color.Red, 2.5f, 0.0f);
 
 			// the data used to render the connection
-			private string mName = string.Empty;
-			private Color mColor = Color.Empty;
-			private float mSize = 1.0f;
-			private float mHingeAngle = 0.0f;
-			private string mFourDBrixName = "NT_UNDEFINED";
+			private readonly Color mColor = Color.Empty;
+			private readonly float mSize = 1.0f;
+			private readonly float mHingeAngle = 0.0f;
+			private readonly string mFourDBrixName = "NT_UNDEFINED";
 
 			public Color Color
 			{
@@ -57,9 +56,8 @@ namespace BlueBrick.MapData
 				get { return mFourDBrixName; }
 			}
 
-			public ConnectionType(string name, Color color, float size, float angle, string fourDBrixName = "NT_UNDEFINED")
+			public ConnectionType(Color color, float size, float angle, string fourDBrixName = "NT_UNDEFINED")
 			{
-				mName = name;
 				mColor = color;
 				mSize = size;
 				mHingeAngle = angle;
@@ -136,10 +134,9 @@ namespace BlueBrick.MapData
 							// first try to get the id for the registry set on this machine
 							if (mOtherIds != null)
 							{
-								int id = 0;								
-								if (mOtherIds.TryGetValue(sCurrentRegistryUsed, out id))
-									return id;
-							}
+                                if (mOtherIds.TryGetValue(sCurrentRegistryUsed, out int id))
+                                    return id;
+                            }
 							// else return 0
 							return 0;
 						}
@@ -150,7 +147,7 @@ namespace BlueBrick.MapData
 						get	{ return mDefaultId; }
 					}
 
-					public void addId(string registry, int id)
+					public void AddId(string registry, int id)
 					{
 						// check if it is the default id
 						if (registry.Equals("default"))
@@ -170,13 +167,12 @@ namespace BlueBrick.MapData
 						}
 					}
 
-					private void addIdToAssociationDictionnary(Dictionary<int, List<Brick>> TDPartNumberAssociation, int id, Brick brick)
+					private void AddIdToAssociationDictionnary(Dictionary<int, List<Brick>> TDPartNumberAssociation, int id, Brick brick)
 					{
-						// try to get the list that maybe already exist
-						List<Brick> brickList = null;
-						TDPartNumberAssociation.TryGetValue(id, out brickList);
-						// if the list doesn't exist create it and add it to the dictionary
-						if (brickList == null)
+                        // try to get the list that maybe already exist
+                        TDPartNumberAssociation.TryGetValue(id, out List<Brick> brickList);
+                        // if the list doesn't exist create it and add it to the dictionary
+                        if (brickList == null)
 						{
 							brickList = new List<Brick>(1); // most of the time there's only one brick associated with a TD id
 							TDPartNumberAssociation.Add(id, brickList);
@@ -186,14 +182,14 @@ namespace BlueBrick.MapData
 							brickList.Add(brick);
 					}
 
-					public void addToAssociationDictionnary(Dictionary<int, List<Brick>> TDPartNumberAssociation, Brick brick)
+					public void AddToAssociationDictionnary(Dictionary<int, List<Brick>> TDPartNumberAssociation, Brick brick)
 					{
 						// add the default id
-						addIdToAssociationDictionnary(TDPartNumberAssociation, mDefaultId, brick);
+						AddIdToAssociationDictionnary(TDPartNumberAssociation, mDefaultId, brick);
 						// and add the other id if needed
 						if (mOtherIds != null)
 							foreach(int id in mOtherIds.Values)
-								addIdToAssociationDictionnary(TDPartNumberAssociation, id, brick);
+								AddIdToAssociationDictionnary(TDPartNumberAssociation, id, brick);
 					}
 				}
 
@@ -340,17 +336,19 @@ namespace BlueBrick.MapData
 				// parse the xml data if the xml file exists
 				if (System.IO.File.Exists(xmlFileName))
 				{
-					// create an XML reader to parse the data
-					System.Xml.XmlReaderSettings xmlSettings = new System.Xml.XmlReaderSettings();
-					xmlSettings.ConformanceLevel = System.Xml.ConformanceLevel.Document;
-					xmlSettings.IgnoreWhitespace = true;
-					xmlSettings.IgnoreComments = true;
-					xmlSettings.CheckCharacters = false;
-					xmlSettings.CloseInput = true;
-					System.Xml.XmlReader xmlReader = System.Xml.XmlReader.Create(xmlFileName, xmlSettings);
+                    // create an XML reader to parse the data
+                    var xmlSettings = new System.Xml.XmlReaderSettings
+                    {
+                        ConformanceLevel = System.Xml.ConformanceLevel.Document,
+                        IgnoreWhitespace = true,
+                        IgnoreComments = true,
+                        CheckCharacters = false,
+                        CloseInput = true
+                    };
+					var xmlReader = System.Xml.XmlReader.Create(xmlFileName, xmlSettings);
 
-					// first find and enter the unique root tag
-                    bool rootNodeFound = false;
+                    // first find and enter the unique root tag
+                    bool rootNodeFound;
                     do
                     {
                         xmlReader.Read();
@@ -374,35 +372,35 @@ namespace BlueBrick.MapData
 						while (continueToRead)
 						{
 							if (xmlReader.Name.Equals("Author"))
-								readAuthorTag(ref xmlReader);
+								ReadAuthorTag(ref xmlReader);
 							else if (xmlReader.Name.Equals("Description"))
-								readDescriptionTag(ref xmlReader);
+								ReadDescriptionTag(ref xmlReader);
 							else if (xmlReader.Name.Equals("SortingKey"))
-								readSortingKeyTag(ref xmlReader);
+								ReadSortingKeyTag(ref xmlReader);
 							else if (xmlReader.Name.Equals("ImageURL"))
-								readImageURLTag(ref xmlReader);
+								ReadImageURLTag(ref xmlReader);
 							else if (xmlReader.Name.Equals("SnapMargin"))
-								readSnapMarginTag(ref xmlReader);
+								ReadSnapMarginTag(ref xmlReader);
 							else if (xmlReader.Name.Equals("ConnexionList"))
-								readConnexionListTag(ref xmlReader, connectionRemapingDictionary);
+								ReadConnexionListTag(ref xmlReader, connectionRemapingDictionary);
 							else if (xmlReader.Name.Equals("hull"))
-								readHullTag(ref xmlReader);
+								ReadHullTag(ref xmlReader);
 							else if (xmlReader.Name.Equals("TrackDesigner"))
-								readTrackDesignerTag(ref xmlReader);
+								ReadTrackDesignerTag(ref xmlReader);
 							else if (xmlReader.Name.Equals("LDraw"))
-								readLDRAWTag(ref xmlReader);
+								ReadLDRAWTag(ref xmlReader);
 							else if (xmlReader.Name.Equals("OldNameList"))
-								readImageOldNameTag(ref xmlReader);
+								ReadImageOldNameTag(ref xmlReader);
                             else if (xmlReader.Name.Equals("CanUngroup"))
-                                readCanUngroupTag(ref xmlReader);
+                                ReadCanUngroupTag(ref xmlReader);
                             else if (xmlReader.Name.Equals("SubPartList"))
-                                readSubPartListTag(ref xmlReader);
+                                ReadSubPartListTag(ref xmlReader);
 							else if (xmlReader.Name.Equals("GroupConnectionPreferenceList"))
-								readGroupConnectionPreferenceListTag(ref xmlReader);
+								ReadGroupConnectionPreferenceListTag(ref xmlReader);
 							else if (xmlReader.Name.Equals("NotListedInLibrary"))
-								readNotListedInLibraryTag(ref xmlReader);
+								ReadNotListedInLibraryTag(ref xmlReader);
 							else if (xmlReader.Name.Equals("FourDBrix"))
-								read4DBrixTag(ref xmlReader);
+								Read4DBrixTag(ref xmlReader);
 							else
 								xmlReader.Read();
 							// check if we need to continue
@@ -443,7 +441,7 @@ namespace BlueBrick.MapData
 					mHull = mBoundingBox;
 			}
 
-			private void readAuthorTag(ref System.Xml.XmlReader xmlReader)
+			private void ReadAuthorTag(ref System.Xml.XmlReader xmlReader)
 			{
 				// we store the author name because it can be used when the used create groups to expand the lib
 				if (!xmlReader.IsEmptyElement)
@@ -456,7 +454,7 @@ namespace BlueBrick.MapData
 				}
 			}
 
-			private void readDescriptionTag(ref System.Xml.XmlReader xmlReader)
+			private void ReadDescriptionTag(ref System.Xml.XmlReader xmlReader)
 			{
 				// check if the description is not empty
 				bool continueToRead = !xmlReader.IsEmptyElement;
@@ -506,7 +504,7 @@ namespace BlueBrick.MapData
 				}
 			}
 
-			private void readSortingKeyTag(ref System.Xml.XmlReader xmlReader)
+			private void ReadSortingKeyTag(ref System.Xml.XmlReader xmlReader)
 			{
 				if (!xmlReader.IsEmptyElement)
 				{
@@ -518,7 +516,7 @@ namespace BlueBrick.MapData
 				}
 			}
 
-			private void readImageURLTag(ref System.Xml.XmlReader xmlReader)
+			private void ReadImageURLTag(ref System.Xml.XmlReader xmlReader)
 			{
 				if (!xmlReader.IsEmptyElement)
 				{
@@ -530,7 +528,7 @@ namespace BlueBrick.MapData
 				}
 			}
 
-			private void readImageOldNameTag(ref System.Xml.XmlReader xmlReader)
+			private void ReadImageOldNameTag(ref System.Xml.XmlReader xmlReader)
 			{
 				// check if the old name list is not empty
 				bool continueToRead = !xmlReader.IsEmptyElement;
@@ -563,7 +561,7 @@ namespace BlueBrick.MapData
 				}
 			}
 
-			private void readSnapMarginTag(ref System.Xml.XmlReader xmlReader)
+			private void ReadSnapMarginTag(ref System.Xml.XmlReader xmlReader)
 			{
 				// check if the margin is not empty
 				bool continueToRead = !xmlReader.IsEmptyElement;
@@ -597,7 +595,7 @@ namespace BlueBrick.MapData
 				}
 			}
 
-			private void readConnexionListTag(ref System.Xml.XmlReader xmlReader, Dictionary<string, int> connectionRemapingDictionary)
+			private void ReadConnexionListTag(ref System.Xml.XmlReader xmlReader, Dictionary<string, int> connectionRemapingDictionary)
 			{
 				if (!xmlReader.IsEmptyElement)
 				{
@@ -620,9 +618,9 @@ namespace BlueBrick.MapData
 						while (continueToReadConnexion)
 						{
 							if (xmlReader.Name.Equals("type"))
-								connectionPoint.mType = readConnectionType(ref xmlReader, connectionRemapingDictionary);
+								connectionPoint.mType = ReadConnectionType(ref xmlReader, connectionRemapingDictionary);
 							else if (xmlReader.Name.Equals("position"))
-								connectionPoint.mPosition = readPointTag(ref xmlReader, "position");
+								connectionPoint.mPosition = ReadPointTag(ref xmlReader, "position");
 							else if (xmlReader.Name.Equals("angle"))
 								connectionPoint.mAngle = xmlReader.ReadElementContentAsFloat();
 							else if (xmlReader.Name.Equals("angleToPrev"))
@@ -679,15 +677,14 @@ namespace BlueBrick.MapData
 				}
 			}
 
-			private int readConnectionType(ref System.Xml.XmlReader xmlReader, Dictionary<string, int> remapingDictionary)
+			private int ReadConnectionType(ref System.Xml.XmlReader xmlReader, Dictionary<string, int> remapingDictionary)
 			{
 				string connectionName = xmlReader.ReadElementContentAsString();
-				int index = BrickLibrary.ConnectionType.DEFAULT;
-				remapingDictionary.TryGetValue(connectionName, out index);
-				return index;
+                remapingDictionary.TryGetValue(connectionName, out int index);
+                return index;
 			}
 
-			private void readHullTag(ref System.Xml.XmlReader xmlReader)
+			private void ReadHullTag(ref System.Xml.XmlReader xmlReader)
 			{
 				if (!xmlReader.IsEmptyElement)
 				{
@@ -696,7 +693,7 @@ namespace BlueBrick.MapData
 					{
 						if (xmlReader.Name.Equals("point"))
 						{
-							PointF point = readPointTag(ref xmlReader, "point");
+							PointF point = ReadPointTag(ref xmlReader, "point");
 							// shift the pixel coord of a half pixel (to center the coordinate)
 							point.X += 0.5f;
 							point.Y += 0.5f;
@@ -716,7 +713,7 @@ namespace BlueBrick.MapData
 				}
 			}
 
-			private void readTrackDesignerTag(ref System.Xml.XmlReader xmlReader)
+			private void ReadTrackDesignerTag(ref System.Xml.XmlReader xmlReader)
 			{
 				// check if the track designer is not empty
 				if (!xmlReader.IsEmptyElement)
@@ -730,15 +727,15 @@ namespace BlueBrick.MapData
 					while (continueToRead)
 					{
 						if (xmlReader.Name.Equals("ID"))
-							readTrackDesignerIDTag(ref xmlReader);
+							ReadTrackDesignerIDTag(ref xmlReader);
 						else if (xmlReader.Name.Equals("IDList"))
-							readTrackDesignerIDListTag(ref xmlReader);
+							ReadTrackDesignerIDListTag(ref xmlReader);
 						else if (xmlReader.Name.Equals("Flag"))
 							mTDRemapData.mFlags = xmlReader.ReadElementContentAsInt();
 						else if (xmlReader.Name.Equals("HasSeveralGeometries"))
 							mTDRemapData.mHasSeveralPort = xmlReader.ReadElementContentAsBoolean();
 						else if (xmlReader.Name.Equals("TDBitmapList"))
-							readTrackDesignerBitmapTag(ref xmlReader);
+							ReadTrackDesignerBitmapTag(ref xmlReader);
 						else
 							xmlReader.Read();
 
@@ -756,7 +753,7 @@ namespace BlueBrick.MapData
 				}
 			}
 
-			private void readTrackDesignerIDTag(ref System.Xml.XmlReader xmlReader)
+			private void ReadTrackDesignerIDTag(ref System.Xml.XmlReader xmlReader)
 			{
 				// check if the id list is not empty
 				if (!xmlReader.IsEmptyElement)
@@ -768,7 +765,7 @@ namespace BlueBrick.MapData
 					// read the int id
 					int id = xmlReader.ReadElementContentAsInt();
 					// add it to the id class (that can maintain several ids)
-					mTDRemapData.mTDId.addId(registry, id);
+					mTDRemapData.mTDId.AddId(registry, id);
 				}
 				else
 				{
@@ -776,7 +773,7 @@ namespace BlueBrick.MapData
 				}
 			}
 
-			private void readTrackDesignerIDListTag(ref System.Xml.XmlReader xmlReader)
+			private void ReadTrackDesignerIDListTag(ref System.Xml.XmlReader xmlReader)
 			{
 				// check if the id list is not empty
 				if (!xmlReader.IsEmptyElement)
@@ -787,7 +784,7 @@ namespace BlueBrick.MapData
 					while (continueToRead)
 					{
 						if (xmlReader.Name.Equals("ID"))
-							readTrackDesignerIDTag(ref xmlReader);
+							ReadTrackDesignerIDTag(ref xmlReader);
 						else
 							xmlReader.Read();
 
@@ -805,7 +802,7 @@ namespace BlueBrick.MapData
 				}
 			}
 
-			private void readTrackDesignerBitmapTag(ref System.Xml.XmlReader xmlReader)
+			private void ReadTrackDesignerBitmapTag(ref System.Xml.XmlReader xmlReader)
 			{
 				bool bitmapFound = xmlReader.ReadToDescendant("TDBitmap");
 				// instanciate the list of bitmap id
@@ -847,7 +844,7 @@ namespace BlueBrick.MapData
 					xmlReader.ReadEndElement();
 			}
 
-			private void readLDRAWTag(ref System.Xml.XmlReader xmlReader)
+			private void ReadLDRAWTag(ref System.Xml.XmlReader xmlReader)
 			{
 				// check if the description is not empty
 				bool continueToRead = !xmlReader.IsEmptyElement;
@@ -864,12 +861,12 @@ namespace BlueBrick.MapData
 						if (xmlReader.Name.Equals("Angle"))
 							mLDrawRemapData.mAngle = xmlReader.ReadElementContentAsFloat();
 						else if (xmlReader.Name.Equals("Translation"))
-							mLDrawRemapData.mTranslation = readPointTag(ref xmlReader, "Translation");
+							mLDrawRemapData.mTranslation = ReadPointTag(ref xmlReader, "Translation");
 						else if (xmlReader.Name.Equals("PreferredHeight"))
 							mLDrawRemapData.mPreferredHeight = xmlReader.ReadElementContentAsFloat();
 						else if (xmlReader.Name.Equals("SleeperID"))
 						{
-							readBlueBrickId(ref xmlReader, ref mLDrawRemapData.mSleeperBrickNumber, ref mLDrawRemapData.mSleeperBrickColor);
+							ReadBlueBrickId(ref xmlReader, ref mLDrawRemapData.mSleeperBrickNumber, ref mLDrawRemapData.mSleeperBrickColor);
 							if (mLDrawRemapData.mSleeperBrickColor == null)
 								mLDrawRemapData.mSleeperBrickColor = "0"; // black as default color
 						}
@@ -878,7 +875,7 @@ namespace BlueBrick.MapData
 							// before reading the alias content check if we need to create a remaping by reading the attribute
 							bool needToAddRemap = !(xmlReader.HasAttributes && (xmlReader.GetAttribute("noremap") == "true"));
 							// read the alias
-							string fullPartId = readBlueBrickId(ref xmlReader, ref mLDrawRemapData.mAliasPartNumber, ref mLDrawRemapData.mAliasPartColor);
+							string fullPartId = ReadBlueBrickId(ref xmlReader, ref mLDrawRemapData.mAliasPartNumber, ref mLDrawRemapData.mAliasPartColor);
 							// add the part to the remap list if need
 							if (needToAddRemap)
 								BrickLibrary.Instance.AddToTempRenamedPartList(fullPartId, this);
@@ -899,7 +896,7 @@ namespace BlueBrick.MapData
 				}
 			}
 
-			private void read4DBrixTag(ref System.Xml.XmlReader xmlReader)
+			private void Read4DBrixTag(ref System.Xml.XmlReader xmlReader)
 			{
 				// check if the description is not empty
 				bool continueToRead = !xmlReader.IsEmptyElement;
@@ -941,7 +938,7 @@ namespace BlueBrick.MapData
 				}
 			}
 
-			private void readCanUngroupTag(ref System.Xml.XmlReader xmlReader)
+			private void ReadCanUngroupTag(ref System.Xml.XmlReader xmlReader)
             {
                 if (!xmlReader.IsEmptyElement)
                 {
@@ -957,7 +954,7 @@ namespace BlueBrick.MapData
                 }
             }
 
-            private void readSubPartListTag(ref System.Xml.XmlReader xmlReader)
+            private void ReadSubPartListTag(ref System.Xml.XmlReader xmlReader)
             {
                 if (!xmlReader.IsEmptyElement)
                 {
@@ -973,13 +970,15 @@ namespace BlueBrick.MapData
                     while (subpartFound)
                     {
                         // instanciate a sub part for the current one read
-                        SubPart subPart = new SubPart();
+                        SubPart subPart = new SubPart
+                        {
 
-                        // read the id of the sub part
-                        subPart.mSubPartNumber = xmlReader.GetAttribute("id").ToUpperInvariant();
+                            // read the id of the sub part
+                            mSubPartNumber = xmlReader.GetAttribute("id").ToUpperInvariant()
+                        };
 
-						// variable to store the position of the sub part from which we will construct a transform
-						PointF position = new PointF();
+                        // variable to store the position of the sub part from which we will construct a transform
+                        PointF position = new PointF();
 
                         // read the first child node of the connexion (and check that the sub part is not empty)
                         xmlReader.Read();
@@ -987,7 +986,7 @@ namespace BlueBrick.MapData
                         while (continueToReadSubPart)
                         {
                             if (xmlReader.Name.Equals("position"))
-								position = readPointTag(ref xmlReader, "position");
+								position = ReadPointTag(ref xmlReader, "position");
                             else if (xmlReader.Name.Equals("angle"))
 								subPart.mOrientation = xmlReader.ReadElementContentAsFloat();
                             else
@@ -1018,7 +1017,7 @@ namespace BlueBrick.MapData
                 }
             }
 
-			private void readGroupConnectionPreferenceListTag(ref System.Xml.XmlReader xmlReader)
+			private void ReadGroupConnectionPreferenceListTag(ref System.Xml.XmlReader xmlReader)
 			{
 				if (!xmlReader.IsEmptyElement)
 				{
@@ -1053,7 +1052,7 @@ namespace BlueBrick.MapData
 				}
 			}
 
-			private void readNotListedInLibraryTag(ref System.Xml.XmlReader xmlReader)
+			private void ReadNotListedInLibraryTag(ref System.Xml.XmlReader xmlReader)
 			{
 				if (!xmlReader.IsEmptyElement)
 				{
@@ -1067,7 +1066,7 @@ namespace BlueBrick.MapData
 				}
 			}
 
-			private string readBlueBrickId(ref System.Xml.XmlReader xmlReader, ref string partNumber, ref string partColor)
+			private string ReadBlueBrickId(ref System.Xml.XmlReader xmlReader, ref string partNumber, ref string partColor)
 			{
 				string fullPartId = xmlReader.ReadElementContentAsString().ToUpperInvariant();
 				int lastDotIndex = fullPartId.LastIndexOf('.');
@@ -1083,7 +1082,7 @@ namespace BlueBrick.MapData
 				return fullPartId;
 			}
 
-			private PointF readPointTag(ref System.Xml.XmlReader xmlReader, string pointTagName)
+			private PointF ReadPointTag(ref System.Xml.XmlReader xmlReader, string pointTagName)
 			{
 				float x = 0;
 				float y = 0;
@@ -1117,29 +1116,29 @@ namespace BlueBrick.MapData
 		}
 
 		// a dictionary that contains all the images of the parts
-		private Dictionary<string, Brick> mBrickDictionary = new Dictionary<string, Brick>();
+		private readonly Dictionary<string, Brick> mBrickDictionary = new Dictionary<string, Brick>();
 
 		// a dictionary that contains all color names in the current langage of the application
-		private Dictionary<int, string> mColorNames = new Dictionary<int, string>();
+		private readonly Dictionary<int, string> mColorNames = new Dictionary<int, string>();
 
 		// a list of all the different type of connections
-		private List<ConnectionType> mConnectionTypes = new List<ConnectionType>();
-		private Dictionary<string, int> mConnectionTypeRemapingDictionnary = new Dictionary<string, int>();
+		private readonly List<ConnectionType> mConnectionTypes = new List<ConnectionType>();
+		private readonly Dictionary<string, int> mConnectionTypeRemapingDictionnary = new Dictionary<string, int>();
 
 		// a dictionary to find the corresponding BlueBrick part number from the TD part id
-		private Dictionary<int, List<Brick>> mTrackDesignerPartNumberAssociation = new Dictionary<int, List<Brick>>();
+		private readonly Dictionary<int, List<Brick>> mTrackDesignerPartNumberAssociation = new Dictionary<int, List<Brick>>();
 
 		// a dictionary that match the registry file names with a registry keyword used in the part XML files
-		private Dictionary<string, string> mTrackDesignerRegistryFiles = new Dictionary<string, string>();
+		private readonly Dictionary<string, string> mTrackDesignerRegistryFiles = new Dictionary<string, string>();
 
 		// a dictionary to find the corresponding BlueBrick part number from the 4DBrix part id
-		private Dictionary<string, Brick> m4DBrixPartNumberAssociation = new Dictionary<string, Brick>();
+		private readonly Dictionary<string, Brick> m4DBrixPartNumberAssociation = new Dictionary<string, Brick>();
 
 		// This temporary list is used during the loading of the Brick library to record the parts that have an alias
-		private Dictionary<string, Brick> mTempRenamedPartList = new Dictionary<string, Brick>();
+		private readonly Dictionary<string, Brick> mTempRenamedPartList = new Dictionary<string, Brick>();
 
 		// singleton on the map (we assume it is always valid)
-		private static BrickLibrary sInstance = new BrickLibrary();
+		private static readonly BrickLibrary sInstance = new BrickLibrary();
 
 		// a special part to return as default for the unknown parts
 		private bool mWereUnknownBricksAdded = false;
@@ -1176,7 +1175,7 @@ namespace BlueBrick.MapData
 		/// <summary>
 		/// clear all the data contained in the part library
 		/// </summary>
-		public void clearAllData()
+		public void ClearAllData()
 		{
 			// specifically dispose all the image, in order to remove the lock on the image files, and let the user update the images
 			foreach (Brick brick in mBrickDictionary.Values)
@@ -1227,7 +1226,7 @@ namespace BlueBrick.MapData
 		/// This method should be called when the application start to load the information from
 		/// the config xml file.
 		/// </summary>
-		public void loadColorInfo()
+		public void LoadColorInfo()
 		{
 			// clear the color name table and description tables
 			mColorNames.Clear();
@@ -1235,13 +1234,15 @@ namespace BlueBrick.MapData
 			string xmlFileName = Application.StartupPath + @"/config/ColorTable.xml";
 			if (System.IO.File.Exists(xmlFileName))
 			{
-				System.Xml.XmlReaderSettings xmlSettings = new System.Xml.XmlReaderSettings();
-				xmlSettings.ConformanceLevel = System.Xml.ConformanceLevel.Fragment;
-				xmlSettings.IgnoreWhitespace = true;
-				xmlSettings.IgnoreComments = true;
-				xmlSettings.CheckCharacters = false;
-				xmlSettings.CloseInput = true;
-				System.Xml.XmlReader xmlReader = System.Xml.XmlReader.Create(xmlFileName, xmlSettings);
+                System.Xml.XmlReaderSettings xmlSettings = new System.Xml.XmlReaderSettings
+                {
+                    ConformanceLevel = System.Xml.ConformanceLevel.Fragment,
+                    IgnoreWhitespace = true,
+                    IgnoreComments = true,
+                    CheckCharacters = false,
+                    CloseInput = true
+                };
+                System.Xml.XmlReader xmlReader = System.Xml.XmlReader.Create(xmlFileName, xmlSettings);
  
 				// use a variable to know if we need to read another language
 				bool isDefaultLanguageEnglish = BlueBrick.Properties.Settings.Default.Language.Equals("en");
@@ -1258,9 +1259,9 @@ namespace BlueBrick.MapData
 					xmlReader.ReadToDescendant("en");
 					string defaultColorName = xmlReader.ReadElementContentAsString();
 
-					// now search the name in the language of the application
-					string colorName = string.Empty;
-					if (isDefaultLanguageEnglish)
+                    // now search the name in the language of the application
+                    string colorName;
+                    if (isDefaultLanguageEnglish)
 						colorName = defaultColorName;
 					else if (xmlReader.Name.Equals(BlueBrick.Properties.Settings.Default.Language))
 						colorName = xmlReader.ReadElementContentAsString();
@@ -1294,21 +1295,21 @@ namespace BlueBrick.MapData
 		/// This method should be called when the application start in order to load the information from
 		/// the config xml file. This config file contains the list of connection types.
 		/// </summary>
-		public void loadConnectionTypeInfo()
+		public void LoadConnectionTypeInfo()
 		{
 			// clear the color name table and description tables
 			mConnectionTypes.Clear();
 			mConnectionTypeRemapingDictionnary.Clear();
 
 			// add the default connection at first in the list
-			mConnectionTypes.Add(new ConnectionType(string.Empty, Color.Black, 1.0f, 0.0f));
+			mConnectionTypes.Add(new ConnectionType(Color.Black, 1.0f, 0.0f));
 
 			// try to load the default xml file
 			string xmlFileName = Application.StartupPath + @"/config/ConnectionTypeList.xml";
 			if (System.IO.File.Exists(xmlFileName))
 			{
 				// call the function to load the file (and load the selected connection description)
-				loadConnectionTypeInfo(xmlFileName, true);
+				LoadConnectionTypeInfo(xmlFileName, true);
 			}
 			else
 			{
@@ -1326,18 +1327,20 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="xmlFileName">The full path of the xml file to load</param>
 		/// <param name="shouldReadSelectedConnection">if <c>true</c> is specified then the selectedConnection section will be ignored in the xml file</param>
-		public void loadConnectionTypeInfo(string xmlFileName, bool shouldReadSelectedConnection)
+		public void LoadConnectionTypeInfo(string xmlFileName, bool shouldReadSelectedConnection)
 		{ 
 			// try to load the xml file
 			if (System.IO.File.Exists(xmlFileName))
 			{
-				System.Xml.XmlReaderSettings xmlSettings = new System.Xml.XmlReaderSettings();
-				xmlSettings.ConformanceLevel = System.Xml.ConformanceLevel.Fragment;
-				xmlSettings.IgnoreWhitespace = true;
-				xmlSettings.IgnoreComments = true;
-				xmlSettings.CheckCharacters = false;
-				xmlSettings.CloseInput = true;
-				System.Xml.XmlReader xmlReader = System.Xml.XmlReader.Create(xmlFileName, xmlSettings);
+                System.Xml.XmlReaderSettings xmlSettings = new System.Xml.XmlReaderSettings
+                {
+                    ConformanceLevel = System.Xml.ConformanceLevel.Fragment,
+                    IgnoreWhitespace = true,
+                    IgnoreComments = true,
+                    CheckCharacters = false,
+                    CloseInput = true
+                };
+                System.Xml.XmlReader xmlReader = System.Xml.XmlReader.Create(xmlFileName, xmlSettings);
 
 				// read the first node
 				if (xmlReader.ReadToFollowing("info"))
@@ -1358,7 +1361,7 @@ namespace BlueBrick.MapData
 						if (xmlReader.Name.Equals("Size"))
 							size = xmlReader.ReadElementContentAsFloat();
 						// update the selected connection rendering
-						ConnectionType.sSelectedConnection = new ConnectionType(string.Empty, color, size, 0.0f);
+						ConnectionType.sSelectedConnection = new ConnectionType(color, size, 0.0f);
 					}
 					// now skip all the nodes until reaching the first connection type
 					while (continueToRead && !xmlReader.Name.Equals("ConnectionType"))
@@ -1400,7 +1403,7 @@ namespace BlueBrick.MapData
 						if (!mConnectionTypeRemapingDictionnary.ContainsKey(name))
 						{
 							mConnectionTypeRemapingDictionnary.Add(name, mConnectionTypes.Count);
-							mConnectionTypes.Add(new ConnectionType(name, color, size, hingeAngle, fourDBrixName));
+							mConnectionTypes.Add(new ConnectionType(color, size, hingeAngle, fourDBrixName));
 						}
 
 						// read the next connection
@@ -1423,15 +1426,14 @@ namespace BlueBrick.MapData
 		/// This method should be called when the application start but after having
 		/// initialized the library to duplicate entry in the dictionnary on the renamed parts
 		/// </summary>
-		public void createEntriesForRenamedParts()
+		public void CreateEntriesForRenamedParts()
 		{
 			// Add all the parts that have an alias (previous name or alias in LDRaw tag)
 			foreach (KeyValuePair<string, Brick> renamedPart in mTempRenamedPartList)
 			{
-				// check if the alias brick does not already exist in the library, else we wont erase it
-				Brick brickRef = null;
-				mBrickDictionary.TryGetValue(renamedPart.Key, out brickRef);
-				if (brickRef == null)
+                // check if the alias brick does not already exist in the library, else we wont erase it
+                mBrickDictionary.TryGetValue(renamedPart.Key, out Brick brickRef);
+                if (brickRef == null)
 					mBrickDictionary.Add(renamedPart.Key, renamedPart.Value);
 			}
 
@@ -1443,7 +1445,7 @@ namespace BlueBrick.MapData
 		/// This method should be called when the application start to associate keyword and filename
 		/// for the TD registry files.
 		/// </summary>
-		public void loadTrackDesignerRegistryFileList()
+		public void LoadTrackDesignerRegistryFileList()
 		{
 			try
 			{
@@ -1486,25 +1488,23 @@ namespace BlueBrick.MapData
 		/// Track Designer store its preference in this key:
 		/// HKEY_CURRENT_USER\Software\Train Depot\Track Designer\Registry
 		/// </summary>
-		public void updateCurrentTrackDesignerRegistryUsed()
+		public void UpdateCurrentTrackDesignerRegistryUsed()
 		{
 			// set the default keyword in case we don't find it
 			Brick.TDRemapData.TDId.sCurrentRegistryUsed = "default";
 
-			// try to read the value from the windows registry
-			Object TDRegistryFilenameObject = Registry.GetValue("HKEY_CURRENT_USER\\Software\\Train Depot\\Track Designer\\Registry", "Filename", null);
+            // try to read the value from the windows registry
+            object TDRegistryFilenameObject = Registry.GetValue("HKEY_CURRENT_USER\\Software\\Train Depot\\Track Designer\\Registry", "Filename", null);
 			if (TDRegistryFilenameObject != null)
 			{
-				// try to convert the key into a string and then find the file in the registry list
-				string TDRegistryFilename = TDRegistryFilenameObject as string;
-				if (TDRegistryFilename != null)
-				{
-					System.IO.FileInfo fileInfo = new System.IO.FileInfo(TDRegistryFilename);
-					string keyword = null;
-					if (mTrackDesignerRegistryFiles.TryGetValue(fileInfo.Name, out keyword))
-						Brick.TDRemapData.TDId.sCurrentRegistryUsed = keyword;
-				}
-			}
+                // try to convert the key into a string and then find the file in the registry list
+                if (TDRegistryFilenameObject is string TDRegistryFilename)
+                {
+                    System.IO.FileInfo fileInfo = new System.IO.FileInfo(TDRegistryFilename);
+                    if (mTrackDesignerRegistryFiles.TryGetValue(fileInfo.Name, out string keyword))
+                        Brick.TDRemapData.TDId.sCurrentRegistryUsed = keyword;
+                }
+            }
 		}
 
 		#endregion
@@ -1517,7 +1517,7 @@ namespace BlueBrick.MapData
 		/// <param name="widthInStud">width of the image of the brick in stud</param>
 		/// <param name="heightInStud">height of the image of the brick in stud</param>
 		/// <returns></returns>
-		private Bitmap createUnknownImage(string partNumber, int widthInStud, int heightInStud)
+		private Bitmap CreateUnknownImage(string partNumber, int widthInStud, int heightInStud)
 		{
 			int widthInPixel = widthInStud * Layer.NUM_PIXEL_PER_STUD_FOR_BRICKS;
 			int heightInPixel = heightInStud * Layer.NUM_PIXEL_PER_STUD_FOR_BRICKS;
@@ -1533,10 +1533,12 @@ namespace BlueBrick.MapData
 			if ((partNumber != null) && (partNumber.Length > 0))
 			{
 				SolidBrush brush = new SolidBrush(Color.Black);
-				StringFormat format = new StringFormat();
-				format.Alignment = StringAlignment.Center;
-				format.LineAlignment = StringAlignment.Center;
-				float fontSize = Math.Min(widthInPixel, heightInPixel) / partNumber.Length;
+                StringFormat format = new StringFormat
+                {
+                    Alignment = StringAlignment.Center,
+                    LineAlignment = StringAlignment.Center
+                };
+                float fontSize = Math.Min(widthInPixel, heightInPixel) / partNumber.Length;
 				if (fontSize <= 4.0f)
 					fontSize = 4.0f;
 				Font font = new Font(FontFamily.GenericSansSerif, fontSize);
@@ -1551,15 +1553,15 @@ namespace BlueBrick.MapData
         /// </summary>
         /// <param name="group">the brick representing the group in the library</param>
         /// <returns>True if the image of the group can sucessfully be created</returns>
-        public void createGroupImage(Brick group)
+        public void CreateGroupImage(Brick group)
         {
 			// check if this group already has an image, in that case it was created while creating the image
 			// of an upper group. So in that case we don't need to recreate it
 			if (group.Image == null)
-				createGroupImageRecursive(group, new List<Brick>());
+				CreateGroupImageRecursive(group, new List<Brick>());
 		}
 
-		private void createGroupImageRecursive(Brick group, List<Brick> parentGroups)
+		private void CreateGroupImageRecursive(Brick group, List<Brick> parentGroups)
 		{
 			if (group.mGroupInfo.mGroupSubPartList.Count == 0)
 				throw new Exception("The group is empty. The tag <SubPartList> cannot be empty.");
@@ -1584,11 +1586,13 @@ namespace BlueBrick.MapData
 					subPart.mSubPartBrick = AddUnknownBrick(subPart.mSubPartNumber, 32, 32);
 
 				// check if the current sub part is a group not yet created in that case call the function recursively
-				if ((subPart.mSubPartBrick.IsAGroup) && (subPart.mSubPartBrick.Image == null))
+				if (subPart.mSubPartBrick.IsAGroup && (subPart.mSubPartBrick.Image == null))
 				{
-					List<Brick> newParentGroups = new List<Brick>(parentGroups);
-					newParentGroups.Add(group);
-					createGroupImageRecursive(subPart.mSubPartBrick, newParentGroups);
+                    List<Brick> newParentGroups = new List<Brick>(parentGroups)
+                    {
+                        group
+                    };
+                    CreateGroupImageRecursive(subPart.mSubPartBrick, newParentGroups);
 				}
 
 				// create the drawing transform and add it to the list
@@ -1608,8 +1612,8 @@ namespace BlueBrick.MapData
 				hullHalfSize.X *= 0.5f;
 				hullHalfSize.Y *= 0.5f;
 				// compute the part translation in pixel
-				float localTransformXInPixel = (subPart.mLocalTransformInStud.OffsetX * Layer.NUM_PIXEL_PER_STUD_FOR_BRICKS);
-				float localTransformYInPixel = (subPart.mLocalTransformInStud.OffsetY * Layer.NUM_PIXEL_PER_STUD_FOR_BRICKS);
+				float localTransformXInPixel = subPart.mLocalTransformInStud.OffsetX * Layer.NUM_PIXEL_PER_STUD_FOR_BRICKS;
+				float localTransformYInPixel = subPart.mLocalTransformInStud.OffsetY * Layer.NUM_PIXEL_PER_STUD_FOR_BRICKS;
 				// compute the hull min and max inside the whole group (so with the translation of the part)
 				PointF hullMinInsideGroup = new PointF(localTransformXInPixel - hullHalfSize.X, localTransformYInPixel - hullHalfSize.Y);
 				PointF hullMaxInsideGroup = new PointF(localTransformXInPixel + hullHalfSize.X, localTransformYInPixel + hullHalfSize.Y);
@@ -1684,7 +1688,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="partNumber">the bluebrick part number</param>
 		/// <returns>true if the brick is loaded in the library, false otherwise</returns>
-		public bool isInLibrary(string partNumber)
+		public bool IsInLibrary(string partNumber)
 		{
 			return mBrickDictionary.ContainsKey(partNumber);
 		}
@@ -1693,7 +1697,7 @@ namespace BlueBrick.MapData
 		/// Return the complete list of all the names of the bricks currently in the library
 		/// </summary>
 		/// <returns>the complete list of all the names of the bricks currently in the library</returns>
-		public string[] getBrickNameList()
+		public string[] GetBrickNameList()
 		{
 			string[] result = new string[mBrickDictionary.Keys.Count];
 			mBrickDictionary.Keys.CopyTo(result, 0);
@@ -1705,11 +1709,10 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="partNumber">a potential old name</param>
 		/// <returns>the new name of the part or the specified param if the brick was not founded</returns>
-		public string getActualPartNumber(string partNumber)
+		public string GetActualPartNumber(string partNumber)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if (brickRef != null)
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if (brickRef != null)
 				return brickRef.mPartNumber;
 			return partNumber;
 		}
@@ -1720,7 +1723,7 @@ namespace BlueBrick.MapData
 				widthInStud = 32;
 			if (heightInStud <= 0)
 				heightInStud = 32;
-			Bitmap unknownImage = createUnknownImage(partNumber, widthInStud, heightInStud);
+			Bitmap unknownImage = CreateUnknownImage(partNumber, widthInStud, heightInStud);
 			Brick brick = new Brick(partNumber, unknownImage, null, mConnectionTypeRemapingDictionnary);
 			mBrickDictionary.Add(partNumber, brick);
 			mWereUnknownBricksAdded = true;
@@ -1730,17 +1733,16 @@ namespace BlueBrick.MapData
         public Brick AddBrick(string partNumber, Image image, string xmlFileName, bool allowReplacement)
 		{
             // check if the brick was not already added
-            Brick brick = null;
-            if (mBrickDictionary.TryGetValue(partNumber, out brick))
-				if (allowReplacement)
-				{
-					// if the replacement is allowed, remove the old brick from the lib
-					mBrickDictionary.Remove(partNumber);
-					// and clear the brick pointer
-					brick = null;
-				}
-			// check if we didn't find the brick already
-			if (brick == null)
+            if (mBrickDictionary.TryGetValue(partNumber, out Brick brick))
+                if (allowReplacement)
+                {
+                    // if the replacement is allowed, remove the old brick from the lib
+                    mBrickDictionary.Remove(partNumber);
+                    // and clear the brick pointer
+                    brick = null;
+                }
+            // check if we didn't find the brick already
+            if (brick == null)
             {
                 // instanciate the brick and add it into the dictionnary
                 brick = new Brick(partNumber, image, xmlFileName, mConnectionTypeRemapingDictionnary);
@@ -1750,7 +1752,7 @@ namespace BlueBrick.MapData
                     mBrickDictionary.Add(partNumber, brick);
                     // add also the link between the TD number and the BB number if there is an available TD remap data
                     if (brick.mTDRemapData != null)
-                        brick.mTDRemapData.mTDId.addToAssociationDictionnary(mTrackDesignerPartNumberAssociation, brick);
+                        brick.mTDRemapData.mTDId.AddToAssociationDictionnary(mTrackDesignerPartNumberAssociation, brick);
                 }
                 catch
                 {
@@ -1760,11 +1762,10 @@ namespace BlueBrick.MapData
             return brick;
 		}
 
-		public Image getImage(string partNumber, ref List<PointF> boundingBox, ref List<PointF> hull)
+		public Image GetImage(string partNumber, ref List<PointF> boundingBox, ref List<PointF> hull)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if (brickRef != null)
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if (brickRef != null)
 			{
 				boundingBox = brickRef.mBoundingBox;
 				hull = brickRef.mHull;
@@ -1775,11 +1776,10 @@ namespace BlueBrick.MapData
 			return null;
 		}
 
-		public Image getImage(string partNumber)
+		public Image GetImage(string partNumber)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if (brickRef != null)
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if (brickRef != null)
 				return brickRef.Image;
 			return null;
 		}
@@ -1790,7 +1790,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="connexionTypeIndex">The index of the connection type for which you want more infos</param>
 		/// <returns>An object containing more info on the connection type</returns>
-		public ConnectionType getConnexionTypeInfo(int connexionTypeIndex)
+		public ConnectionType GetConnexionTypeInfo(int connexionTypeIndex)
 		{
 			// make sure the index if valid otherwise, return the default connection type
 			if ((connexionTypeIndex < 0) || (connexionTypeIndex >= mConnectionTypes.Count))
@@ -1798,36 +1798,33 @@ namespace BlueBrick.MapData
 			return mConnectionTypes[connexionTypeIndex];
 		}
 
-		public int getConnexionType(string partNumber, int connexionIndex)
+		public int GetConnexionType(string partNumber, int connexionIndex)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if ((brickRef != null) && (brickRef.mConnectionPoints != null))
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if ((brickRef != null) && (brickRef.mConnectionPoints != null))
 				return brickRef.mConnectionPoints[connexionIndex].mType;
 			return ConnectionType.DEFAULT;
 		}
 
-		public float getConnexionHingeAngle(int connexionType)
+		public float GetConnexionHingeAngle(int connexionType)
 		{
 			if ((connexionType >= 0) && (connexionType < mConnectionTypes.Count))
 				return mConnectionTypes[connexionType].HingeAngle;
 			return 0.0f;
 		}
 
-		public Brick.Margin getSnapMargin(string partNumber)
+		public Brick.Margin GetSnapMargin(string partNumber)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if (brickRef != null)
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if (brickRef != null)
 				return brickRef.mSnapMargin;
 			return new Brick.Margin();
 		}
 
-		public List<Brick.ConnectionPoint> getConnectionList(string partNumber)
+		public List<Brick.ConnectionPoint> GetConnectionList(string partNumber)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if (brickRef != null)
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if (brickRef != null)
 			{
 				if (brickRef.IsAGroup)
 				{
@@ -1836,7 +1833,7 @@ namespace BlueBrick.MapData
 					{
 						List<Brick.ConnectionPoint> subPartList = null;
 						if (subPart.mSubPartBrick.IsAGroup)
-							subPartList = getConnectionList(subPart.mSubPartNumber);
+							subPartList = GetConnectionList(subPart.mSubPartNumber);
 						else
 							subPartList = subPart.mSubPartBrick.mConnectionPoints;
 						// add the list if not null
@@ -1859,11 +1856,10 @@ namespace BlueBrick.MapData
 			return null;
 		}
 
-		public List<PointF> getConnectionPositionList(string partNumber)
+		public List<PointF> GetConnectionPositionList(string partNumber)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if (brickRef != null)
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if (brickRef != null)
 				return brickRef.mConnectionPositionList;
 			return null;
 		}
@@ -1875,20 +1871,18 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="partNumber">the full part number</param>
 		/// <returns>The number of connection for the specified part, or 0 if the part doesn't exist.</returns>
-		public int getConnectionCount(string partNumber)
+		public int GetConnectionCount(string partNumber)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if ((brickRef != null) && (brickRef.mConnectionPoints != null))
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if ((brickRef != null) && (brickRef.mConnectionPoints != null))
 				return brickRef.mConnectionPoints.Count;
 			return 0;
 		}
 
-		public float getConnectionAngle(string partNumber, int pointIndex)
+		public float GetConnectionAngle(string partNumber, int pointIndex)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if ((brickRef != null) && (brickRef.mConnectionPoints != null))
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if ((brickRef != null) && (brickRef.mConnectionPoints != null))
 				return brickRef.mConnectionPoints[pointIndex].mAngle;
 			return 0.0f;
 		}
@@ -1903,10 +1897,10 @@ namespace BlueBrick.MapData
 		/// <param name="partNumber2">The part number of the brick 2</param>
 		/// <param name="pointIndex2">The connection point index of brick 2 used to link to brick 1</param>
 		/// <returns>the difference of angle (in degree) to apply to brick 2 to connect it correctly to brick 1 through the specified connection points</returns>
-		public float getConnectionAngleDifference(string partNumber1, int pointIndex1, string partNumber2, int pointIndex2)
+		public float GetConnectionAngleDifference(string partNumber1, int pointIndex1, string partNumber2, int pointIndex2)
 		{
-			float angle1 = getConnectionAngle(partNumber1, pointIndex1);
-			float angle2 = getConnectionAngle(partNumber2, pointIndex2);
+			float angle1 = GetConnectionAngle(partNumber1, pointIndex1);
+			float angle2 = GetConnectionAngle(partNumber2, pointIndex2);
 			// compute the result
 			float result = angle1 + 180 - angle2;
 			// clamp the result between 0 and 360
@@ -1918,37 +1912,33 @@ namespace BlueBrick.MapData
 			return result;
 		}
 
-		public float getConnectionAngleToPrev(string partNumber, int pointIndex)
+		public float GetConnectionAngleToPrev(string partNumber, int pointIndex)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if ((brickRef != null) && (brickRef.mConnectionPoints != null))
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if ((brickRef != null) && (brickRef.mConnectionPoints != null))
 				return brickRef.mConnectionPoints[pointIndex].mAngleToPrev;
 			return 0.0f;
 		}
 
-		public float getConnectionAngleToNext(string partNumber, int pointIndex)
+		public float GetConnectionAngleToNext(string partNumber, int pointIndex)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if ((brickRef != null) && (brickRef.mConnectionPoints != null))
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if ((brickRef != null) && (brickRef.mConnectionPoints != null))
 				return brickRef.mConnectionPoints[pointIndex].mAngleToNext;
 			return 0.0f;
 		}
 
-		public int getConnectionNextPreferedIndex(string partNumber, int pointIndex)
+		public int GetConnectionNextPreferedIndex(string partNumber, int pointIndex)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if (brickRef != null)
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if (brickRef != null)
 			{
 				if (brickRef.IsAGroup)
 				{
 					if (brickRef.mGroupInfo.mGroupNextPreferedConnection != null)
 					{
-						int result = 0;
-						brickRef.mGroupInfo.mGroupNextPreferedConnection.TryGetValue(pointIndex, out result);
-						return result;
+                        brickRef.mGroupInfo.mGroupNextPreferedConnection.TryGetValue(pointIndex, out int result);
+                        return result;
 					}
 				}
 				else
@@ -1960,20 +1950,18 @@ namespace BlueBrick.MapData
 			return 0;
 		}
 
-		public List<Brick.ElectricCircuit> getElectricCircuitList(string partNumber)
+		public List<Brick.ElectricCircuit> GetElectricCircuitList(string partNumber)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if (brickRef != null)
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if (brickRef != null)
 				return brickRef.mElectricCircuitList;
 			return null;
 		}
 
-		public List<Brick.SubPart> getGroupSubPartList(string partNumber)
+		public List<Brick.SubPart> GetGroupSubPartList(string partNumber)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if ((brickRef != null) && (brickRef.mGroupInfo != null))
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if ((brickRef != null) && (brickRef.mGroupInfo != null))
 				return brickRef.mGroupInfo.mGroupSubPartList;
 			return null;
 		}
@@ -1984,45 +1972,41 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="partNumber"></param>
 		/// <returns></returns>
-		public Dictionary<string, int> getSubPartCount(string partNumber)
+		public Dictionary<string, int> GetSubPartCount(string partNumber)
 		{
 			// this will be the final result
 			Dictionary<string, int> result = new Dictionary<string,int>();
-			// try to get the sub part of this part
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if ((brickRef != null) && (brickRef.mGroupInfo != null))
+            // try to get the sub part of this part
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if ((brickRef != null) && (brickRef.mGroupInfo != null))
 				foreach (Brick.SubPart subPart in brickRef.mGroupInfo.mGroupSubPartList)
 					if (subPart.mSubPartBrick.IsAGroup)
 					{
 						// get the count of the subpart recursively
-						Dictionary<string, int> subpartCount = this.getSubPartCount(subPart.mSubPartNumber);
+						Dictionary<string, int> subpartCount = this.GetSubPartCount(subPart.mSubPartNumber);
 						// then merge it in the result
 						foreach (KeyValuePair<string, int> pair in subpartCount)
 						{
-							int value = 0;
-							if (result.TryGetValue(pair.Key, out value))
-								result.Remove(pair.Key);
-							result.Add(pair.Key, value + pair.Value);
+                            if (result.TryGetValue(pair.Key, out int value))
+                                result.Remove(pair.Key);
+                            result.Add(pair.Key, value + pair.Value);
 						}
 					}
 					else
 					{
-						// if the sub part is just a single part add it to the count
-						int value = 0;
-						if (result.TryGetValue(subPart.mSubPartNumber, out value))
-							result.Remove(subPart.mSubPartNumber);
-						result.Add(subPart.mSubPartNumber, value + 1);
+                        // if the sub part is just a single part add it to the count
+                        if (result.TryGetValue(subPart.mSubPartNumber, out int value))
+                            result.Remove(subPart.mSubPartNumber);
+                        result.Add(subPart.mSubPartNumber, value + 1);
 					}
 			// return the result
 			return result;
 		}
 
-		public string getImageURL(string partNumber)
+		public string GetImageURL(string partNumber)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if (brickRef != null)
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if (brickRef != null)
 				return brickRef.mImageURL;
 			return null;
 		}
@@ -2033,7 +2017,7 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="partNumber">the bluebrick part number</param>
 		/// <returns></returns>
-		public string[] getBrickInfo(string partNumber)
+		public string[] GetBrickInfo(string partNumber)
 		{
 			string[] result = new string[4];
 
@@ -2047,24 +2031,22 @@ namespace BlueBrick.MapData
 				// We copy the color id no matter if it is a valid id number or "set" for example
 				result[1] = partNumber.Substring(lastDotIndex + 1);
 
-				// try to parse the color id that may failed if the color is "set"
-				int colorId = 0;
-				if (int.TryParse(result[1], out colorId))
-				{
-					// try to get the name of this color (this can fail because we may have a valid color id
-					// but no name for this color in the list of color name)
-					string colorName = string.Empty;
-					if (mColorNames.TryGetValue(colorId, out colorName))
-						result[2] = colorName;
-					else
-						result[2] = BlueBrick.Properties.Resources.TextUnknown;
-				}
-				else
-				{
-					// no valid color id, this case is for the "set" for example
-					result[2] = BlueBrick.Properties.Resources.TextNA;
-				}
-			}
+                // try to parse the color id that may failed if the color is "set"
+                if (int.TryParse(result[1], out int colorId))
+                {
+                    // try to get the name of this color (this can fail because we may have a valid color id
+                    // but no name for this color in the list of color name)
+                    if (mColorNames.TryGetValue(colorId, out string colorName))
+                        result[2] = colorName;
+                    else
+                        result[2] = BlueBrick.Properties.Resources.TextUnknown;
+                }
+                else
+                {
+                    // no valid color id, this case is for the "set" for example
+                    result[2] = BlueBrick.Properties.Resources.TextNA;
+                }
+            }
 			else
 			{
 				// in case of a logo for example which doesn't have a color
@@ -2073,10 +2055,9 @@ namespace BlueBrick.MapData
 				result[2] = BlueBrick.Properties.Resources.TextNA;
 			}
 
-			// try to get the description
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if (brickRef != null)
+            // try to get the description
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if (brickRef != null)
 				result[3] = brickRef.mDescription;
 			else
 				result[3] = BlueBrick.Properties.Resources.TextUnknown;
@@ -2090,9 +2071,9 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="partNumber">the bluebrick part number</param>
 		/// <returns>A formated description of the part</returns>
-		public string getFormatedBrickInfo(string partNumber, bool withId, bool withColor, bool withDescription)
+		public string GetFormatedBrickInfo(string partNumber, bool withId, bool withColor, bool withDescription)
 		{
-			string[] partInfo = getBrickInfo(partNumber);
+			string[] partInfo = GetBrickInfo(partNumber);
 			// construct the message with part number, color and description and return it
 			string formatedInfo = "";
 			if (withId)
@@ -2117,11 +2098,10 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="partNumber">the bluebrick part number</param>
 		/// <returns>the author named as written in the XML file or an empty string (never return null)</returns>
-		public string getAuthor(string partNumber)
+		public string GetAuthor(string partNumber)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if (brickRef != null)
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if (brickRef != null)
 				return brickRef.mAuthor;
 			return string.Empty;
 		}
@@ -2131,11 +2111,10 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="partNumber">the bluebrick part number</param>
 		/// <returns>the sorting key or an empty string (never return null)</returns>
-		public string getSortingKey(string partNumber)
+		public string GetSortingKey(string partNumber)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if (brickRef != null)
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if (brickRef != null)
 				return brickRef.mSortingKey;
 			return string.Empty;
 		}
@@ -2145,11 +2124,10 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="partNumber">the bluebrick part number</param>
 		/// <returns>An instance of remap data, that contains all the information to translate the specified part into Track Designer</returns>
-		public Brick.TDRemapData getTDRemapData(string partNumber)
+		public Brick.TDRemapData GetTDRemapData(string partNumber)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if (brickRef != null)
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if (brickRef != null)
 				return brickRef.mTDRemapData;
 			return null;
 		}
@@ -2160,15 +2138,14 @@ namespace BlueBrick.MapData
 		/// <param name="partNumber">the Track Designer ID</param>
 		/// <param name="BBPartNumber">The corresponding BlueBrick part number return</param>
 		/// <returns>An instance of remap data, that contains all the information to translate the specified part into Track Designer</returns>
-		public Brick.TDRemapData getTDRemapData(int tdID, out string BBPartNumber)
+		public Brick.TDRemapData GetTDRemapData(int tdID, out string BBPartNumber)
 		{
 			// the brick that will best fit the TD id
 			Brick brickFound = null;
-			// first get the corresponding Brick list from the TD id
-			List<Brick> brickList = null;
-			mTrackDesignerPartNumberAssociation.TryGetValue(tdID, out brickList);
-			// if not null try to get the remap data for this or these Brick parts
-			if (brickList != null)
+            // first get the corresponding Brick list from the TD id
+            mTrackDesignerPartNumberAssociation.TryGetValue(tdID, out List<Brick> brickList);
+            // if not null try to get the remap data for this or these Brick parts
+            if (brickList != null)
 			{
 				if (brickList.Count == 1)
 				{
@@ -2220,11 +2197,10 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="partNumber">the bluebrick part number</param>
 		/// <returns>An instance of remap data, that contains all the information to translate the specified part into LDRAW</returns>
-		public Brick.LDrawRemapData getLDrawRemapData(string partNumber)
+		public Brick.LDrawRemapData GetLDrawRemapData(string partNumber)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if (brickRef != null)
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if (brickRef != null)
 				return brickRef.mLDrawRemapData;
 			return null;
 		}
@@ -2234,20 +2210,18 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="partNumber">the bluebrick part number</param>
 		/// <returns>An instance of remap data, that contains all the information to translate the specified part into 4DBrix</returns>
-		public Brick.FourDBrixRemapData get4DBrixRemapData(string partNumber)
+		public Brick.FourDBrixRemapData Get4DBrixRemapData(string partNumber)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if (brickRef != null)
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if (brickRef != null)
 				return brickRef.m4DBrixRemapData;
 			return null;
 		}
 
-		public Brick getBrickFrom4DBrixPartName(string fourDBrixPartName)
+		public Brick GetBrickFrom4DBrixPartName(string fourDBrixPartName)
 		{
-			Brick brickRef = null;
-			m4DBrixPartNumberAssociation.TryGetValue(fourDBrixPartName, out brickRef);
-			return brickRef;
+            m4DBrixPartNumberAssociation.TryGetValue(fourDBrixPartName, out Brick brickRef);
+            return brickRef;
 		}
 
 		/// <summary>
@@ -2255,11 +2229,10 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="partNumber">the bluebrick part number</param>
 		/// <returns>true if the brick should be skiped</returns>
-		public bool shouldBeIgnoredAtLoading(string partNumber)
+		public bool ShouldBeIgnoredAtLoading(string partNumber)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if (brickRef != null)
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if (brickRef != null)
 				return brickRef.ShouldBeIgnoredAtLoading;
 			return false;
 		}
@@ -2269,11 +2242,10 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="partNumber">the bluebrick part number</param>
 		/// <returns>true if the brick is a group</returns>
-		public bool isAGroup(string partNumber)
+		public bool IsAGroup(string partNumber)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if (brickRef != null)
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if (brickRef != null)
 				return brickRef.IsAGroup;
 			return false;
 		}
@@ -2283,11 +2255,10 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="partNumber">the bluebrick part number</param>
 		/// <returns>true if the brick is visible in the library</returns>
-		public bool isListedInLibrary(string partNumber)
+		public bool IsListedInLibrary(string partNumber)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if (brickRef != null)
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if (brickRef != null)
 				return !brickRef.NotListedInLibrary;
 			return false;
 		}
@@ -2297,11 +2268,10 @@ namespace BlueBrick.MapData
 		/// </summary>
 		/// <param name="partNumber">the bluebrick part number</param>
 		/// <returns>true if the brick is a group that can be ungrouped, false if it is not a group or a group that cannot be ungrouped</returns>
-		public bool canUngroup(string partNumber)
+		public bool CanUngroup(string partNumber)
 		{
-			Brick brickRef = null;
-			mBrickDictionary.TryGetValue(partNumber, out brickRef);
-			if (brickRef != null)
+            mBrickDictionary.TryGetValue(partNumber, out Brick brickRef);
+            if (brickRef != null)
 				return brickRef.CanUngroup;
 			return false;
 		}

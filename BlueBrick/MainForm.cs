@@ -759,16 +759,16 @@ namespace BlueBrick
 		private void loadPartLibraryFromDisk()
 		{
 			// first clear the database for precaution
-			BrickLibrary.Instance.clearAllData();
+			BrickLibrary.Instance.ClearAllData();
 			// reload first the connection type info because we will need it for loading the part library
-			BrickLibrary.Instance.loadConnectionTypeInfo();
+			BrickLibrary.Instance.LoadConnectionTypeInfo();
 			// reload the color info, because the bricks also need the color name (for correctly setting up the color name in the bubble info)
-			BrickLibrary.Instance.loadColorInfo();
+			BrickLibrary.Instance.LoadColorInfo();
 			// reinit the parts tab control (that will fill the brick library again)
 			this.PartsTabControl.initPartsTabControl();
 			// and relod the other data for the brick library (after the brick library is loaded)
-			BrickLibrary.Instance.createEntriesForRenamedParts();
-			BrickLibrary.Instance.loadTrackDesignerRegistryFileList();
+			BrickLibrary.Instance.CreateEntriesForRenamedParts();
+			BrickLibrary.Instance.LoadTrackDesignerRegistryFileList();
 		}
 
 		/// <summary>
@@ -799,7 +799,7 @@ namespace BlueBrick
 		{
 			// update the map
             if (mapUpdateType > Actions.Action.UpdateViewType.NONE)
-				this.mapPanel.updateView();
+				this.mapPanel.UpdateView();
 
 			// update the layer
             if (layerUpdateType > Actions.Action.UpdateViewType.NONE)
@@ -1154,7 +1154,7 @@ namespace BlueBrick
 				return;
 
 			// compute the size
-			RectangleF totalArea = Map.Instance.getTotalAreaInStud(true);
+			RectangleF totalArea = Map.Instance.GetTotalAreaInStud(true);
 			MapData.Tools.Distance width = new MapData.Tools.Distance(totalArea.Width, MapData.Tools.Distance.Unit.STUD);
 			MapData.Tools.Distance height = new MapData.Tools.Distance(totalArea.Height, MapData.Tools.Distance.Unit.STUD);
 
@@ -1420,7 +1420,7 @@ namespace BlueBrick
 			if (isFileValid)
 			{
 				// move the view to center of the map
-				this.mapPanel.moveViewToMapCenter();
+				this.mapPanel.MoveViewToMapCenter();
 				// update the view
 				this.updateView(Actions.Action.UpdateViewType.FULL, Actions.Action.UpdateViewType.FULL);
 				Budget.Budget.Instance.recountAllBricks();
@@ -1704,7 +1704,7 @@ namespace BlueBrick
 
 				// then clear the part lib panel and the brick library (before creating the new map)
 				this.PartsTabControl.clearAllData();
-				BrickLibrary.Instance.clearAllData();
+				BrickLibrary.Instance.ClearAllData();
 
 				// destroy the current map
 				reinitializeCurrentMap();
@@ -2342,7 +2342,7 @@ namespace BlueBrick
 				// reinit the array of shortcut
 				initShortcutKeyArrayFromSettings();
 				// update the gamma for the layer bricks because they may have changed (before redrawing the map)
-				Map.Instance.updateGammaFromSettings();
+				Map.Instance.UpdateGammaFromSettings();
 				// redraw the map because the color scheme may have changed
 				this.mapPanel.Invalidate();
 				// also redraw the undo stack
@@ -2860,7 +2860,7 @@ namespace BlueBrick
 		{
 			if (Map.Instance.SelectedLayer != null)
 			{
-				int index = Map.Instance.getIndexOf(Map.Instance.SelectedLayer);
+				int index = Map.Instance.GetIndexOf(Map.Instance.SelectedLayer);
 				if (index < Map.Instance.NumLayers - 1)
 					ActionManager.Instance.doAction(new MoveLayerUp(Map.Instance.SelectedLayer));
 			}
@@ -2870,7 +2870,7 @@ namespace BlueBrick
 		{
 			if (Map.Instance.SelectedLayer != null)
 			{
-				int index = Map.Instance.getIndexOf(Map.Instance.SelectedLayer);
+				int index = Map.Instance.GetIndexOf(Map.Instance.SelectedLayer);
 				if (index > 0)
 					ActionManager.Instance.doAction(new MoveLayerDown(Map.Instance.SelectedLayer));
 			}
@@ -3252,7 +3252,7 @@ namespace BlueBrick
 				if (mLastModifierKeyDown != e.Modifiers)
 				{
 					mLastModifierKeyDown = e.Modifiers;
-					this.mapPanel.setDefaultCursor();
+					this.mapPanel.SetDefaultCursor();
 				}
 				return;
 			}
@@ -3288,9 +3288,9 @@ namespace BlueBrick
 									{
 										// add a connected brick, or if there's no connectable brick, add a brick in the origin
 										if (brickLayer.getConnectableBrick() != null)
-											Map.Instance.addConnectBrick(shortcut.mPartName, shortcut.mConnexion);
+											Map.Instance.AddConnectBrick(shortcut.mPartName, shortcut.mConnexion);
 										else
-											Map.Instance.addBrick(shortcut.mPartName);
+											Map.Instance.AddBrick(shortcut.mPartName);
 									}
 									break;
 								}
@@ -3355,7 +3355,7 @@ namespace BlueBrick
 										if (selectedBrick != null)
 										{
 											selectedBrick.setActiveConnectionPointWithNextOne(true);
-											this.mapPanel.updateView();
+											this.mapPanel.UpdateView();
 										}
 									}
 									break;
@@ -3398,7 +3398,7 @@ namespace BlueBrick
 				// save the new modifier state
 				mLastModifierKeyDown = e.Modifiers;
 				// and change the cursor of the panel
-				this.mapPanel.setDefaultCursor();
+				this.mapPanel.SetDefaultCursor();
 				// a modifier was released anyway, we don't handle the key
 				e.Handled = false;
 			}

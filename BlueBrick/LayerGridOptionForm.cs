@@ -215,7 +215,7 @@ namespace BlueBrick
 
 		private void cellIndexOriginButton_Click(object sender, EventArgs e)
 		{
-			PointF position = Map.Instance.getMostTopLeftBrickPosition();
+			PointF position = Map.Instance.GetMostTopLeftBrickPosition();
 			int x = (int)(position.X / (int)this.gridSizeNumericUpDown.Value) - 1;
 			int y = (int)(position.Y / (int)this.gridSizeNumericUpDown.Value) - 1;
 			if (position.X < 0)

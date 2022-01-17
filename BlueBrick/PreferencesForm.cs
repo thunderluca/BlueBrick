@@ -246,7 +246,7 @@ namespace BlueBrick
 					addShortcutKey(itemNames);
 				}
 				// fill the part combobox
-				this.comboBoxPartNum.Items.AddRange(BrickLibrary.Instance.getBrickNameList());
+				this.comboBoxPartNum.Items.AddRange(BrickLibrary.Instance.GetBrickNameList());
 				// init the combobox selections (the selection for connexion is set in the event handler of the selection of part num)
 				this.comboBoxKey.SelectedIndex = 0;
 				this.comboBoxAction.SelectedIndex = 0;
@@ -395,7 +395,7 @@ namespace BlueBrick
 			{
 				// set the wait cursor because the recreation of image can take a long time
 				this.Cursor = Cursors.WaitCursor;
-				Map.Instance.recomputeBrickMipmapImages();
+				Map.Instance.RecomputeBrickMipmapImages();
 				this.Cursor = Cursors.Default;
 			}
 
@@ -1482,7 +1482,7 @@ namespace BlueBrick
 			// refill the connexion combobox according to the current selected part
 			this.comboBoxConnexion.Items.Clear();
 			// ask the list of connexion to the brick library
-			List<BrickLibrary.Brick.ConnectionPoint> connexionList = BrickLibrary.Instance.getConnectionList(this.comboBoxPartNum.SelectedItem.ToString());
+			List<BrickLibrary.Brick.ConnectionPoint> connexionList = BrickLibrary.Instance.GetConnectionList(this.comboBoxPartNum.SelectedItem.ToString());
 			int nbConnexion = 1;
 			if (connexionList != null)
 				nbConnexion = connexionList.Count;

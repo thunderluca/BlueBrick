@@ -333,7 +333,7 @@ namespace BlueBrick
 			Map.Instance = mySerializer.Deserialize(myFileStream) as Map;
             // recompute the absolute export file name, from the relative one saved in the BBM file
             // (and save temporarly in the absolute variable during the xml parsing)
-            Map.Instance.computeAbsoluteExportPathAfterLoading(filename, Map.Instance.ExportAbsoluteFileName);
+            Map.Instance.ComputeAbsoluteExportPathAfterLoading(filename, Map.Instance.ExportAbsoluteFileName);
 			// release the file stream
 			myFileStream.Close();
 			myFileStream.Dispose();
@@ -595,7 +595,7 @@ namespace BlueBrick
                 }
 
                 // then add the layer to the map
-                Map.Instance.addLayer(sCurrentLayerLoaded);
+                Map.Instance.AddLayer(sCurrentLayerLoaded);
 
 				// then clear the pointer
 				sCurrentLayerLoaded = null;
@@ -638,7 +638,7 @@ namespace BlueBrick
 				{
 					string partNumber = groupName.Substring(0, hashCodeIndex);
 					if (partNumber != string.Empty)
-						canUngroup = BrickLibrary.Instance.canUngroup(partNumber);
+						canUngroup = BrickLibrary.Instance.CanUngroup(partNumber);
 				}
 				// instanciate a new group, and add it in the hash table
 				group = new Layer.Group(canUngroup);
@@ -766,7 +766,7 @@ namespace BlueBrick
 				string partNumber = partNumberWithoutColor + "." + color;
 
 				// check if it is a sleeper that we should ignore
-				if (BrickLibrary.Instance.shouldBeIgnoredAtLoading(partNumber))
+				if (BrickLibrary.Instance.ShouldBeIgnoredAtLoading(partNumber))
 					return;
 
 				// compute the orientation angle
@@ -775,7 +775,7 @@ namespace BlueBrick
 				angle *= (float)(180.0 / Math.PI);
 
 				// check if we have some origin conversion to do
-				BrickLibrary.Brick.LDrawRemapData remapData = BrickLibrary.Instance.getLDrawRemapData(partNumber);
+				BrickLibrary.Brick.LDrawRemapData remapData = BrickLibrary.Instance.GetLDrawRemapData(partNumber);
 				if (remapData != null)
 				{
 					// cheat the angle
@@ -793,7 +793,7 @@ namespace BlueBrick
 				}
 
 				// create a new brick
-				LayerBrick.Brick brick = new LayerBrick.Brick(BrickLibrary.Instance.getActualPartNumber(partNumber));
+				LayerBrick.Brick brick = new LayerBrick.Brick(BrickLibrary.Instance.GetActualPartNumber(partNumber));
 
 				// rotate the brick (will recompute the correct OffsetFromOriginalImage)
 				brick.Orientation = angle;
@@ -1005,7 +1005,7 @@ namespace BlueBrick
 				float z = -brick.Center.Y - brick.OffsetFromOriginalImage.Y;
 
 				// get the remap data
-				BrickLibrary.Brick.LDrawRemapData remapData = BrickLibrary.Instance.getLDrawRemapData(brick.PartNumber);
+				BrickLibrary.Brick.LDrawRemapData remapData = BrickLibrary.Instance.GetLDrawRemapData(brick.PartNumber);
 
 				// check if we need to save another brick number instead
 				if (remapData != null)
@@ -1035,7 +1035,7 @@ namespace BlueBrick
 					sleeperBrick.Altitude = brick.Altitude;
 
 					// get the remap data of the sleeper
-					BrickLibrary.Brick.LDrawRemapData sleeperRemapData = BrickLibrary.Instance.getLDrawRemapData(sleeperBrick.PartNumber);
+					BrickLibrary.Brick.LDrawRemapData sleeperRemapData = BrickLibrary.Instance.GetLDrawRemapData(sleeperBrick.PartNumber);
 
 					// if we found the sleeper remap data, add the difference of height between the rail brick and the sleeper
 					if ((sleeperRemapData != null) && (sleeperBrick.Altitude != 0.0f))
@@ -1067,7 +1067,7 @@ namespace BlueBrick
 								// 2x8 plate, then we don't add it, we will add the plate instead
 								if (remapData.mSleeperBrickNumber.Equals("767"))
 								{
-									BrickLibrary.Brick.LDrawRemapData connectedBrickRemapData = BrickLibrary.Instance.getLDrawRemapData(connexion.ConnectedBrick.PartNumber);
+									BrickLibrary.Brick.LDrawRemapData connectedBrickRemapData = BrickLibrary.Instance.GetLDrawRemapData(connexion.ConnectedBrick.PartNumber);
 									if ((connectedBrickRemapData != null) && (connectedBrickRemapData.mSleeperBrickNumber != null))
 										needToAddSleeper = (connectedBrickRemapData.mSleeperBrickNumber.Equals("767"));
 								}
@@ -1077,7 +1077,7 @@ namespace BlueBrick
 						if (needToAddSleeper)
 						{
 							// set the correct position and orientation of the sleeper
-							sleeperBrick.Orientation = brick.Orientation + BrickLibrary.Instance.getConnectionAngle(brick.PartNumber, i);
+							sleeperBrick.Orientation = brick.Orientation + BrickLibrary.Instance.GetConnectionAngle(brick.PartNumber, i);
 							x = connexion.PositionInStudWorldCoord.X;
 							z = -connexion.PositionInStudWorldCoord.Y;
 							saveOneBrickInLDRAW(textWriter, sleeperBrick, partNumberAndColor, x, z, sleeperRemapData, hideBricks);
@@ -1304,7 +1304,7 @@ namespace BlueBrick
 			List<int> noRemapablePartFound = new List<int>();
 
 			// update the registry to use
-			BrickLibrary.Instance.updateCurrentTrackDesignerRegistryUsed();
+			BrickLibrary.Instance.UpdateCurrentTrackDesignerRegistryUsed();
 
 			// open the file
 			FileStream myFileStream = new FileStream(filename, FileMode.Open, FileAccess.Read);
@@ -1398,7 +1398,7 @@ namespace BlueBrick
 
 				// try to get the remap data for the BlueBrick part number
 				string BBPartNumber = null;
-				BrickLibrary.Brick.TDRemapData remapData = BrickLibrary.Instance.getTDRemapData(TDPartNumber, out BBPartNumber);
+				BrickLibrary.Brick.TDRemapData remapData = BrickLibrary.Instance.GetTDRemapData(TDPartNumber, out BBPartNumber);
 
 				// if it is a valid part, get the class of the brick to know in which layer add
 				// and then create the brick and add it to the layer
@@ -1514,19 +1514,19 @@ namespace BlueBrick
 			{
 				baseplateLayer.Name = "Baseplate";
 				baseplateLayer.updateFullBrickConnectivity();
-				Map.Instance.addLayer(baseplateLayer);
+				Map.Instance.AddLayer(baseplateLayer);
 			}
 			if (rail9VLayer.BrickList.Count > 0)
 			{
 				rail9VLayer.Name = "Rail";
 				rail9VLayer.updateFullBrickConnectivity();
-				Map.Instance.addLayer(rail9VLayer);
+				Map.Instance.AddLayer(rail9VLayer);
 			}
 			if (monorailLayer.BrickList.Count > 0)
 			{
 				monorailLayer.Name = "Monorail";
 				monorailLayer.updateFullBrickConnectivity();
-				Map.Instance.addLayer(monorailLayer);
+				Map.Instance.AddLayer(monorailLayer);
 			}
 
 			// finish the progressbar to hide it
@@ -1627,7 +1627,7 @@ namespace BlueBrick
 			MainForm.Instance.stepProgressBar();
 
 			// update the registry to use
-			BrickLibrary.Instance.updateCurrentTrackDesignerRegistryUsed();
+			BrickLibrary.Instance.UpdateCurrentTrackDesignerRegistryUsed();
 
 			// open the file
 			FileStream myFileStream = new FileStream(filename, FileMode.Create);
@@ -1708,7 +1708,7 @@ namespace BlueBrick
 		private static bool saveOneBrickInTDL(BinaryWriter binaryWriter, LayerBrick.Brick brick, bool writeSeparatorWord)
 		{
 			// try to get the remap data structure
-			BrickLibrary.Brick.TDRemapData remapData = BrickLibrary.Instance.getTDRemapData(brick.PartNumber);
+			BrickLibrary.Brick.TDRemapData remapData = BrickLibrary.Instance.GetTDRemapData(brick.PartNumber);
 
 			// check if we found the correct remap data
 			if (remapData != null)
@@ -1856,7 +1856,7 @@ namespace BlueBrick
 
 								// so now connectedBrickOtherBBConnexionIndex contain the BB connexion index, and we
 								// have to remap this index to the TD port id so get the remap data of the connect brick
-								BrickLibrary.Brick.TDRemapData connectedRemapData = BrickLibrary.Instance.getTDRemapData(connectedBrick.PartNumber);
+								BrickLibrary.Brick.TDRemapData connectedRemapData = BrickLibrary.Instance.GetTDRemapData(connectedBrick.PartNumber);
 								// if we found the remap data of the connected brick
 								if (connectedRemapData != null)
 								{
@@ -1904,7 +1904,7 @@ namespace BlueBrick
 		private static void saveTDLHeader(BinaryWriter binaryWriter, int nbTotalBricks)
 		{
 			// get the boundaries of the map
-			RectangleF boundaries = Map.Instance.getTotalAreaInStud(true);
+			RectangleF boundaries = Map.Instance.GetTotalAreaInStud(true);
 			const int margin = 5;
 			boundaries.X = (int)Math.Round(boundaries.X) - margin;
 			boundaries.Width = (int)Math.Round(boundaries.Width) + (margin * 2);
@@ -1962,7 +1962,7 @@ namespace BlueBrick
 			else
 			{
 				// get the cursor position from the left top most position (this function return (0,0) if there's no bricks)
-				cursorPosition = Map.Instance.getMostTopLeftBrickPosition();
+				cursorPosition = Map.Instance.GetMostTopLeftBrickPosition();
 			}
 
 			// save the cursor position
@@ -2130,11 +2130,11 @@ namespace BlueBrick
 			createGroupsFromSegmentAndGroupIdList(segments, groups);
 
 			// add the layers to the map in the correct order
-			Map.Instance.addLayer(new LayerGrid());
-			Map.Instance.addLayer(tableLayer);
-			Map.Instance.addLayer(baseplateLayer);
-			Map.Instance.addLayer(trackLayer);
-			Map.Instance.addLayer(structureLayer);
+			Map.Instance.AddLayer(new LayerGrid());
+			Map.Instance.AddLayer(tableLayer);
+			Map.Instance.AddLayer(baseplateLayer);
+			Map.Instance.AddLayer(trackLayer);
+			Map.Instance.AddLayer(structureLayer);
 
 			// select the track layer by default
 			Map.Instance.SelectedLayer = trackLayer;
@@ -2327,7 +2327,7 @@ namespace BlueBrick
 			foreach (FourDBrixSegment segment in segments)
 			{
 				// first try to find the equivalent brick in the brick library
-				BrickLibrary.Brick libBrick = BrickLibrary.Instance.getBrickFrom4DBrixPartName(segment.mPartId);
+				BrickLibrary.Brick libBrick = BrickLibrary.Instance.GetBrickFrom4DBrixPartName(segment.mPartId);
 				// if we found a brick in the brick library matching the 4DBrix part name, we can add the brick to the current layer
 				if (libBrick != null)
 				{
@@ -2422,7 +2422,7 @@ namespace BlueBrick
 				if (partNumber != string.Empty)
 				{
 					// check if we can find the equivalent brick in the library
-					BrickLibrary.Brick libBrick = BrickLibrary.Instance.getBrickFrom4DBrixPartName(partNumber);
+					BrickLibrary.Brick libBrick = BrickLibrary.Instance.GetBrickFrom4DBrixPartName(partNumber);
 					// if we found a brick in the brick library matching the 4DBrix part name, we can add the brick to the current layer
 					if (libBrick != null)
 					{
@@ -2546,7 +2546,7 @@ namespace BlueBrick
 		private static void saveHeaderIn4DBrix(StreamWriter textWriter, string filename)
 		{
 			// get the total area of the map (as we will need to save it
-			RectangleF totalArea = Map.Instance.getTotalAreaInStud(true);
+			RectangleF totalArea = Map.Instance.GetTotalAreaInStud(true);
 
 			// get the File Info of the current file if it already exists (for the creation date)
 			string dateTimeFormat = "d-MMM-yyyy, HH:mm:ss";
@@ -2606,7 +2606,7 @@ namespace BlueBrick
 												"\" z=\"" + z.ToString(System.Globalization.CultureInfo.InvariantCulture) + "\"/>");
 			textWriter.WriteLine("      <segments a=\"" + ConnectedBrickAId + "\" b=\"" + ConnectedBrickBId + "\"/>");
 			textWriter.WriteLine("      <anchor value=\"no\"/>");
-			BrickLibrary.ConnectionType connectionType = BrickLibrary.Instance.getConnexionTypeInfo(connectionPoint.Type);
+			BrickLibrary.ConnectionType connectionType = BrickLibrary.Instance.GetConnexionTypeInfo(connectionPoint.Type);
 			textWriter.WriteLine("      <type value=\"" + connectionType.FourDBrixName + "\"/>");
 			textWriter.WriteLine("   </node>");
 		}
@@ -2726,7 +2726,7 @@ namespace BlueBrick
 				{
 					// the width and height are the one of the baseplate without rotation for ncontrol, so we ask it to the part library
 					// nControl wants the baseplate size is in millimeter, one stud = 8 mm, and the brick resolution is 8 pixel per stud. So 1 px = 1 mm, we can use the image size in pixel.
-					Image brickImage = BrickLibrary.Instance.getImage(part.mBrick.PartNumber);
+					Image brickImage = BrickLibrary.Instance.GetImage(part.mBrick.PartNumber);
 					textWriter.WriteLine("      <size height=\"" + brickImage.Height + "\" width=\"" + brickImage.Width + "\"/>");
 				}
 				textWriter.WriteLine("   </" + partTag + ">");
@@ -2813,7 +2813,7 @@ namespace BlueBrick
 						}
 
 						// create a struct to combine the remap data and the brick
-						FourDBrixPart part = new FourDBrixPart() { mRemapData = BrickLibrary.Instance.get4DBrixRemapData(brick.PartNumber), mBrick = brick };
+						FourDBrixPart part = new FourDBrixPart() { mRemapData = BrickLibrary.Instance.Get4DBrixRemapData(brick.PartNumber), mBrick = brick };
 						// add the part in the correct list according to the remapdata type (if it exists, otherwise, ignore the part)
 						if (part.mRemapData != null)
 						{

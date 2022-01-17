@@ -45,7 +45,7 @@ namespace BlueBrick.Actions.Bricks
 				{
 					int firstIndex = firstConnection.mMyBrick.ConnectionPoints.IndexOf(firstConnection);
 					int secondIndex = secondConnection.mMyBrick.ConnectionPoints.IndexOf(secondConnection);
-					mAngleBetween = BrickLibrary.Instance.getConnectionAngleDifference(secondConnection.mMyBrick.PartNumber, secondIndex,
+					mAngleBetween = BrickLibrary.Instance.GetConnectionAngleDifference(secondConnection.mMyBrick.PartNumber, secondIndex,
 																					firstConnection.mMyBrick.PartNumber, firstIndex);
 				}
 				else
@@ -143,7 +143,7 @@ namespace BlueBrick.Actions.Bricks
 				// if there's only one connection, if must be a flexible one, and 
 				// the starting connection will be the brick itself
 				// and the only connection will be the second one from which starting the chain
-				if (BrickLibrary.Instance.getConnexionHingeAngle(grabbedTrack.ConnectionPoints[0].Type) == 0.0f)
+				if (BrickLibrary.Instance.GetConnexionHingeAngle(grabbedTrack.ConnectionPoints[0].Type) == 0.0f)
 					return;
 			}
 			else
@@ -225,7 +225,7 @@ namespace BlueBrick.Actions.Bricks
 			if (connectionLead != null)
 			{
 				// set the flag if not already true
-				isConnectionLeadingToFlexiblePart |= (BrickLibrary.Instance.getConnexionHingeAngle(connectionLead.Type) != 0.0f);
+				isConnectionLeadingToFlexiblePart |= (BrickLibrary.Instance.GetConnexionHingeAngle(connectionLead.Type) != 0.0f);
 				// if we found a flexible part, stop following the path
 				if (isConnectionLeadingToFlexiblePart)
 				{
@@ -275,8 +275,8 @@ namespace BlueBrick.Actions.Bricks
 			LayerBrick.Brick.ConnectionPoint grabbedFirstConnection = grabbedTrack.ConnectionPoints[0];
 			LayerBrick.Brick.ConnectionPoint grabbedSecondConnection = grabbedTrack.ConnectionPoints[1];
 			// by preference choose the not flexible connection on the grabbed part
-			float firstHingeAngle = BrickLibrary.Instance.getConnexionHingeAngle(grabbedFirstConnection.Type);
-			float secondHingeAngle = BrickLibrary.Instance.getConnexionHingeAngle(grabbedSecondConnection.Type);
+			float firstHingeAngle = BrickLibrary.Instance.GetConnexionHingeAngle(grabbedFirstConnection.Type);
+			float secondHingeAngle = BrickLibrary.Instance.GetConnexionHingeAngle(grabbedSecondConnection.Type);
 			if (firstHingeAngle != 0.0f && secondHingeAngle == 0.0f)
 				return grabbedSecondConnection;
 			else if (firstHingeAngle == 0.0f && secondHingeAngle != 0.0f)
@@ -381,7 +381,7 @@ namespace BlueBrick.Actions.Bricks
 				mFlexChainList.Insert(0, link);
 
 				// check if the connection can rotate (if it is an hinge)
-				float hingeAngle = BrickLibrary.Instance.getConnexionHingeAngle(currentSecondConnection.Type);
+				float hingeAngle = BrickLibrary.Instance.GetConnexionHingeAngle(currentSecondConnection.Type);
 				if (hingeAngle != 0.0f)
 				{
 					// advance the hinge conncetion

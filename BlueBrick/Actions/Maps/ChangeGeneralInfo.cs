@@ -13,6 +13,7 @@
 // GNU General Public License for more details.
 
 using System;
+using System.Collections.Generic;
 using BlueBrick.MapData;
 
 namespace BlueBrick.Actions.Maps
@@ -28,15 +29,25 @@ namespace BlueBrick.Actions.Maps
 			public string mComment = null;
 			public override bool Equals(object obj)
 			{
-				GeneralMapInfo other = obj as GeneralMapInfo;
-				if (other != null)
-					return other.mAuthor.Equals(this.mAuthor) && other.mLUG.Equals(this.mLUG) && other.mEvent.Equals(this.mEvent) && other.mDate.Equals(this.mDate) && other.mComment.Equals(this.mComment);
-				return false;
+                if (obj is GeneralMapInfo other)
+                    return other.mAuthor.Equals(this.mAuthor) && other.mLUG.Equals(this.mLUG) && other.mEvent.Equals(this.mEvent) && other.mDate.Equals(this.mDate) && other.mComment.Equals(this.mComment);
+                return false;
 			}
-		}
 
-		private GeneralMapInfo oldInfo = new GeneralMapInfo();
-		private GeneralMapInfo newInfo = new GeneralMapInfo();
+            public override int GetHashCode()
+            {
+                int hashCode = -1319741560;
+                hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(mAuthor);
+                hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(mLUG);
+                hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(mEvent);
+                hashCode = hashCode * -1521134295 + mDate.GetHashCode();
+                hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(mComment);
+                return hashCode;
+            }
+        }
+
+		private readonly GeneralMapInfo oldInfo = new GeneralMapInfo();
+		private readonly GeneralMapInfo newInfo = new GeneralMapInfo();
 
 		public ChangeGeneralInfo(string author, string lug, string show, DateTime date, string comment)
 		{
@@ -83,12 +94,23 @@ namespace BlueBrick.Actions.Maps
 
 		public override bool Equals(object obj)
 		{
-			// we only change the new data, to know if something new will be changed
-			ChangeGeneralInfo other = obj as ChangeGeneralInfo;
-			if (other != null)
-				return other.newInfo.Equals(this.newInfo);
-			// if the specified action is not of the same type as me, for sure it is different
-			return false;
+            // we only change the new data, to know if something new will be changed
+            if (obj is ChangeGeneralInfo other)
+                return other.newInfo.Equals(this.newInfo);
+            // if the specified action is not of the same type as me, for sure it is different
+            return false;
 		}
-	}
+
+        public override int GetHashCode()
+        {
+            int hashCode = -1652883639;
+            hashCode = hashCode * -1521134295 + mUpdateMapView.GetHashCode();
+            hashCode = hashCode * -1521134295 + mUpdateLayerView.GetHashCode();
+            hashCode = hashCode * -1521134295 + UpdateMapView.GetHashCode();
+            hashCode = hashCode * -1521134295 + UpdateLayerView.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<GeneralMapInfo>.Default.GetHashCode(oldInfo);
+            hashCode = hashCode * -1521134295 + EqualityComparer<GeneralMapInfo>.Default.GetHashCode(newInfo);
+            return hashCode;
+        }
+    }
 }

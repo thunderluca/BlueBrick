@@ -46,7 +46,7 @@ namespace BlueBrick
 			public IconEntry(string partNumber, ImageList imageList)
 			{
 				// get the image of the part from the library
-				Image originalPartImage = BrickLibrary.Instance.getImage(partNumber);
+				Image originalPartImage = BrickLibrary.Instance.GetImage(partNumber);
 				// create a snapshot of the current image and replace it in the two image lists
 				// but to avoid a stretching effect, we redraw the picture in a square
 				// first compute the position and size of the bitmap to draw
@@ -98,7 +98,7 @@ namespace BlueBrick
 				mImageIndex = imageIndex;
 
 				// get the description and color from the database
-				string[] brickInfo = BrickLibrary.Instance.getBrickInfo(mPartNumber);
+				string[] brickInfo = BrickLibrary.Instance.GetBrickInfo(mPartNumber);
 				// the first text of the array must be the part number because it is treated as the item text itself
 				// and the columns are defined in this order: part, quantity, color and description
 				// even if the display order is different (quantity, part, color and description)
@@ -1140,7 +1140,7 @@ namespace BlueBrick
 							string partNumber = text;
 							if (colorNum != string.Empty)
 								partNumber += "." + colorNum;
-							string imageURL = BrickLibrary.Instance.getImageURL(partNumber);
+							string imageURL = BrickLibrary.Instance.GetImageURL(partNumber);
 							if (imageURL == null)
 								imageURL = colorNum + "/" + text.ToLower() + ".png";
 							// construct the text for the IMG tag

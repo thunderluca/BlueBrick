@@ -64,7 +64,7 @@ namespace BlueBrick
 		private bool mIsMouseHandledByMap = false;
 		private Point mSelectionRectangleInitialPosition = new Point();
 		private Rectangle mSelectionRectangle = new Rectangle();
-		private Pen mSelectionRectanglePen = new Pen(Color.Black, 2);
+		private readonly Pen mSelectionRectanglePen = new Pen(Color.Black, 2);
 
         // adjust the map area size if the status bar or scrollbar are displayed
 		private int mCurrentStatusBarHeight = 0;
@@ -129,9 +129,9 @@ namespace BlueBrick
 				if (mViewScale != oldValue)
 				{
 					// call map notification
-					Map.Instance.zoomScaleChangeNotification(oldValue, mViewScale);
+					Map.Instance.ZoomScaleChangeNotification(oldValue, mViewScale);
 					// update the scrollbars
-					updateScrollbarSize();
+					UpdateScrollbarSize();
 					// invalidate the panel, since we must redraw it to handle the new scale
 					Invalidate();
 				}
@@ -163,33 +163,33 @@ namespace BlueBrick
 		{
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapPanel));
-			this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.bringToFrontToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.sendToBackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.selectToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
-			this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.deselectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.selectPathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.groupToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
-			this.groupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.ungroupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.attachRulerToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
-			this.attachToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.detachToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.useAsModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.propertiesToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
-			this.propertiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.appearanceToolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
-			this.scrollBarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.horizontalScrollBar = new System.Windows.Forms.HScrollBar();
-			this.verticalScrollBar = new System.Windows.Forms.VScrollBar();
+			this.contextMenuStrip = new ContextMenuStrip(this.components);
+			this.bringToFrontToolStripMenuItem = new ToolStripMenuItem();
+			this.sendToBackToolStripMenuItem = new ToolStripMenuItem();
+			this.selectToolStripSeparator = new ToolStripSeparator();
+			this.selectAllToolStripMenuItem = new ToolStripMenuItem();
+			this.deselectAllToolStripMenuItem = new ToolStripMenuItem();
+			this.selectPathToolStripMenuItem = new ToolStripMenuItem();
+			this.groupToolStripSeparator = new ToolStripSeparator();
+			this.groupToolStripMenuItem = new ToolStripMenuItem();
+			this.ungroupToolStripMenuItem = new ToolStripMenuItem();
+			this.attachRulerToolStripSeparator = new ToolStripSeparator();
+			this.attachToolStripMenuItem = new ToolStripMenuItem();
+			this.detachToolStripMenuItem = new ToolStripMenuItem();
+			this.useAsModelToolStripMenuItem = new ToolStripMenuItem();
+			this.propertiesToolStripSeparator = new ToolStripSeparator();
+			this.propertiesToolStripMenuItem = new ToolStripMenuItem();
+			this.appearanceToolStripSeparator = new ToolStripSeparator();
+			this.scrollBarToolStripMenuItem = new ToolStripMenuItem();
+			this.horizontalScrollBar = new HScrollBar();
+			this.verticalScrollBar = new VScrollBar();
 			this.contextMenuStrip.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// contextMenuStrip
 			// 
 			resources.ApplyResources(this.contextMenuStrip, "contextMenuStrip");
-			this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.contextMenuStrip.Items.AddRange(new ToolStripItem[] {
             this.bringToFrontToolStripMenuItem,
             this.sendToBackToolStripMenuItem,
             this.selectToolStripSeparator,
@@ -208,19 +208,19 @@ namespace BlueBrick
             this.appearanceToolStripSeparator,
             this.scrollBarToolStripMenuItem});
 			this.contextMenuStrip.Name = "contextMenuStrip";
-			this.contextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_Opening);
+			this.contextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStrip_Opening);
 			// 
 			// bringToFrontToolStripMenuItem
 			// 
 			resources.ApplyResources(this.bringToFrontToolStripMenuItem, "bringToFrontToolStripMenuItem");
 			this.bringToFrontToolStripMenuItem.Name = "bringToFrontToolStripMenuItem";
-			this.bringToFrontToolStripMenuItem.Click += new System.EventHandler(this.bringToFrontToolStripMenuItem_Click);
+			this.bringToFrontToolStripMenuItem.Click += this.BringToFrontToolStripMenuItem_Click;
 			// 
 			// sendToBackToolStripMenuItem
 			// 
 			resources.ApplyResources(this.sendToBackToolStripMenuItem, "sendToBackToolStripMenuItem");
 			this.sendToBackToolStripMenuItem.Name = "sendToBackToolStripMenuItem";
-			this.sendToBackToolStripMenuItem.Click += new System.EventHandler(this.sendToBackToolStripMenuItem_Click);
+			this.sendToBackToolStripMenuItem.Click += this.SendToBackToolStripMenuItem_Click;
 			// 
 			// selectToolStripSeparator
 			// 
@@ -231,19 +231,19 @@ namespace BlueBrick
 			// 
 			resources.ApplyResources(this.selectAllToolStripMenuItem, "selectAllToolStripMenuItem");
 			this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-			this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
+			this.selectAllToolStripMenuItem.Click += this.SelectAllToolStripMenuItem_Click;
 			// 
 			// deselectAllToolStripMenuItem
 			// 
 			resources.ApplyResources(this.deselectAllToolStripMenuItem, "deselectAllToolStripMenuItem");
 			this.deselectAllToolStripMenuItem.Name = "deselectAllToolStripMenuItem";
-			this.deselectAllToolStripMenuItem.Click += new System.EventHandler(this.deselectAllToolStripMenuItem_Click);
+			this.deselectAllToolStripMenuItem.Click += this.DeselectAllToolStripMenuItem_Click;
 			// 
 			// selectPathToolStripMenuItem
 			// 
 			resources.ApplyResources(this.selectPathToolStripMenuItem, "selectPathToolStripMenuItem");
 			this.selectPathToolStripMenuItem.Name = "selectPathToolStripMenuItem";
-			this.selectPathToolStripMenuItem.Click += new System.EventHandler(this.selectPathToolStripMenuItem_Click);
+			this.selectPathToolStripMenuItem.Click += this.SelectPathToolStripMenuItem_Click;
 			// 
 			// groupToolStripSeparator
 			// 
@@ -254,13 +254,13 @@ namespace BlueBrick
 			// 
 			resources.ApplyResources(this.groupToolStripMenuItem, "groupToolStripMenuItem");
 			this.groupToolStripMenuItem.Name = "groupToolStripMenuItem";
-			this.groupToolStripMenuItem.Click += new System.EventHandler(this.groupToolStripMenuItem_Click);
+			this.groupToolStripMenuItem.Click += this.GroupToolStripMenuItem_Click;
 			// 
 			// ungroupToolStripMenuItem
 			// 
 			resources.ApplyResources(this.ungroupToolStripMenuItem, "ungroupToolStripMenuItem");
 			this.ungroupToolStripMenuItem.Name = "ungroupToolStripMenuItem";
-			this.ungroupToolStripMenuItem.Click += new System.EventHandler(this.ungroupToolStripMenuItem_Click);
+			this.ungroupToolStripMenuItem.Click += this.UngroupToolStripMenuItem_Click;
 			// 
 			// attachRulerToolStripSeparator
 			// 
@@ -271,19 +271,19 @@ namespace BlueBrick
 			// 
 			resources.ApplyResources(this.attachToolStripMenuItem, "attachToolStripMenuItem");
 			this.attachToolStripMenuItem.Name = "attachToolStripMenuItem";
-			this.attachToolStripMenuItem.Click += new System.EventHandler(this.attachToolStripMenuItem_Click);
+			this.attachToolStripMenuItem.Click += this.AttachToolStripMenuItem_Click;
 			// 
 			// detachToolStripMenuItem
 			// 
 			resources.ApplyResources(this.detachToolStripMenuItem, "detachToolStripMenuItem");
 			this.detachToolStripMenuItem.Name = "detachToolStripMenuItem";
-			this.detachToolStripMenuItem.Click += new System.EventHandler(this.detachToolStripMenuItem_Click);
+			this.detachToolStripMenuItem.Click += this.DetachToolStripMenuItem_Click;
 			// 
 			// useAsModelToolStripMenuItem
 			// 
 			resources.ApplyResources(this.useAsModelToolStripMenuItem, "useAsModelToolStripMenuItem");
 			this.useAsModelToolStripMenuItem.Name = "useAsModelToolStripMenuItem";
-			this.useAsModelToolStripMenuItem.Click += new System.EventHandler(this.useAsModelToolStripMenuItem_Click);
+			this.useAsModelToolStripMenuItem.Click += this.UseAsModelToolStripMenuItem_Click;
 			// 
 			// propertiesToolStripSeparator
 			// 
@@ -294,7 +294,7 @@ namespace BlueBrick
 			// 
 			resources.ApplyResources(this.propertiesToolStripMenuItem, "propertiesToolStripMenuItem");
 			this.propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
-			this.propertiesToolStripMenuItem.Click += new System.EventHandler(this.propertiesToolStripMenuItem_Click);
+			this.propertiesToolStripMenuItem.Click += this.PropertiesToolStripMenuItem_Click;
 			// 
 			// appearanceToolStripSeparator
 			// 
@@ -306,21 +306,21 @@ namespace BlueBrick
 			resources.ApplyResources(this.scrollBarToolStripMenuItem, "scrollBarToolStripMenuItem");
 			this.scrollBarToolStripMenuItem.CheckOnClick = true;
 			this.scrollBarToolStripMenuItem.Name = "scrollBarToolStripMenuItem";
-			this.scrollBarToolStripMenuItem.Click += new System.EventHandler(this.scrollBarToolStripMenuItem_Click);
+			this.scrollBarToolStripMenuItem.Click += this.ScrollBarToolStripMenuItem_Click;
 			// 
 			// horizontalScrollBar
 			// 
 			resources.ApplyResources(this.horizontalScrollBar, "horizontalScrollBar");
 			this.horizontalScrollBar.Name = "horizontalScrollBar";
-			this.horizontalScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.horizontalScrollBar_Scroll);
-			this.horizontalScrollBar.MouseEnter += new System.EventHandler(this.horizontalScrollBar_MouseEnter);
+			this.horizontalScrollBar.Scroll += this.HorizontalScrollBar_Scroll;
+			this.horizontalScrollBar.MouseEnter += this.HorizontalScrollBar_MouseEnter;
 			// 
 			// verticalScrollBar
 			// 
 			resources.ApplyResources(this.verticalScrollBar, "verticalScrollBar");
 			this.verticalScrollBar.Name = "verticalScrollBar";
-			this.verticalScrollBar.Scroll += new System.Windows.Forms.ScrollEventHandler(this.verticalScrollBar_Scroll);
-			this.verticalScrollBar.MouseEnter += new System.EventHandler(this.verticalScrollBar_MouseEnter);
+			this.verticalScrollBar.Scroll += this.VerticalScrollBar_Scroll;
+			this.verticalScrollBar.MouseEnter += this.VerticalScrollBar_MouseEnter;
 			// 
 			// MapPanel
 			// 
@@ -329,22 +329,22 @@ namespace BlueBrick
 			this.ContextMenuStrip = this.contextMenuStrip;
 			this.Controls.Add(this.horizontalScrollBar);
 			this.Controls.Add(this.verticalScrollBar);
-			this.SizeChanged += new System.EventHandler(this.MapPanel_SizeChanged);
-			this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MapPanel_DragDrop);
-			this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MapPanel_DragEnter);
-			this.DragOver += new System.Windows.Forms.DragEventHandler(this.MapPanel_DragOver);
-			this.DragLeave += new System.EventHandler(this.MapPanel_DragLeave);
-			this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MapPanel_MouseDown);
-			this.MouseEnter += new System.EventHandler(this.MapPanel_MouseEnter);
-			this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MapPanel_MouseMove);
-			this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MapPanel_MouseUp);
-			this.Resize += new System.EventHandler(this.MapPanel_Resize);
+			this.SizeChanged += this.MapPanel_SizeChanged;
+			this.DragDrop += this.MapPanel_DragDrop;
+			this.DragEnter += this.MapPanel_DragEnter;
+			this.DragOver += this.MapPanel_DragOver;
+			this.DragLeave += this.MapPanel_DragLeave;
+			this.MouseDown += this.MapPanel_MouseDown;
+			this.MouseEnter += this.MapPanel_MouseEnter;
+			this.MouseMove += this.MapPanel_MouseMove;
+			this.MouseUp += this.MapPanel_MouseUp;
+			this.Resize += this.MapPanel_Resize;
 			this.contextMenuStrip.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
 
-		public void updateView()
+		public void UpdateView()
 		{
 			// nothing special except invalidate the view
 			Invalidate();
@@ -405,8 +405,8 @@ namespace BlueBrick
 			float startXInStud = (float)mViewCornerX;
 			float startYInStud = (float)mViewCornerY;
 			RectangleF rectangle = new RectangleF(startXInStud, startYInStud, widthInStud, heightInStud);
-			Map.Instance.draw(g, rectangle, mViewScale, true);
-			Map.Instance.drawWatermark(g, rectangle, mViewScale);
+			Map.Instance.Draw(g, rectangle, mViewScale, true);
+			Map.Instance.DrawWatermark(g, rectangle, mViewScale);
 
 			// on top of all the layer draw the selection rectangle
 			if (mIsSelectionRectangleOn)
@@ -426,16 +426,16 @@ namespace BlueBrick
 //for debug FPS			g.DrawString(delta.Ticks.ToString(), new Font(FontFamily.GenericMonospace,12), Brushes.Black, 0, 0);
 		}
 
-		public void moveViewToMapCenter()
+		public void MoveViewToMapCenter()
 		{
 			float halfViewWidthInStud = (float)(this.Size.Width / (mViewScale * 2));
 			float halfViewHeightInStud = (float)(this.Size.Height / (mViewScale * 2));
 			// get the total area of the map
-			mMapTotalAreaInStud = Map.Instance.getTotalAreaInStud(false);
+			mMapTotalAreaInStud = Map.Instance.GetTotalAreaInStud(false);
 			mViewCornerX = ((mMapTotalAreaInStud.Left + mMapTotalAreaInStud.Right) / 2) - halfViewWidthInStud;
 			mViewCornerY = ((mMapTotalAreaInStud.Top + mMapTotalAreaInStud.Bottom) / 2) - halfViewHeightInStud;
 			// and update the scroll bar as we changed the view corner, and also the whole map may have changed
-			updateScrollbarSize();
+			UpdateScrollbarSize();
 		}
 		#endregion
 	
@@ -444,34 +444,35 @@ namespace BlueBrick
 		/// <summary>
 		/// Set the default Cursor on the map according to the current selected layer
 		/// </summary>
-		private Cursor getDefaultCursor(PointF mouseCoordInStud)
+		private Cursor GetDefaultCursor(PointF mouseCoordInStud)
 		{
 			if (Map.Instance.SelectedLayer != null)
 				return Map.Instance.SelectedLayer.getDefaultCursorWithoutMouseClick(mouseCoordInStud);
 			return Cursors.Default;
 		}
 
-		public void setDefaultCursor()
+		public void SetDefaultCursor()
 		{
-			this.Cursor = getDefaultCursor(getPointCoordInStud(this.PointToClient(Cursor.Position)));
+			this.Cursor = GetDefaultCursor(GetPointCoordInStud(this.PointToClient(Cursor.Position)));
 		}
 
-		private PointF getPointCoordInStud(Point pointCoordInPixel)
+		private PointF GetPointCoordInStud(Point pointCoordInPixel)
 		{
-			PointF pointCoordInStud = new PointF();
-			pointCoordInStud.X = (float)(mViewCornerX + (pointCoordInPixel.X / mViewScale));
-			pointCoordInStud.Y = (float)(mViewCornerY + (pointCoordInPixel.Y / mViewScale));
-			return pointCoordInStud;
+            return new PointF
+            {
+                X = (float)(mViewCornerX + (pointCoordInPixel.X / mViewScale)),
+                Y = (float)(mViewCornerY + (pointCoordInPixel.Y / mViewScale))
+            };
 		}
 
-		private PointF getMouseCoordInStud(MouseEventArgs e)
+		private PointF GetMouseCoordInStud(MouseEventArgs e)
 		{
-			return getPointCoordInStud(e.Location);
+			return GetPointCoordInStud(e.Location);
 		}
 
-		private PointF getScreenPointInStud(Point pointInScreenCoord)
+		private PointF GetScreenPointInStud(Point pointInScreenCoord)
 		{
-			return getPointCoordInStud(pointInScreenCoord);
+			return GetPointCoordInStud(pointInScreenCoord);
 		}
 
 		private void MapPanel_MouseDown(object sender, MouseEventArgs e)
@@ -483,8 +484,8 @@ namespace BlueBrick
 			this.Focus();
 
 			// the cursor to set according to the action
-			mLastDownMouseCoordInStud = getMouseCoordInStud(e);
-			Cursor preferedCursor = getDefaultCursor(mLastDownMouseCoordInStud);
+			mLastDownMouseCoordInStud = GetMouseCoordInStud(e);
+			Cursor preferedCursor = GetDefaultCursor(mLastDownMouseCoordInStud);
 
 			// then dispatch the event
 			switch (e.Button)
@@ -495,10 +496,10 @@ namespace BlueBrick
 						// this is the pan with the keys, not the wheel
 						actionToDo = ActionToDoInMouseEvent.SCROLL_VIEW;
 					}
-					else if (Map.Instance.handleMouseDown(e, mLastDownMouseCoordInStud, ref preferedCursor))
+					else if (Map.Instance.HandleMouseDown(e, mLastDownMouseCoordInStud, ref preferedCursor))
 					{
 						// left button is handle by layers (so give it to the map)
-						mustRefreshView = Map.Instance.mouseDown(e, mLastDownMouseCoordInStud);
+						mustRefreshView = Map.Instance.MouseDown(e, mLastDownMouseCoordInStud);
 						mIsMouseHandledByMap = true;
 					}
 					else if ((Map.Instance.SelectedLayer != null) && (Map.Instance.SelectedLayer.Visible))
@@ -530,10 +531,10 @@ namespace BlueBrick
 					{
 						actionToDo = ActionToDoInMouseEvent.ZOOM_VIEW;
 					}
-					else if (Map.Instance.handleMouseDown(e, mLastDownMouseCoordInStud, ref preferedCursor))
+					else if (Map.Instance.HandleMouseDown(e, mLastDownMouseCoordInStud, ref preferedCursor))
 					{
 						// right button is handle by layers (so give it to the map)
-						mustRefreshView = Map.Instance.mouseDown(e, mLastDownMouseCoordInStud);
+						mustRefreshView = Map.Instance.MouseDown(e, mLastDownMouseCoordInStud);
 						mIsMouseHandledByMap = true;
 					}
 
@@ -561,14 +562,14 @@ namespace BlueBrick
 
 			// check if we need to update the view
 			if (mustRefreshView)
-				updateView();
+				UpdateView();
 		}
 
 		private void MapPanel_MouseMove(object sender, MouseEventArgs e)
 		{
 			ActionToDoInMouseEvent actionToDo = ActionToDoInMouseEvent.NONE;
 			bool mustRefreshView = false;
-			PointF mouseCoordInStud = getMouseCoordInStud(e);
+			PointF mouseCoordInStud = GetMouseCoordInStud(e);
 			string statusBarMessage = "(" + mouseCoordInStud.X.ToString("F1") + " / " + mouseCoordInStud.Y.ToString("F1") + ") ";
 			Cursor preferedCursor = this.Cursor;
 
@@ -592,7 +593,7 @@ namespace BlueBrick
 					else if (mIsMouseHandledByMap)
 					{
 						// left button is handle by layers (so give it to the map)
-						mustRefreshView = Map.Instance.mouseMove(e, mouseCoordInStud, ref preferedCursor);
+						mustRefreshView = Map.Instance.MouseMove(e, mouseCoordInStud, ref preferedCursor);
 						this.Cursor = preferedCursor;
 					}
 					else if (mIsZooming)
@@ -614,7 +615,7 @@ namespace BlueBrick
 					if (mIsMouseHandledByMap)
 					{
 						// left button is handle by layers (so give it to the map)
-						mustRefreshView = Map.Instance.mouseMove(e, mouseCoordInStud, ref preferedCursor);
+						mustRefreshView = Map.Instance.MouseMove(e, mouseCoordInStud, ref preferedCursor);
 						this.Cursor = preferedCursor;
 					}
 					else if (mIsZooming)
@@ -625,48 +626,46 @@ namespace BlueBrick
 
 				case MouseButtons.None:
 					// if the map also want to handle this free move, call it
-					preferedCursor = getDefaultCursor(mouseCoordInStud);
-					mIsMouseHandledByMap = Map.Instance.handleMouseMoveWithoutClick(e, mouseCoordInStud, ref preferedCursor);
+					preferedCursor = GetDefaultCursor(mouseCoordInStud);
+					mIsMouseHandledByMap = Map.Instance.HandleMouseMoveWithoutClick(e, mouseCoordInStud, ref preferedCursor);
 					if (mIsMouseHandledByMap)
-						mustRefreshView = Map.Instance.mouseMove(e, mouseCoordInStud, ref preferedCursor);
+						mustRefreshView = Map.Instance.MouseMove(e, mouseCoordInStud, ref preferedCursor);
 					// set the cursor with the preference
 					this.Cursor = preferedCursor;
 
 					// nothing to do if we didn't move
 					if ((mLastMousePos.X != e.X) || (mLastMousePos.Y != e.Y))
 					{
-						// if there's a brick under the mouse, and the player don't use a button,
-						// display the description of the brick in the status bar
-						LayerBrick brickLayer = Map.Instance.SelectedLayer as LayerBrick;
-						if (brickLayer != null)
-						{
-							LayerBrick.Brick brickUnderMouse = brickLayer.getBrickUnderMouse(mouseCoordInStud);
-							if (brickUnderMouse != null)
-								statusBarMessage += BrickLibrary.Instance.getFormatedBrickInfo(brickUnderMouse.PartNumber, true, true, true);
-						}
-						else
-						{
-							LayerText textLayer = Map.Instance.SelectedLayer as LayerText;
-							if (textLayer != null)
-							{
-								LayerText.TextCell textUnderMouse = textLayer.getTextCellUnderMouse(mouseCoordInStud);
-								if (textUnderMouse != null)
-								{
-									statusBarMessage += textUnderMouse.Text.Replace("\r", "");
-									statusBarMessage = statusBarMessage.Replace('\n', ' ');
-									if (statusBarMessage.Length > 80)
-										statusBarMessage = statusBarMessage.Substring(0, 80) + "...";
-								}
-							}
-						}
-					}
+                        // if there's a brick under the mouse, and the player don't use a button,
+                        // display the description of the brick in the status bar
+                        if (Map.Instance.SelectedLayer is LayerBrick brickLayer)
+                        {
+                            LayerBrick.Brick brickUnderMouse = brickLayer.getBrickUnderMouse(mouseCoordInStud);
+                            if (brickUnderMouse != null)
+                                statusBarMessage += BrickLibrary.Instance.GetFormatedBrickInfo(brickUnderMouse.PartNumber, true, true, true);
+                        }
+                        else
+                        {
+                            if (Map.Instance.SelectedLayer is LayerText textLayer)
+                            {
+                                LayerText.TextCell textUnderMouse = textLayer.getTextCellUnderMouse(mouseCoordInStud);
+                                if (textUnderMouse != null)
+                                {
+                                    statusBarMessage += textUnderMouse.Text.Replace("\r", "");
+                                    statusBarMessage = statusBarMessage.Replace('\n', ' ');
+                                    if (statusBarMessage.Length > 80)
+                                        statusBarMessage = statusBarMessage.Substring(0, 80) + "...";
+                                }
+                            }
+                        }
+                    }
 					break;
 			}
 
 			switch (actionToDo)
 			{
 				case ActionToDoInMouseEvent.SCROLL_VIEW:
-					pan((mLastScrollMousePos.X - e.X) / mViewScale, (mLastScrollMousePos.Y - e.Y) / mViewScale);
+					Pan((mLastScrollMousePos.X - e.X) / mViewScale, (mLastScrollMousePos.Y - e.Y) / mViewScale);
 					mLastScrollMousePos.X = e.X;
 					mLastScrollMousePos.Y = e.Y;
 					// update the view continuously
@@ -676,7 +675,7 @@ namespace BlueBrick
 				case ActionToDoInMouseEvent.ZOOM_VIEW:
 					int yDiff = e.Y - mLastZoomMousePos.Y;
 					mLastZoomMousePos = e.Location;
-					zoom((float)(1.0f + (yDiff * 4.0f * Settings.Default.WheelMouseZoomSpeed)),
+					Zoom((float)(1.0f + (yDiff * 4.0f * Settings.Default.WheelMouseZoomSpeed)),
 							Settings.Default.WheelMouseIsZoomOnCursor, mFirstZoomMousePos);
 					// the zoom function already update the view, don't need to set the bool flag here
 					break;
@@ -691,13 +690,13 @@ namespace BlueBrick
 
 			// check if we need to update the view
 			if (mustRefreshView)
-				updateView();
+				UpdateView();
 		}
 
 		private void MapPanel_MouseUp(object sender, MouseEventArgs e)
 		{
 			bool mustRefreshView = false;
-			PointF mouseCoordInStud = getMouseCoordInStud(e);
+			PointF mouseCoordInStud = GetMouseCoordInStud(e);
 
 			// check if we are using a selecion rectangle
 			if (mIsSelectionRectangleOn)
@@ -708,10 +707,10 @@ namespace BlueBrick
 				mSelectionRectangle.Height = Math.Abs(e.Y - mSelectionRectangleInitialPosition.Y);
 
 				// compute the new selection rectangle in stud and call the selection on the map
-				PointF topLeftCorner = getScreenPointInStud(mSelectionRectangle.Location);
-				PointF BottomRightCorner = getScreenPointInStud(new Point(mSelectionRectangle.Right, mSelectionRectangle.Bottom));
+				PointF topLeftCorner = GetScreenPointInStud(mSelectionRectangle.Location);
+				PointF BottomRightCorner = GetScreenPointInStud(new Point(mSelectionRectangle.Right, mSelectionRectangle.Bottom));
 				RectangleF selectionRectangeInStud = new RectangleF(topLeftCorner.X, topLeftCorner.Y, BottomRightCorner.X - topLeftCorner.X, BottomRightCorner.Y - topLeftCorner.Y);
-				Map.Instance.selectInRectangle(selectionRectangeInStud);
+				Map.Instance.SelectInRectangle(selectionRectangeInStud);
 
 				// delete the selection rectangle
 				mIsSelectionRectangleOn = false;
@@ -721,7 +720,7 @@ namespace BlueBrick
 			else if (mIsMouseHandledByMap)
 			{
 				// left button is handle by layers (so give it to the map)
-				mustRefreshView = Map.Instance.mouseUp(e, mouseCoordInStud);
+				mustRefreshView = Map.Instance.MouseUp(e, mouseCoordInStud);
 				mIsMouseHandledByMap = false;
 			}
 			else if (mIsZooming)
@@ -739,11 +738,11 @@ namespace BlueBrick
 			}
 
 			// restore the default cursor
-			this.Cursor = getDefaultCursor(mouseCoordInStud);
+			this.Cursor = GetDefaultCursor(mouseCoordInStud);
 
 			// check if we need to update the view
 			if (mustRefreshView)
-				updateView();
+				UpdateView();
 		}
 
 		private void MapPanel_DragEnter(object sender, DragEventArgs e)
@@ -760,13 +759,13 @@ namespace BlueBrick
 				string partDropNumber = (this.TopLevelControl as MainForm).getDraggingPartNumberInPartLib();
 
 				// check if we can add it
-				Map.BrickAddability canAdd = Map.Instance.canAddBrick(partDropNumber);
+				Map.BrickAddability canAdd = Map.Instance.CanAddBrick(partDropNumber);
 				if (canAdd == Map.BrickAddability.YES)
 				{
 					mBrickLayerThatReceivePartDrop = Map.Instance.SelectedLayer as LayerBrick;
 					if (partDropNumber != null && mBrickLayerThatReceivePartDrop != null)
 					{
-						if (BrickLibrary.Instance.isAGroup(partDropNumber))
+						if (BrickLibrary.Instance.IsAGroup(partDropNumber))
 							mCurrentPartDrop = new Layer.Group(partDropNumber);
 						else
 							mCurrentPartDrop = new LayerBrick.Brick(partDropNumber);
@@ -776,7 +775,7 @@ namespace BlueBrick
 					}
 				}
 				else
-					Map.Instance.giveFeedbackForNotAddingBrick(canAdd);
+					Map.Instance.GiveFeedbackForNotAddingBrick(canAdd);
 			}
 
 			// check again if we are not dragging a part, maybe we drag a file
@@ -790,11 +789,11 @@ namespace BlueBrick
 			if ((mCurrentPartDrop != null) && (mBrickLayerThatReceivePartDrop != null))
 			{
 				// memorise the position of the mouse snapped to the grid
-				PointF mouseCoordInStud = getScreenPointInStud(this.PointToClient(new Point(e.X, e.Y)));
+				PointF mouseCoordInStud = GetScreenPointInStud(this.PointToClient(new Point(e.X, e.Y)));
 				mCurrentPartDrop.Center = mBrickLayerThatReceivePartDrop.getMovedSnapPoint(mouseCoordInStud, mCurrentPartDrop);
 				mBrickLayerThatReceivePartDrop.updateBoundingSelectionRectangle();
 				// refresh the view
-				updateView();
+				UpdateView();
 			}
 		}
 
@@ -809,12 +808,12 @@ namespace BlueBrick
 					mBrickLayerThatReceivePartDrop = null;
 				}
 				// and add the real new part
-				Map.Instance.addBrick(mCurrentPartDrop);
+				Map.Instance.AddBrick(mCurrentPartDrop);
 				// reset the dropping part number here and there
 				mCurrentPartDrop = null;
 				(this.TopLevelControl as MainForm).resetDraggingPartNumberInPartLib();
 				// refresh the view
-				updateView();
+				UpdateView();
 				// and give the focus to the map panel such as if the user use the wheel to zoom
 				// just after after the drop, the zoom is performed instead of the part lib scrolling
 				this.Focus();
@@ -840,14 +839,14 @@ namespace BlueBrick
 				}
 				mCurrentPartDrop = null;
 				// update the view
-				updateView();
+				UpdateView();
 			}
 		}
 
 		private void MapPanel_MouseEnter(object sender, EventArgs e)
 		{
 			// set the default cursor
-			this.Cursor = getDefaultCursor(PointF.Empty);
+			this.Cursor = GetDefaultCursor(PointF.Empty);
 			// focus on the panel for handling the mouse scroll
 			this.Focus();
 		}
@@ -857,11 +856,11 @@ namespace BlueBrick
 			// use the zoom cursor
 			this.Cursor = MainForm.Instance.ZoomCursor;
 			// and call the zoom function
-			zoom((float)(1.0f + (e.Delta * Settings.Default.WheelMouseZoomSpeed)),
+			Zoom((float)(1.0f + (e.Delta * Settings.Default.WheelMouseZoomSpeed)),
 				Settings.Default.WheelMouseIsZoomOnCursor, e.Location);
 		}
 
-		private void pan(double deltaX, double deltaY)
+		private void Pan(double deltaX, double deltaY)
 		{
 			// pan the view according to the delta
 			mViewCornerX += deltaX;
@@ -870,7 +869,7 @@ namespace BlueBrick
 			UpdateScrollBarThumbFromViewCorner(true, true);
 		}
 
-		private void zoom(float zoomFactor, bool zoomOnMousePosition, Point mousePosition)
+		private void Zoom(float zoomFactor, bool zoomOnMousePosition, Point mousePosition)
 		{
 			// compute the center of the view in case of we need to zoom in the center
 			Point screenCenterInPixel = new Point(this.ClientSize.Width / 2, this.ClientSize.Height / 2);
@@ -880,9 +879,9 @@ namespace BlueBrick
 			// screen) in stud coord system
 			PointF previousZoomPointInStud;
 			if (zoomOnMousePosition)
-				previousZoomPointInStud = getPointCoordInStud(mousePosition);
+				previousZoomPointInStud = GetPointCoordInStud(mousePosition);
 			else
-				previousZoomPointInStud = getPointCoordInStud(screenCenterInPixel);
+				previousZoomPointInStud = GetPointCoordInStud(screenCenterInPixel);
 
 			// compute the delta of the zoom according to the setting and
 			// set the new scale by using the accessor to clamp and refresh the view
@@ -892,19 +891,19 @@ namespace BlueBrick
 			// but the zoom point (mouse coord or center) in pixel didn't changed
 			PointF newZoomPointInStud;
 			if (zoomOnMousePosition)
-				newZoomPointInStud = getPointCoordInStud(mousePosition);
+				newZoomPointInStud = GetPointCoordInStud(mousePosition);
 			else
-				newZoomPointInStud = getPointCoordInStud(screenCenterInPixel);
+				newZoomPointInStud = GetPointCoordInStud(screenCenterInPixel);
 
 			// compute how much we should scroll the view to keep the same
 			// point in stud under the mouse coord on screen
-			pan(previousZoomPointInStud.X - newZoomPointInStud.X, previousZoomPointInStud.Y - newZoomPointInStud.Y);
-			updateView();
+			Pan(previousZoomPointInStud.X - newZoomPointInStud.X, previousZoomPointInStud.Y - newZoomPointInStud.Y);
+			UpdateView();
 		}
 		#endregion
 
 		#region right click context menu
-		private void contextMenuStrip_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+		private void ContextMenuStrip_Opening(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			// if the zoom modifier key is pressed, cancel the opening of the context menu
 			if (mIsMouseHandledByMap || mIsZooming || (Control.ModifierKeys == Settings.Default.MouseZoomPanKey))
@@ -969,86 +968,82 @@ namespace BlueBrick
 			}
 		}
 
-		private void bringToFrontToolStripMenuItem_Click(object sender, EventArgs e)
+		private void BringToFrontToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			MainForm.Instance.bringToFrontToolStripMenuItem_Click(sender, e);
 		}
 
-		private void sendToBackToolStripMenuItem_Click(object sender, EventArgs e)
+		private void SendToBackToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			MainForm.Instance.sendToBackToolStripMenuItem_Click(sender, e);
 		}
 
-		private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+		private void SelectAllToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			MainForm.Instance.selectAllToolStripMenuItem_Click(sender, e);
 		}
 
-		private void deselectAllToolStripMenuItem_Click(object sender, EventArgs e)
+		private void DeselectAllToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			MainForm.Instance.deselectAllToolStripMenuItem_Click(sender, e);
 		}
 
-		private void selectPathToolStripMenuItem_Click(object sender, EventArgs e)
+		private void SelectPathToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			MainForm.Instance.selectPathToolStripMenuItem_Click(sender, e);
 		}
 
-		private void groupToolStripMenuItem_Click(object sender, EventArgs e)
+		private void GroupToolStripMenuItem_Click(object sender, EventArgs e)
 		{
             MainForm.Instance.groupToolStripMenuItem_Click(sender, e);
 		}
 
-		private void ungroupToolStripMenuItem_Click(object sender, EventArgs e)
+		private void UngroupToolStripMenuItem_Click(object sender, EventArgs e)
 		{
             MainForm.Instance.ungroupToolStripMenuItem_Click(sender, e);
 		}
 
-		private void attachToolStripMenuItem_Click(object sender, EventArgs e)
+		private void AttachToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			LayerRuler rulerLayer = Map.Instance.SelectedLayer as LayerRuler;
-			if (rulerLayer != null)
-				ActionManager.Instance.doAction(new Actions.Rulers.AttachRulerToBrick(rulerLayer.CurrentRulerWithHighlightedControlPoint, rulerLayer.CurrentBrickUsedForRulerAttachement));
-		}
+            if (Map.Instance.SelectedLayer is LayerRuler rulerLayer)
+                ActionManager.Instance.doAction(new Actions.Rulers.AttachRulerToBrick(rulerLayer.CurrentRulerWithHighlightedControlPoint, rulerLayer.CurrentBrickUsedForRulerAttachement));
+        }
 
-		private void detachToolStripMenuItem_Click(object sender, EventArgs e)
+		private void DetachToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			LayerRuler rulerLayer = Map.Instance.SelectedLayer as LayerRuler;
-			if (rulerLayer!= null)
-				ActionManager.Instance.doAction(new Actions.Rulers.DetachRuler(rulerLayer.CurrentRulerWithHighlightedControlPoint, rulerLayer.CurrentBrickUsedForRulerAttachement));
-		}
+            if (Map.Instance.SelectedLayer is LayerRuler rulerLayer)
+                ActionManager.Instance.doAction(new Actions.Rulers.DetachRuler(rulerLayer.CurrentRulerWithHighlightedControlPoint, rulerLayer.CurrentBrickUsedForRulerAttachement));
+        }
 
-		private void useAsModelToolStripMenuItem_Click(object sender, EventArgs e)
+		private void UseAsModelToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			// this action (i.e. changing the settings) is not undoable
 			if (Map.Instance.SelectedLayer is LayerRuler)
 			{
-				LayerRuler rulerLayer = Map.Instance.SelectedLayer as LayerRuler;
+				var rulerLayer = Map.Instance.SelectedLayer as LayerRuler;
 				if (rulerLayer.SelectedObjects.Count == 1)
 				{
-					LayerRuler.RulerItem item = rulerLayer.SelectedObjects[0] as LayerRuler.RulerItem;
-					if (item != null)
-						PreferencesForm.sChangeRulerSettingsFromRuler(item);
-				}
+                    if (rulerLayer.SelectedObjects[0] is LayerRuler.RulerItem item)
+                        PreferencesForm.sChangeRulerSettingsFromRuler(item);
+                }
 			}
 			else if (Map.Instance.SelectedLayer is LayerText)
 			{
-				LayerText textLayer = Map.Instance.SelectedLayer as LayerText;
+				var textLayer = Map.Instance.SelectedLayer as LayerText;
 				if (textLayer.SelectedObjects.Count == 1)
 				{
-					LayerText.TextCell item = textLayer.SelectedObjects[0] as LayerText.TextCell;
-					if (item != null)
-						PreferencesForm.sChangeTextSettingsFromText(item);
-				}
+                    if (textLayer.SelectedObjects[0] is LayerText.TextCell item)
+                        PreferencesForm.sChangeTextSettingsFromText(item);
+                }
 			}
 		}
 
-		private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
+		private void PropertiesToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			Map.Instance.editSelectedItemsProperties(mLastDownMouseCoordInStud);
+			Map.Instance.EditSelectedItemsProperties(mLastDownMouseCoordInStud);
 		}
 
-		private void scrollBarToolStripMenuItem_Click(object sender, EventArgs e)
+		private void ScrollBarToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			// Warn Main form to update its menu item for the scroll bars
 			MainForm.Instance.mapScrollBarsVisibilityChangeNotification(scrollBarToolStripMenuItem.Checked);
@@ -1069,9 +1064,9 @@ namespace BlueBrick
 			if (this.horizontalScrollBar.Visible || this.verticalScrollBar.Visible)
 			{
 				// recompute the map area
-				mMapTotalAreaInStud = Map.Instance.getTotalAreaInStud(false);
+				mMapTotalAreaInStud = Map.Instance.GetTotalAreaInStud(false);
 				// update the scrollbars size (if they are not visible, nothing happen)
-				updateScrollbarSize();
+				UpdateScrollbarSize();
 			}
 		}
 
@@ -1109,7 +1104,7 @@ namespace BlueBrick
 				mViewCornerY = ((((double)this.verticalScrollBar.Value / mMapScrollBarSliderSize) * this.Size.Height) / mViewScale) + mMapTotalAreaInStud.Top - mScrollBarAddedMarginInStud;
 		}
 
-		private void updateScrollbarSize()
+		private void UpdateScrollbarSize()
 		{
 			// does nothing if the scrollbars are not visible
 			if (this.horizontalScrollBar.Visible || this.verticalScrollBar.Visible)
@@ -1133,35 +1128,35 @@ namespace BlueBrick
 			}
 		}
 
-		private void horizontalScrollBar_Scroll(object sender, ScrollEventArgs e)
+		private void HorizontalScrollBar_Scroll(object sender, ScrollEventArgs e)
 		{
 			UpdateViewCornerFromScrollBarThumb(true, false);
 			this.Invalidate();
 		}
 
-		private void verticalScrollBar_Scroll(object sender, ScrollEventArgs e)
+		private void VerticalScrollBar_Scroll(object sender, ScrollEventArgs e)
 		{
 			UpdateViewCornerFromScrollBarThumb(false, true);
 			this.Invalidate();
 		}
-		private void verticalScrollBar_MouseEnter(object sender, EventArgs e)
+		private void VerticalScrollBar_MouseEnter(object sender, EventArgs e)
 		{
 			this.Cursor = this.DefaultCursor;
 		}
 
-		private void horizontalScrollBar_MouseEnter(object sender, EventArgs e)
+		private void HorizontalScrollBar_MouseEnter(object sender, EventArgs e)
 		{
 			this.Cursor = this.DefaultCursor;
 		}
 
 		private void MapPanel_Resize(object sender, EventArgs e)
 		{
-			updateScrollbarSize();
+			UpdateScrollbarSize();
 		}
 
 		private void MapPanel_SizeChanged(object sender, EventArgs e)
 		{
-			updateScrollbarSize();
+			UpdateScrollbarSize();
 		}
 		#endregion
 	}

@@ -398,7 +398,7 @@ namespace BlueBrick.MapData
 			/// </summary>
 			protected void updateSnapMargin()
 			{
-				BrickLibrary.Brick.Margin snapMargin = BrickLibrary.Instance.getSnapMargin(this.PartNumber);
+				BrickLibrary.Brick.Margin snapMargin = BrickLibrary.Instance.GetSnapMargin(this.PartNumber);
 				if ((snapMargin.mLeft != 0.0f) || (snapMargin.mRight != 0.0f) || (snapMargin.mTop != 0.0f) || (snapMargin.mBottom != 0.0f))
 				{
 					double angleInRadian = mOrientation * Math.PI / 180.0;
@@ -694,9 +694,9 @@ namespace BlueBrick.MapData
 				// set the orientation of this group after the part number (useful to compute the snap marging)
 				this.Orientation = (float)(Math.Atan2(parentTransform.Elements[1], parentTransform.Elements[0]) * 180.0 / Math.PI);
 				// set the can ungroup flag
-				mCanUngroup = BrickLibrary.Instance.canUngroup(groupName);
+				mCanUngroup = BrickLibrary.Instance.CanUngroup(groupName);
 				// create all the parts inside the group
-				List<BrickLibrary.Brick.SubPart> groupSubPartList = BrickLibrary.Instance.getGroupSubPartList(groupName);
+				List<BrickLibrary.Brick.SubPart> groupSubPartList = BrickLibrary.Instance.GetGroupSubPartList(groupName);
 				if (groupSubPartList != null)
 					foreach (BrickLibrary.Brick.SubPart subPart in groupSubPartList)
 					{
@@ -740,10 +740,10 @@ namespace BlueBrick.MapData
 			public override void ReadXml(System.Xml.XmlReader reader)
 			{
 				reader.ReadStartElement();
-				mPartNumber = BrickLibrary.Instance.getActualPartNumber(reader.ReadElementContentAsString().ToUpperInvariant());
+				mPartNumber = BrickLibrary.Instance.GetActualPartNumber(reader.ReadElementContentAsString().ToUpperInvariant());
 				// set the flag according to the group name
 				if (mPartNumber != string.Empty)
-					mCanUngroup = BrickLibrary.Instance.canUngroup(mPartNumber);
+					mCanUngroup = BrickLibrary.Instance.CanUngroup(mPartNumber);
 				readMyGroup(reader);
 			}
 
@@ -1787,7 +1787,7 @@ namespace BlueBrick.MapData
 				System.Xml.XmlWriter xmlWriter = System.Xml.XmlWriter.Create(stringWriter, xmlSettings);
 
 				// write the version number
-				Map.Instance.saveVersionNumber(xmlWriter);
+				Map.Instance.SaveVersionNumber(xmlWriter);
 
 				// then call the serialization method on the list of object
 				this.writeSelectionToClipboard(xmlWriter);
@@ -1841,7 +1841,7 @@ namespace BlueBrick.MapData
 			System.Xml.XmlReader xmlReader = System.Xml.XmlReader.Create(stringReader, xmlSettings);
 
 			// try to read the version number if we start with a version tag (otherwise ignore if it is plain text)
-			Map.Instance.readVersionNumber(xmlReader);
+			Map.Instance.ReadVersionNumber(xmlReader);
 
 			// normallly after it's the layer node, and we should be already on it
 			if (!xmlReader.Name.Equals("Layer"))

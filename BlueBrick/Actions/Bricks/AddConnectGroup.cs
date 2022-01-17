@@ -64,7 +64,7 @@ namespace BlueBrick.Actions.Bricks
 			{
 				// after setting the active connection point index from which this brick will be attached,
 				// get the prefered index from the library
-				mNextPreferedActiveConnectionIndex = BrickLibrary.Instance.getConnectionNextPreferedIndex(partNumber, wantedConnexion);
+				mNextPreferedActiveConnectionIndex = BrickLibrary.Instance.GetConnectionNextPreferedIndex(partNumber, wantedConnexion);
 
 				// Compute the orientation of the bricks
 				float newOrientation = AddConnectBrick.sGetOrientationOfConnectedBrick(selectedBrick, brickToConnectInAddedGroup);
@@ -136,7 +136,7 @@ namespace BlueBrick.Actions.Bricks
 			{
 				// check if the new added brick is the same kind of the selected one, if so,
 				// then we choose the previous connection point, but check if it is the same type
-				wantedConnexion = BrickLibrary.Instance.getConnectionNextPreferedIndex(fixedGroup.PartNumber, fixedGroup.ActiveConnectionIndex);
+				wantedConnexion = BrickLibrary.Instance.GetConnectionNextPreferedIndex(fixedGroup.PartNumber, fixedGroup.ActiveConnectionIndex);
 				brickToAttach = setActiveConnectionIndex(wantedConnexion);
 				// check that the connection type is the same
 				isActiveConnectionPointChosen = (brickToAttach != null) &&

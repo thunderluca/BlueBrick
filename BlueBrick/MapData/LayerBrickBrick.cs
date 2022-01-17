@@ -111,7 +111,7 @@ namespace BlueBrick.MapData
 								// in priority choose my next prefered connection point, otherwise the function will choose the next free one
 								if (activeConnectionPoint == this)
 								{
-									int nextPreferedIndex = BrickLibrary.Instance.getConnectionNextPreferedIndex(mMyBrick.PartNumber, activeConnectionPoint.Index);
+									int nextPreferedIndex = BrickLibrary.Instance.GetConnectionNextPreferedIndex(mMyBrick.PartNumber, activeConnectionPoint.Index);
 									mMyBrick.setActiveConnectionPointIndex(nextPreferedIndex, true);
 								}
 							}
@@ -139,7 +139,7 @@ namespace BlueBrick.MapData
 					{
 						int myIndex = mMyBrick.ConnectionPoints.IndexOf(this);
 						if (myIndex >= 0)
-							return BrickLibrary.Instance.getConnectionAngle(mMyBrick.PartNumber, myIndex);
+							return BrickLibrary.Instance.GetConnectionAngle(mMyBrick.PartNumber, myIndex);
 						return 0.0f;
 					}
 				}
@@ -197,7 +197,7 @@ namespace BlueBrick.MapData
 				{
 					mMyBrick = myBrick;
 					// save the brick type (for optimisation reasons)
-					mType = BrickLibrary.Instance.getConnexionType(myBrick.PartNumber, connexionIndex);
+					mType = BrickLibrary.Instance.GetConnexionType(myBrick.PartNumber, connexionIndex);
 				}
 
 				#endregion
@@ -297,7 +297,7 @@ namespace BlueBrick.MapData
 					// set the value
 					mPartNumber = value;
 					// update the associated electric current when the part number change
-					mElectricCircuitIndexList = BrickLibrary.Instance.getElectricCircuitList(value);
+					mElectricCircuitIndexList = BrickLibrary.Instance.GetElectricCircuitList(value);
 					// update the image
 					updateImage();
 					updateSnapMargin();
@@ -456,7 +456,7 @@ namespace BlueBrick.MapData
 				get
 				{
 					if (mConnectionPoints != null)
-						return BrickLibrary.Instance.getConnectionAngle(mPartNumber, mActiveConnectionPointIndex);
+						return BrickLibrary.Instance.GetConnectionAngle(mPartNumber, mActiveConnectionPointIndex);
 					return 0.0f;
 				}
 			}
@@ -581,7 +581,7 @@ namespace BlueBrick.MapData
 				// adjust the center position after the creation of the display area in the PartNumber accessor
 				this.Center = centerPosition;
 				// create the connection list if any
-				List<BrickLibrary.Brick.ConnectionPoint> connectionList = BrickLibrary.Instance.getConnectionList(partNumber);
+				List<BrickLibrary.Brick.ConnectionPoint> connectionList = BrickLibrary.Instance.GetConnectionList(partNumber);
 				if (connectionList != null)
 				{
 					mConnectionPoints = new List<ConnectionPoint>(connectionList.Count);
@@ -607,9 +607,9 @@ namespace BlueBrick.MapData
 				// read the base class
 				base.ReadXml(reader);
 				// avoid using the accessor to reduce the number of call of updateBitmap
-				mPartNumber = BrickLibrary.Instance.getActualPartNumber(reader.ReadElementContentAsString().ToUpperInvariant());
+				mPartNumber = BrickLibrary.Instance.GetActualPartNumber(reader.ReadElementContentAsString().ToUpperInvariant());
 				// but then update its electric list
-				mElectricCircuitIndexList = BrickLibrary.Instance.getElectricCircuitList(mPartNumber);
+				mElectricCircuitIndexList = BrickLibrary.Instance.GetElectricCircuitList(mPartNumber);
 				mOrientation = reader.ReadElementContentAsFloat();
 				int activeConnectionPointIndexReadInFile = reader.ReadElementContentAsInt();
 				// the altitude
@@ -638,7 +638,7 @@ namespace BlueBrick.MapData
 				// So first, we ask the number of connection to the part lib then allocate
 				// the list of connection based on the number set in the library and not the number
 				// read in the file, because finally the number of connection must be like the part lib says
-				int connectionCountInBrickLibrary = BrickLibrary.Instance.getConnectionCount(mPartNumber);
+				int connectionCountInBrickLibrary = BrickLibrary.Instance.GetConnectionCount(mPartNumber);
 				if (connectionCountInBrickLibrary > 0)
 					mConnectionPoints = new List<ConnectionPoint>(connectionCountInBrickLibrary);
 
@@ -673,7 +673,7 @@ namespace BlueBrick.MapData
 						{
 							// set the connexion type, if not set during the above creation
 							if (isConnectionValid)
-								connexion.Type = BrickLibrary.Instance.getConnexionType(this.PartNumber, connexionIndex);
+								connexion.Type = BrickLibrary.Instance.GetConnexionType(this.PartNumber, connexionIndex);
 						}
 
 						//read the connexion data and add it in the Connection list
@@ -788,13 +788,13 @@ namespace BlueBrick.MapData
 			{
 				List<PointF> boundingBox = null;
 				List<PointF> hull = null;
-				mOriginalImageReference = BrickLibrary.Instance.getImage(mPartNumber, ref boundingBox, ref hull);
+				mOriginalImageReference = BrickLibrary.Instance.GetImage(mPartNumber, ref boundingBox, ref hull);
 				// check if the image is not in the library, create one
 				if (mOriginalImageReference == null)
 				{
 					// add a default image in the library and ask it again
 					BrickLibrary.Instance.AddUnknownBrick(mPartNumber, (int)(mDisplayArea.Width), (int)(mDisplayArea.Height));
-					mOriginalImageReference = BrickLibrary.Instance.getImage(mPartNumber, ref boundingBox, ref hull);
+					mOriginalImageReference = BrickLibrary.Instance.GetImage(mPartNumber, ref boundingBox, ref hull);
 				}
 				// normally now, we should have an image
 				// transform the bounding box of the part
@@ -919,7 +919,7 @@ namespace BlueBrick.MapData
 			{
 				if (mConnectionPoints != null)
 				{
-					List<PointF> pointList = BrickLibrary.Instance.getConnectionPositionList(mPartNumber);
+					List<PointF> pointList = BrickLibrary.Instance.GetConnectionPositionList(mPartNumber);
 					if (pointList != null)
 					{
 						Matrix rotation = new Matrix();

@@ -71,7 +71,7 @@ namespace BlueBrick
 
             // compute the total area of the map, and the total scale in order to display the full map
 			// in the preview window and assign the selected area with the same value
-			mTotalAreaInStud = Map.Instance.getTotalAreaInStud(false);
+			mTotalAreaInStud = Map.Instance.GetTotalAreaInStud(false);
 
 			// select the total area. It depends if we already have exported this file
 			if (Map.Instance.ExportArea.Width != 0.0f && Map.Instance.ExportArea.Height != 0.0f)
@@ -244,7 +244,7 @@ namespace BlueBrick
 				graphics.CompositingQuality = CompositingQuality.HighSpeed;
 				graphics.InterpolationMode = InterpolationMode.Low;
 				// draw the bitmap
-				Map.Instance.draw(graphics, mTotalAreaInStud, mTotalScalePixelPerStud, false);
+				Map.Instance.Draw(graphics, mTotalAreaInStud, mTotalScalePixelPerStud, false);
 			}
 			else
 			{
@@ -279,7 +279,7 @@ namespace BlueBrick
 				RectangleF watermarkRectangleInStud = new RectangleF(mTotalAreaInStud.X, mTotalAreaInStud.Y,
 																	mSelectedAreaInStud.X - mTotalAreaInStud.X + mSelectedAreaInStud.Width,
 																	mSelectedAreaInStud.Y - mTotalAreaInStud.Y + mSelectedAreaInStud.Height);
-				Map.Instance.drawWatermark(graphics, watermarkRectangleInStud, mTotalScalePixelPerStud);
+				Map.Instance.DrawWatermark(graphics, watermarkRectangleInStud, mTotalScalePixelPerStud);
 
 				// draw black overlay to over the margins
 				graphics.FillRectangle(mMarginBlackOverlayBrush, 0, 0, selectedAreaInPixel.Left, this.previewPictureBox.Image.Height);
@@ -671,7 +671,7 @@ namespace BlueBrick
 			saveUISettingInDefaultSettings();
 
 			// save the setting chosen in the Map
-			Map.Instance.saveExportAreaAndDisplaySettings(mSelectedAreaInStud, (double)(this.scaleNumericUpDown.Value),
+			Map.Instance.SaveExportAreaAndDisplaySettings(mSelectedAreaInStud, (double)(this.scaleNumericUpDown.Value),
                 this.exportWatermarkCheckBox.Checked, this.exportElectricCircuitCheckBox.Checked, this.exportConnectionPointCheckBox.Checked);
 
 			// then ask the user to choose a filename and format
@@ -681,7 +681,7 @@ namespace BlueBrick
 			{
 				// the user have chosen a correct filename and format
 				// save the new settings in the map
-				Map.Instance.saveExportFileSettings(fileName, saveExportImageDialog.FilterIndex);
+				Map.Instance.SaveExportFileSettings(fileName, saveExportImageDialog.FilterIndex);
 
 				// then call the function to export all the images
 				exportAllImages(fileName, choosenFormat);
@@ -812,8 +812,8 @@ namespace BlueBrick
 					RectangleF areaInStud = new RectangleF(mSelectedAreaInStud.X + (columnWidthInStud * i), mSelectedAreaInStud.Y + (rowHeightInStud * j), columnWidthInStud, rowHeightInStud);
 
 					// draw the bitmap
-					Map.Instance.draw(graphics, areaInStud, scalePixelPerStud, false);
-					Map.Instance.drawWatermark(graphics, areaInStud, scalePixelPerStud);
+					Map.Instance.Draw(graphics, areaInStud, scalePixelPerStud, false);
+					Map.Instance.DrawWatermark(graphics, areaInStud, scalePixelPerStud);
 
 					// construct a filename for each image (if there's more than one image)
 					string cellImageFileName = fileName;

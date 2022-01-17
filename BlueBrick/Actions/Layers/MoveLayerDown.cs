@@ -36,12 +36,12 @@ namespace BlueBrick.Actions
 
 		public override void redo()
 		{
-			Map.Instance.moveLayerDown(mLayerMoved);
+			Map.Instance.MoveLayerDown(mLayerMoved);
 		}
 
 		public override void undo()
 		{
-			Map.Instance.moveLayerUp(mLayerMoved);
+			Map.Instance.MoveLayerUp(mLayerMoved);
 		}
 	}
 }
