@@ -683,7 +683,7 @@ namespace BlueBrick
 
 			//display the message in the status bar
 			if ((mLastMousePos.X != e.X) || (mLastMousePos.Y != e.Y))
-				MainForm.Instance.setStatusBarMessage(statusBarMessage);
+				MainForm.Instance.SetStatusBarMessage(statusBarMessage);
 
 			// save the last mouse position anyway
 			mLastMousePos = e.Location;
@@ -756,7 +756,7 @@ namespace BlueBrick
 
 				// ask the main window if one part was selected in the part lib
 				// because the getData from the event doesn't work well under mono, normally it should be: e.Data.GetData(DataFormats.SystemString) as string
-				string partDropNumber = (TopLevelControl as MainForm).getDraggingPartNumberInPartLib();
+				string partDropNumber = (TopLevelControl as MainForm).GetDraggingPartNumberInPartLib();
 
 				// check if we can add it
 				Map.BrickAddability canAdd = Map.Instance.CanAddBrick(partDropNumber);
@@ -811,7 +811,7 @@ namespace BlueBrick
 				Map.Instance.AddBrick(mCurrentPartDrop);
 				// reset the dropping part number here and there
 				mCurrentPartDrop = null;
-				(TopLevelControl as MainForm).resetDraggingPartNumberInPartLib();
+				(TopLevelControl as MainForm).ResetDraggingPartNumberInPartLib();
 				// refresh the view
 				UpdateView();
 				// and give the focus to the map panel such as if the user use the wheel to zoom
@@ -970,37 +970,37 @@ namespace BlueBrick
 
 		private void BringToFrontToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			MainForm.Instance.bringToFrontToolStripMenuItem_Click(sender, e);
+			MainForm.Instance.BringToFrontToolStripMenuItem_Click(sender, e);
 		}
 
 		private void SendToBackToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			MainForm.Instance.sendToBackToolStripMenuItem_Click(sender, e);
+			MainForm.Instance.SendToBackToolStripMenuItem_Click(sender, e);
 		}
 
 		private void SelectAllToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			MainForm.Instance.selectAllToolStripMenuItem_Click(sender, e);
+			MainForm.Instance.SelectAllToolStripMenuItem_Click(sender, e);
 		}
 
 		private void DeselectAllToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			MainForm.Instance.deselectAllToolStripMenuItem_Click(sender, e);
+			MainForm.Instance.DeselectAllToolStripMenuItem_Click(sender, e);
 		}
 
 		private void SelectPathToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			MainForm.Instance.selectPathToolStripMenuItem_Click(sender, e);
+			MainForm.Instance.SelectPathToolStripMenuItem_Click(sender, e);
 		}
 
 		private void GroupToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-            MainForm.Instance.groupToolStripMenuItem_Click(sender, e);
+            MainForm.Instance.GroupToolStripMenuItem_Click(sender, e);
 		}
 
 		private void UngroupToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-            MainForm.Instance.ungroupToolStripMenuItem_Click(sender, e);
+            MainForm.Instance.UngroupToolStripMenuItem_Click(sender, e);
 		}
 
 		private void AttachToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1046,7 +1046,7 @@ namespace BlueBrick
 		private void ScrollBarToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			// Warn Main form to update its menu item for the scroll bars
-			MainForm.Instance.mapScrollBarsVisibilityChangeNotification(scrollBarToolStripMenuItem.Checked);
+			MainForm.Instance.MapScrollBarsVisibilityChangeNotification(scrollBarToolStripMenuItem.Checked);
 			// show or hide the scrollbar
 			ShowHideScrollBars(scrollBarToolStripMenuItem.Checked);
 		}

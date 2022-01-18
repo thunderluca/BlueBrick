@@ -236,7 +236,7 @@ namespace BlueBrick.MapData
 					}
 
 			// update the electric circuit on the whole layer
-			ElectricCircuitChecker.check(this);
+			ElectricCircuitChecker.Check(this);
 		}
 
 		protected override T ReadItem<T>(System.Xml.XmlReader reader)
@@ -321,7 +321,7 @@ namespace BlueBrick.MapData
 						// after the link is fully break, update the electric circuit on the connected brick
 						// not on the brick we are removing, since we are removing it
 						if (connectedBrick != null)
-							ElectricCircuitChecker.check(connectedBrick);
+							ElectricCircuitChecker.Check(connectedBrick);
 					}
 				// detach its rulers
 				brickToRemove.detachAllRulersTemporarily();
@@ -445,7 +445,7 @@ namespace BlueBrick.MapData
 				freeConnectionPoints.remove(connexion2);
 				// check the current for the new connection (only one call with one brick is enough, since the two bricks are connected)
 				if (checkElectricShortcut)
-					ElectricCircuitChecker.check(connexion1.mMyBrick);
+					ElectricCircuitChecker.Check(connexion1.mMyBrick);
 				return true;
 			}
 			return false;
@@ -467,9 +467,9 @@ namespace BlueBrick.MapData
 
 			// check the electric circuit on both brick after the link is broken totally
 			if (connexion1 != null)
-				ElectricCircuitChecker.check(connexion1.mMyBrick);
+				ElectricCircuitChecker.Check(connexion1.mMyBrick);
 			if (connexion2 != null)
-				ElectricCircuitChecker.check(connexion2.mMyBrick);
+				ElectricCircuitChecker.Check(connexion2.mMyBrick);
 		}
 
 		private static bool arePositionsEqual(PointF pos1, PointF pos2)
@@ -606,7 +606,7 @@ namespace BlueBrick.MapData
 				updateFullBrickConnectivityForOneBrick(item as Brick, mFreeConnectionPoints, false);
 
 			// update the electric circuit for the whole layer
-			ElectricCircuitChecker.check(this);
+			ElectricCircuitChecker.Check(this);
 		}
 
 		/// <summary>
@@ -621,7 +621,7 @@ namespace BlueBrick.MapData
 				updateFullBrickConnectivityForOneBrick(brick, mFreeConnectionPoints, false);
 
 			// update the electric circuit for the whole layer
-			ElectricCircuitChecker.check(this);
+			ElectricCircuitChecker.Check(this);
 		}
 		#endregion 
 
@@ -964,7 +964,7 @@ namespace BlueBrick.MapData
 			{
 				bool needRedraw = mMouseFlexMoveAction.update();
 				if (needRedraw)
-                    MainForm.Instance.updateView(Actions.Action.UpdateViewType.FULL, Actions.Action.UpdateViewType.NONE);
+                    MainForm.Instance.UpdateView(Actions.Action.UpdateViewType.FULL, Actions.Action.UpdateViewType.NONE);
 				// debug draw for the flex
 				// mMouseFlexMoveAction.draw(g, areaInStud, scalePixelPerStud);
 			}
@@ -1214,7 +1214,7 @@ namespace BlueBrick.MapData
 				if ((mCurrentBrickUnderMouse != null) && (mEditAction == EditAction.SELECT_PATH))
 				{
 					// find a path between the last brick that has been selected, and the current brick under the mouse
-					List<LayerItem> brickToSelect = AStar.findPath(SelectedObjects[SelectedObjects.Count - 1] as Brick, mCurrentBrickUnderMouse);
+					List<LayerItem> brickToSelect = AStar.FindPath(SelectedObjects[SelectedObjects.Count - 1] as Brick, mCurrentBrickUnderMouse);
 					// if AStar found a path, select the path
 					if (brickToSelect.Count > 0)
 						AddObjectInSelection(brickToSelect);

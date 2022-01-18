@@ -142,6 +142,15 @@
     <Compile Include="DownloadCenterForm.Designer.cs">
       <DependentUpon>DownloadCenterForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DownloadCenterForm.DownloadableFileInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DownloadCenterForm.DownloadParameter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DownloadCenterForm.ResultParameter.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="EditBrickForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -187,12 +196,28 @@
     <Compile Include="LibraryPackageSourceForm.Designer.cs">
       <DependentUpon>LibraryPackageSourceForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MainForm.KeyAndPart.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.LanguageCodeAndName.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.ShortcutableAction.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="MapData\RulerAttachementSet.cs" />
     <Compile Include="MapData\LayerBrickBrick.cs" />
     <Compile Include="MapData\LayerRuler.cs" />
     <Compile Include="MapData\LayerRulerItem.cs" />
     <Compile Include="MapData\LayerTextCell.cs" />
     <Compile Include="MapData\Tools\AlphabeticIndex.cs" />
+    <Compile Include="MapData\Tools\AStarNode.cs" />
+    <Compile Include="MapData\Tools\AStarNodeList.cs" />
+    <Compile Include="MapData\Tools\Circle.cs" />
+    <Compile Include="MapData\Tools\Distance.Unit.cs" />
+    <Compile Include="MapData\Tools\IKSolver.Bone_2D_CCD.cs" />
+    <Compile Include="MapData\Tools\IKSolver.CCDResult.cs" />
+    <Compile Include="MapData\Tools\Polygon.cs" />
     <Compile Include="MapData\Tools\Surface.cs" />
     <Compile Include="MapData\Tools\Distance.cs" />
     <Compile Include="PartListView.cs">

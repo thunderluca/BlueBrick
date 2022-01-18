@@ -185,7 +185,7 @@ namespace BlueBrick.MapData
 				// step the progress bar for each line
 				if (x != currentLineIndex)
 				{
-					MainForm.Instance.stepProgressBar();
+					MainForm.Instance.StepProgressBar();
 					currentLineIndex = x;
 				}
 			}
@@ -215,7 +215,7 @@ namespace BlueBrick.MapData
 					writer.WriteEndElement();
 				}
 				// step the progress bar for each line
-				MainForm.Instance.stepProgressBar();
+				MainForm.Instance.StepProgressBar();
 			}
 			writer.WriteEndElement(); // end of Areas
 			// write the footer

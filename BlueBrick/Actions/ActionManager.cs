@@ -54,9 +54,9 @@ namespace BlueBrick.Actions
 			// each time we add a action, we clear the redo stack
 			mRedoStack.Clear();
 			//display the action in the status bar
-			MainForm.Instance.setStatusBarMessage(action.GetName());
+			MainForm.Instance.SetStatusBarMessage(action.GetName());
 			// update the main form
-			MainForm.Instance.updateView(action.UpdateMapView, action.UpdateLayerView);
+			MainForm.Instance.UpdateView(action.UpdateMapView, action.UpdateLayerView);
 		}
 
 		public void undo(int actionNum)
@@ -87,9 +87,9 @@ namespace BlueBrick.Actions
 					break;
 				}
 			// clear the status bar
-			MainForm.Instance.setStatusBarMessage("");
+			MainForm.Instance.SetStatusBarMessage("");
 			// update the main form
-			MainForm.Instance.updateView(maxUpdateMapView, maxUpdateLayerView);
+			MainForm.Instance.UpdateView(maxUpdateMapView, maxUpdateLayerView);
 		}
 
 		public void redo(int actionNum)
@@ -120,9 +120,9 @@ namespace BlueBrick.Actions
 				}
 			// display the action name of the last action redone in the status bar
 			if (action != null)
-				MainForm.Instance.setStatusBarMessage(action.GetName());
+				MainForm.Instance.SetStatusBarMessage(action.GetName());
 			// update the main form
-			MainForm.Instance.updateView(maxUpdateMapView, maxUpdateLayerView);
+			MainForm.Instance.UpdateView(maxUpdateMapView, maxUpdateLayerView);
 		}
 
 		public void clearStacks()
@@ -130,9 +130,9 @@ namespace BlueBrick.Actions
 			mUndoStack.Clear();
 			mRedoStack.Clear();
 			// clear the status bar
-			MainForm.Instance.setStatusBarMessage("");
+			MainForm.Instance.SetStatusBarMessage("");
 			// update the main form
-			MainForm.Instance.updateView(Action.UpdateViewType.FULL, Action.UpdateViewType.FULL);
+			MainForm.Instance.UpdateView(Action.UpdateViewType.FULL, Action.UpdateViewType.FULL);
 		}
 
 		public Type getUndoableActionType()

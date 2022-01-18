@@ -326,7 +326,7 @@ namespace BlueBrick
 			// have an estimation of the number of brick in the file.
 			// This is only usefull for files which version is under 3, because
 			// from version 3 we record the number of brick in the file
-			MainForm.Instance.resetProgressBar((int)(myFileStream.Length / 900));
+			MainForm.Instance.ResetProgressBar((int)(myFileStream.Length / 900));
 			// parse and copy the data into this
 			Map.Instance = mySerializer.Deserialize(myFileStream) as Map;
             // recompute the absolute export file name, from the relative one saved in the BBM file
@@ -402,14 +402,14 @@ namespace BlueBrick
 			// open the file
 			StreamReader textReader = new StreamReader(filename);
 			// init the progress bar with the number of bytes of the file
-			MainForm.Instance.resetProgressBar((int)textReader.BaseStream.Length);
+			MainForm.Instance.ResetProgressBar((int)textReader.BaseStream.Length);
 			// create a line spliter array
 			while (!textReader.EndOfStream)
 			{
 				// read the current line
 				string line = textReader.ReadLine();
 				// move the progressbar according to the number of byte read
-				MainForm.Instance.stepProgressBar(line.Length);
+				MainForm.Instance.StepProgressBar(line.Length);
 				// split the current line
                 string[] token = splitLDrawLine(line);
 				// check if the first token is 0 or 1, the other are just ignored
@@ -448,7 +448,7 @@ namespace BlueBrick
 			sHashtableForGroupRebuilding.Clear();
 
 			// finish the progress bar (to hide it)
-			MainForm.Instance.finishProgressBar();
+			MainForm.Instance.FinishProgressBar();
 
 			// the file can be open
 			return true;
@@ -464,7 +464,7 @@ namespace BlueBrick
 			// open the file
 			StreamReader textReader = new StreamReader(filename);
 			// init the progress bar with the number of bytes of the file
-			MainForm.Instance.resetProgressBar((int)textReader.BaseStream.Length);
+			MainForm.Instance.ResetProgressBar((int)textReader.BaseStream.Length);
 			// use a flag because in MPD, the first "0 FILE" tage is reserved for the file itself, the following one are the submodels
 			bool wasFirstFileTagFound = false;
 			// create a line spliter array
@@ -472,7 +472,7 @@ namespace BlueBrick
 			{
 				string line = textReader.ReadLine();
 				// move the progressbar according to the number of byte read
-				MainForm.Instance.stepProgressBar(line.Length);
+				MainForm.Instance.StepProgressBar(line.Length);
 				// split the current line
 				string[] token = splitLDrawLine(line);
 				// check if the first token is 0 or 1, the other are just ignored
@@ -542,7 +542,7 @@ namespace BlueBrick
 			sHashtableForGroupRebuilding.Clear();
 
 			// finish the progress bar (to hide it)
-			MainForm.Instance.finishProgressBar();
+			MainForm.Instance.FinishProgressBar();
 
 			// the file can be open
 			return true;
@@ -836,10 +836,10 @@ namespace BlueBrick
 			int nbItems = 2;
 			foreach (Layer layer in Map.Instance.LayerList)
 				nbItems += layer.NbItems;
-			MainForm.Instance.resetProgressBar(nbItems);
+			MainForm.Instance.ResetProgressBar(nbItems);
 
 			// step the progressbar after the init of part remap
-			MainForm.Instance.stepProgressBar();
+			MainForm.Instance.StepProgressBar();
 
 			StreamWriter textWriter = new StreamWriter(filename, false, new UTF8Encoding(false));
 			// write the header
@@ -847,7 +847,7 @@ namespace BlueBrick
 			// add a line break
 			textWriter.WriteLine("0");
 			// step the progressbar after the write of the header
-			MainForm.Instance.stepProgressBar();
+			MainForm.Instance.StepProgressBar();
 
 			// iterate on all the layers of the Map
 			foreach (Layer layer in Map.Instance.LayerList)
@@ -868,10 +868,10 @@ namespace BlueBrick
 			int nbItems = 3;
 			foreach (Layer layer in Map.Instance.LayerList)
     			nbItems += layer.NbItems;
-			MainForm.Instance.resetProgressBar(nbItems);
+			MainForm.Instance.ResetProgressBar(nbItems);
 
 			// step the progressbar after the init of part remap
-			MainForm.Instance.stepProgressBar();
+			MainForm.Instance.StepProgressBar();
 
 			StreamWriter textWriter = new StreamWriter(filename, false, new UTF8Encoding(false));
 			// in mpd, we always start with the 0 FILE command,
@@ -880,7 +880,7 @@ namespace BlueBrick
 			// write the header
 			saveHeaderInLDRAW(textWriter);
 			// step the progressbar after the write of the header
-			MainForm.Instance.stepProgressBar();
+			MainForm.Instance.StepProgressBar();
 
 			// write the list of all the layer, at the 0 position with identity matrix in black
 			// the format line is like for a single part:
@@ -903,7 +903,7 @@ namespace BlueBrick
 				layerStandardizedNames.Add(layerName);
 			}
 			// step the progressbar after the write of the layer list
-			MainForm.Instance.stepProgressBar();
+			MainForm.Instance.StepProgressBar();
 
 			// add a line break
 			textWriter.WriteLine("0");
@@ -979,7 +979,7 @@ namespace BlueBrick
 			foreach (LayerBrick.Brick brick in brickLayer.BrickList)
 			{
 				// step the progressbar for each brick (we do it at the begining because there is a continue in this loop)
-				MainForm.Instance.stepProgressBar();
+				MainForm.Instance.StepProgressBar();
 
 				// split the part name and color
 				string[] partNumberAndColor = { string.Empty, string.Empty };
@@ -1213,7 +1213,7 @@ namespace BlueBrick
 			foreach (LayerRuler.RulerItem ruler in rulerLayer.RulerList)
 			{
 				// step the progressbar for each brick (we do it at the begining because there is a continue in this loop)
-				MainForm.Instance.stepProgressBar();
+				MainForm.Instance.StepProgressBar();
 				// save the ruler
 				saveOneRulerItemInLDRAW(textWriter, ruler, hideRulers);
 			}
@@ -1274,19 +1274,19 @@ namespace BlueBrick
 		private static void saveAreaLayerInLDRAW(StreamWriter textWriter, LayerArea areaLayer, bool useMLCADHide)
 		{
 			textWriter.WriteLine("0 // Area layer not implemented yet, see you maybe in BB 1.9");
-            MainForm.Instance.stepProgressBar(areaLayer.NbItems);
+            MainForm.Instance.StepProgressBar(areaLayer.NbItems);
         }
 
 		private static void saveGridLayerInLDRAW(StreamWriter textWriter, LayerGrid gridLayer, bool useMLCADHide)
 		{
             textWriter.WriteLine("0 // Grid layer not implemented yet, see you maybe in BB 1.9");
-            MainForm.Instance.stepProgressBar(gridLayer.NbItems);
+            MainForm.Instance.StepProgressBar(gridLayer.NbItems);
         }
 
 		private static void saveTextLayerInLDRAW(StreamWriter textWriter, LayerText textLayer, bool useMLCADHide)
 		{
             textWriter.WriteLine("0 // Text layer not implemented yet, see you maybe in BB 1.9");
-            MainForm.Instance.stepProgressBar(textLayer.NbItems);
+            MainForm.Instance.StepProgressBar(textLayer.NbItems);
         }
 		#endregion
 		#region TrackDesigner Format
@@ -1309,7 +1309,7 @@ namespace BlueBrick
 			FileStream myFileStream = new FileStream(filename, FileMode.Open, FileAccess.Read);
 			BinaryReader binaryReader = new BinaryReader(myFileStream);
 			// init the progress bar with the number of bytes of the file
-			MainForm.Instance.resetProgressBar((int)myFileStream.Length);
+			MainForm.Instance.ResetProgressBar((int)myFileStream.Length);
 
 			// read the header which is 124 bytes normally without comments
 			int headerSize = loadTDLHeader(binaryReader);
@@ -1317,7 +1317,7 @@ namespace BlueBrick
 			if (headerSize <= 0)
 			{
 				// finish the progressbar to hide it
-				MainForm.Instance.finishProgressBar();
+				MainForm.Instance.FinishProgressBar();
 				binaryReader.Close();
 				myFileStream.Close();
 				return false;
@@ -1331,7 +1331,7 @@ namespace BlueBrick
 			headerSize += 17;
 
 			// move the progressbar according to the number of byte read
-			MainForm.Instance.stepProgressBar(headerSize);
+			MainForm.Instance.StepProgressBar(headerSize);
 
 			// read until we reach the end of file
 			bool endOfFile = binaryReader.BaseStream.Position >= binaryReader.BaseStream.Length;
@@ -1501,7 +1501,7 @@ namespace BlueBrick
 				}
 
 				// move the progressbar according to the number of byte read (each part takes 106 bytes)
-				MainForm.Instance.stepProgressBar(106);
+				MainForm.Instance.StepProgressBar(106);
 			}
 
 			// close the stream
@@ -1529,7 +1529,7 @@ namespace BlueBrick
 			}
 
 			// finish the progressbar to hide it
-			MainForm.Instance.finishProgressBar();
+			MainForm.Instance.FinishProgressBar();
 
 			// check if we found some part that can be remaped
 			if (noRemapablePartFound.Count > 0)
@@ -1619,10 +1619,10 @@ namespace BlueBrick
                     nbItems += layer.NbItems;
             }
 			// init the progress bar with the number of parts to write
-			MainForm.Instance.resetProgressBar(nbItems + 2);
+			MainForm.Instance.ResetProgressBar(nbItems + 2);
 
 			// step the progressbar after the init of part remap
-			MainForm.Instance.stepProgressBar();
+			MainForm.Instance.StepProgressBar();
 
 			// update the registry to use
 			BrickLibrary.Instance.UpdateCurrentTrackDesignerRegistryUsed();
@@ -1635,7 +1635,7 @@ namespace BlueBrick
 			saveTDLHeader(binaryWriter, nbItems);
 
 			// step the progressbar after the write of the header
-			MainForm.Instance.stepProgressBar();
+			MainForm.Instance.StepProgressBar();
 
 			// now the piece list (record the stream position because the number of item may changed if some brick were skipped)
 			long streamPositionOfNbItem = binaryWriter.BaseStream.Position;
@@ -1661,7 +1661,7 @@ namespace BlueBrick
                             if (saveOneBrickInTDL(binaryWriter, brick, nbItemsWritten > 0))
                                 nbItemsWritten++;
                             // step the progress bar
-                            MainForm.Instance.stepProgressBar();
+                            MainForm.Instance.StepProgressBar();
                         }
                 }
 
@@ -1679,7 +1679,7 @@ namespace BlueBrick
 			binaryWriter.Close();
 
 			// finish the progressbar to hide it
-			MainForm.Instance.finishProgressBar();
+			MainForm.Instance.FinishProgressBar();
 
 			return true;
 		}
@@ -2147,7 +2147,7 @@ namespace BlueBrick
 			Map.Instance.SelectedLayer = trackLayer;
 
 			// finish the progress bar (to hide it)
-			MainForm.Instance.finishProgressBar();
+			MainForm.Instance.FinishProgressBar();
 
 			// check if we found some part that can be remaped
 			if (noRemapablePartFound.Count > 0)
@@ -2705,7 +2705,7 @@ namespace BlueBrick
 				// save the brick
 				saveOneTrackSegmentIn4DBrix(textWriter, part, connectionGlobalIndex);
 				// step the progress bar for this brick for the second pass
-				MainForm.Instance.stepProgressBar();
+				MainForm.Instance.StepProgressBar();
 			}
 		}
 
@@ -2739,7 +2739,7 @@ namespace BlueBrick
 				// rotate back the brick to its original orientation
 				part.mBrick.Orientation = part.mBrick.Orientation - part.mRemapData.mOrientationDifference;
 				// step the progress bar for this brick for the second pass
-				MainForm.Instance.stepProgressBar();
+				MainForm.Instance.StepProgressBar();
 			}
 		}
 
@@ -2781,17 +2781,17 @@ namespace BlueBrick
 			foreach (Layer layer in Map.Instance.LayerList)
 				if (layer is LayerBrick)
 					nbItems += layer.NbItems * 2;
-			MainForm.Instance.resetProgressBar(nbItems);
+			MainForm.Instance.ResetProgressBar(nbItems);
 
 			// step the progressbar after the init of part remap
-			MainForm.Instance.stepProgressBar();
+			MainForm.Instance.StepProgressBar();
 
 			StreamWriter textWriter = new StreamWriter(filename, false, new UTF8Encoding(false));
 			// write the header
 			saveHeaderIn4DBrix(textWriter, filename);
 
 			// step the progressbar after the write of the header
-			MainForm.Instance.stepProgressBar();
+			MainForm.Instance.StepProgressBar();
 
 			// 4DBrix only have 4 fixed layers, so we need to split the bricks of all the layers in 4 different list
 			List<FourDBrixPart> tables = new List<FourDBrixPart>();
@@ -2845,11 +2845,11 @@ namespace BlueBrick
 						else
 						{
 							// if the current item is skiped (not inserted in the list), then step the progress bar, to skip also its second phase)
-							MainForm.Instance.stepProgressBar();
+							MainForm.Instance.StepProgressBar();
 						}
 
 						// step the progress bar for this brick for the first pass
-						MainForm.Instance.stepProgressBar();
+						MainForm.Instance.StepProgressBar();
 					}
 				}
 			}

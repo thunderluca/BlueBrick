@@ -1164,7 +1164,7 @@ namespace BlueBrick.MapData
 			public override bool isInsideAScalingHandle(PointF pointInStud, float thicknessInStud)
 			{
 				if (mAllowOffset)
-					return SelectionArea.isPointInside(pointInStud);
+					return SelectionArea.IsPointInside(pointInStud);
 				return false;
 			}
 

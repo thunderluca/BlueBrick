@@ -355,11 +355,11 @@ namespace BlueBrick
 			resources.ApplyResources(this.textBoxPartFilter, "textBoxPartFilter");
 			this.textBoxPartFilter.Name = "textBoxPartFilter";
 			this.toolTipForMainForm.SetToolTip(this.textBoxPartFilter, resources.GetString("textBoxPartFilter.ToolTip"));
-			this.textBoxPartFilter.TextChanged += new System.EventHandler(this.textBoxPartFilter_TextChanged);
-			this.textBoxPartFilter.Enter += new System.EventHandler(this.textBoxPartFilter_Enter);
-			this.textBoxPartFilter.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxPartFilter_KeyDown);
-			this.textBoxPartFilter.Leave += new System.EventHandler(this.textBoxPartFilter_Leave);
-			this.textBoxPartFilter.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.textBoxPartFilter_PreviewKeyDown);
+			this.textBoxPartFilter.TextChanged += new System.EventHandler(this.TextBoxPartFilter_TextChanged);
+			this.textBoxPartFilter.Enter += new System.EventHandler(this.TextBoxPartFilter_Enter);
+			this.textBoxPartFilter.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxPartFilter_KeyDown);
+			this.textBoxPartFilter.Leave += new System.EventHandler(this.TextBoxPartFilter_Leave);
+			this.textBoxPartFilter.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.TextBoxPartFilter_PreviewKeyDown);
 			// 
 			// filterAllTabCheckBox
 			// 
@@ -368,7 +368,7 @@ namespace BlueBrick
 			this.filterAllTabCheckBox.Name = "filterAllTabCheckBox";
 			this.toolTipForMainForm.SetToolTip(this.filterAllTabCheckBox, resources.GetString("filterAllTabCheckBox.ToolTip"));
 			this.filterAllTabCheckBox.UseVisualStyleBackColor = true;
-			this.filterAllTabCheckBox.CheckedChanged += new System.EventHandler(this.filterAllTabCheckBox_CheckedChanged);
+			this.filterAllTabCheckBox.CheckedChanged += new System.EventHandler(this.FilterAllTabCheckBox_CheckedChanged);
 			// 
 			// filterLibraryCheckboxImageList
 			// 
@@ -438,7 +438,7 @@ namespace BlueBrick
 			this.trashLayerButton.Name = "trashLayerButton";
 			this.toolTipForMainForm.SetToolTip(this.trashLayerButton, resources.GetString("trashLayerButton.ToolTip"));
 			this.trashLayerButton.UseVisualStyleBackColor = false;
-			this.trashLayerButton.Click += new System.EventHandler(this.trashLayerButton_Click);
+			this.trashLayerButton.Click += new System.EventHandler(this.TrashLayerButton_Click);
 			// 
 			// label2
 			// 
@@ -453,7 +453,7 @@ namespace BlueBrick
 			this.newLayerRulerButton.Name = "newLayerRulerButton";
 			this.toolTipForMainForm.SetToolTip(this.newLayerRulerButton, resources.GetString("newLayerRulerButton.ToolTip"));
 			this.newLayerRulerButton.UseVisualStyleBackColor = true;
-			this.newLayerRulerButton.Click += new System.EventHandler(this.newLayerRulerButton_Click);
+			this.newLayerRulerButton.Click += new System.EventHandler(this.NewLayerRulerButton_Click);
 			// 
 			// newLayerTextButton
 			// 
@@ -463,7 +463,7 @@ namespace BlueBrick
 			this.newLayerTextButton.Name = "newLayerTextButton";
 			this.toolTipForMainForm.SetToolTip(this.newLayerTextButton, resources.GetString("newLayerTextButton.ToolTip"));
 			this.newLayerTextButton.UseVisualStyleBackColor = true;
-			this.newLayerTextButton.Click += new System.EventHandler(this.newLayerTextButton_Click);
+			this.newLayerTextButton.Click += new System.EventHandler(this.NewLayerTextButton_Click);
 			// 
 			// newLayerAreaButton
 			// 
@@ -473,7 +473,7 @@ namespace BlueBrick
 			this.newLayerAreaButton.Name = "newLayerAreaButton";
 			this.toolTipForMainForm.SetToolTip(this.newLayerAreaButton, resources.GetString("newLayerAreaButton.ToolTip"));
 			this.newLayerAreaButton.UseVisualStyleBackColor = true;
-			this.newLayerAreaButton.Click += new System.EventHandler(this.newLayerAreaButton_Click);
+			this.newLayerAreaButton.Click += new System.EventHandler(this.NewLayerAreaButton_Click);
 			// 
 			// newLayerBrickButton
 			// 
@@ -483,7 +483,7 @@ namespace BlueBrick
 			this.newLayerBrickButton.Name = "newLayerBrickButton";
 			this.toolTipForMainForm.SetToolTip(this.newLayerBrickButton, resources.GetString("newLayerBrickButton.ToolTip"));
 			this.newLayerBrickButton.UseVisualStyleBackColor = true;
-			this.newLayerBrickButton.Click += new System.EventHandler(this.newLayerBrickButton_Click);
+			this.newLayerBrickButton.Click += new System.EventHandler(this.NewLayerBrickButton_Click);
 			// 
 			// newLayerGridButton
 			// 
@@ -493,7 +493,7 @@ namespace BlueBrick
 			this.newLayerGridButton.Name = "newLayerGridButton";
 			this.toolTipForMainForm.SetToolTip(this.newLayerGridButton, resources.GetString("newLayerGridButton.ToolTip"));
 			this.newLayerGridButton.UseVisualStyleBackColor = true;
-			this.newLayerGridButton.Click += new System.EventHandler(this.newLayerGridButton_Click);
+			this.newLayerGridButton.Click += new System.EventHandler(this.NewLayerGridButton_Click);
 			// 
 			// label1
 			// 
@@ -508,7 +508,7 @@ namespace BlueBrick
 			this.layerUpButton.Name = "layerUpButton";
 			this.toolTipForMainForm.SetToolTip(this.layerUpButton, resources.GetString("layerUpButton.ToolTip"));
 			this.layerUpButton.UseVisualStyleBackColor = true;
-			this.layerUpButton.Click += new System.EventHandler(this.layerUpButton_Click);
+			this.layerUpButton.Click += new System.EventHandler(this.LayerUpButton_Click);
 			// 
 			// layerDownButton
 			// 
@@ -518,7 +518,7 @@ namespace BlueBrick
 			this.layerDownButton.Name = "layerDownButton";
 			this.toolTipForMainForm.SetToolTip(this.layerDownButton, resources.GetString("layerDownButton.ToolTip"));
 			this.layerDownButton.UseVisualStyleBackColor = true;
-			this.layerDownButton.Click += new System.EventHandler(this.layerDownButton_Click);
+			this.layerDownButton.Click += new System.EventHandler(this.LayerDownButton_Click);
 			// 
 			// DocumentDataPartListTabPage
 			// 
@@ -633,8 +633,8 @@ namespace BlueBrick
 			this.DocumentDataPropertiesTableLayoutPanel.SetColumnSpan(this.commentTextBox, 8);
 			resources.ApplyResources(this.commentTextBox, "commentTextBox");
 			this.commentTextBox.Name = "commentTextBox";
-			this.commentTextBox.Enter += new System.EventHandler(this.commentTextBox_Enter);
-			this.commentTextBox.Leave += new System.EventHandler(this.commentTextBox_Leave);
+			this.commentTextBox.Enter += new System.EventHandler(this.CommentTextBox_Enter);
+			this.commentTextBox.Leave += new System.EventHandler(this.CommentTextBox_Leave);
 			// 
 			// label12
 			// 
@@ -741,7 +741,7 @@ namespace BlueBrick
 			this.DocumentDataPropertiesTableLayoutPanel.SetColumnSpan(this.dateTimePicker, 8);
 			resources.ApplyResources(this.dateTimePicker, "dateTimePicker");
 			this.dateTimePicker.Name = "dateTimePicker";
-			this.dateTimePicker.ValueChanged += new System.EventHandler(this.dateTimePicker_ValueChanged);
+			this.dateTimePicker.ValueChanged += new System.EventHandler(this.DateTimePicker_ValueChanged);
 			// 
 			// labelEvent
 			// 
@@ -754,9 +754,9 @@ namespace BlueBrick
 			resources.ApplyResources(this.eventComboBox, "eventComboBox");
 			this.eventComboBox.FormattingEnabled = true;
 			this.eventComboBox.Name = "eventComboBox";
-			this.eventComboBox.Enter += new System.EventHandler(this.eventComboBox_Enter);
-			this.eventComboBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.eventComboBox_KeyDown);
-			this.eventComboBox.Leave += new System.EventHandler(this.eventComboBox_Leave);
+			this.eventComboBox.Enter += new System.EventHandler(this.EventComboBox_Enter);
+			this.eventComboBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.EventComboBox_KeyDown);
+			this.eventComboBox.Leave += new System.EventHandler(this.EventComboBox_Leave);
 			// 
 			// labelLUG
 			// 
@@ -769,9 +769,9 @@ namespace BlueBrick
 			resources.ApplyResources(this.lugComboBox, "lugComboBox");
 			this.lugComboBox.FormattingEnabled = true;
 			this.lugComboBox.Name = "lugComboBox";
-			this.lugComboBox.Enter += new System.EventHandler(this.lugComboBox_Enter);
-			this.lugComboBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lugComboBox_KeyDown);
-			this.lugComboBox.Leave += new System.EventHandler(this.lugComboBox_Leave);
+			this.lugComboBox.Enter += new System.EventHandler(this.LugComboBox_Enter);
+			this.lugComboBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LugComboBox_KeyDown);
+			this.lugComboBox.Leave += new System.EventHandler(this.LugComboBox_Leave);
 			// 
 			// labelAuthor
 			// 
@@ -829,13 +829,13 @@ namespace BlueBrick
 			// 
 			this.newToolStripMenuItem.Name = "newToolStripMenuItem";
 			resources.ApplyResources(this.newToolStripMenuItem, "newToolStripMenuItem");
-			this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+			this.newToolStripMenuItem.Click += new System.EventHandler(this.NewToolStripMenuItem_Click);
 			// 
 			// openToolStripMenuItem
 			// 
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
 			resources.ApplyResources(this.openToolStripMenuItem, "openToolStripMenuItem");
-			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+			this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
 			// 
 			// openRecentToolStripMenuItem
 			// 
@@ -851,25 +851,25 @@ namespace BlueBrick
 			// 
 			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
 			resources.ApplyResources(this.saveToolStripMenuItem, "saveToolStripMenuItem");
-			this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+			this.saveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
 			// 
 			// saveasToolStripMenuItem
 			// 
 			this.saveasToolStripMenuItem.Name = "saveasToolStripMenuItem";
 			resources.ApplyResources(this.saveasToolStripMenuItem, "saveasToolStripMenuItem");
-			this.saveasToolStripMenuItem.Click += new System.EventHandler(this.saveasToolStripMenuItem_Click);
+			this.saveasToolStripMenuItem.Click += new System.EventHandler(this.SaveasToolStripMenuItem_Click);
 			// 
 			// exportAsPictureToolStripMenuItem
 			// 
 			this.exportAsPictureToolStripMenuItem.Name = "exportAsPictureToolStripMenuItem";
 			resources.ApplyResources(this.exportAsPictureToolStripMenuItem, "exportAsPictureToolStripMenuItem");
-			this.exportAsPictureToolStripMenuItem.Click += new System.EventHandler(this.exportAsPictureToolStripMenuItem_Click);
+			this.exportAsPictureToolStripMenuItem.Click += new System.EventHandler(this.ExportAsPictureToolStripMenuItem_Click);
 			// 
 			// exportPartListToolStripMenuItem
 			// 
 			this.exportPartListToolStripMenuItem.Name = "exportPartListToolStripMenuItem";
 			resources.ApplyResources(this.exportPartListToolStripMenuItem, "exportPartListToolStripMenuItem");
-			this.exportPartListToolStripMenuItem.Click += new System.EventHandler(this.exportPartListToolStripMenuItem_Click);
+			this.exportPartListToolStripMenuItem.Click += new System.EventHandler(this.ExportPartListToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator2
 			// 
@@ -880,19 +880,19 @@ namespace BlueBrick
 			// 
 			this.reloadPartLibraryToolStripMenuItem.Name = "reloadPartLibraryToolStripMenuItem";
 			resources.ApplyResources(this.reloadPartLibraryToolStripMenuItem, "reloadPartLibraryToolStripMenuItem");
-			this.reloadPartLibraryToolStripMenuItem.Click += new System.EventHandler(this.reloadPartLibraryToolStripMenuItem_Click);
+			this.reloadPartLibraryToolStripMenuItem.Click += new System.EventHandler(this.ReloadPartLibraryToolStripMenuItem_Click);
 			// 
 			// downloadAdditionnalPartsToolStripMenuItem
 			// 
 			this.downloadAdditionnalPartsToolStripMenuItem.Name = "downloadAdditionnalPartsToolStripMenuItem";
 			resources.ApplyResources(this.downloadAdditionnalPartsToolStripMenuItem, "downloadAdditionnalPartsToolStripMenuItem");
-			this.downloadAdditionnalPartsToolStripMenuItem.Click += new System.EventHandler(this.downloadAdditionnalPartsToolStripMenuItem_Click);
+			this.downloadAdditionnalPartsToolStripMenuItem.Click += new System.EventHandler(this.DownloadAdditionnalPartsToolStripMenuItem_Click);
 			// 
 			// saveSelectionInLibraryToolStripMenuItem
 			// 
 			resources.ApplyResources(this.saveSelectionInLibraryToolStripMenuItem, "saveSelectionInLibraryToolStripMenuItem");
 			this.saveSelectionInLibraryToolStripMenuItem.Name = "saveSelectionInLibraryToolStripMenuItem";
-			this.saveSelectionInLibraryToolStripMenuItem.Click += new System.EventHandler(this.saveSelectionInLibraryToolStripMenuItem_Click);
+			this.saveSelectionInLibraryToolStripMenuItem.Click += new System.EventHandler(this.SaveSelectionInLibraryToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator12
 			// 
@@ -903,7 +903,7 @@ namespace BlueBrick
 			// 
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
 			resources.ApplyResources(this.exitToolStripMenuItem, "exitToolStripMenuItem");
-			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+			this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
 			// 
 			// editToolStripMenuItem
 			// 
@@ -937,13 +937,13 @@ namespace BlueBrick
 			// 
 			resources.ApplyResources(this.undoToolStripMenuItem, "undoToolStripMenuItem");
 			this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
-			this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
+			this.undoToolStripMenuItem.Click += new System.EventHandler(this.UndoToolStripMenuItem_Click);
 			// 
 			// redoToolStripMenuItem
 			// 
 			resources.ApplyResources(this.redoToolStripMenuItem, "redoToolStripMenuItem");
 			this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
-			this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
+			this.redoToolStripMenuItem.Click += new System.EventHandler(this.RedoToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator4
 			// 
@@ -954,25 +954,25 @@ namespace BlueBrick
 			// 
 			this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
 			resources.ApplyResources(this.cutToolStripMenuItem, "cutToolStripMenuItem");
-			this.cutToolStripMenuItem.Click += new System.EventHandler(this.cutToolStripMenuItem_Click);
+			this.cutToolStripMenuItem.Click += new System.EventHandler(this.CutToolStripMenuItem_Click);
 			// 
 			// copyToolStripMenuItem
 			// 
 			this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
 			resources.ApplyResources(this.copyToolStripMenuItem, "copyToolStripMenuItem");
-			this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
+			this.copyToolStripMenuItem.Click += new System.EventHandler(this.CopyToolStripMenuItem_Click);
 			// 
 			// pasteToolStripMenuItem
 			// 
 			this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
 			resources.ApplyResources(this.pasteToolStripMenuItem, "pasteToolStripMenuItem");
-			this.pasteToolStripMenuItem.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
+			this.pasteToolStripMenuItem.Click += new System.EventHandler(this.PasteToolStripMenuItem_Click);
 			// 
 			// deleteToolStripMenuItem
 			// 
 			this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
 			resources.ApplyResources(this.deleteToolStripMenuItem, "deleteToolStripMenuItem");
-			this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+			this.deleteToolStripMenuItem.Click += new System.EventHandler(this.DeleteToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator5
 			// 
@@ -983,7 +983,7 @@ namespace BlueBrick
 			// 
 			this.findAndReplaceToolStripMenuItem.Name = "findAndReplaceToolStripMenuItem";
 			resources.ApplyResources(this.findAndReplaceToolStripMenuItem, "findAndReplaceToolStripMenuItem");
-			this.findAndReplaceToolStripMenuItem.Click += new System.EventHandler(this.findAndReplaceToolStripMenuItem_Click);
+			this.findAndReplaceToolStripMenuItem.Click += new System.EventHandler(this.FindAndReplaceToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator14
 			// 
@@ -994,19 +994,19 @@ namespace BlueBrick
 			// 
 			this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
 			resources.ApplyResources(this.selectAllToolStripMenuItem, "selectAllToolStripMenuItem");
-			this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
+			this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.SelectAllToolStripMenuItem_Click);
 			// 
 			// deselectAllToolStripMenuItem
 			// 
 			this.deselectAllToolStripMenuItem.Name = "deselectAllToolStripMenuItem";
 			resources.ApplyResources(this.deselectAllToolStripMenuItem, "deselectAllToolStripMenuItem");
-			this.deselectAllToolStripMenuItem.Click += new System.EventHandler(this.deselectAllToolStripMenuItem_Click);
+			this.deselectAllToolStripMenuItem.Click += new System.EventHandler(this.DeselectAllToolStripMenuItem_Click);
 			// 
 			// selectPathToolStripMenuItem
 			// 
 			this.selectPathToolStripMenuItem.Name = "selectPathToolStripMenuItem";
 			resources.ApplyResources(this.selectPathToolStripMenuItem, "selectPathToolStripMenuItem");
-			this.selectPathToolStripMenuItem.Click += new System.EventHandler(this.selectPathToolStripMenuItem_Click);
+			this.selectPathToolStripMenuItem.Click += new System.EventHandler(this.SelectPathToolStripMenuItem_Click);
 			// 
 			// groupMenuToolStripMenuItem
 			// 
@@ -1020,13 +1020,13 @@ namespace BlueBrick
 			// 
 			this.groupToolStripMenuItem.Name = "groupToolStripMenuItem";
 			resources.ApplyResources(this.groupToolStripMenuItem, "groupToolStripMenuItem");
-			this.groupToolStripMenuItem.Click += new System.EventHandler(this.groupToolStripMenuItem_Click);
+			this.groupToolStripMenuItem.Click += new System.EventHandler(this.GroupToolStripMenuItem_Click);
 			// 
 			// ungroupToolStripMenuItem
 			// 
 			this.ungroupToolStripMenuItem.Name = "ungroupToolStripMenuItem";
 			resources.ApplyResources(this.ungroupToolStripMenuItem, "ungroupToolStripMenuItem");
-			this.ungroupToolStripMenuItem.Click += new System.EventHandler(this.ungroupToolStripMenuItem_Click);
+			this.ungroupToolStripMenuItem.Click += new System.EventHandler(this.UngroupToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator8
 			// 
@@ -1064,7 +1064,7 @@ namespace BlueBrick
 			// 
 			this.moveStepDisabledToolStripMenuItem.Name = "moveStepDisabledToolStripMenuItem";
 			resources.ApplyResources(this.moveStepDisabledToolStripMenuItem, "moveStepDisabledToolStripMenuItem");
-			this.moveStepDisabledToolStripMenuItem.Click += new System.EventHandler(this.moveStepDisabledToolStripMenuItem_Click);
+			this.moveStepDisabledToolStripMenuItem.Click += new System.EventHandler(this.MoveStepDisabledToolStripMenuItem_Click);
 			// 
 			// moveStep32ToolStripMenuItem
 			// 
@@ -1072,55 +1072,55 @@ namespace BlueBrick
 			this.moveStep32ToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.moveStep32ToolStripMenuItem.Name = "moveStep32ToolStripMenuItem";
 			resources.ApplyResources(this.moveStep32ToolStripMenuItem, "moveStep32ToolStripMenuItem");
-			this.moveStep32ToolStripMenuItem.Click += new System.EventHandler(this.moveStep32ToolStripMenuItem_Click);
+			this.moveStep32ToolStripMenuItem.Click += new System.EventHandler(this.MoveStep32ToolStripMenuItem_Click);
 			// 
 			// moveStep16ToolStripMenuItem
 			// 
 			this.moveStep16ToolStripMenuItem.Name = "moveStep16ToolStripMenuItem";
 			resources.ApplyResources(this.moveStep16ToolStripMenuItem, "moveStep16ToolStripMenuItem");
-			this.moveStep16ToolStripMenuItem.Click += new System.EventHandler(this.moveStep16ToolStripMenuItem_Click);
+			this.moveStep16ToolStripMenuItem.Click += new System.EventHandler(this.MoveStep16ToolStripMenuItem_Click);
 			// 
 			// moveStep8ToolStripMenuItem
 			// 
 			this.moveStep8ToolStripMenuItem.Name = "moveStep8ToolStripMenuItem";
 			resources.ApplyResources(this.moveStep8ToolStripMenuItem, "moveStep8ToolStripMenuItem");
-			this.moveStep8ToolStripMenuItem.Click += new System.EventHandler(this.moveStep8ToolStripMenuItem_Click);
+			this.moveStep8ToolStripMenuItem.Click += new System.EventHandler(this.MoveStep8ToolStripMenuItem_Click);
 			// 
 			// moveStep4ToolStripMenuItem
 			// 
 			this.moveStep4ToolStripMenuItem.Name = "moveStep4ToolStripMenuItem";
 			resources.ApplyResources(this.moveStep4ToolStripMenuItem, "moveStep4ToolStripMenuItem");
-			this.moveStep4ToolStripMenuItem.Click += new System.EventHandler(this.moveStep4ToolStripMenuItem_Click);
+			this.moveStep4ToolStripMenuItem.Click += new System.EventHandler(this.MoveStep4ToolStripMenuItem_Click);
 			// 
 			// moveStep2ToolStripMenuItem
 			// 
 			this.moveStep2ToolStripMenuItem.Name = "moveStep2ToolStripMenuItem";
 			resources.ApplyResources(this.moveStep2ToolStripMenuItem, "moveStep2ToolStripMenuItem");
-			this.moveStep2ToolStripMenuItem.Click += new System.EventHandler(this.moveStep2ToolStripMenuItem_Click);
+			this.moveStep2ToolStripMenuItem.Click += new System.EventHandler(this.MoveStep2ToolStripMenuItem_Click);
 			// 
 			// moveStep1ToolStripMenuItem
 			// 
 			this.moveStep1ToolStripMenuItem.Name = "moveStep1ToolStripMenuItem";
 			resources.ApplyResources(this.moveStep1ToolStripMenuItem, "moveStep1ToolStripMenuItem");
-			this.moveStep1ToolStripMenuItem.Click += new System.EventHandler(this.moveStep1ToolStripMenuItem_Click);
+			this.moveStep1ToolStripMenuItem.Click += new System.EventHandler(this.MoveStep1ToolStripMenuItem_Click);
 			// 
 			// moveStep05ToolStripMenuItem
 			// 
 			this.moveStep05ToolStripMenuItem.Name = "moveStep05ToolStripMenuItem";
 			resources.ApplyResources(this.moveStep05ToolStripMenuItem, "moveStep05ToolStripMenuItem");
-			this.moveStep05ToolStripMenuItem.Click += new System.EventHandler(this.moveStep05ToolStripMenuItem_Click);
+			this.moveStep05ToolStripMenuItem.Click += new System.EventHandler(this.MoveStep05ToolStripMenuItem_Click);
 			// 
 			// sendToBackToolStripMenuItem
 			// 
 			this.sendToBackToolStripMenuItem.Name = "sendToBackToolStripMenuItem";
 			resources.ApplyResources(this.sendToBackToolStripMenuItem, "sendToBackToolStripMenuItem");
-			this.sendToBackToolStripMenuItem.Click += new System.EventHandler(this.sendToBackToolStripMenuItem_Click);
+			this.sendToBackToolStripMenuItem.Click += new System.EventHandler(this.SendToBackToolStripMenuItem_Click);
 			// 
 			// bringToFrontToolStripMenuItem
 			// 
 			this.bringToFrontToolStripMenuItem.Name = "bringToFrontToolStripMenuItem";
 			resources.ApplyResources(this.bringToFrontToolStripMenuItem, "bringToFrontToolStripMenuItem");
-			this.bringToFrontToolStripMenuItem.Click += new System.EventHandler(this.bringToFrontToolStripMenuItem_Click);
+			this.bringToFrontToolStripMenuItem.Click += new System.EventHandler(this.BringToFrontToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator9
 			// 
@@ -1143,37 +1143,37 @@ namespace BlueBrick
 			this.rotationStep90ToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.rotationStep90ToolStripMenuItem.Name = "rotationStep90ToolStripMenuItem";
 			resources.ApplyResources(this.rotationStep90ToolStripMenuItem, "rotationStep90ToolStripMenuItem");
-			this.rotationStep90ToolStripMenuItem.Click += new System.EventHandler(this.rotationStep90ToolStripMenuItem_Click);
+			this.rotationStep90ToolStripMenuItem.Click += new System.EventHandler(this.RotationStep90ToolStripMenuItem_Click);
 			// 
 			// rotationStep45ToolStripMenuItem
 			// 
 			this.rotationStep45ToolStripMenuItem.Name = "rotationStep45ToolStripMenuItem";
 			resources.ApplyResources(this.rotationStep45ToolStripMenuItem, "rotationStep45ToolStripMenuItem");
-			this.rotationStep45ToolStripMenuItem.Click += new System.EventHandler(this.rotationStep45ToolStripMenuItem_Click);
+			this.rotationStep45ToolStripMenuItem.Click += new System.EventHandler(this.RotationStep45ToolStripMenuItem_Click);
 			// 
 			// rotationStep22ToolStripMenuItem
 			// 
 			this.rotationStep22ToolStripMenuItem.Name = "rotationStep22ToolStripMenuItem";
 			resources.ApplyResources(this.rotationStep22ToolStripMenuItem, "rotationStep22ToolStripMenuItem");
-			this.rotationStep22ToolStripMenuItem.Click += new System.EventHandler(this.rotationStep22ToolStripMenuItem_Click);
+			this.rotationStep22ToolStripMenuItem.Click += new System.EventHandler(this.RotationStep22ToolStripMenuItem_Click);
 			// 
 			// rotationStep1ToolStripMenuItem
 			// 
 			this.rotationStep1ToolStripMenuItem.Name = "rotationStep1ToolStripMenuItem";
 			resources.ApplyResources(this.rotationStep1ToolStripMenuItem, "rotationStep1ToolStripMenuItem");
-			this.rotationStep1ToolStripMenuItem.Click += new System.EventHandler(this.rotationStep1ToolStripMenuItem_Click);
+			this.rotationStep1ToolStripMenuItem.Click += new System.EventHandler(this.RotationStep1ToolStripMenuItem_Click);
 			// 
 			// rotateCWToolStripMenuItem
 			// 
 			this.rotateCWToolStripMenuItem.Name = "rotateCWToolStripMenuItem";
 			resources.ApplyResources(this.rotateCWToolStripMenuItem, "rotateCWToolStripMenuItem");
-			this.rotateCWToolStripMenuItem.Click += new System.EventHandler(this.rotateCWToolStripMenuItem_Click);
+			this.rotateCWToolStripMenuItem.Click += new System.EventHandler(this.RotateCWToolStripMenuItem_Click);
 			// 
 			// rotateCCWToolStripMenuItem
 			// 
 			this.rotateCCWToolStripMenuItem.Name = "rotateCCWToolStripMenuItem";
 			resources.ApplyResources(this.rotateCCWToolStripMenuItem, "rotateCCWToolStripMenuItem");
-			this.rotateCCWToolStripMenuItem.Click += new System.EventHandler(this.rotateCCWToolStripMenuItem_Click);
+			this.rotateCCWToolStripMenuItem.Click += new System.EventHandler(this.RotateCCWToolStripMenuItem_Click);
 			// 
 			// paintToolToolStripMenuItem
 			// 
@@ -1191,13 +1191,13 @@ namespace BlueBrick
 			this.paintToolPaintToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.paintToolPaintToolStripMenuItem.Name = "paintToolPaintToolStripMenuItem";
 			resources.ApplyResources(this.paintToolPaintToolStripMenuItem, "paintToolPaintToolStripMenuItem");
-			this.paintToolPaintToolStripMenuItem.Click += new System.EventHandler(this.paintToolPaintToolStripMenuItem_Click);
+			this.paintToolPaintToolStripMenuItem.Click += new System.EventHandler(this.PaintToolPaintToolStripMenuItem_Click);
 			// 
 			// paintToolEraseToolStripMenuItem
 			// 
 			this.paintToolEraseToolStripMenuItem.Name = "paintToolEraseToolStripMenuItem";
 			resources.ApplyResources(this.paintToolEraseToolStripMenuItem, "paintToolEraseToolStripMenuItem");
-			this.paintToolEraseToolStripMenuItem.Click += new System.EventHandler(this.paintToolEraseToolStripMenuItem_Click);
+			this.paintToolEraseToolStripMenuItem.Click += new System.EventHandler(this.PaintToolEraseToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator11
 			// 
@@ -1208,7 +1208,7 @@ namespace BlueBrick
 			// 
 			this.paintToolChooseColorToolStripMenuItem.Name = "paintToolChooseColorToolStripMenuItem";
 			resources.ApplyResources(this.paintToolChooseColorToolStripMenuItem, "paintToolChooseColorToolStripMenuItem");
-			this.paintToolChooseColorToolStripMenuItem.Click += new System.EventHandler(this.paintToolChooseColorToolStripMenuItem_Click);
+			this.paintToolChooseColorToolStripMenuItem.Click += new System.EventHandler(this.PaintToolChooseColorToolStripMenuItem_Click);
 			// 
 			// rulerToolToolStripMenuItem
 			// 
@@ -1225,19 +1225,19 @@ namespace BlueBrick
 			this.selectAndEditToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.selectAndEditToolStripMenuItem.Name = "selectAndEditToolStripMenuItem";
 			resources.ApplyResources(this.selectAndEditToolStripMenuItem, "selectAndEditToolStripMenuItem");
-			this.selectAndEditToolStripMenuItem.Click += new System.EventHandler(this.rulerSelectAndEditToolStripMenuItem_Click);
+			this.selectAndEditToolStripMenuItem.Click += new System.EventHandler(this.RulerSelectAndEditToolStripMenuItem_Click);
 			// 
 			// addRulerToolStripMenuItem
 			// 
 			this.addRulerToolStripMenuItem.Name = "addRulerToolStripMenuItem";
 			resources.ApplyResources(this.addRulerToolStripMenuItem, "addRulerToolStripMenuItem");
-			this.addRulerToolStripMenuItem.Click += new System.EventHandler(this.rulerAddRulerToolStripMenuItem_Click);
+			this.addRulerToolStripMenuItem.Click += new System.EventHandler(this.RulerAddRulerToolStripMenuItem_Click);
 			// 
 			// addCircleToolStripMenuItem
 			// 
 			this.addCircleToolStripMenuItem.Name = "addCircleToolStripMenuItem";
 			resources.ApplyResources(this.addCircleToolStripMenuItem, "addCircleToolStripMenuItem");
-			this.addCircleToolStripMenuItem.Click += new System.EventHandler(this.rulerAddCircleToolStripMenuItem_Click);
+			this.addCircleToolStripMenuItem.Click += new System.EventHandler(this.RulerAddCircleToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator10
 			// 
@@ -1248,19 +1248,19 @@ namespace BlueBrick
 			// 
 			this.mapBackgroundColorToolStripMenuItem.Name = "mapBackgroundColorToolStripMenuItem";
 			resources.ApplyResources(this.mapBackgroundColorToolStripMenuItem, "mapBackgroundColorToolStripMenuItem");
-			this.mapBackgroundColorToolStripMenuItem.Click += new System.EventHandler(this.mapBackgroundColorToolStripMenuItem_Click);
+			this.mapBackgroundColorToolStripMenuItem.Click += new System.EventHandler(this.MapBackgroundColorToolStripMenuItem_Click);
 			// 
 			// currentLayerOptionsToolStripMenuItem
 			// 
 			this.currentLayerOptionsToolStripMenuItem.Name = "currentLayerOptionsToolStripMenuItem";
 			resources.ApplyResources(this.currentLayerOptionsToolStripMenuItem, "currentLayerOptionsToolStripMenuItem");
-			this.currentLayerOptionsToolStripMenuItem.Click += new System.EventHandler(this.currentLayerOptionsToolStripMenuItem_Click);
+			this.currentLayerOptionsToolStripMenuItem.Click += new System.EventHandler(this.CurrentLayerOptionsToolStripMenuItem_Click);
 			// 
 			// preferencesMenuItem
 			// 
 			this.preferencesMenuItem.Name = "preferencesMenuItem";
 			resources.ApplyResources(this.preferencesMenuItem, "preferencesMenuItem");
-			this.preferencesMenuItem.Click += new System.EventHandler(this.preferencesMenuItem_Click);
+			this.preferencesMenuItem.Click += new System.EventHandler(this.PreferencesMenuItem_Click);
 			// 
 			// viewToolStripMenuItem
 			// 
@@ -1283,7 +1283,7 @@ namespace BlueBrick
 			this.toolbarMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.toolbarMenuItem.Name = "toolbarMenuItem";
 			resources.ApplyResources(this.toolbarMenuItem, "toolbarMenuItem");
-			this.toolbarMenuItem.Click += new System.EventHandler(this.toolbarToolStripMenuItem_Click);
+			this.toolbarMenuItem.Click += new System.EventHandler(this.ToolbarToolStripMenuItem_Click);
 			// 
 			// statusBarMenuItem
 			// 
@@ -1292,14 +1292,14 @@ namespace BlueBrick
 			this.statusBarMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.statusBarMenuItem.Name = "statusBarMenuItem";
 			resources.ApplyResources(this.statusBarMenuItem, "statusBarMenuItem");
-			this.statusBarMenuItem.Click += new System.EventHandler(this.statusBarToolStripMenuItem_Click);
+			this.statusBarMenuItem.Click += new System.EventHandler(this.StatusBarToolStripMenuItem_Click);
 			// 
 			// mapScrollBarsToolStripMenuItem
 			// 
 			this.mapScrollBarsToolStripMenuItem.CheckOnClick = true;
 			this.mapScrollBarsToolStripMenuItem.Name = "mapScrollBarsToolStripMenuItem";
 			resources.ApplyResources(this.mapScrollBarsToolStripMenuItem, "mapScrollBarsToolStripMenuItem");
-			this.mapScrollBarsToolStripMenuItem.Click += new System.EventHandler(this.mapScrollBarsToolStripMenuItem_Click);
+			this.mapScrollBarsToolStripMenuItem.Click += new System.EventHandler(this.MapScrollBarsToolStripMenuItem_Click);
 			// 
 			// watermarkToolStripMenuItem
 			// 
@@ -1308,7 +1308,7 @@ namespace BlueBrick
 			this.watermarkToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.watermarkToolStripMenuItem.Name = "watermarkToolStripMenuItem";
 			resources.ApplyResources(this.watermarkToolStripMenuItem, "watermarkToolStripMenuItem");
-			this.watermarkToolStripMenuItem.Click += new System.EventHandler(this.watermarkToolStripMenuItem_Click);
+			this.watermarkToolStripMenuItem.Click += new System.EventHandler(this.WatermarkToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator13
 			// 
@@ -1320,7 +1320,7 @@ namespace BlueBrick
 			this.electricCircuitsMenuItem.CheckOnClick = true;
 			this.electricCircuitsMenuItem.Name = "electricCircuitsMenuItem";
 			resources.ApplyResources(this.electricCircuitsMenuItem, "electricCircuitsMenuItem");
-			this.electricCircuitsMenuItem.Click += new System.EventHandler(this.electricCircuitsMenuItem_Click);
+			this.electricCircuitsMenuItem.Click += new System.EventHandler(this.ElectricCircuitsMenuItem_Click);
 			// 
 			// connectionPointsToolStripMenuItem
 			// 
@@ -1329,7 +1329,7 @@ namespace BlueBrick
 			this.connectionPointsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.connectionPointsToolStripMenuItem.Name = "connectionPointsToolStripMenuItem";
 			resources.ApplyResources(this.connectionPointsToolStripMenuItem, "connectionPointsToolStripMenuItem");
-			this.connectionPointsToolStripMenuItem.Click += new System.EventHandler(this.connectionPointsToolStripMenuItem_Click);
+			this.connectionPointsToolStripMenuItem.Click += new System.EventHandler(this.ConnectionPointsToolStripMenuItem_Click);
 			// 
 			// rulerAttachPointsToolStripMenuItem
 			// 
@@ -1338,7 +1338,7 @@ namespace BlueBrick
 			this.rulerAttachPointsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.rulerAttachPointsToolStripMenuItem.Name = "rulerAttachPointsToolStripMenuItem";
 			resources.ApplyResources(this.rulerAttachPointsToolStripMenuItem, "rulerAttachPointsToolStripMenuItem");
-			this.rulerAttachPointsToolStripMenuItem.Click += new System.EventHandler(this.rulerAttachPointsToolStripMenuItem_Click);
+			this.rulerAttachPointsToolStripMenuItem.Click += new System.EventHandler(this.RulerAttachPointsToolStripMenuItem_Click);
 			// 
 			// budgetToolStripMenuItem
 			// 
@@ -1361,19 +1361,19 @@ namespace BlueBrick
 			// 
 			this.budgetNewToolStripMenuItem.Name = "budgetNewToolStripMenuItem";
 			resources.ApplyResources(this.budgetNewToolStripMenuItem, "budgetNewToolStripMenuItem");
-			this.budgetNewToolStripMenuItem.Click += new System.EventHandler(this.budgetNewToolStripMenuItem_Click);
+			this.budgetNewToolStripMenuItem.Click += new System.EventHandler(this.BudgetNewToolStripMenuItem_Click);
 			// 
 			// budgetOpenToolStripMenuItem
 			// 
 			this.budgetOpenToolStripMenuItem.Name = "budgetOpenToolStripMenuItem";
 			resources.ApplyResources(this.budgetOpenToolStripMenuItem, "budgetOpenToolStripMenuItem");
-			this.budgetOpenToolStripMenuItem.Click += new System.EventHandler(this.budgetOpenToolStripMenuItem_Click);
+			this.budgetOpenToolStripMenuItem.Click += new System.EventHandler(this.BudgetOpenToolStripMenuItem_Click);
 			// 
 			// budgetImportAndMergeToolStripMenuItem
 			// 
 			this.budgetImportAndMergeToolStripMenuItem.Name = "budgetImportAndMergeToolStripMenuItem";
 			resources.ApplyResources(this.budgetImportAndMergeToolStripMenuItem, "budgetImportAndMergeToolStripMenuItem");
-			this.budgetImportAndMergeToolStripMenuItem.Click += new System.EventHandler(this.budgetImportAndMergeToolStripMenuItem_Click);
+			this.budgetImportAndMergeToolStripMenuItem.Click += new System.EventHandler(this.BudgetImportAndMergeToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator15
 			// 
@@ -1384,19 +1384,19 @@ namespace BlueBrick
 			// 
 			this.budgetCloseToolStripMenuItem.Name = "budgetCloseToolStripMenuItem";
 			resources.ApplyResources(this.budgetCloseToolStripMenuItem, "budgetCloseToolStripMenuItem");
-			this.budgetCloseToolStripMenuItem.Click += new System.EventHandler(this.budgetCloseToolStripMenuItem_Click);
+			this.budgetCloseToolStripMenuItem.Click += new System.EventHandler(this.BudgetCloseToolStripMenuItem_Click);
 			// 
 			// budgetSaveToolStripMenuItem
 			// 
 			this.budgetSaveToolStripMenuItem.Name = "budgetSaveToolStripMenuItem";
 			resources.ApplyResources(this.budgetSaveToolStripMenuItem, "budgetSaveToolStripMenuItem");
-			this.budgetSaveToolStripMenuItem.Click += new System.EventHandler(this.budgetSaveToolStripMenuItem_Click);
+			this.budgetSaveToolStripMenuItem.Click += new System.EventHandler(this.BudgetSaveToolStripMenuItem_Click);
 			// 
 			// budgetSaveAsToolStripMenuItem
 			// 
 			this.budgetSaveAsToolStripMenuItem.Name = "budgetSaveAsToolStripMenuItem";
 			resources.ApplyResources(this.budgetSaveAsToolStripMenuItem, "budgetSaveAsToolStripMenuItem");
-			this.budgetSaveAsToolStripMenuItem.Click += new System.EventHandler(this.budgetSaveAsToolStripMenuItem_Click);
+			this.budgetSaveAsToolStripMenuItem.Click += new System.EventHandler(this.BudgetSaveAsToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator16
 			// 
@@ -1407,19 +1407,19 @@ namespace BlueBrick
 			// 
 			this.showOnlyBudgetedPartsToolStripMenuItem.Name = "showOnlyBudgetedPartsToolStripMenuItem";
 			resources.ApplyResources(this.showOnlyBudgetedPartsToolStripMenuItem, "showOnlyBudgetedPartsToolStripMenuItem");
-			this.showOnlyBudgetedPartsToolStripMenuItem.Click += new System.EventHandler(this.showOnlyBudgetedPartsToolStripMenuItem_Click);
+			this.showOnlyBudgetedPartsToolStripMenuItem.Click += new System.EventHandler(this.ShowOnlyBudgetedPartsToolStripMenuItem_Click);
 			// 
 			// showBudgetNumbersToolStripMenuItem
 			// 
 			this.showBudgetNumbersToolStripMenuItem.Name = "showBudgetNumbersToolStripMenuItem";
 			resources.ApplyResources(this.showBudgetNumbersToolStripMenuItem, "showBudgetNumbersToolStripMenuItem");
-			this.showBudgetNumbersToolStripMenuItem.Click += new System.EventHandler(this.showBudgetNumbersToolStripMenuItem_Click);
+			this.showBudgetNumbersToolStripMenuItem.Click += new System.EventHandler(this.ShowBudgetNumbersToolStripMenuItem_Click);
 			// 
 			// useBudgetLimitationToolStripMenuItem
 			// 
 			this.useBudgetLimitationToolStripMenuItem.Name = "useBudgetLimitationToolStripMenuItem";
 			resources.ApplyResources(this.useBudgetLimitationToolStripMenuItem, "useBudgetLimitationToolStripMenuItem");
-			this.useBudgetLimitationToolStripMenuItem.Click += new System.EventHandler(this.useBudgetLimitationToolStripMenuItem_Click);
+			this.useBudgetLimitationToolStripMenuItem.Click += new System.EventHandler(this.UseBudgetLimitationToolStripMenuItem_Click);
 			// 
 			// helpToolStripMenuItem
 			// 
@@ -1433,13 +1433,13 @@ namespace BlueBrick
 			// 
 			this.helpContentsToolStripMenuItem.Name = "helpContentsToolStripMenuItem";
 			resources.ApplyResources(this.helpContentsToolStripMenuItem, "helpContentsToolStripMenuItem");
-			this.helpContentsToolStripMenuItem.Click += new System.EventHandler(this.helpContentsToolStripMenuItem_Click);
+			this.helpContentsToolStripMenuItem.Click += new System.EventHandler(this.HelpContentsToolStripMenuItem_Click);
 			// 
 			// aboutBlueBrickToolStripMenuItem
 			// 
 			this.aboutBlueBrickToolStripMenuItem.Name = "aboutBlueBrickToolStripMenuItem";
 			resources.ApplyResources(this.aboutBlueBrickToolStripMenuItem, "aboutBlueBrickToolStripMenuItem");
-			this.aboutBlueBrickToolStripMenuItem.Click += new System.EventHandler(this.aboutBlueBrickToolStripMenuItem_Click);
+			this.aboutBlueBrickToolStripMenuItem.Click += new System.EventHandler(this.AboutBlueBrickToolStripMenuItem_Click);
 			// 
 			// toolBar
 			// 
@@ -1471,21 +1471,21 @@ namespace BlueBrick
 			this.toolBarNewButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			resources.ApplyResources(this.toolBarNewButton, "toolBarNewButton");
 			this.toolBarNewButton.Name = "toolBarNewButton";
-			this.toolBarNewButton.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+			this.toolBarNewButton.Click += new System.EventHandler(this.NewToolStripMenuItem_Click);
 			// 
 			// toolBarOpenButton
 			// 
 			this.toolBarOpenButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			resources.ApplyResources(this.toolBarOpenButton, "toolBarOpenButton");
 			this.toolBarOpenButton.Name = "toolBarOpenButton";
-			this.toolBarOpenButton.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+			this.toolBarOpenButton.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
 			// 
 			// toolBarSaveButton
 			// 
 			this.toolBarSaveButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			resources.ApplyResources(this.toolBarSaveButton, "toolBarSaveButton");
 			this.toolBarSaveButton.Name = "toolBarSaveButton";
-			this.toolBarSaveButton.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+			this.toolBarSaveButton.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator7
 			// 
@@ -1497,16 +1497,16 @@ namespace BlueBrick
 			this.toolBarUndoButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			resources.ApplyResources(this.toolBarUndoButton, "toolBarUndoButton");
 			this.toolBarUndoButton.Name = "toolBarUndoButton";
-			this.toolBarUndoButton.ButtonClick += new System.EventHandler(this.undoToolStripMenuItem_Click);
-			this.toolBarUndoButton.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolBarUndoButton_DropDownItemClicked);
+			this.toolBarUndoButton.ButtonClick += new System.EventHandler(this.UndoToolStripMenuItem_Click);
+			this.toolBarUndoButton.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.ToolBarUndoButton_DropDownItemClicked);
 			// 
 			// toolBarRedoButton
 			// 
 			this.toolBarRedoButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			resources.ApplyResources(this.toolBarRedoButton, "toolBarRedoButton");
 			this.toolBarRedoButton.Name = "toolBarRedoButton";
-			this.toolBarRedoButton.ButtonClick += new System.EventHandler(this.redoToolStripMenuItem_Click);
-			this.toolBarRedoButton.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolBarRedoButton_DropDownItemClicked);
+			this.toolBarRedoButton.ButtonClick += new System.EventHandler(this.RedoToolStripMenuItem_Click);
+			this.toolBarRedoButton.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.ToolBarRedoButton_DropDownItemClicked);
 			// 
 			// toolStripSeparator3
 			// 
@@ -1518,28 +1518,28 @@ namespace BlueBrick
 			this.toolBarDeleteButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			resources.ApplyResources(this.toolBarDeleteButton, "toolBarDeleteButton");
 			this.toolBarDeleteButton.Name = "toolBarDeleteButton";
-			this.toolBarDeleteButton.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+			this.toolBarDeleteButton.Click += new System.EventHandler(this.DeleteToolStripMenuItem_Click);
 			// 
 			// toolBarCutButton
 			// 
 			this.toolBarCutButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			resources.ApplyResources(this.toolBarCutButton, "toolBarCutButton");
 			this.toolBarCutButton.Name = "toolBarCutButton";
-			this.toolBarCutButton.Click += new System.EventHandler(this.cutToolStripMenuItem_Click);
+			this.toolBarCutButton.Click += new System.EventHandler(this.CutToolStripMenuItem_Click);
 			// 
 			// toolBarCopyButton
 			// 
 			this.toolBarCopyButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			resources.ApplyResources(this.toolBarCopyButton, "toolBarCopyButton");
 			this.toolBarCopyButton.Name = "toolBarCopyButton";
-			this.toolBarCopyButton.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
+			this.toolBarCopyButton.Click += new System.EventHandler(this.CopyToolStripMenuItem_Click);
 			// 
 			// toolBarPasteButton
 			// 
 			this.toolBarPasteButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			resources.ApplyResources(this.toolBarPasteButton, "toolBarPasteButton");
 			this.toolBarPasteButton.Name = "toolBarPasteButton";
-			this.toolBarPasteButton.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
+			this.toolBarPasteButton.Click += new System.EventHandler(this.PasteToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator6
 			// 
@@ -1559,7 +1559,7 @@ namespace BlueBrick
             this.toolBarGrid05Button});
 			resources.ApplyResources(this.toolBarSnapGridButton, "toolBarSnapGridButton");
 			this.toolBarSnapGridButton.Name = "toolBarSnapGridButton";
-			this.toolBarSnapGridButton.Click += new System.EventHandler(this.toolBarSnapGridButton_Click);
+			this.toolBarSnapGridButton.Click += new System.EventHandler(this.ToolBarSnapGridButton_Click);
 			// 
 			// toolBarGrid32Button
 			// 
@@ -1567,43 +1567,43 @@ namespace BlueBrick
 			this.toolBarGrid32Button.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.toolBarGrid32Button.Name = "toolBarGrid32Button";
 			resources.ApplyResources(this.toolBarGrid32Button, "toolBarGrid32Button");
-			this.toolBarGrid32Button.Click += new System.EventHandler(this.moveStep32ToolStripMenuItem_Click);
+			this.toolBarGrid32Button.Click += new System.EventHandler(this.MoveStep32ToolStripMenuItem_Click);
 			// 
 			// toolBarGrid16Button
 			// 
 			this.toolBarGrid16Button.Name = "toolBarGrid16Button";
 			resources.ApplyResources(this.toolBarGrid16Button, "toolBarGrid16Button");
-			this.toolBarGrid16Button.Click += new System.EventHandler(this.moveStep16ToolStripMenuItem_Click);
+			this.toolBarGrid16Button.Click += new System.EventHandler(this.MoveStep16ToolStripMenuItem_Click);
 			// 
 			// toolBarGrid8Button
 			// 
 			this.toolBarGrid8Button.Name = "toolBarGrid8Button";
 			resources.ApplyResources(this.toolBarGrid8Button, "toolBarGrid8Button");
-			this.toolBarGrid8Button.Click += new System.EventHandler(this.moveStep8ToolStripMenuItem_Click);
+			this.toolBarGrid8Button.Click += new System.EventHandler(this.MoveStep8ToolStripMenuItem_Click);
 			// 
 			// toolBarGrid4Button
 			// 
 			this.toolBarGrid4Button.Name = "toolBarGrid4Button";
 			resources.ApplyResources(this.toolBarGrid4Button, "toolBarGrid4Button");
-			this.toolBarGrid4Button.Click += new System.EventHandler(this.moveStep4ToolStripMenuItem_Click);
+			this.toolBarGrid4Button.Click += new System.EventHandler(this.MoveStep4ToolStripMenuItem_Click);
 			// 
 			// toolBarGrid2Button
 			// 
 			this.toolBarGrid2Button.Name = "toolBarGrid2Button";
 			resources.ApplyResources(this.toolBarGrid2Button, "toolBarGrid2Button");
-			this.toolBarGrid2Button.Click += new System.EventHandler(this.moveStep2ToolStripMenuItem_Click);
+			this.toolBarGrid2Button.Click += new System.EventHandler(this.MoveStep2ToolStripMenuItem_Click);
 			// 
 			// toolBarGrid1Button
 			// 
 			this.toolBarGrid1Button.Name = "toolBarGrid1Button";
 			resources.ApplyResources(this.toolBarGrid1Button, "toolBarGrid1Button");
-			this.toolBarGrid1Button.Click += new System.EventHandler(this.moveStep1ToolStripMenuItem_Click);
+			this.toolBarGrid1Button.Click += new System.EventHandler(this.MoveStep1ToolStripMenuItem_Click);
 			// 
 			// toolBarGrid05Button
 			// 
 			this.toolBarGrid05Button.Name = "toolBarGrid05Button";
 			resources.ApplyResources(this.toolBarGrid05Button, "toolBarGrid05Button");
-			this.toolBarGrid05Button.Click += new System.EventHandler(this.moveStep05ToolStripMenuItem_Click);
+			this.toolBarGrid05Button.Click += new System.EventHandler(this.MoveStep05ToolStripMenuItem_Click);
 			// 
 			// toolBarRotationAngleButton
 			// 
@@ -1622,53 +1622,53 @@ namespace BlueBrick
 			this.toolBarAngle90Button.CheckState = System.Windows.Forms.CheckState.Checked;
 			this.toolBarAngle90Button.Name = "toolBarAngle90Button";
 			resources.ApplyResources(this.toolBarAngle90Button, "toolBarAngle90Button");
-			this.toolBarAngle90Button.Click += new System.EventHandler(this.rotationStep90ToolStripMenuItem_Click);
+			this.toolBarAngle90Button.Click += new System.EventHandler(this.RotationStep90ToolStripMenuItem_Click);
 			// 
 			// toolBarAngle45Button
 			// 
 			this.toolBarAngle45Button.Name = "toolBarAngle45Button";
 			resources.ApplyResources(this.toolBarAngle45Button, "toolBarAngle45Button");
-			this.toolBarAngle45Button.Click += new System.EventHandler(this.rotationStep45ToolStripMenuItem_Click);
+			this.toolBarAngle45Button.Click += new System.EventHandler(this.RotationStep45ToolStripMenuItem_Click);
 			// 
 			// toolBarAngle22Button
 			// 
 			this.toolBarAngle22Button.Name = "toolBarAngle22Button";
 			resources.ApplyResources(this.toolBarAngle22Button, "toolBarAngle22Button");
-			this.toolBarAngle22Button.Click += new System.EventHandler(this.rotationStep22ToolStripMenuItem_Click);
+			this.toolBarAngle22Button.Click += new System.EventHandler(this.RotationStep22ToolStripMenuItem_Click);
 			// 
 			// toolBarAngle1Button
 			// 
 			this.toolBarAngle1Button.Name = "toolBarAngle1Button";
 			resources.ApplyResources(this.toolBarAngle1Button, "toolBarAngle1Button");
-			this.toolBarAngle1Button.Click += new System.EventHandler(this.rotationStep1ToolStripMenuItem_Click);
+			this.toolBarAngle1Button.Click += new System.EventHandler(this.RotationStep1ToolStripMenuItem_Click);
 			// 
 			// toolBarRotateCCWButton
 			// 
 			this.toolBarRotateCCWButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			resources.ApplyResources(this.toolBarRotateCCWButton, "toolBarRotateCCWButton");
 			this.toolBarRotateCCWButton.Name = "toolBarRotateCCWButton";
-			this.toolBarRotateCCWButton.Click += new System.EventHandler(this.rotateCCWToolStripMenuItem_Click);
+			this.toolBarRotateCCWButton.Click += new System.EventHandler(this.RotateCCWToolStripMenuItem_Click);
 			// 
 			// toolBarRotateCWButton
 			// 
 			this.toolBarRotateCWButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			resources.ApplyResources(this.toolBarRotateCWButton, "toolBarRotateCWButton");
 			this.toolBarRotateCWButton.Name = "toolBarRotateCWButton";
-			this.toolBarRotateCWButton.Click += new System.EventHandler(this.rotateCWToolStripMenuItem_Click);
+			this.toolBarRotateCWButton.Click += new System.EventHandler(this.RotateCWToolStripMenuItem_Click);
 			// 
 			// toolBarSendToBackButton
 			// 
 			this.toolBarSendToBackButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			resources.ApplyResources(this.toolBarSendToBackButton, "toolBarSendToBackButton");
 			this.toolBarSendToBackButton.Name = "toolBarSendToBackButton";
-			this.toolBarSendToBackButton.Click += new System.EventHandler(this.sendToBackToolStripMenuItem_Click);
+			this.toolBarSendToBackButton.Click += new System.EventHandler(this.SendToBackToolStripMenuItem_Click);
 			// 
 			// toolBarBringToFrontButton
 			// 
 			this.toolBarBringToFrontButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			resources.ApplyResources(this.toolBarBringToFrontButton, "toolBarBringToFrontButton");
 			this.toolBarBringToFrontButton.Name = "toolBarBringToFrontButton";
-			this.toolBarBringToFrontButton.Click += new System.EventHandler(this.bringToFrontToolStripMenuItem_Click);
+			this.toolBarBringToFrontButton.Click += new System.EventHandler(this.BringToFrontToolStripMenuItem_Click);
 			// 
 			// toolBarToolButton
 			// 
@@ -1681,37 +1681,37 @@ namespace BlueBrick
             this.rulerAddCircleToolStripMenuItem});
 			resources.ApplyResources(this.toolBarToolButton, "toolBarToolButton");
 			this.toolBarToolButton.Name = "toolBarToolButton";
-			this.toolBarToolButton.ButtonClick += new System.EventHandler(this.toolBarPaintButton_ButtonClick);
+			this.toolBarToolButton.ButtonClick += new System.EventHandler(this.ToolBarPaintButton_ButtonClick);
 			// 
 			// paintToolStripMenuItem
 			// 
 			resources.ApplyResources(this.paintToolStripMenuItem, "paintToolStripMenuItem");
 			this.paintToolStripMenuItem.Name = "paintToolStripMenuItem";
-			this.paintToolStripMenuItem.Click += new System.EventHandler(this.paintToolPaintToolStripMenuItem_Click);
+			this.paintToolStripMenuItem.Click += new System.EventHandler(this.PaintToolPaintToolStripMenuItem_Click);
 			// 
 			// eraseToolStripMenuItem
 			// 
 			resources.ApplyResources(this.eraseToolStripMenuItem, "eraseToolStripMenuItem");
 			this.eraseToolStripMenuItem.Name = "eraseToolStripMenuItem";
-			this.eraseToolStripMenuItem.Click += new System.EventHandler(this.paintToolEraseToolStripMenuItem_Click);
+			this.eraseToolStripMenuItem.Click += new System.EventHandler(this.PaintToolEraseToolStripMenuItem_Click);
 			// 
 			// rulerSelectAndEditToolStripMenuItem
 			// 
 			resources.ApplyResources(this.rulerSelectAndEditToolStripMenuItem, "rulerSelectAndEditToolStripMenuItem");
 			this.rulerSelectAndEditToolStripMenuItem.Name = "rulerSelectAndEditToolStripMenuItem";
-			this.rulerSelectAndEditToolStripMenuItem.Click += new System.EventHandler(this.rulerSelectAndEditToolStripMenuItem_Click);
+			this.rulerSelectAndEditToolStripMenuItem.Click += new System.EventHandler(this.RulerSelectAndEditToolStripMenuItem_Click);
 			// 
 			// rulerAddRulerToolStripMenuItem
 			// 
 			resources.ApplyResources(this.rulerAddRulerToolStripMenuItem, "rulerAddRulerToolStripMenuItem");
 			this.rulerAddRulerToolStripMenuItem.Name = "rulerAddRulerToolStripMenuItem";
-			this.rulerAddRulerToolStripMenuItem.Click += new System.EventHandler(this.rulerAddRulerToolStripMenuItem_Click);
+			this.rulerAddRulerToolStripMenuItem.Click += new System.EventHandler(this.RulerAddRulerToolStripMenuItem_Click);
 			// 
 			// rulerAddCircleToolStripMenuItem
 			// 
 			resources.ApplyResources(this.rulerAddCircleToolStripMenuItem, "rulerAddCircleToolStripMenuItem");
 			this.rulerAddCircleToolStripMenuItem.Name = "rulerAddCircleToolStripMenuItem";
-			this.rulerAddCircleToolStripMenuItem.Click += new System.EventHandler(this.rulerAddCircleToolStripMenuItem_Click);
+			this.rulerAddCircleToolStripMenuItem.Click += new System.EventHandler(this.RulerAddCircleToolStripMenuItem_Click);
 			// 
 			// openFileDialog
 			// 

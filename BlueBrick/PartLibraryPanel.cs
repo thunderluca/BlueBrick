@@ -1088,19 +1088,19 @@ namespace BlueBrick
 		private void menuItem_ShowOnlyBudgetedPartsClick(object sender, EventArgs e)
 		{
 			// call the event handler of the main form
-			MainForm.Instance.showOnlyBudgetedPartsToolStripMenuItem_Click(null, null);
+			MainForm.Instance.ShowOnlyBudgetedPartsToolStripMenuItem_Click(null, null);
 		}
 
 		private void menuItem_ShowBudgetNumberClick(object sender, EventArgs e)
 		{
 			// call the event handler of the main form
-			MainForm.Instance.showBudgetNumbersToolStripMenuItem_Click(null, null);
+			MainForm.Instance.ShowBudgetNumbersToolStripMenuItem_Click(null, null);
 		}
 
 		private void menuItem_UseBudgetLimitationClick(object sender, EventArgs e)
 		{
 			// call the event handler of the main form
-			MainForm.Instance.useBudgetLimitationToolStripMenuItem_Click(null, null);
+			MainForm.Instance.UseBudgetLimitationToolStripMenuItem_Click(null, null);
 		}
 
 		private void menuItem_EditBudgetClick(object sender, EventArgs e)
@@ -1148,7 +1148,7 @@ namespace BlueBrick
 								message = BrickLibrary.Instance.GetFormatedBrickInfo(item.Tag as string, true, true, true);
 
 							//display the message in the status bar
-							MainForm.Instance.setStatusBarMessage(message);
+							MainForm.Instance.SetStatusBarMessage(message);
 							break;
 						}
 					case MouseButtons.Left:
@@ -1196,7 +1196,7 @@ namespace BlueBrick
 			if (!Settings.Default.UIFilterAllLibraryTab && (TabCount > 0) && (SelectedTab != null) && (SelectedTab.Controls.Count > 0))
 			{
                 if (SelectedTab.Controls[0] is PartListView listView)
-                    MainForm.Instance.updateFilterComboBox(listView.FilterSentence);
+                    MainForm.Instance.UpdateFilterComboBox(listView.FilterSentence);
             }
 		}
 		#endregion

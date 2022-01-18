@@ -14,72 +14,82 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace BlueBrick
 {
-	class LanguageManager
-	{
-		/// <summary>
-		/// This method check if the folder with the specified languageCode exist inside the starting folder
-		/// of the application. If it exists it also check the presence of the language package dll as well
-		/// as the HTM help file.
-		/// If something is missing this method will open the dowload center to download the corresponding files
-		/// from the internet.
-		/// </summary>
-		/// <param name="languageCode">A language code in 2 letters such as "en" or "fr"</param>
-		public static void checkLanguage(string languageCode)
-		{
-			// if the language is english, exit immediatly since it's the default language
-			if (languageCode.Equals("en"))
-				return;
+    class LanguageManager
+    {
+        private static readonly string DllName = $"{nameof(BlueBrick)}.resources.dll";
+        private static readonly string ChmName = $"{nameof(BlueBrick)}.chm";
 
-			// check the presence of the folder in the startup path
-			string folderPath = Application.StartupPath + @"/" + languageCode;
-			DirectoryInfo languageFolder = new DirectoryInfo(folderPath);
-			// if it doesn't exist create it
-			try
-			{
-				if (!languageFolder.Exists)
-				{
-					languageFolder.Create();
-					// set the attribute to normal
-					languageFolder.Attributes = FileAttributes.Normal;
-				}
-			}
-			catch
-			{
-				// we should display an error message here, saying the folder can not be created
-				return;
-			}
+        /// <summary>
+        /// This method check if the folder with the specified languageCode exist inside the starting folder
+        /// of the application. If it exists it also check the presence of the language package dll as well
+        /// as the HTM help file.
+        /// If something is missing this method will open the dowload center to download the corresponding files
+        /// from the internet.
+        /// </summary>
+        /// <param name="languageCode">A language code in 2 letters such as "en" or "fr"</param>
+        public static void CheckLanguage(string languageCode)
+        {
+            // if the language is english, exit immediatly since it's the default language
+            if (string.IsNullOrWhiteSpace(languageCode) || languageCode.Equals("en"))
+            {
+                return;
+            }
 
-			// create a potential list of files to download
-			List<DownloadCenterForm.DownloadableFileInfo> filesToDownload = new List<DownloadCenterForm.DownloadableFileInfo>();
-			string destinationFolder = @"/" + languageCode + @"/";
-			string url = "https://bluebrick.lswproject.com/download/language/" + languageCode + "/";
-			string dllName = "BlueBrick.resources.dll";
-			string chmName = "BlueBrick.chm";
+            // check the presence of the folder in the startup path
+            var folderPath = Application.StartupPath + @"/" + languageCode;
 
-			// after checking the folder existence, check the presence of the dll package
-			FileInfo languagePackage = new FileInfo(folderPath + @"/" + dllName);
-			if (!languagePackage.Exists)
-				filesToDownload.Add(new DownloadCenterForm.DownloadableFileInfo(dllName, "1", url + dllName, destinationFolder + dllName));
+            try
+            {
+                // if it doesn't exist create it
+                var languageFolder = new DirectoryInfo(folderPath);
+                if (!languageFolder.Exists)
+                {
+                    languageFolder.Create();
+                    // set the attribute to normal
+                    languageFolder.Attributes = FileAttributes.Normal;
+                }
+            }
+            catch
+            {
+                // we should display an error message here, saying the folder can not be created
+                return;
+            }
 
-			// check also the presence of the chm help file for certain languages
-			List<string> languageWithHelpFile = new List<string>(new string[] {"de", "nl", "fr", "es"});
-			if (languageWithHelpFile.Contains(languageCode))
-			{
-				FileInfo helpFile = new FileInfo(folderPath + @"/" + chmName);
-				if (!helpFile.Exists)
-					filesToDownload.Add(new DownloadCenterForm.DownloadableFileInfo(chmName, "1", url + chmName, destinationFolder + chmName));
-			}
+            // create a potential list of files to download
+            var filesToDownload = new List<DownloadCenterForm.DownloadableFileInfo>();
 
-			// now check if the list of file to download is not null, call the download manager
-			if (filesToDownload.Count > 0)
-			{
-				DownloadCenterForm languageManager = new DownloadCenterForm(filesToDownload, false);
-				languageManager.ShowDialog();
-			}
-		}
-	}
+            var destinationFolder = $@"/{languageCode}/";
+            var url = "https://bluebrick.lswproject.com/download/language/{languageCode}/"; 
+
+            // after checking the folder existence, check the presence of the dll package
+            var languagePackage = new FileInfo(folderPath + @"/" + DllName);
+            if (!languagePackage.Exists)
+            {
+                filesToDownload.Add(new DownloadCenterForm.DownloadableFileInfo(DllName, "1", url + DllName, destinationFolder + DllName));
+            }
+
+            // check also the presence of the chm help file for certain languages
+            var languageWithHelpFile = new[] { "de", "nl", "fr", "es" };
+            if (languageWithHelpFile.Contains(languageCode))
+            {
+                var helpFile = new FileInfo(folderPath + @"/" + ChmName);
+                if (!helpFile.Exists)
+                {
+                    filesToDownload.Add(new DownloadCenterForm.DownloadableFileInfo(ChmName, "1", url + ChmName, destinationFolder + ChmName));
+                }
+            }
+
+            // now check if the list of file to download is not null, call the download manager
+            if (filesToDownload.Count > 0)
+            {
+                var languageManager = new DownloadCenterForm(filesToDownload, false);
+                languageManager.ShowDialog();
+            }
+        }
+    }
 }

@@ -283,7 +283,7 @@ namespace BlueBrick.MapData
 			mCellIndexRowType = (CellIndexType)reader.ReadElementContentAsInt();
 			mCellIndexCorner = XmlReadWrite.readPoint(reader);
 			// step the progress bar for the grid
-			MainForm.Instance.stepProgressBar();
+			MainForm.Instance.StepProgressBar();
 		}
 
 		public override void WriteXml(System.Xml.XmlWriter writer)
@@ -309,7 +309,7 @@ namespace BlueBrick.MapData
 			WriteFooter(writer); // end of layer
 
 			// step the progress bar for the grid
-			MainForm.Instance.stepProgressBar();
+			MainForm.Instance.StepProgressBar();
 		}
 
 		#endregion

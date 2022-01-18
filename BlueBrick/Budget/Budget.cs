@@ -107,7 +107,7 @@ namespace BlueBrick.Budget
 				mWasModified = value;
 				//if the state changed, call the update of the title bar
 				if (stateChanged)
-					MainForm.Instance.updateTitleBar();
+					MainForm.Instance.UpdateTitleBar();
 			}
 		}
 		#endregion

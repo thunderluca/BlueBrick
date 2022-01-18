@@ -75,7 +75,7 @@ namespace BlueBrick.MapData
 			{
 				sCurrentEditTool = value;
 				// update the view because we shoudl show/hide the control point of the selection depending on the type of tool
-				MainForm.Instance.updateView(Actions.Action.UpdateViewType.LIGHT, Actions.Action.UpdateViewType.NONE);
+				MainForm.Instance.UpdateView(Actions.Action.UpdateViewType.LIGHT, Actions.Action.UpdateViewType.NONE);
 			}
 		}
 
@@ -340,7 +340,7 @@ namespace BlueBrick.MapData
 
 			// check if we need to update the view panel
 			if (mCurrentRulerWithHighlightedControlPoint != previousHighlightedRuler)
-				MainForm.Instance.updateView(Actions.Action.UpdateViewType.LIGHT, Actions.Action.UpdateViewType.NONE);
+				MainForm.Instance.UpdateView(Actions.Action.UpdateViewType.LIGHT, Actions.Action.UpdateViewType.NONE);
 
 			// return true if we found a good candidate
 			return mCurrentRulerWithHighlightedControlPoint != null;
@@ -948,7 +948,7 @@ namespace BlueBrick.MapData
 							{
 								// check if we can move the control point
                                 bool isCurrentControlPointFree = !mCurrentlyEditedRuler.IsCurrentControlPointAttached;
-                                if (isCurrentControlPointFree || mCurrentlyEditedRuler.BrickAttachedToCurrentControlPoint.SelectionArea.isPointInside(mouseCoordInStudSnapped))
+                                if (isCurrentControlPointFree || mCurrentlyEditedRuler.BrickAttachedToCurrentControlPoint.SelectionArea.IsPointInside(mouseCoordInStudSnapped))
                                 {
                                     // move the control point
                                     mCurrentlyEditedRuler.CurrentControlPoint = mouseCoordInStudSnapped;
@@ -1081,7 +1081,7 @@ namespace BlueBrick.MapData
 								// compute the final position before reseting the current position to the initial one
 								PointF finalPosition = mCurrentlyEditedRuler.CurrentControlPoint;
 								if (!mCurrentlyEditedRuler.IsCurrentControlPointAttached ||
-									mCurrentlyEditedRuler.BrickAttachedToCurrentControlPoint.SelectionArea.isPointInside(mouseCoordInStudSnapped))
+									mCurrentlyEditedRuler.BrickAttachedToCurrentControlPoint.SelectionArea.IsPointInside(mouseCoordInStudSnapped))
 									finalPosition = mouseCoordInStudSnapped;
 								// move back the control point because for a linear ruler, because a swap of
 								// current control point can happen if you move the two control point at the same place
@@ -1190,7 +1190,7 @@ namespace BlueBrick.MapData
 
 			// if we have finished to edit the current ruler, change the tool back to edition
 			if (wasARulerItemCreated && Properties.Settings.Default.SwitchToEditionAfterRulerCreation)
-				MainForm.Instance.rulerSelectAndEditToolStripMenuItem_Click(null, null);
+				MainForm.Instance.RulerSelectAndEditToolStripMenuItem_Click(null, null);
 
 			return mustRefresh;
 		}

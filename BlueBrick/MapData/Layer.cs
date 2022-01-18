@@ -380,12 +380,12 @@ namespace BlueBrick.MapData
 			#region update
 			private void TranslateSelectionArea(PointF oldPosition, PointF newPosition)
 			{
-				mSelectionArea?.translate(new PointF(newPosition.X - oldPosition.X, newPosition.Y - oldPosition.Y));
+				mSelectionArea?.Translate(new PointF(newPosition.X - oldPosition.X, newPosition.Y - oldPosition.Y));
 			}
 
 			protected void TranslateSelectionArea(PointF translation)
 			{
-				mSelectionArea?.translate(translation);
+				mSelectionArea?.Translate(translation);
 			}
 
 			/// <summary>
@@ -1191,7 +1191,7 @@ namespace BlueBrick.MapData
 			mName += " " + nameInstanceCounter.ToString();
 			// A new layer is created, of course the selection is empty so 
 			// disable some buttons in the toolbar related to an empty selection
-			MainForm.Instance.enableToolbarButtonOnItemSelection(false);
+			MainForm.Instance.EnableToolbarButtonOnItemSelection(false);
 		}
 
 		/// <summary>
@@ -1338,7 +1338,7 @@ namespace BlueBrick.MapData
 
 					// step the progress bar for each text cell
 					if (useProgressBar)
-						MainForm.Instance.stepProgressBar();
+						MainForm.Instance.StepProgressBar();
 				}
 				// read the end of the list tag, to finish the list of items (unless the list is empty)
 				reader.ReadEndElement();
@@ -1439,7 +1439,7 @@ namespace BlueBrick.MapData
 				item.WriteXml(writer);
 				// step the progress bar for each brick
 				if (useProgressBar)
-					MainForm.Instance.stepProgressBar();
+					MainForm.Instance.StepProgressBar();
 			}
 			writer.WriteEndElement(); // end of itemsListName
 
@@ -1688,11 +1688,11 @@ namespace BlueBrick.MapData
             Actions.Items.RotateItems.sLastCenterIsValid = false;
             Actions.Items.RotateItems.sLastCenterIsValid = false;
 			// enable or disable the toolbar buttons related to the selection (if it is empty or not)
-			MainForm.Instance.enableToolbarButtonOnItemSelection(mSelectedObjects.Count > 0);
+			MainForm.Instance.EnableToolbarButtonOnItemSelection(mSelectedObjects.Count > 0);
             // enable the grouping button on the main form
             bool canGroupSelection = Actions.Items.GroupItems.findItemsToGroup(mSelectedObjects).Count > 1;
             bool canUngroupSelection = Actions.Items.UngroupItems.findItemsToUngroup(mSelectedObjects).Count > 0;
-            MainForm.Instance.enableGroupingButton(canGroupSelection, canUngroupSelection);
+            MainForm.Instance.EnableGroupingButton(canGroupSelection, canUngroupSelection);
         }
 
 		/// <summary>
@@ -1801,7 +1801,7 @@ namespace BlueBrick.MapData
 				xmlWriter.Close();
 
 				// enable the paste buttons
-				MainForm.Instance.enablePasteButton(true);
+				MainForm.Instance.EnablePasteButton(true);
 			}
 		}
 
@@ -2115,7 +2115,7 @@ namespace BlueBrick.MapData
 			for (int i = itemList.Count - 1; i >= 0; --i)
 			{
 				LayerItem item = itemList[i];
-				if (item.SelectionArea.isPointInside(mouseCoordInStud))
+				if (item.SelectionArea.IsPointInside(mouseCoordInStud))
 					return item;
 			}
 			return null;
@@ -2244,7 +2244,7 @@ namespace BlueBrick.MapData
 			List<LayerItem> objListInRectangle = new List<LayerItem>(itemList.Count);
 			foreach (LayerItem item in itemList)
 			{
-				if (item.SelectionArea.isRectangleIntersect(selectionRectangeInStud))
+				if (item.SelectionArea.IsRectangleIntersect(selectionRectangeInStud))
 					objListInRectangle.Add(item);
 			}
 			// check if it is a brand new selection or a add/remove selection
